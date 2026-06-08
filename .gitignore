@@ -1,0 +1,7 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Session/temp files
+*.session.json
+*.tmp

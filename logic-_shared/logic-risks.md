@@ -1,0 +1,112 @@
+# Logic-Lens — Logic Risk Taxonomy (L1–L9)
+
+## L1 — Shadow Override
+An identifier resolves to a different entity than assumed — local/import/class binding silently overrides a builtin or expected name.
+**Detect:** (1) Walk scope chain for every call/access: local→enclosing→module→builtins. (2) Check `from X import Y` / `import X as Y` for builtin shadowing. (3) Check subclass attributes hiding parent methods. If a name cannot be uniquely resolved, that itself is a finding.
+**Symptom:** `f(x)` calls project-local `f` not builtin `f`; tests pass because they mock the same wrong name.
+**Common in:** Python (import shadowing), JavaScript (prototype chain), Ruby (method aliasing), Lua (global mutation).
+
+---
+
+## L2 — Type Contract Breach
+A function/operator receives a value of a type it cannot correctly process; the mismatch may be implicit or conditional.
+**Detect:** (1) State the expected type for each parameter (hints/docs/usage). (2) Trace actual argument type from origin through every transformation to call site. (3) Check for implicit coercions or interface widening along the path. (4) Note nullable paths: when can the value be `None`/`null`/`undefined`?
+**Symptom:** Value enters as type A, is treated as type B by an operator/intermediary, and arrives at a call expecting type C.
+**Common in:** Python (`None` where `str` expected), JavaScript (numeric/string coercion), Go (nil interface vs nil pointer), Java (unchecked cast).
+
+---
+
+## L3 — Boundary Blindspot
+Logic is correct for typical inputs but does not handle boundary conditions: empty collections, zero/negative numbers, null/None, single-element sequences, first/last loop iterations.
+**Detect:** (1) For each collection/numeric/optional: trace the empty/zero/null path explicitly — do not assume happy-path trace covers it. (2) Check loop indices, slice ranges, division operations for off-by-one and divide-by-zero. (3) Check first/last element of sequences separately.
+**Symptom:** `items[0]` or `total / count` without a guard for `len(items) == 0` or `count == 0`.
+**Not L3 — designed capacity limits:** If code explicitly returns an error or rejection at a designed boundary (e.g., `return errors.New("cache full")` when `len >= maxSize`, HTTP 429, buffer-full rejection), that is correct boundary enforcement, not a blindspot. L3 applies only when code *attempts* to operate past the boundary and silently fails (crash, wrong result, infinite loop) — not when it explicitly gates the operation with an error return. Apply adversarial red-team: "Does the code explicitly return an error / rejection at this boundary rather than attempting to continue past it?" If yes, withdraw the L3 candidate. Note: a `panic` at a boundary is NOT a designed error return — it is a crash and remains a potential L3.
+**Common in:** All languages. Especially array indexing, pagination, aggregation, date arithmetic.
+
+---
+
+## L4 — State Mutation Hazard
+Shared mutable state is read or written in a **single execution context** in an order producing incorrect results. Includes mutations affecting ongoing iterations, aliased references causing unexpected sharing, read-after-side-effect ordering. For multi-context hazards, see L7.
+**Detect:** (1) Identify all mutable state touched: local refs passed by reference, object fields, global state, closure captures. (2) Trace every read and write in execution order. (3) Ask: does any read occur after a write that invalidated its assumption? Do any aliases point to the same mutable object? (4) **Aliased-return check:** does the function mutate its input argument AND also return that same reference? If so, callers who write `result = f(x)` discover `x` was also mutated — neither the pure-function contract (`sorted()` returns a new copy) nor the in-place contract (`list.sort()` returns `None`) is satisfied. This dual-contract footgun is L4. Sort/search routines (quicksort, mergesort, in-place reverse) exhibiting it are confirmed L4 findings — primary classification stays L4 even when a secondary risk like recursion depth coexists on the same function.
+**Symptom:** Collection modified during iteration; variable read after being reset by side effect; alias mutated through one name and observed through another; function sorts/modifies in-place AND returns the same object.
+**Common in:** Python (mutable default args, list mutation during `for` loop, in-place-sort returning self), JavaScript (closure over `var` loop variable), Go (slice aliasing across `append`), Java (mutating `Collection` while iterating).
+
+---
+
+## L5 — Control Flow Escape
+An early exit (`return`, `raise`/`throw`, `break`, `continue`, unhandled exception) skips a required non-lifecycle operation: state update, validation, commit marker, audit event, notification, or invariant restoration. For acquire/use/release imbalance, use L8.
+**Detect:** (1) List all required post-conditions for the function/block: state updated, invariant restored, commit marker written, notification emitted. (2) Enumerate every exit point including implicit raises from callees. (3) Verify each exit path meets all non-lifecycle post-conditions. (4) If the skipped operation is a resource release/rollback/unsubscribe/close, classify as L8 instead. **Exhaustive path rule:** report EACH exit path that skips the post-condition as a named path in the finding — do not stop after the first skipped path. A finding that names only one path is incomplete if others also skip the required operation.
+**Symptom:** Status flag updated only on the happy path; audit event skipped on exception; validation bypassed by an early `return`; `continue` skips a required accumulator update.
+**Common in:** All languages. Especially code refactored to add early returns, or exception handlers that don't mirror the acquisition path.
+
+---
+
+## L6 — Callee Contract Mismatch
+Calling code assumes behavioral guarantees (return value semantics, exception behavior, idempotency, side-effect ordering) that the callee does not actually provide.
+**Detect:** (1) For each local or external call, state what the caller assumes: return value, exceptions, idempotency, side effects, ordering. (2) Trace into the callee's implementation when local, or docs when external, and verify each assumption. (3) Flag: `None`/`null` returns the caller doesn't check; exceptions the caller doesn't catch; side effects the caller relies on but aren't guaranteed.
+**Symptom:** `result = get_user(id)` then `result.name` without checking if `get_user` can return `None`; retry calling a non-idempotent function; assuming sort is stable when it isn't.
+**Common in:** All languages. Especially at API boundaries, ORM interactions, third-party integrations.
+
+---
+
+## L7 — Concurrency / Async Hazard
+Code under concurrency (threads, goroutines, async tasks, event loops) violates a single-thread assumption: atomicity of read-modify-write, happens-before across `await`/yield/channel boundaries, message ordering, cancellable operation progress. Distinct from L4 — L7 requires **more than one execution context**.
+**Detect:** (1) Enumerate every concurrency boundary: `await`, `yield`, channel send/receive, lock acquire/release, callback, `Promise.then`, goroutine/task spawn. (2) For each boundary: which shared state is observable on both sides? Can another context mutate it between read and use? (3) For locks: trace acquire→use→release on every exit path. (4) For ordering: identify the synchronization enforcing it — "usually happens first" is not enforcement. (5) For cancellable tasks: trace partial-update state.
+**Subtype — AV (Atomicity Violation):** A code region implicitly assumed to execute atomically is interleaved by another context (Detect step 2). Pattern: thread A performs read₁ … write₁ on variable V; thread B can execute between read₁ and write₁ and mutate V, making write₁ operate on a stale read. Check: (a) find every multi-step read-modify-write on shared state; (b) confirm another context can observe the variable between those steps; (c) verify a lock or atomic primitive protects the entire sequence, not just individual operations.
+**Subtype — OV (Order Violation):** Code assumes operation A always completes before operation B, but no explicit synchronization enforces that order (Detect step 4). Pattern: initialization flag set by goroutine A is read by goroutine B before A has run. Check: (a) for every "A must happen before B" assumption, name the concrete synchronization primitive (mutex, channel, WaitGroup, Promise chain); (b) if none exists, the ordering is accidental — classify as L7/OV.
+**Split-state flag race (L7/AV):** When one logical state is encoded as two independent non-atomic flags updated by different code paths (e.g., `mode_flag` set synchronously by one thread; `hardware_ready_flag` cleared asynchronously by a callback), reads of the pair in another thread are not atomic — any combination of values can be observed. The fix is always a single atomic state variable (e.g., an enum `ELECTRON | XRAY_RETRACTING | XRAY_READY`) so state transitions are indivisible. Recommend collapsing dual flags into one atomic state machine. **No-bug variant:** if both flags are updated atomically under the same lock (or a single atomic CAS) with no other code path mutating either flag outside that lock, the pair is effectively a single state variable — confirm by tracing all mutation sites before reporting.
+**Async interleaving is L7, not L4:** Even though Python asyncio runs on a single OS thread, coroutines interleave at `await` boundaries. A check-then-act pattern with an `await` between the check and the act is an L7 atomicity violation (the event loop can schedule other coroutines that mutate shared state between the check and the act). Do NOT classify this as L4 — L4 is for single-context mutation hazards (iteration aliasing, mutable defaults). Similarly, JavaScript Promise races and Go goroutine interleaving are L7.
+**Memory model hazards (Java/C++/Go):** For double-checked locking or publication patterns, always trace TWO aspects: (a) **visibility** — can another thread see a non-null reference before the object's fields are initialized? (missing `volatile`, missing `atomic`, no happens-before); (b) **initialization ordering** — is `loadFromDisk()` / constructor work guaranteed to complete before the reference is published? If `new Foo()` is followed by `this.data = loadFromDisk()` inside the constructor, the fields may be visible in an intermediate state. **Post-constructor initialization hazard (distinct pattern):** if initialization runs OUTSIDE the constructor — e.g., `instance = new ConfigCache(); instance.loadFromDisk();` — threads that read `instance` without holding the lock (e.g., the outer null-check in double-checked locking) can observe a non-null `instance` with `this.data == null`, because the write to `instance` can be visible to lock-free readers before `loadFromDisk()` completes. Report BOTH (a) the missing-`volatile` hazard AND (b) the publish-before-init-complete hazard; these are two faces of the same L7 finding. **Code-structure parsing rule:** When you see `instance = new ConfigCache(); instance.loadFromDisk();` as two separate statements, these are NOT atomic — the write to `instance` can be visible to lock-free readers (e.g., the outer null-check in DCL) after the first line, before `loadFromDisk()` runs on the second line. Report this as the publish-before-init-complete hazard in addition to the missing-`volatile` hazard.
+**Symptom:** Counter incremented as `x = x + 1` from multiple coroutines loses updates; value read before `await` used as if unchanged after; producer sends after consumer cancelled; init function assumed complete before first use without a barrier.
+**Common in:** JavaScript (Promise races, missing `await`), Python (asyncio task interleaving), Go (concurrent map access, goroutine leaks), Java (visibility without `volatile`/synchronized), Rust (`unsafe` blocks, `Mutex` poisoning).
+
+---
+
+## L8 — Resource Lifecycle Hazard
+A resource (file handle, DB connection, lock, transaction, subscription, buffer, process, listener) has a broken acquire/use/release lifecycle: missing release, double release, wrong-order release, or ownership transferred without updating the release plan. Distinct from L5 — L8 covers the full pairing discipline including double-release and ownership transfer.
+**Detect:** (1) List every resource the code acquires. (2) Identify the matching release and when it must run (always / on success only / exactly once). (3) Trace every exit path; verify release runs the correct number of times. (4) Check ownership transfer: if resource is returned/stored/passed elsewhere, verify the new owner releases it.
+**Symptom:** Connection released only on success path; transaction neither committed nor rolled back on exception; subscription registered in mount but unsubscribe references stale handle.
+**Exception-path disambiguation (L8 vs L6):** If a callee throws mid-processing and the exception bypasses resource cleanup (`fclose`, socket close, DB connection return), the primary finding is **L8** — the issue is the broken acquire/release pairing. Classify as **L6** only when the callee's exception behavior differs from what the caller assumed (the caller's contract assumption is wrong). Both can coexist; if so, lead with L8.
+**Go `defer` guarantee (no-bug pattern):** `defer mu.Unlock()` (or `defer f.Close()`) placed immediately after the acquire — not inside any conditional branch and not after any early return — guarantees release on ALL function exit paths. Do NOT flag this as L8. L8 applies only when the release is absent entirely, or `defer` is placed inside a conditional branch that may not execute.
+**Common in:** All languages. Python (`with` not used), JavaScript (listeners on long-lived DOM), Java (try-with-resources omitted in chain), Go (no `defer` for release, or `defer` placed inside a conditional branch that may not execute), C/C++ (`free`/`delete` across function boundaries).
+
+---
+
+## L9 — Time / Locale Hazard
+Code makes implicit assumptions about time zones, calendars, locale-dependent ordering, character encodings, or numeric locale conventions that hold on the developer's machine but break elsewhere.
+**Detect:** (1) Every datetime: trace naive vs timezone-aware at every hop — naive↔aware comparison/arithmetic is L9. (2) Datetime arithmetic: can a DST transition fall inside the interval? Wall vs monotonic clock? (3) String comparison/ordering: locale-dependent? (4) Encoding conversion: explicit or guessed? Round-trip preserving? (5) Numeric parse/format: `.` vs `,` decimal separator?
+**Symptom:** `new Date('2025-03-09T02:30:00')` in `America/Los_Angeles` lands in a non-existent hour; `datetime.now()` (naive) compared with timezone-aware DB value raises `TypeError`; `"i".upper() == "I"` fails in Turkish locale.
+**Common in:** Python (`datetime` naive vs aware), JavaScript (`Date` always wall-time), Java (`java.util.Date` vs `java.time`), Go (`time.Time` Location), SQL (`TIMESTAMP` vs `TIMESTAMP WITH TIME ZONE`).
+
+---
+
+## Custom Risk Codes (Cx)
+Projects define custom codes in `.logic-lens.yaml` using `C1`, `C2`, etc. Treat with the same Premises→Trace→Divergence→Trigger→Remedy discipline as built-ins. Appear in findings as `[C1]`, `[C2]`, etc.
+
+---
+
+## Quick Disambiguation Table
+
+| If the bug involves | Use | Common mistake to avoid |
+|---------------------|-----|------------------------|
+| more than one execution context to manifest | **L7** | ❌ L4 (L4 is single-context only) |
+| lock-acquisition order differs between two functions, deadlock requires concurrent goroutines/threads | **L7** | ❌ L4, ❌ L6 |
+| resource lifecycle imbalance (missing/double release, ownership transfer) | **L8** | ❌ L5, ❌ L6 |
+| control-flow exit skipping required non-lifecycle code in a single sequential path (audit log, metric, notification) | **L5** | ❌ L2 (skipping a side-effect is a control-flow escape, not a type issue) |
+| modifying a collection during `for`-loop iteration (elements skipped or crash) | **L4** | ❌ L3 (this is a mutation hazard, not a boundary blindspot) |
+| aliased references causing unexpected sharing in single-context code | **L4** | ❌ L7 (no concurrent context needed) |
+| function mutates its argument AND returns the same reference (dual-contract footgun) | **L4** | ❌ L3 |
+| TypeScript `as` / Java unchecked cast bypassing runtime type safety | **L2** | ❌ L4 (no mutation involved — the issue is a type-system gap) |
+| implicit type coercion at operator level (`+`/`-`/`*`/`==` string↔number) | **L2** | ❌ L6 (operators are not callees — the issue is a type contract gap at the language level) |
+| `.get()` / `.value()` on Optional/Maybe without presence check → throws | **L6** | ❌ L1 (no name shadowing — the issue is a callee-contract violation) |
+| timezone, DST, locale-dependent parsing/sorting, or encoding to trigger | **L9** | ❌ L6, ❌ L2, ❌ L3 |
+| data type lacking tz/locale metadata (`TIMESTAMP` vs `TIMESTAMPTZ`, naive datetime) | **L9** | ❌ L6 (the root cause is information lost at data-type choice, not callee behavior) |
+| name resolution to a different definition than expected (constant lookup, module shadowing, import aliasing) | **L1** | ❌ L3 (shadowing is about names, not boundaries) |
+| variable scoping: `const`/`let` in constructor not visible to methods, block-scoped variable hiding outer | **L1** | ❌ L4 (no mutable state mutation — the issue is name/scope resolution) |
+| callee behavior under specific inputs not matching caller's assumption | **L6** | |
+| file/connection/handle not released on exception path | **L8** | ❌ L6 (the issue is a broken acquire/release lifecycle) |
+| error code / exit status suppressed (shell or-true, empty `catch`, bare `except`, missing `set -e`) | **L5** | ❌ L7 (single-context error suppression is control flow escape, not concurrency) |
+| lock/mutex acquire-release imbalance under concurrency | **L7 + L8** jointly | |
+| Go `defer release` placed before any conditional — guarantees all paths covered | **no-bug** | |
+| two independent non-atomic flags jointly encoding one logical state, read across threads | **L7** (split-state flag race) | ❌ L3 |
+| post-constructor initialization called on published reference before completion | **L7** (publish-before-init) | |
