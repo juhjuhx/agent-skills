@@ -1,0 +1,280 @@
+{
+  "_version": "1.0",
+  "_description": "Skill categories for agent-skills. Use install.sh --category to select groups.",
+
+  "categories": [
+    {
+      "id": "essential",
+      "name": "Essential",
+      "icon": "🧰",
+      "description": "Foundational skills every agent should have: plugin dev, MCP, handoff, skill management",
+      "default": true,
+      "skills": [
+        "agent-development",
+        "command-development",
+        "find-skills",
+        "output-skill",
+        "handoff",
+        "hook-development",
+        "mcp-integration",
+        "plugin-settings",
+        "plugin-structure",
+        "skill-development",
+        "using-superpowers",
+        "write-a-skill",
+        "writing-rules",
+        "writing-skills"
+      ]
+    },
+    {
+      "id": "coding",
+      "name": "Coding",
+      "icon": "💻",
+      "description": "Code review, debugging, TDD, architecture, logic analysis, algorithms",
+      "default": true,
+      "skills": [
+        "brainstorming",
+        "brooks-brooks-audit",
+        "brooks-brooks-debt",
+        "brooks-brooks-harness",
+        "brooks-brooks-health",
+        "brooks-brooks-review",
+        "brooks-brooks-sweep",
+        "brooks-brooks-test",
+        "brooks-new-skill",
+        "brooks-release",
+        "claude-opus-4-5-migration",
+        "code-review-skill-main",
+        "complexity-cuts",
+        "debugging-code",
+        "diagnose",
+        "dispatching-parallel-agents",
+        "executing-plans",
+        "finishing-a-development-branch",
+        "improve-codebase-architecture",
+        "invariant-guard",
+        "lemmaly",
+        "logic-logic-diff",
+        "logic-logic-explain",
+        "logic-logic-fix-all",
+        "logic-logic-health",
+        "logic-logic-locate",
+        "logic-logic-review",
+        "mathguard",
+        "official-code-review",
+        "official-feature-dev",
+        "pr-review-toolkit",
+        "prototype",
+        "receiving-code-review",
+        "requesting-code-review",
+        "runaway-guard",
+        "setup-matt-pocock-skills",
+        "subagent-driven-development",
+        "systematic-debugging",
+        "tdd",
+        "test-driven-development",
+        "triage",
+        "using-git-worktrees",
+        "verification-before-completion",
+        "writing-plans",
+        "zoom-out"
+      ]
+    },
+    {
+      "id": "design",
+      "name": "Design",
+      "icon": "🎨",
+      "description": "UI/UX, brand, design systems, frontend aesthetics, accessibility",
+      "default": false,
+      "skills": [
+        "baseline-ui",
+        "brand-guidelines",
+        "brand",
+        "brandkit",
+        "brutalist-skill",
+        "design-system",
+        "design",
+        "fixing-accessibility",
+        "fixing-metadata",
+        "fixing-motion-performance",
+        "frontend-design",
+        "gpt-tasteskill",
+        "image-to-code-skill",
+        "imagegen-frontend-mobile",
+        "imagegen-frontend-web",
+        "minimalist-skill",
+        "redesign-skill",
+        "slides",
+        "soft-skill",
+        "stitch-skill",
+        "styleseed",
+        "taste-skill",
+        "taste-skill-v1",
+        "ui-styling",
+        "ui-ux-pro-max"
+      ]
+    },
+    {
+      "id": "visual",
+      "name": "Visual Media",
+      "icon": "🖼️",
+      "description": "Image generation, diagrams, infographics, banners, slide decks, comics",
+      "default": false,
+      "skills": [
+        "agnes-vision",
+        "algorithmic-art",
+        "banner-design",
+        "baoyu-article-illustrator",
+        "baoyu-comic",
+        "baoyu-compress-image",
+        "baoyu-cover-image",
+        "baoyu-danger-gemini-web",
+        "baoyu-diagram",
+        "baoyu-image-cards",
+        "baoyu-image-gen",
+        "baoyu-imagine",
+        "baoyu-infographic",
+        "baoyu-slide-deck",
+        "baoyu-xhs-images",
+        "slides",
+        "visual-atelier"
+      ]
+    },
+    {
+      "id": "content",
+      "name": "Content",
+      "icon": "📝",
+      "description": "Translation, markdown processing, URL fetching, YouTube transcripts",
+      "default": false,
+      "skills": [
+        "baoyu-danger-x-to-markdown",
+        "baoyu-format-markdown",
+        "baoyu-markdown-to-html",
+        "baoyu-translate",
+        "baoyu-url-to-markdown",
+        "baoyu-youtube-transcript"
+      ]
+    },
+    {
+      "id": "social-media",
+      "name": "Social Media",
+      "icon": "📱",
+      "description": "Posting to WeChat, Weibo, X/Twitter",
+      "default": false,
+      "skills": [
+        "baoyu-post-to-wechat",
+        "baoyu-post-to-weibo",
+        "baoyu-post-to-x",
+        "baoyu-wechat-summary"
+      ]
+    },
+    {
+      "id": "video",
+      "name": "Video & Cinema",
+      "icon": "🎬",
+      "description": "Cinematic prompts, video presentations, Seedance direction",
+      "default": false,
+      "skills": [
+        "banana-pro-director",
+        "cinema-worldbuilder",
+        "web-video-presentation"
+      ]
+    },
+    {
+      "id": "threejs",
+      "name": "Three.js 3D",
+      "icon": "🧊",
+      "description": "Complete Three.js 3D graphics pipeline",
+      "default": false,
+      "skills": [
+        "threejs-animation",
+        "threejs-fundamentals",
+        "threejs-geometry",
+        "threejs-interaction",
+        "threejs-lighting",
+        "threejs-loaders",
+        "threejs-materials",
+        "threejs-postprocessing",
+        "threejs-shaders",
+        "threejs-textures"
+      ]
+    },
+    {
+      "id": "pro-workflow",
+      "name": "Pro Workflow",
+      "icon": "⚡",
+      "description": "Advanced productivity: context management, wiki, commits, session, LLM council",
+      "default": false,
+      "skills": [
+        "pro-agent-teams",
+        "pro-auto-setup",
+        "pro-batch-orchestration",
+        "pro-bug-capture",
+        "pro-compact-guard",
+        "pro-context-engineering",
+        "pro-context-optimizer",
+        "pro-cost-tracker",
+        "pro-deslop",
+        "pro-file-watcher",
+        "pro-insights",
+        "pro-learn-rule",
+        "pro-llm-council",
+        "pro-llm-gate",
+        "pro-mcp-audit",
+        "pro-module-map",
+        "pro-orchestrate",
+        "pro-parallel-worktrees",
+        "pro-permission-tuner",
+        "pro-plan-interrogate",
+        "pro-pro-workflow",
+        "pro-replay-learnings",
+        "pro-safe-mode",
+        "pro-session-handoff",
+        "pro-skill-optimizer",
+        "pro-smart-commit",
+        "pro-sprint-status",
+        "pro-survey-generator",
+        "pro-thoroughness-scoring",
+        "pro-token-efficiency",
+        "pro-wiki-builder",
+        "pro-wiki-query",
+        "pro-wiki-research-loop",
+        "pro-wiki-viewer",
+        "pro-wrap-up"
+      ]
+    },
+    {
+      "id": "misc",
+      "name": "Other Tools",
+      "icon": "🔧",
+      "description": "Miscellaneous: caveman mode, grilling, releases, issue tracking",
+      "default": false,
+      "skills": [
+        "caveman",
+        "grill-me",
+        "grill-with-docs",
+        "html-ppt",
+        "release-skills",
+        "to-issues",
+        "to-prd"
+      ]
+    }
+  ],
+
+  "_shared_dirs": ["brooks-_shared", "logic-_shared"],
+
+  "profiles": {
+    "minimal": {
+      "description": "Minimum viable agent: essential + coding only",
+      "categories": ["essential", "coding"]
+    },
+    "default": {
+      "description": "Recommended for most developers",
+      "categories": ["essential", "coding", "design"]
+    },
+    "full": {
+      "description": "Install everything (170+ skills)",
+      "categories": ["essential", "coding", "design", "visual", "content", "social-media", "video", "threejs", "pro-workflow", "misc"]
+    }
+  }
+}
