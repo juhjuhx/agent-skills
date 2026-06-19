@@ -27,6 +27,12 @@ If CLAUDE.md, GEMINI.md, or AGENTS.md says "don't use TDD" and a skill says "alw
 
 ## How to Access Skills
 
+**In Hermes Agent:** Use `skill_view(name)` to load any skill. The system prompt lists a subset of skills in `available_skills`, but you MUST also scan the full catalog when those don't match. Use `skills_list()` to get all available skills (236+), then `skill_view(name)` to load the matching one. A skill catalog file exists at `~/.hermes/hermes-skills-catalog.md` with natural-language→skill mappings for quick lookup.
+
+**CRITICAL — Scan ALL skills, not just listed ones:** The `available_skills` in the system prompt only shows builtin skills. OpenCode-synced skills (opencode-oc category, 161+ skills) are NOT listed there but ARE available via `skill_view`. When the user describes a task in natural language, check the full catalog first. Examples: "做小紅書圖卡" → `baoyu-image-cards` (not in system prompt list); "做邏輯審查" → `logic-review` (not in system prompt list).
+
+**Hermes auto-matching (user preference — HARD RULE):** When the user describes a need in natural language, proactively scan the full skill catalog (236+ skills) and invoke matching skills WITHOUT requiring them to name the skill or use `/` commands. SPECIFIC TRIGGER: when user message exceeds 30 characters, automatically invoke this skill to scan for matching skills. Do not wait for explicit requests. The catalog file at `~/.hermes/hermes-skills-catalog.md` has natural-language→skill mappings. Load via `skill_view(name)` immediately — don't ask the user which skill to use.
+
 **In Claude Code:** Use the `Skill` tool. When you invoke a skill, its content is loaded and presented to you—follow it directly. Never use the Read tool on skill files.
 
 **In Copilot CLI:** Use the `skill` tool. Skills are auto-discovered from installed plugins. The `skill` tool works the same as Claude Code's `Skill` tool.
@@ -115,3 +121,8 @@ The skill itself tells you which.
 ## User Instructions
 
 Instructions say WHAT, not HOW. "Add X" or "Fix Y" doesn't mean skip workflows.
+
+## Pitfalls
+
+- **CI lint version mismatch**: When fixing lint/format issues, check `tests/requirements.txt` or CI workflow for pinned tool versions BEFORE running locally. See `references/ci-lint-version-pitfall.md`.
+- **Gateway vs chatbot framework**: When the user wants a chatbot on a messaging platform (LINE, Telegram, etc.), consider existing chatbot frameworks (AstrBot, etc.) BEFORE suggesting Hermes Gateway setup. The user may prefer a simpler, purpose-built solution over general-purpose infrastructure.

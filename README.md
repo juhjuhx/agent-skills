@@ -1,6 +1,6 @@
 # Agent Skills
 
-170+ AI agent skills, organized into categories. Works with **OpenCode / Claude Code / Gemini CLI / Cursor / Codex / Windsurf / Continue / Aider** and more.
+216+ AI agent skills, organized into categories. Works with **OpenCode / Claude Code / Gemini CLI / Cursor / Codex / Windsurf / Continue / Aider** and more.
 
 ## Quick Install
 
@@ -17,7 +17,7 @@ Without flags → **interactive mode**: pick which categories to install.
 | `bash install.sh` | Interactive — pick your categories |
 | `bash install.sh --minimal` | Essential + Coding only (~60 skills) |
 | `bash install.sh --default` | Essential + Coding + Design (~85 skills) |
-| `bash install.sh --all` | Everything (170+ skills) |
+| `bash install.sh --all` | Everything (216+ skills) |
 | `bash install.sh --category essential,coding,design` | Specific categories only |
 
 ## Categories

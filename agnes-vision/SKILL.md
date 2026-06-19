@@ -8,6 +8,17 @@ version: 1.0.0
 
 Use this skill ONLY when the currently active model cannot process images directly. The current model is text-only.
 
+## Preferred Alternative: MiMo Vision (mimo-v2.5-pro)
+
+On this Mac, `vision_analyze` works with mimo-v2.5-pro (Xiaomi provider) for multimodal image analysis.
+**Prefer MiMo over Agnes** because:
+- No SSL certificate issues on macOS
+- No API key management needed (uses existing Hermes provider)
+- Works with local file paths directly
+- Confirmed working: detailed scene analysis, color detection, style identification
+
+Use Agnes only when MiMo is unavailable or the user explicitly requests it.
+
 ## API Configuration
 
 ```
