@@ -1,0 +1,2664 @@
+{
+  "schema_version": "1.0",
+  "source": "https://github.com/juhjuhx/agent-skills.git",
+  "source_ref": "main",
+  "source_commit": "db3b67d5b051c4223da9146b2b836a9ed45e9bac",
+  "skill_count": 214,
+  "skills": [
+    {
+      "id": "Agent Development",
+      "name": "Agent Development",
+      "description": "This skill should be used when the user asks to \"create an agent\", \"add an agent\", \"write a subagent\", \"agent frontmatter\", \"when to use description\", \"agent examples\", \"agent tools\", \"agent colors\", \"autonomous agent\", or needs guidance on agent structure, system prompts, triggering conditions, or agent development best practices for Claude Code plugins.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "software-engineering",
+        "design-and-frontend"
+      ],
+      "relative_path": "agent-development/SKILL.md",
+      "sha256": "ff3324078bbeef3e214157391795360e148892e9c6735f1fc049f397aa939c80"
+    },
+    {
+      "id": "agnes-vision",
+      "name": "agnes-vision",
+      "description": "Agnes AI vision models for image analysis when the main model lacks image support. Use when: 看圖片、分析圖片、describe image、analyze screenshot、read text from image、image recognition、圖像分析、視覺分析。",
+      "triggers": [
+        "看圖片、分析圖片、describe image、analyze screenshot、read text from image、image recognition、圖像分析、視覺分析。"
+      ],
+      "categories": [
+        "media-and-images"
+      ],
+      "relative_path": "agnes-vision/SKILL.md",
+      "sha256": "99e8564ae4fbdd821fc105d2c7b04889136d59f077fa20298acb0a28bb5f8842"
+    },
+    {
+      "id": "airtable",
+      "name": "airtable",
+      "description": "Airtable REST API via curl. Records CRUD, filters, upserts.",
+      "triggers": [],
+      "categories": [
+        "integrations-and-data"
+      ],
+      "relative_path": "airtable/SKILL.md",
+      "sha256": "537d440df7f23c58a7c4721dadd29636bab368cddb1e322863b611288835295a"
+    },
+    {
+      "id": "algorithmic-art",
+      "name": "algorithmic-art",
+      "description": "Create generative algorithmic art with p5.js using seeded randomness and interactive parameters. Use when: 生成藝術、generative art、algorithmic art、p5.js、flow field、particle system、互動藝術、code art。",
+      "triggers": [
+        "生成藝術、generative art、algorithmic art、p5.js、flow field、particle system、互動藝術、code art。"
+      ],
+      "categories": [
+        "software-engineering",
+        "documents-and-publishing"
+      ],
+      "relative_path": "algorithmic-art/SKILL.md",
+      "sha256": "ae33152e8850a9bb5442dcef96d05225864b3658021fb5ba43d7b48302c22fb0"
+    },
+    {
+      "id": "banana-pro-director",
+      "name": "banana-pro-director",
+      "description": "Higgsfield image prompt director covering Banana Pro, Soul Cinema, and GPT-2. Three asset types in strict order: (1) single-image character outfit on white seamless studio — the locked base reference, via Banana Pro (custom styling from prompt) or Soul Cinema (face/body from character ref + outfit from wardrobe ref), (2) 6-panel multi-angle character sheet off that base, (3) scene plates with or without characters in cinematic environments. Also GPT-2 for detail face/chest-up portraits. Reads reference images for hair, makeup, wardrobe, jewelry, identity markers. Outputs photorealistic prompts with locked hyperreal stack — skin pores, subsurface scattering, strand-by-strand hair, fabric weave, Kodak Vision3 film. Use for any character outfit reference, character sheet, model sheet, ref sheet, multi-angle sheet, scene plate, environment plate, face detail shot, or photorealistic still — even without saying 'Banana Pro,' 'Nano Banana,' or 'Soul Cinema.'",
+      "triggers": [],
+      "categories": [
+        "media-and-images"
+      ],
+      "relative_path": "banana-pro-director/SKILL.md",
+      "sha256": "0c10aa598b1c7a697fc9cc96304cfa11b1a284dd8964d55d321b86b5669be365"
+    },
+    {
+      "id": "ckm:banner-design",
+      "name": "ckm:banner-design",
+      "description": "Design banners for social media, ads, website heroes, and print with multiple style options. Use when: banner設計、橫幅設計、社群封面、social media banner、ad banner、hero image、YouTube thumbnail、Facebook cover。",
+      "triggers": [
+        "banner設計、橫幅設計、社群封面、social media banner、ad banner、hero image、YouTube thumbnail、Facebook cover。"
+      ],
+      "categories": [
+        "design-and-frontend",
+        "media-and-images"
+      ],
+      "relative_path": "banner-design/SKILL.md",
+      "sha256": "f97f65dd71ef446dfa276cafbd6799820d0da9b6f8393199daa5767417d27c9e"
+    },
+    {
+      "id": "baoyu-article-illustrator",
+      "name": "baoyu-article-illustrator",
+      "description": "Analyze articles and generate matching illustrations with Type/Style/Palette consistency. Use when: 文章插圖、配圖、illustrate article、add images to article、為文章配圖、generate article images。",
+      "triggers": [
+        "文章插圖、配圖、illustrate article、add images to article、為文章配圖、generate article images。"
+      ],
+      "categories": [
+        "documents-and-publishing",
+        "media-and-images"
+      ],
+      "relative_path": "baoyu-article-illustrator/SKILL.md",
+      "sha256": "80a3ab06d099bf836146d10665a780be50a7ffd1e85e7bd7b0f58c8616a22d73"
+    },
+    {
+      "id": "baoyu-comic",
+      "name": "baoyu-comic",
+      "description": "Create educational and knowledge comics with multiple art styles. Use when: 漫畫、連環畫、comic strip、知識漫畫、biography comic、tutorial comic、做漫畫、educational comic、Logicomix。",
+      "triggers": [
+        "漫畫、連環畫、comic strip、知識漫畫、biography comic、tutorial comic、做漫畫、educational comic、Logicomix。"
+      ],
+      "categories": [
+        "context-and-cost",
+        "media-and-images"
+      ],
+      "relative_path": "baoyu-comic/SKILL.md",
+      "sha256": "728c83d1a1681f2e064c2d020baf0c7eb8fac4728d80ded6b05748713d489064"
+    },
+    {
+      "id": "baoyu-compress-image",
+      "name": "baoyu-compress-image",
+      "description": "Compresses images to WebP (default) or PNG with automatic tool selection. Use when user asks to \"compress image\", \"optimize image\", \"convert to webp\", or reduce image file size.",
+      "triggers": [],
+      "categories": [
+        "media-and-images"
+      ],
+      "relative_path": "baoyu-compress-image/SKILL.md",
+      "sha256": "b14b2ac50b798aa7cdac1ba489a5963312b0faf538fdb3f88e69733045c3f9dc"
+    },
+    {
+      "id": "baoyu-cover-image",
+      "name": "baoyu-cover-image",
+      "description": "Generates article cover images with 5 dimensions (type, palette, rendering, text, mood) combining 11 color palettes and 7 rendering styles. Supports cinematic (2.35:1), widescreen (16:9), and square (1:1) aspects. Use when user asks to \"generate cover image\", \"create article cover\", or \"make cover\".",
+      "triggers": [],
+      "categories": [
+        "documents-and-publishing",
+        "media-and-images"
+      ],
+      "relative_path": "baoyu-cover-image/SKILL.md",
+      "sha256": "5695d051887524b1a4b3c9dd486a4aeb70a8c662e56893ca909a597cafe702c5"
+    },
+    {
+      "id": "baoyu-danger-gemini-web",
+      "name": "baoyu-danger-gemini-web",
+      "description": "Generates images and text via reverse-engineered Gemini Web API. Supports text generation, image generation from prompts, reference images for vision input, and multi-turn conversations. Use when other skills need image generation backend, or when user requests \"generate image with Gemini\", \"Gemini text generation\", or needs vision-capable AI generation.",
+      "triggers": [],
+      "categories": [
+        "media-and-images"
+      ],
+      "relative_path": "baoyu-danger-gemini-web/SKILL.md",
+      "sha256": "151cc71fb8bde0f46274f82888bd746a9e1151369a0a384bfe86c3c5557b9bec"
+    },
+    {
+      "id": "baoyu-danger-x-to-markdown",
+      "name": "baoyu-danger-x-to-markdown",
+      "description": "Converts X (Twitter) tweets and articles to markdown with YAML front matter. Uses reverse-engineered API requiring user consent. Use when user mentions \"X to markdown\", \"tweet to markdown\", \"save tweet\", or provides x.com/twitter.com URLs for conversion.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend",
+        "documents-and-publishing"
+      ],
+      "relative_path": "baoyu-danger-x-to-markdown/SKILL.md",
+      "sha256": "a0e04ce170ec6ea9f57d9c4b5644b802fbe71d933fa5af87c75f751bda617dc6"
+    },
+    {
+      "id": "baoyu-diagram",
+      "name": "baoyu-diagram",
+      "description": "Generate professional dark-themed SVG diagrams — architecture, flowchart, sequence, mind map, timeline. Use when: 畫圖、架構圖、流程圖、SVG diagram、flowchart、sequence diagram、mind map、visualize、畫個圖、network topology、state machine。",
+      "triggers": [
+        "畫圖、架構圖、流程圖、SVG diagram、flowchart、sequence diagram、mind map、visualize、畫個圖、network topology、state machine。"
+      ],
+      "categories": [
+        "software-engineering",
+        "design-and-frontend",
+        "media-and-images"
+      ],
+      "relative_path": "baoyu-diagram/SKILL.md",
+      "sha256": "8d5478a20fc5f5cd9117016a74fe92c2686dd397b26f0491f8aa08ce6973fdb5"
+    },
+    {
+      "id": "baoyu-format-markdown",
+      "name": "baoyu-format-markdown",
+      "description": "Formats plain text or markdown files with frontmatter, titles, summaries, headings, bold, lists, and code blocks. Use when user asks to \"format markdown\", \"beautify article\", \"add formatting\", or improve article layout. Outputs to {filename}-formatted.md.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "documents-and-publishing"
+      ],
+      "relative_path": "baoyu-format-markdown/SKILL.md",
+      "sha256": "39bd9eeb5373365c84ac139b85a11311eab57710707e54b101e41085636b56bb"
+    },
+    {
+      "id": "baoyu-image-cards",
+      "name": "baoyu-image-cards",
+      "description": "Generates infographic image card series with 12 visual styles, 8 layouts, and 3 color palettes. Breaks content into 1-10 cartoon-style image cards optimized for social media engagement. Use when user mentions \"小红书图片\", \"小红书种草\", \"小绿书\", \"微信图文\", \"微信贴图\", \"image cards\", \"图片卡片\", or wants social media infographic series.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend",
+        "media-and-images"
+      ],
+      "relative_path": "baoyu-image-cards/SKILL.md",
+      "sha256": "cabb051e98752203f75fef9663bc6eda13b0141014ca3d2522a52ca56a80e3f5"
+    },
+    {
+      "id": "baoyu-image-gen",
+      "name": "baoyu-image-gen",
+      "description": "[Deprecated: use baoyu-imagine] AI image generation. Use baoyu-imagine instead.",
+      "triggers": [],
+      "categories": [
+        "media-and-images"
+      ],
+      "relative_path": "baoyu-image-gen/SKILL.md",
+      "sha256": "4daf1bffabfc2a33ea8f17c056ae0f80dacbe706e307b8a2615012d30a50cdfa"
+    },
+    {
+      "id": "baoyu-imagine",
+      "name": "baoyu-imagine",
+      "description": "AI image generation via OpenAI, Google, DashScope, MiniMax, Replicate APIs. Use when: 圖像生成、AI圖片、generate image、text-to-image、draw image、做圖、生成圖片、create picture、image generation。",
+      "triggers": [
+        "圖像生成、AI圖片、generate image、text-to-image、draw image、做圖、生成圖片、create picture、image generation。"
+      ],
+      "categories": [
+        "media-and-images",
+        "integrations-and-data"
+      ],
+      "relative_path": "baoyu-imagine/SKILL.md",
+      "sha256": "b526a7b4d89fd9d9a2f5dafd52dbcdeb654ea305b11043ab03c74001a8e97da7"
+    },
+    {
+      "id": "baoyu-infographic",
+      "name": "baoyu-infographic",
+      "description": "Infographics: 21 layouts x 21 styles (信息图, 可视化).",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "baoyu-infographic/SKILL.md",
+      "sha256": "89e25da6d8ea1cac79b18d9e6c4c3b8d7a522df2eef559f151f19c6ce5b2a002"
+    },
+    {
+      "id": "baoyu-markdown-to-html",
+      "name": "baoyu-markdown-to-html",
+      "description": "Converts Markdown to styled HTML with WeChat-compatible themes. Supports code highlighting, math, PlantUML, footnotes, alerts, infographics, and optional bottom citations for external links. Use when user asks for \"markdown to html\", \"convert md to html\", \"md 转 html\", \"微信外链转底部引用\", or needs styled HTML output from markdown.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "documents-and-publishing"
+      ],
+      "relative_path": "baoyu-markdown-to-html/SKILL.md",
+      "sha256": "8e02791aefd98839be706f0beb69f8c27cdd0a4e101a342077eb2e8b9c5d9574"
+    },
+    {
+      "id": "baoyu-post-to-wechat",
+      "name": "baoyu-post-to-wechat",
+      "description": "Posts content to WeChat Official Account (微信公众号) via API or Chrome CDP. Supports article posting (文章) with HTML, markdown, or plain text input, and image-text posting (贴图, formerly 图文) with multiple images. Markdown article workflows default to converting ordinary external links into bottom citations for WeChat-friendly output. Use when user mentions \"发布公众号\", \"post to wechat\", \"微信公众号\", or \"贴图/图文/文章\".",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "documents-and-publishing",
+        "media-and-images"
+      ],
+      "relative_path": "baoyu-post-to-wechat/SKILL.md",
+      "sha256": "d3045d553bfc52d4fa03e59881faa3588ac4d86983ae0006d5e97abd6ccc5327"
+    },
+    {
+      "id": "baoyu-post-to-weibo",
+      "name": "baoyu-post-to-weibo",
+      "description": "Posts content to Weibo (微博). Supports regular posts with text, images, and videos, and headline articles (头条文章) with Markdown input via Chrome CDP. Use when user asks to \"post to Weibo\", \"发微博\", \"发布微博\", \"publish to Weibo\", \"share on Weibo\", \"写微博\", or \"微博头条文章\".",
+      "triggers": [],
+      "categories": [
+        "documents-and-publishing",
+        "media-and-images"
+      ],
+      "relative_path": "baoyu-post-to-weibo/SKILL.md",
+      "sha256": "32cbbb4753849d6c95a179c3462af8c32215e3eeccb60483a150d28281cdf5df"
+    },
+    {
+      "id": "baoyu-post-to-x",
+      "name": "baoyu-post-to-x",
+      "description": "Posts content and articles to X (Twitter). Supports regular posts with images/videos and X Articles (long-form Markdown). In Codex, honor explicit requests for the Codex Chrome plugin/@chrome by using the Chrome Extension workflow; otherwise use Chrome Computer Use when available and fall back to real Chrome CDP scripts only when allowed. Use when user asks to \"post to X\", \"tweet\", \"publish to Twitter\", or \"share on X\".",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "software-engineering",
+        "documents-and-publishing",
+        "media-and-images"
+      ],
+      "relative_path": "baoyu-post-to-x/SKILL.md",
+      "sha256": "f2fe70bfc3be6eae27a4a83c1548d349de6625789ff3142df982acc5050652c3"
+    },
+    {
+      "id": "baoyu-slide-deck",
+      "name": "baoyu-slide-deck",
+      "description": "Generate professional slide deck images from content. Use when: 幻燈片、slide deck、做投影片、create slides、generate deck、PPT圖片、make a presentation、slide images、投影片圖像。",
+      "triggers": [
+        "幻燈片、slide deck、做投影片、create slides、generate deck、PPT圖片、make a presentation、slide images、投影片圖像。"
+      ],
+      "categories": [
+        "design-and-frontend",
+        "media-and-images"
+      ],
+      "relative_path": "baoyu-slide-deck/SKILL.md",
+      "sha256": "36aef4e30a46878f4274654dbd19885163c0ca9c0fd512180c029b1612292b40"
+    },
+    {
+      "id": "baoyu-translate",
+      "name": "baoyu-translate",
+      "description": "Translate articles/documents with three modes (quick/normal/refined) and custom glossaries. Use when: 翻譯、translate、中英翻譯、精翻、快速翻譯、改成中文、改成英文、localize、本地化、proofread translation。",
+      "triggers": [
+        "翻譯、translate、中英翻譯、精翻、快速翻譯、改成中文、改成英文、localize、本地化、proofread translation。"
+      ],
+      "categories": [
+        "design-and-frontend",
+        "documents-and-publishing"
+      ],
+      "relative_path": "baoyu-translate/SKILL.md",
+      "sha256": "87eb71700e3a3291b1d78daf8135f799871da3d1348fbc60cddc5a684bfecaa1"
+    },
+    {
+      "id": "baoyu-url-to-markdown",
+      "name": "baoyu-url-to-markdown",
+      "description": "Fetch any URL and convert to markdown using baoyu-fetch CLI (Chrome CDP with site-specific adapters). Built-in adapters for X/Twitter, YouTube transcripts, Hacker News threads, and generic pages via Defuddle. Handles login/CAPTCHA via interaction wait modes. Use when user wants to save a webpage as markdown.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend",
+        "documents-and-publishing"
+      ],
+      "relative_path": "baoyu-url-to-markdown/SKILL.md",
+      "sha256": "40913749b0e95165b02771bdf17bb8ed9fa0a72787d3e09571341ab7148359d0"
+    },
+    {
+      "id": "baoyu-wechat-summary",
+      "name": "baoyu-wechat-summary",
+      "description": "Summarizes WeChat group chat highlights into a structured digest using the local wx-cli binary (https://github.com/jackwener/wx-cli). Generates a normal digest by default; a roast (毒舌) version is opt-in. Maintains per-group history (history.json + history-digests.jsonl) and per-user profiles across runs, with privacy guardrails baked in. Use when the user asks to \"总结群聊\", \"群聊精华\", \"群聊摘要\", \"summarize group chat\", \"group chat digest\", mentions a WeChat group name with a time range, says \"帮我看看 XX 群最近聊了什么\", \"XX 群有什么值得看的\", or asks to \"回溯画像\" / \"初始化画像\" / \"backfill profiles\". Adds the roast version when the user says \"毒舌版\", \"roast 版\", \"再来个毒舌的\", or similar.",
+      "triggers": [],
+      "categories": [
+        "quality-and-safety",
+        "integrations-and-data"
+      ],
+      "relative_path": "baoyu-wechat-summary/SKILL.md",
+      "sha256": "d3c0325f34695ccbb6102f365bdc22ac71fb0a14262a730d9a34f8fd3fd6ebc2"
+    },
+    {
+      "id": "baoyu-xhs-images",
+      "name": "baoyu-xhs-images",
+      "description": "[Deprecated: use baoyu-image-cards] Generates Xiaohongshu (Little Red Book) image card series with 12 visual styles, 8 layouts, and 3 color palettes. Breaks content into 1-10 cartoon-style image cards optimized for XHS engagement. Use when user mentions \"小红书图片\", \"XHS images\", \"RedNote infographics\", \"小红书种草\", \"小绿书\", \"微信图文\", \"微信贴图\", or wants social media infographic series for Chinese platforms.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend",
+        "media-and-images"
+      ],
+      "relative_path": "baoyu-xhs-images/SKILL.md",
+      "sha256": "7d8508d51a2beac135f2ba978f9040c5060e173bb3ba1e772ca442bfbf78cfd7"
+    },
+    {
+      "id": "baoyu-youtube-transcript",
+      "name": "baoyu-youtube-transcript",
+      "description": "Downloads YouTube video transcripts/subtitles and cover images by URL or video ID. Supports multiple languages, translation, chapters, and speaker identification. Caches raw data for fast re-formatting. Use when user asks to \"get YouTube transcript\", \"download subtitles\", \"get captions\", \"YouTube字幕\", \"YouTube封面\", \"视频封面\", \"video thumbnail\", \"video cover image\", or provides a YouTube URL and wants the transcript/subtitle text or cover image extracted.",
+      "triggers": [],
+      "categories": [
+        "media-and-images"
+      ],
+      "relative_path": "baoyu-youtube-transcript/SKILL.md",
+      "sha256": "b7085574c6bf72e07c578db14316682b9ebf1e841d9db62916d284efd84c96cc"
+    },
+    {
+      "id": "baseline-ui",
+      "name": "baseline-ui",
+      "description": "Validate animation durations, typography scale, component accessibility, and layout anti-patterns. Use when: UI基線檢查、animation duration、typography scale、layout anti-pattern、design consistency、Tailwind CSS review。",
+      "triggers": [
+        "UI基線檢查、animation duration、typography scale、layout anti-pattern、design consistency、Tailwind CSS review。"
+      ],
+      "categories": [
+        "quality-and-safety",
+        "design-and-frontend"
+      ],
+      "relative_path": "baseline-ui/SKILL.md",
+      "sha256": "397142af2c39036ca4ca060abaec65c061a3f0cd619180f2dc4ba1ea4c4bfa0b"
+    },
+    {
+      "id": "blogwatcher",
+      "name": "blogwatcher",
+      "description": "Monitor blogs and RSS/Atom feeds via blogwatcher-cli tool.",
+      "triggers": [],
+      "categories": [
+        "documents-and-publishing"
+      ],
+      "relative_path": "blogwatcher/SKILL.md",
+      "sha256": "b85be5a9b86b90287266dd142a0ae9740be926298fbcb772f56b8a4d6451bb12"
+    },
+    {
+      "id": "brainstorming",
+      "name": "brainstorming",
+      "description": "Explore intent, requirements, and design before implementation. Use when: 腦力激盪、brainstorm、創意發想、explore ideas、design before code、discuss approach、think through design、explore options。",
+      "triggers": [
+        "腦力激盪、brainstorm、創意發想、explore ideas、design before code、discuss approach、think through design、explore options。"
+      ],
+      "categories": [
+        "software-engineering",
+        "design-and-frontend"
+      ],
+      "relative_path": "brainstorming/SKILL.md",
+      "sha256": "a5f0aabeb53dcf8b0845c16f255b9cd72e75ed2ce7c176b0a03bbbd23808a18f"
+    },
+    {
+      "id": "ckm:brand",
+      "name": "ckm:brand",
+      "description": "Brand identity, voice, messaging, asset management, and consistency. Use when: 品牌設計、brand identity、brand voice、tone of voice、logo、品牌規範、marketing assets、brand compliance、品牌一致性。",
+      "triggers": [
+        "品牌設計、brand identity、brand voice、tone of voice、logo、品牌規範、marketing assets、brand compliance、品牌一致性。"
+      ],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "brand/SKILL.md",
+      "sha256": "d982326bb179294166f2d73cf614569a69e5f4f2b5b64ea1db810beaca894abb"
+    },
+    {
+      "id": "brand-guidelines",
+      "name": "brand-guidelines",
+      "description": "Apply Anthropic's official brand colors and typography to any artifact. Use when: Anthropic brand、brand colors、style guide、品牌規範、visual identity、corporate identity、brand styling。",
+      "triggers": [
+        "Anthropic brand、brand colors、style guide、品牌規範、visual identity、corporate identity、brand styling。"
+      ],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "brand-guidelines/SKILL.md",
+      "sha256": "dc1a0f0c3174341716809dbf111b07b4e486c7d3403411baa1863489dc502617"
+    },
+    {
+      "id": "brandkit",
+      "name": "brandkit",
+      "description": "Premium brand-kit image generation skill for creating high-end brand-guidelines boards, logo systems, identity decks, and visual-world presentations. Trained for minimalist, cinematic, editorial, dark-tech, luxury, cultural, security, gaming, developer-tool, and consumer-app brand systems. Optimized for intentional logo concepting, refined composition, sparse typography, strong symbolic meaning, premium mockups, art-directed imagery, and flexible grid layouts.",
+      "triggers": [],
+      "categories": [
+        "quality-and-safety",
+        "design-and-frontend",
+        "media-and-images"
+      ],
+      "relative_path": "brandkit/SKILL.md",
+      "sha256": "b0c4837e1bd140ca816ae54948754ddd2ac1e2a4d3619363777a80caf00b2ede"
+    },
+    {
+      "id": "brooks-audit",
+      "name": "brooks-audit",
+      "description": "Architecture audit that maps module dependencies, checks layering integrity, and flags structural decay across a codebase, drawing on twelve classic engineering books. Triggers when: user asks to audit architecture, review folder/module structure, check for circular imports, understand how the codebase is organized, or asks \"does this follow clean architecture?\", \"why does everything depend on everything?\", \"are our layers correct?\", \"where should this code live?\". Also triggers for onboarding requests: \"explain this codebase to a new developer\" or \"give me a codebase tour\" (use onboarding mode). Do NOT trigger for: PR-level code review (use brooks-review) or line-level refactoring questions — this skill analyzes structural/module-level concerns, not individual functions.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "quality-and-safety",
+        "integrations-and-data"
+      ],
+      "relative_path": "brooks-brooks-audit/SKILL.md",
+      "sha256": "f85ab0f60c0f8537f03d737adf5cb4d60c7353a04dbb370a6f99eb1315171e1b"
+    },
+    {
+      "id": "brooks-debt",
+      "name": "brooks-debt",
+      "description": "Tech debt assessment that identifies, classifies, and prioritizes maintainability problems — helping teams build a refactoring roadmap — drawing on twelve classic engineering books. Triggers when: user asks about tech debt, refactoring priorities, what to clean up first, or asks \"why is this so hard to change?\", \"where's the most painful part?\", \"what should we fix first?\", \"how do I justify refactoring to management?\", \"why is our velocity dropping?\". Do NOT trigger for: server health checks, HTTP /health endpoints, Kubernetes probes, database health, or application uptime — \"health\" in those contexts is infrastructure, not code quality. Also not for single-function refactoring questions.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "context-and-cost",
+        "software-engineering",
+        "quality-and-safety",
+        "design-and-frontend",
+        "integrations-and-data"
+      ],
+      "relative_path": "brooks-brooks-debt/SKILL.md",
+      "sha256": "869845b9615edda600f42431b83af45a49188d70aeed527c7909f7472b857ace"
+    },
+    {
+      "id": "brooks-harness",
+      "name": "brooks-harness",
+      "description": "Maintenance orchestrator for the brooks-lint plugin itself. Runs a sequential subagent pipeline — author → eval → QA → trigger-audit → release — to add or edit a skill, refresh the eval suite, keep the four manifests + README + CHANGELOG + AGENTS/GEMINI in sync, audit trigger boundaries, and cut releases. Drives the five agents in .claude/agents/ (skill-author, eval-curator, consistency-qa, trigger-boundary-auditor, release-manager). Triggers when the maintainer asks to work ON brooks-lint itself: \"add a new skill\", \"edit the brooks-debt guide\", \"update the eval suite\", \"fix the trigger descriptions\", \"make this change and validate it\", \"release brooks-lint\", \"bump and publish\", and follow-ups: \"re-run\", \"re-validate\", \"update that skill\", \"redo the audit\", \"do the X part again\". Do NOT trigger for: USING the brooks-lint analysis skills on some target codebase (that's brooks-review / brooks-audit / brooks-debt / brooks-test / brooks-health / brooks-sweep); generic questions about brooks-lint that don't ask to change it; or maintenance of a different plugin.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "software-engineering",
+        "quality-and-safety",
+        "design-and-frontend"
+      ],
+      "relative_path": "brooks-brooks-harness/SKILL.md",
+      "sha256": "61018eb1d9a7dccde5e215cf11619579d11d2c800c0339c77a23c0a7776f5121"
+    },
+    {
+      "id": "brooks-health",
+      "name": "brooks-health",
+      "description": "Combined codebase health dashboard that scores a project across all four quality dimensions — PR quality, architecture, tech debt, and test quality — in a single pass, drawing on twelve classic engineering books. Triggers when: user wants an overall quality assessment, asks \"how healthy is this codebase?\", \"run all the checks\", \"give me a big-picture quality report\", \"I need a health score before the release\", \"what's the overall state of our code?\", or wants to onboard a new team with a quality overview. Do NOT trigger for: server health checks, HTTP health endpoints, Kubernetes liveness/readiness probes, database health, or application uptime. Also do not trigger when the user specifically requests only one dimension — use the corresponding focused skill instead (brooks-review / brooks-audit / brooks-debt / brooks-test).",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "software-engineering",
+        "quality-and-safety",
+        "integrations-and-data"
+      ],
+      "relative_path": "brooks-brooks-health/SKILL.md",
+      "sha256": "ea4dfc20596fcf2160bf269790b80f681d5d16535d11007022e2ca3d99566c7c"
+    },
+    {
+      "id": "brooks-review",
+      "name": "brooks-review",
+      "description": "PR code review that surfaces decay risks, design smells, and maintainability issues with concrete Symptom → Source → Consequence → Remedy findings, drawing on twelve classic engineering books. Triggers when: user asks to review code, check a PR, shares a diff or pastes code asking \"does this look right?\" / \"any issues here?\" / \"ready to merge?\", or asks for feedback on a function, class, or file. Also triggers when user mentions: code smells / refactoring / clean architecture / DDD / domain-driven design / SOLID principles / Hyrum's Law / deep modules / tactical programming / conceptual integrity / Brooks's Law / Mythical Man-Month / second system effect. Do NOT trigger for: questions about how to write code from scratch, language syntax questions, or framework/tool questions where no existing code is shared.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "quality-and-safety",
+        "design-and-frontend"
+      ],
+      "relative_path": "brooks-brooks-review/SKILL.md",
+      "sha256": "21c1ef33d40361ae98e150033978e4c5c1c3f66d498de92a6f088daf839591ec"
+    },
+    {
+      "id": "brooks-sweep",
+      "name": "brooks-sweep",
+      "description": "Full-sweep mode: runs a unified analysis across all quality dimensions — code decay, architecture, tech debt, and test quality — then applies fixes directly to the codebase. Safe changes are auto-applied; risky changes are confirmed before execution. Drawing on twelve classic engineering books. Triggers when: user wants to \"fix everything\", \"sweep the codebase\", \"auto-fix all issues\", \"run all checks and fix them\", \"clean up the whole project\", or asks for a single command that both diagnoses and remediates quality problems. Do NOT trigger for: read-only audits or health reports where the user only wants findings without code changes; single-dimension reviews (use the focused skill instead: brooks-review / brooks-audit / brooks-debt / brooks-test); server health checks, HTTP /health endpoints, Kubernetes probes, or application uptime.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "quality-and-safety"
+      ],
+      "relative_path": "brooks-brooks-sweep/SKILL.md",
+      "sha256": "ce6b63e8979c47834c0c07d7425c7093cf1081729b8499c2940f8632d9bf6368"
+    },
+    {
+      "id": "brooks-test",
+      "name": "brooks-test",
+      "description": "Test quality review drawing on twelve classic engineering books — with primary focus on xUnit Test Patterns, The Art of Unit Testing, How Google Tests Software, and Working Effectively with Legacy Code — that diagnoses structural problems in an existing test suite: brittleness, mock abuse, coverage illusions, slow execution, poor readability. Triggers when: user asks about test quality, shares test files for review, or expresses frustration: \"tests keep breaking whenever I change anything\", \"our tests take forever\", \"I can't understand what this test is doing\", \"tests pass but bugs still reach production\", \"we have too many mocks\". Do NOT trigger for: writing new tests from scratch (use the regular test-writing workflow) or testing framework/syntax questions — this skill reviews an existing suite for structural quality problems, not individual test authoring.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "software-engineering",
+        "quality-and-safety",
+        "design-and-frontend",
+        "integrations-and-data"
+      ],
+      "relative_path": "brooks-brooks-test/SKILL.md",
+      "sha256": "e529e10daf14626805049bddf3d209b5727f89942a7de2023065bb2453e15961"
+    },
+    {
+      "id": "new-skill",
+      "name": "new-skill",
+      "description": "Scaffold a new brooks-lint analysis skill so it passes `npm run validate` and `npm run evals` on the first try — generates skills/{name}/SKILL.md (with the mandatory \"Do NOT trigger for:\" clause and a Process section citing guide step ranges) plus skills/{name}/{name}-guide.md (sequentially numbered steps), then appends paired eval scenarios. Triggers when the maintainer asks to \"add a new skill\", \"scaffold a skill\", or \"create a brooks-lint mode\". Do NOT trigger for: editing an existing skill's content, adding a single eval to an existing skill, or authoring skills for some other plugin.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "brooks-new-skill/SKILL.md",
+      "sha256": "adb5b06609d87754e4d674e338cbab5baf260bfbd5b35988ce86076fa0340a7d"
+    },
+    {
+      "id": "release",
+      "name": "release",
+      "description": "Cut a brooks-lint release: set the version in package.json, propagate it across all four plugin manifests + README badge, write the CHANGELOG entry, validate, then commit, push, tag, and publish the GitHub release. Triggers when the maintainer asks to \"release\", \"cut a release\", \"ship a new version\", or \"bump and publish\" brooks-lint. Do NOT trigger for: propagating an already-decided version without releasing (use `npm run bump` directly), CHANGELOG edits alone, or questions about the release process that don't ask to perform it.",
+      "triggers": [],
+      "categories": [
+        "integrations-and-data"
+      ],
+      "relative_path": "brooks-release/SKILL.md",
+      "sha256": "107296b29db4680efc4cc6c5bbb1cc5a9c6add3487a13a8a454fb36d69729e39"
+    },
+    {
+      "id": "industrial-brutalist-ui",
+      "name": "industrial-brutalist-ui",
+      "description": "Industrial brutalist UI: Swiss typography + military terminal aesthetics. Use when: 野獸派設計、brutalist UI、raw interface、industrial design、data-heavy dashboard、declassified look、tactical UI、mechanical precision。",
+      "triggers": [
+        "野獸派設計、brutalist UI、raw interface、industrial design、data-heavy dashboard、declassified look、tactical UI、mechanical precision。"
+      ],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "brutalist-skill/SKILL.md",
+      "sha256": "2e8b153529ff80b0e34718197e2832910da06e3610fab096db1af59bfaa3bd3a"
+    },
+    {
+      "id": "caveman",
+      "name": "caveman",
+      "description": "Ultra-compressed communication mode. Cuts token usage ~75% by dropping filler, articles, and pleasantries while keeping full technical accuracy. Use when user says \"caveman mode\", \"talk like caveman\", \"use caveman\", \"less tokens\", \"be brief\", or invokes /caveman.",
+      "triggers": [],
+      "categories": [
+        "context-and-cost",
+        "documents-and-publishing"
+      ],
+      "relative_path": "caveman/SKILL.md",
+      "sha256": "b4bb6fe3bf3da222993ca0aee5e7c6f5368b182dd30ce1172e8f8e3280eb7052"
+    },
+    {
+      "id": "cinema-worldbuilder",
+      "name": "cinema-worldbuilder",
+      "description": "Seedance video prompt director — composes production-ready cinematic prompts from reference images or scene descriptions. Use when: Seedance、影片prompt、cinematic scene、影片場景、shot list、music video、action sequence、fashion film、做影片。",
+      "triggers": [
+        "Seedance、影片prompt、cinematic scene、影片場景、shot list、music video、action sequence、fashion film、做影片。"
+      ],
+      "categories": [
+        "design-and-frontend",
+        "media-and-images"
+      ],
+      "relative_path": "cinema-worldbuilder/SKILL.md",
+      "sha256": "962d3cc26d96d69f98e8db6564e5b83e1dcf85d41fd2883d95bb47d56f3c8efc"
+    },
+    {
+      "id": "claude-design",
+      "name": "claude-design",
+      "description": "Design one-off HTML artifacts (landing, deck, prototype).",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "claude-design/SKILL.md",
+      "sha256": "4c24fb9579a06f165205b212105f7eb906cada8cce1290319d677195da2d45a7"
+    },
+    {
+      "id": "claude-opus-4-5-migration",
+      "name": "claude-opus-4-5-migration",
+      "description": "Migrate prompts and code from Claude Sonnet 4.0, Sonnet 4.5, or Opus 4.1 to Opus 4.5. Use when the user wants to update their codebase, prompts, or API calls to use Opus 4.5. Handles model string updates and prompt adjustments for known Opus 4.5 behavioral differences. Does NOT migrate Haiku 4.5.",
+      "triggers": [],
+      "categories": [
+        "software-engineering"
+      ],
+      "relative_path": "claude-opus-4-5-migration/SKILL.md",
+      "sha256": "ec3f9c16195aaae88003a5ed831f6a66c8fd7b2e0fbd039071107dc788247761"
+    },
+    {
+      "id": "code-review-excellence",
+      "name": "code-review-excellence",
+      "description": "Comprehensive code review for React, Vue, Angular, Svelte, Rust, TypeScript, Python, Go, Java, C#. Catches bugs, improves quality, gives constructive feedback. Use when: code review、代碼審查、PR review、review code、pull request、code quality、找bug。",
+      "triggers": [
+        "code review、代碼審查、PR review、review code、pull request、code quality、找bug。"
+      ],
+      "categories": [
+        "software-engineering",
+        "quality-and-safety"
+      ],
+      "relative_path": "code-review-skill-main/SKILL.md",
+      "sha256": "0a17fe3afac4b34d823e582aee0bfebb6430246fa78d06704b1aa94eef6e4b35"
+    },
+    {
+      "id": "codebase-inspection",
+      "name": "codebase-inspection",
+      "description": "Inspect codebases w/ pygount: LOC, languages, ratios.",
+      "triggers": [],
+      "categories": [
+        "software-engineering"
+      ],
+      "relative_path": "codebase-inspection/SKILL.md",
+      "sha256": "87ddc0578d9bcbc80addb34ca045e4263689873ce02b1b73e3d57275ec6315c6"
+    },
+    {
+      "id": "comfyui",
+      "name": "comfyui",
+      "description": "Generate images, video, and audio with ComfyUI — install, launch, manage nodes/models, run workflows with parameter injection. Uses the official comfy-cli for lifecycle and direct REST/WebSocket API for execution.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "design-and-frontend",
+        "media-and-images"
+      ],
+      "relative_path": "comfyui/SKILL.md",
+      "sha256": "fc9514a3b888b35226a3d2276955bfcf1778fd1e61f4000d79c8c0c53e7905c3"
+    },
+    {
+      "id": "Command Development",
+      "name": "Command Development",
+      "description": "This skill should be used when the user asks to \"create a slash command\", \"add a command\", \"write a custom command\", \"define command arguments\", \"use command frontmatter\", \"organize commands\", \"create command with file references\", \"interactive command\", \"use AskUserQuestion in command\", or needs guidance on slash command structure, YAML frontmatter fields, dynamic arguments, bash execution in commands, user interaction patterns, or command development best practices for Claude Code.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "design-and-frontend"
+      ],
+      "relative_path": "command-development/SKILL.md",
+      "sha256": "cf4372aa8f5e86ef0b587aa3703b4af9b22996e0dc7fd0ea6ffae49770136a2a"
+    },
+    {
+      "id": "complexity-cuts",
+      "name": "complexity-cuts",
+      "description": "Refactor code with poor Big-O complexity. Use when: 效能、Big-O、算法優化、slow、timeout、OOM、reduce complexity、nested loops、O(n^2)、too much memory、慢、優化算法、效率。",
+      "triggers": [
+        "效能、Big-O、算法優化、slow、timeout、OOM、reduce complexity、nested loops、O(n^2)、too much memory、慢、優化算法、效率。"
+      ],
+      "categories": [
+        "context-and-cost",
+        "software-engineering"
+      ],
+      "relative_path": "complexity-cuts/SKILL.md",
+      "sha256": "c77dffdeb13e19611dd561ad1ca50bfb98f2ddd6a961d072732223cd8f6d9d64"
+    },
+    {
+      "id": "debugging-code",
+      "name": "debugging-code",
+      "description": "Interactive debugger — breakpoints, step-through, variable inspection, call stack. Use when: 斷點、stack trace、crash、exception、wrong output、interactive debug、runtime inspection、調試器、逐行執行。",
+      "triggers": [
+        "斷點、stack trace、crash、exception、wrong output、interactive debug、runtime inspection、調試器、逐行執行。"
+      ],
+      "categories": [
+        "software-engineering"
+      ],
+      "relative_path": "debugging-code/SKILL.md",
+      "sha256": "472982c651294291ad1539ac6ef9c5acdab152bf1f7b8ccb7953b9727653573e"
+    },
+    {
+      "id": "ckm:design",
+      "name": "ckm:design",
+      "description": "Unified design skill: brand, design tokens, UI, logo (55 styles), CIP (50 deliverables), slides, banners (22 styles), icons (15 styles), social photos. Use when: 設計、design、logo設計、banner、簡報、品牌識別、design system、icon design、social media images。",
+      "triggers": [
+        "設計、design、logo設計、banner、簡報、品牌識別、design system、icon design、social media images。"
+      ],
+      "categories": [
+        "context-and-cost",
+        "design-and-frontend",
+        "media-and-images"
+      ],
+      "relative_path": "design/SKILL.md",
+      "sha256": "bc16581150506ca864b6b215c4b673dc88cfc4e99067c9498b0af018d7030f4a"
+    },
+    {
+      "id": "design-md",
+      "name": "design-md",
+      "description": "Author/validate/export Google's DESIGN.md token spec files.",
+      "triggers": [],
+      "categories": [
+        "context-and-cost",
+        "design-and-frontend",
+        "integrations-and-data"
+      ],
+      "relative_path": "design-md/SKILL.md",
+      "sha256": "38ed14bc712a413fdd2514ea9acf6864ffb64fcbaffe6b5cc608021a75ff89fa"
+    },
+    {
+      "id": "ckm:design-system",
+      "name": "ckm:design-system",
+      "description": "Three-layer design token architecture (primitive/semantic/component), CSS variables, typography scales, component specs. Use when: 設計系統、design tokens、component library、CSS variables、品牌設計系統、systematic design。",
+      "triggers": [
+        "設計系統、design tokens、component library、CSS variables、品牌設計系統、systematic design。"
+      ],
+      "categories": [
+        "context-and-cost",
+        "software-engineering",
+        "design-and-frontend"
+      ],
+      "relative_path": "design-system/SKILL.md",
+      "sha256": "1a57e6779b22bfd6cbddbf926d8a9281a57ad72baa393acecb7b031346ec3aa6"
+    },
+    {
+      "id": "diagnose",
+      "name": "diagnose",
+      "description": "Disciplined diagnosis loop for hard bugs and performance regressions. Use when: diagnose、診斷、debug this、performance regression、broken、failing、問題排查、crash、investigate bug。",
+      "triggers": [
+        "diagnose、診斷、debug this、performance regression、broken、failing、問題排查、crash、investigate bug。"
+      ],
+      "categories": [
+        "software-engineering",
+        "quality-and-safety"
+      ],
+      "relative_path": "diagnose/SKILL.md",
+      "sha256": "c5278a0d3493d37d6fb42a24229da8cf448c50bf020f36334909b6fa97d5cad6"
+    },
+    {
+      "id": "dispatching-parallel-agents",
+      "name": "dispatching-parallel-agents",
+      "description": "Dispatch one agent per independent problem for concurrent investigation. Use when: 並行代理、parallel agents、multiple bugs、independent tasks、concurrent work、parallel investigation、多任務並行。",
+      "triggers": [
+        "並行代理、parallel agents、multiple bugs、independent tasks、concurrent work、parallel investigation、多任務並行。"
+      ],
+      "categories": [
+        "orchestration"
+      ],
+      "relative_path": "dispatching-parallel-agents/SKILL.md",
+      "sha256": "d42c5f61b077eea533768081450d27cf6c759f694e3adb1c6e25dae73bb3a0c1"
+    },
+    {
+      "id": "executing-plans",
+      "name": "executing-plans",
+      "description": "Load and execute a written implementation plan with review checkpoints. Use when: 執行計劃、execute plan、implement plan、run plan、carry out plan、執行方案、implementation time。",
+      "triggers": [
+        "執行計劃、execute plan、implement plan、run plan、carry out plan、執行方案、implementation time。"
+      ],
+      "categories": [
+        "quality-and-safety"
+      ],
+      "relative_path": "executing-plans/SKILL.md",
+      "sha256": "ae12b8581157d44c6c1544995dd90111ae5e7669022bd75e8f715fb95f373b8b"
+    },
+    {
+      "id": "find-skills",
+      "name": "find-skills",
+      "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.",
+      "triggers": [],
+      "categories": [
+        "orchestration"
+      ],
+      "relative_path": "find-skills/SKILL.md",
+      "sha256": "1e85f6f9686e145aca4a124e3b704b9bbea9aa87e08515c1e352eee70f6e6e7a"
+    },
+    {
+      "id": "finishing-a-development-branch",
+      "name": "finishing-a-development-branch",
+      "description": "Use when implementation is complete, all tests pass, and you need to decide how to integrate the work - guides completion of development work by presenting structured options for merge, PR, or cleanup",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "design-and-frontend"
+      ],
+      "relative_path": "finishing-a-development-branch/SKILL.md",
+      "sha256": "5c8d4b59aedb14c94e2f5d787a3265e858e8f53d4ceffe7ff1c15878a52b0e91"
+    },
+    {
+      "id": "fixing-accessibility",
+      "name": "fixing-accessibility",
+      "description": "Audit and fix HTML accessibility: ARIA labels, keyboard nav, focus management, color contrast. Use when: 無障礙、WCAG、accessibility、a11y、ARIA、keyboard navigation、color contrast、screen reader。",
+      "triggers": [
+        "無障礙、WCAG、accessibility、a11y、ARIA、keyboard navigation、color contrast、screen reader。"
+      ],
+      "categories": [
+        "quality-and-safety"
+      ],
+      "relative_path": "fixing-accessibility/SKILL.md",
+      "sha256": "e287c49df08ea27b9d67479ea57f9a70d01a0b4e3ea97df603f84974dbdd7154"
+    },
+    {
+      "id": "fixing-metadata",
+      "name": "fixing-metadata",
+      "description": "Audit and fix HTML metadata including page titles, meta descriptions, canonical URLs, Open Graph tags, Twitter cards, favicons, JSON-LD structured data, and robots directives. Use when adding SEO metadata, fixing social share previews, reviewing Open Graph tags, setting up canonical URLs, or shipping new pages that need correct meta tags.",
+      "triggers": [],
+      "categories": [
+        "quality-and-safety"
+      ],
+      "relative_path": "fixing-metadata/SKILL.md",
+      "sha256": "b8315ff95a92dcfa48c33e2b4838a31d9448bd46252aab45726549ce865d6547"
+    },
+    {
+      "id": "fixing-motion-performance",
+      "name": "fixing-motion-performance",
+      "description": "Audit and fix animation performance: layout thrashing, compositor properties, scroll jank. Use when: 動畫效能、animation performance、jank、stutter、animation lag、60fps、smooth animation、scroll performance。",
+      "triggers": [
+        "動畫效能、animation performance、jank、stutter、animation lag、60fps、smooth animation、scroll performance。"
+      ],
+      "categories": [
+        "quality-and-safety"
+      ],
+      "relative_path": "fixing-motion-performance/SKILL.md",
+      "sha256": "d63f69acdc29c494b0072dde3660861e15a5e813944b5b5452e51e588769defe"
+    },
+    {
+      "id": "frontend-design",
+      "name": "frontend-design",
+      "description": "Create production-grade frontend interfaces with bold, non-generic aesthetics. Use when: 建網頁、做landing page、前端設計、UI組件、build webpage、webpage design、page layout、組件開發、網頁風格。Avoids AI-generic looks.",
+      "triggers": [
+        "建網頁、做landing page、前端設計、UI組件、build webpage、webpage design、page layout、組件開發、網頁風格。Avoids AI-generic looks"
+      ],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "frontend-design/SKILL.md",
+      "sha256": "0b4e91f3a0a352af14cfde2549bee63e54ef00ea43fa3abe21192e4c5762f34e"
+    },
+    {
+      "id": "gif-search",
+      "name": "gif-search",
+      "description": "Search/download GIFs from Tenor via curl + jq.",
+      "triggers": [],
+      "categories": [
+        "media-and-images"
+      ],
+      "relative_path": "gif-search/SKILL.md",
+      "sha256": "ee2d14e32314e083d2bb999f502ec409df5762f4c7429e03718fc8835a26abb6"
+    },
+    {
+      "id": "godmode",
+      "name": "godmode",
+      "description": "Jailbreak LLMs: Parseltongue, GODMODE, ULTRAPLINIAN.",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "godmode/SKILL.md",
+      "sha256": "6c50d7f682eeb2dc6a241b2265acb5e3dcb46143299b14760116868904a3f525"
+    },
+    {
+      "id": "google-workspace",
+      "name": "google-workspace",
+      "description": "Google OAuth2 client credentials (downloaded from Google Cloud Console)",
+      "triggers": [],
+      "categories": [
+        "integrations-and-data"
+      ],
+      "relative_path": "google-workspace/SKILL.md",
+      "sha256": "014a4818ee1b363d11fafa2353bcea4fd4f8e0c0802322708023d3cd2e3f43b6"
+    },
+    {
+      "id": "gpt-taste",
+      "name": "gpt-taste",
+      "description": "Elite UX/UI & Advanced GSAP Motion Engineer. Enforces Python-driven true randomization for layout variance, strict AIDA page structure, wide editorial typography (bans 6-line wraps), gapless bento grids, strict GSAP ScrollTriggers (pinning, stacking, scrubbing), inline micro-images, and massive section spacing.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend",
+        "media-and-images"
+      ],
+      "relative_path": "gpt-tasteskill/SKILL.md",
+      "sha256": "2e64c269953f2656c21bf5a0fa6b4568e82fe0c72b36e8f84758e090349966a5"
+    },
+    {
+      "id": "grill-me",
+      "name": "grill-me",
+      "description": "Interview the user relentlessly about a plan or design until reaching shared understanding, resolving each branch of the decision tree. Use when user wants to stress-test a plan, get grilled on their design, or mentions \"grill me\".",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "design-and-frontend"
+      ],
+      "relative_path": "grill-me/SKILL.md",
+      "sha256": "74147eb6010a65957efef2b9e0f0b3ff935c1def7fc117697151b1d0f3610556"
+    },
+    {
+      "id": "grill-with-docs",
+      "name": "grill-with-docs",
+      "description": "Grilling session that challenges your plan against the existing domain model, sharpens terminology, and updates documentation (CONTEXT.md, ADRs) inline as decisions crystallise. Use when user wants to stress-test a plan against their project's language and documented decisions.",
+      "triggers": [],
+      "categories": [
+        "context-and-cost",
+        "software-engineering",
+        "documents-and-publishing"
+      ],
+      "relative_path": "grill-with-docs/SKILL.md",
+      "sha256": "3e35025119ba03efe7983dfdec3c8b96918142e3978512f3c2bf66d428310c7e"
+    },
+    {
+      "id": "handoff",
+      "name": "handoff",
+      "description": "Compact the current conversation into a handoff document for another agent to pick up.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "context-and-cost",
+        "documents-and-publishing"
+      ],
+      "relative_path": "handoff/SKILL.md",
+      "sha256": "77abcc4152081c7201242d220839ca865aca6c0a4c5b7e08f80c89c3a17d91a3"
+    },
+    {
+      "id": "hermes-agent",
+      "name": "hermes-agent",
+      "description": "Configure, extend, or contribute to Hermes Agent.",
+      "triggers": [],
+      "categories": [
+        "orchestration"
+      ],
+      "relative_path": "hermes-agent/SKILL.md",
+      "sha256": "e7e299465eeea96753ec8b48bf64f7717b1d5d8ee08d0f7b0848004819e53d07"
+    },
+    {
+      "id": "himalaya",
+      "name": "himalaya",
+      "description": "Himalaya CLI: IMAP/SMTP email from terminal.",
+      "triggers": [],
+      "categories": [
+        "integrations-and-data"
+      ],
+      "relative_path": "himalaya/SKILL.md",
+      "sha256": "4410c2e6fce5c2416201e855098cd0c181ce07feb44f8ac6cc6eb54fa8ed6d62"
+    },
+    {
+      "id": "Hook Development",
+      "name": "Hook Development",
+      "description": "This skill should be used when the user asks to \"create a hook\", \"add a PreToolUse/PostToolUse/Stop hook\", \"validate tool use\", \"implement prompt-based hooks\", \"use ${CLAUDE_PLUGIN_ROOT}\", \"set up event-driven automation\", \"block dangerous commands\", or mentions hook events (PreToolUse, PostToolUse, Stop, SubagentStop, SessionStart, SessionEnd, UserPromptSubmit, PreCompact, Notification). Provides comprehensive guidance for creating and implementing Claude Code plugin hooks with focus on advanced prompt-based hooks API.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "context-and-cost",
+        "software-engineering",
+        "design-and-frontend",
+        "documents-and-publishing"
+      ],
+      "relative_path": "hook-development/SKILL.md",
+      "sha256": "d14528f389cae485ac50583a22be326485c83fc9c8ef7ce700213e1583cf8fbe"
+    },
+    {
+      "id": "html-canvas-to-video",
+      "name": "html-canvas-to-video",
+      "description": "Convert HTML/Canvas animations to video files via headless browser capture. Supports alpha channel (green screen + chromakey), MP4, and PNG sequences.",
+      "triggers": [],
+      "categories": [
+        "media-and-images"
+      ],
+      "relative_path": "html-canvas-to-video/SKILL.md",
+      "sha256": "0cc6d003303d7fd7c9e0d1dcdc856131714fcbf08e579b1e4bfc32b2793c0b0f"
+    },
+    {
+      "id": "html-ppt",
+      "name": "html-ppt",
+      "description": "Generate interactive HTML presentations with themes, layouts, animations, and keyboard navigation. Use when user says: 做PPT、做簡報、slides、presentation、deck、keynote、幻燈片、投影片、演講稿、分享稿、小红书图文、pitch deck、reveal.js。",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "html-ppt/SKILL.md",
+      "sha256": "a0051ec4be46af887a594eae85e1a38d2f187673c27769edbdf77fde63e35e03"
+    },
+    {
+      "id": "huggingface-hub",
+      "name": "huggingface-hub",
+      "description": "HuggingFace hf CLI: search/download/upload models, datasets.",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "huggingface-hub/SKILL.md",
+      "sha256": "10d5bdf26e08ce4728923d8321493d1d18f7413f3a621e64c8feae6263cfe54c"
+    },
+    {
+      "id": "humanizer",
+      "name": "humanizer",
+      "description": "Humanize text: strip AI-isms and add real voice.",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "humanizer/SKILL.md",
+      "sha256": "4f2eece5122e8296e65930225d744f4fbaf50747e91031c1e17c5ea273911c35"
+    },
+    {
+      "id": "image-to-code",
+      "name": "image-to-code",
+      "description": "Generate design images first, then implement website code to match. Use when: 圖片轉代碼、image to code、screenshot to code、mockup to code、design to code、implement from image、從圖片做網頁。",
+      "triggers": [
+        "圖片轉代碼、image to code、screenshot to code、mockup to code、design to code、implement from image、從圖片做網頁。"
+      ],
+      "categories": [
+        "software-engineering",
+        "design-and-frontend",
+        "media-and-images"
+      ],
+      "relative_path": "image-to-code-skill/SKILL.md",
+      "sha256": "0fcc80113f1e047b265ac4658f7372a2c26c95d12ac4bd301c811c66d011a179"
+    },
+    {
+      "id": "imagegen-frontend-mobile",
+      "name": "imagegen-frontend-mobile",
+      "description": "Elite mobile app image-generation skill for creating premium, app-native screen concepts and flows. Designed for iOS, Android, and cross-platform mobile products. Prioritizes clean hierarchy, comfortably readable text, strong multi-screen consistency, controlled color palettes, non-generic creative direction, textured surfaces, image-led composition, tasteful custom iconography, and clean phone mockup framing. By default, screens should be shown inside a subtle premium iPhone or similar phone mockup with a visible frame, while the main focus stays on the app content itself. This skill generates images only. It does not write code.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "design-and-frontend",
+        "media-and-images"
+      ],
+      "relative_path": "imagegen-frontend-mobile/SKILL.md",
+      "sha256": "8a33389979f3074fa0926678e266ad2eb9234624472254469fc1ad916b9caa24"
+    },
+    {
+      "id": "imagegen-frontend-web",
+      "name": "imagegen-frontend-web",
+      "description": "Elite frontend image-direction skill for generating premium, conversion-aware website design references. CRITICAL OUTPUT RULE — generate ONE separate horizontal image FOR EVERY section. A landing page with 8 sections produces 8 images. Never compress multiple sections into one image. Enforces composition variety (not always left-text / right-image), background-image freedom, varied CTAs, varied hero scales (giant / mid / mini minimalist), narrative concept spine, second-read moments, and a single consistent palette across all images. Optimized for landing pages, marketing sites, and product comps that developers or coding models can accurately recreate.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend",
+        "media-and-images"
+      ],
+      "relative_path": "imagegen-frontend-web/SKILL.md",
+      "sha256": "6b5c2256522fdba1e3313eafa3d743b960a7b13ec029d3e6586e04b23327c1f8"
+    },
+    {
+      "id": "improve-codebase-architecture",
+      "name": "improve-codebase-architecture",
+      "description": "Find architecture deepening opportunities and refactoring targets. Use when: 重構、refactor、架構改善、decouple、modularize、improve architecture、make testable、codebase quality、模組化。",
+      "triggers": [
+        "重構、refactor、架構改善、decouple、modularize、improve architecture、make testable、codebase quality、模組化。"
+      ],
+      "categories": [
+        "software-engineering"
+      ],
+      "relative_path": "improve-codebase-architecture/SKILL.md",
+      "sha256": "ac2befcd188bf45bc82ab3463abb626c153fc25c382eb2f33dbcdd9964211776"
+    },
+    {
+      "id": "invariant-guard",
+      "name": "invariant-guard",
+      "description": "Use when writing or reviewing algorithms where the obvious implementation is subtly wrong — postcondition stronger than the loop's natural invariant (Boyer–Moore majority, Floyd cycle, leftmost vs any binary search, QuickSelect partition); in-place mutation with read+write pointers (dedup-in-place, partition, rotate); recursion with multiple parameters or accumulator state; off-by-one suspects with duplicates, empty inputs, boundary values; iterative refinements that must terminate (fixed-point, Newton, EM); any function where you catch yourself thinking \"I know this algorithm\" — the trap is usually in the contract, not the loop body. Forces writing the function contract (especially the postcondition) and loop invariant BEFORE code. Pairs with lemmaly (picks the algorithm) and mathguard (picks the math).",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "quality-and-safety",
+        "design-and-frontend",
+        "documents-and-publishing"
+      ],
+      "relative_path": "invariant-guard/SKILL.md",
+      "sha256": "a906ae2c53c33f2c8345bef777bb0611447dd2c4e9f09b627b9e087087d9ddb5"
+    },
+    {
+      "id": "jupyter-live-kernel",
+      "name": "jupyter-live-kernel",
+      "description": "Iterative Python via live Jupyter kernel (hamelnb).",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "jupyter-live-kernel/SKILL.md",
+      "sha256": "d93c4b4f50e66c0c074d49e43e28bf5ab87531eaa48884d0083568db827f5869"
+    },
+    {
+      "id": "knowledge-consolidation",
+      "name": "knowledge-consolidation",
+      "description": "Build comprehensive knowledge archives from multiple source files — consolidates notes, PDFs, supplementary directories, and web research into structured .md + interactive .html knowledge bases. Use when: knowledge base, knowledge archive, knowledge graph, 知識圖譜, consolidate notes, build reference, 結構化知識庫, merge documents, multi-source research.",
+      "triggers": [
+        "knowledge base, knowledge archive, knowledge graph, 知識圖譜, consolidate notes, build reference, 結構化知識庫, merge documents, multi-source research"
+      ],
+      "categories": [
+        "context-and-cost",
+        "design-and-frontend",
+        "documents-and-publishing"
+      ],
+      "relative_path": "knowledge-consolidation/SKILL.md",
+      "sha256": "8afac54d99ad429178baead8b5827d6d7dcf48369d19b7c53113c641d036be99"
+    },
+    {
+      "id": "lemmaly",
+      "name": "lemmaly",
+      "description": "Use whenever writing, editing, or reviewing code that involves loops, collections, lookups, searches, joins, recursion, graphs, queries, or any computation over more than a handful of items. Forces algorithmic thinking BEFORE writing code — names the time/space complexity, the data structure, the algorithm family, and the dominant input dimension. Catches O(n^2) loops, N+1 queries, repeated work, wrong data structures, and lazy brute-force solutions that AI assistants ship by default. Pairs with mathguard (advanced math optimization), invariant-guard (correctness), and complexity-cuts (corrective Big-O fixes).",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "quality-and-safety"
+      ],
+      "relative_path": "lemmaly/SKILL.md",
+      "sha256": "53de5c138f7b69deb5337bdbf62ca8040e7e2c134a41d42cedca03d0f71e6455"
+    },
+    {
+      "id": "llm-wiki",
+      "name": "llm-wiki",
+      "description": "Karpathy's LLM Wiki: build/query interlinked markdown KB.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend",
+        "documents-and-publishing"
+      ],
+      "relative_path": "llm-wiki/SKILL.md",
+      "sha256": "eb13a2b8c654eeee8bae2d218a8131f53f199065f61c4ac29c18b8b79eb85869"
+    },
+    {
+      "id": "logic-diff",
+      "name": "logic-diff",
+      "description": "Compare two code versions for semantic equivalence via semi-formal tracing of both versions side-by-side. Trigger when the user shares a refactor, rewrite, migration, or A/B implementation and wants to confirm behavior is unchanged — \"did I break anything\", \"is this equivalent\", \"are these equivalent\", \"semantically equivalent\", \"are these two implementations semantically equivalent\", \"check my refactor\", \"same behavior after the change?\", \"does my rewrite produce the same output\", \"switched from X to Y — same results?\". SCOPE HARD RULE: requires two code versions (A and B). A single version for bug-finding uses logic-review; one version + a failing test uses logic-locate; explaining what one piece of code does uses logic-explain; codebase audit uses logic-health. Do NOT trigger for: single-version review, performance comparison, design-quality comparison, or \"which is better-written\" questions.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "quality-and-safety",
+        "design-and-frontend"
+      ],
+      "relative_path": "logic-logic-diff/SKILL.md",
+      "sha256": "b8094708c5a4cbf8172f504aa14799cf8b4bac4d2adfcf985b9b1e2234ff12e5"
+    },
+    {
+      "id": "logic-explain",
+      "name": "logic-explain",
+      "description": "Explain what a specific piece of code actually does for a given input by producing a step-by-step execution trace (interprocedural, with name resolution and type transitions). Trigger when the user is confused about behavior or asks why code produces X instead of Y — \"walk me through this\", \"trace through X with input Y\", \"why does this return X\", \"what does yield-from do here\", \"explain the execution path\". SCOPE HARD RULE: a specific function + a specific input scenario. If the user wants to find bugs without a scenario in mind, use logic-review; two-version comparison uses logic-diff; concrete failures use logic-locate; codebase-wide audit uses logic-health. Do NOT trigger for: finding bugs without a behavioral question, style or design discussion, or concept explanations not tied to specific code.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "quality-and-safety",
+        "design-and-frontend"
+      ],
+      "relative_path": "logic-logic-explain/SKILL.md",
+      "sha256": "5caaf33f77e654e79cae7275c838802f8642ddf9a639630f6c17546c3983f5aa"
+    },
+    {
+      "id": "logic-fix-all",
+      "name": "logic-fix-all",
+      "description": "Autonomous repository-wide audit-and-fix pipeline: health → review → locate/explain → fix → diff-verify → iterate until clean. Starts with a mandatory consent prompt (token-intensive); after consent runs hands-free. Trigger when the user wants ALL logic issues found and fixed — \"fix everything\", \"fix all logic issues\", \"fix all logic issues in this code\", \"clean up all logic issues\", \"audit and fix the whole repo\", \"fix all bugs automatically\", or frustration with recurring bugs wanting a one-shot pass. SCOPE RULE: repo-wide by default; also trigger for a pasted code snippet when the user says \"fix all\" — produce the full Fix Report (Fix Log, before/after Logic Score). Analysis-only requests use logic-health or logic-review. Single failure uses logic-locate. Two versions uses logic-diff. One path explanation uses logic-explain. Do NOT trigger for: analysis-only (\"show me the bugs\"), style/lint/format concerns, or fixing a single named finding.",
+      "triggers": [],
+      "categories": [
+        "context-and-cost",
+        "software-engineering",
+        "quality-and-safety"
+      ],
+      "relative_path": "logic-logic-fix-all/SKILL.md",
+      "sha256": "1b2f4f5ffaeed66afcdefbb251d42df31800344bcd28666fe1da8cb3d32cdc40"
+    },
+    {
+      "id": "logic-health",
+      "name": "logic-health",
+      "description": "Sweep a directory, module, or full codebase for logic correctness and produce a scored health dashboard with systemic patterns. Trigger when the user requests a health view — \"audit the whole codebase\", \"health check\", \"health overview\", \"logic health overview\", \"audit src/\", \"audit auth and payments modules\", \"where should I focus testing\", \"onboarding review\", \"logic overview before we ship\", \"give me a health overview of this module\". SCOPE RULE: prefer multi-file; also trigger for a single module when the user explicitly uses \"health check\", \"health overview\", or \"logic health\" — a concrete failure uses logic-locate; two versions uses logic-diff; explaining a path uses logic-explain; \"fix everything\" uses logic-fix-all. Do NOT trigger for: style/architecture-only audits, security-only scans, performance-only audits.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "quality-and-safety"
+      ],
+      "relative_path": "logic-logic-health/SKILL.md",
+      "sha256": "f9de78a503cd04c2a6ed0dcfee87bac941310f8c633375af1adf6372d9b3805c"
+    },
+    {
+      "id": "logic-locate",
+      "name": "logic-locate",
+      "description": "Locate the root cause of a CONFIRMED failure via backward-then-forward semi-formal tracing. Trigger when the user provides a stack trace, failing assertion, error message, or specific wrong-value observation — \"find the bug\", \"this test is failing\", \"track down this crash\", \"why is this test failing\", \"KeyError at line 89\", \"expected 70, got 100\", \"NoneType has no attribute X\", \"cart empties when second tab opens\". SCOPE HARD RULE: requires a concrete failure (exception, failing test, or specific wrong output). Vague suspicion without evidence uses logic-review; behavior explanation uses logic-explain; refactor comparison uses logic-diff; codebase audit uses logic-health. Do NOT trigger for: vague \"what's wrong\" without a concrete symptom, style questions, or performance issues.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "quality-and-safety",
+        "design-and-frontend"
+      ],
+      "relative_path": "logic-logic-locate/SKILL.md",
+      "sha256": "dcad44f05e996c46647b000cad4484d7860b36de1ad676f71f40c3a397a3293f"
+    },
+    {
+      "id": "logic-review",
+      "name": "logic-review",
+      "description": "Find logic bugs in a single file via execution tracing. Use when: 邏輯審查、logic bug、\"review this\"、\"does this look right\"、race condition、tests pass but prod fails、code audit、檢查代碼。One file/function only.",
+      "triggers": [
+        "邏輯審查、logic bug、\"review this\"、\"does this look right\"、race condition、tests pass but prod fails、code audit、檢查代碼。One file/function only"
+      ],
+      "categories": [
+        "software-engineering",
+        "quality-and-safety"
+      ],
+      "relative_path": "logic-logic-review/SKILL.md",
+      "sha256": "7950fc3cebbd52521f160aa350da6105d0d635a12151984079df6a90823b5090"
+    },
+    {
+      "id": "macos-cleanup",
+      "name": "macos-cleanup",
+      "description": "Analyze and free disk space on macOS. Covers mole CLI usage, common large-cache locations, interactive TTY tool workarounds, and app container cleanup.",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "macos-cleanup/SKILL.md",
+      "sha256": "31247c9383c00b2fdd4c2baf25e837ff447cd4a3829fd42890b271534799acab"
+    },
+    {
+      "id": "manim-video",
+      "name": "manim-video",
+      "description": "Manim CE animations: 3Blue1Brown math/algo videos.",
+      "triggers": [],
+      "categories": [
+        "media-and-images"
+      ],
+      "relative_path": "manim-video/SKILL.md",
+      "sha256": "3459a6af999f0c9bfd61eb867836c8de90b33253493eb1b6aa4118d82fd320f4"
+    },
+    {
+      "id": "maps",
+      "name": "maps",
+      "description": "Geocode, POIs, routes, timezones via OpenStreetMap/OSRM.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "integrations-and-data"
+      ],
+      "relative_path": "maps/SKILL.md",
+      "sha256": "8c961ecf662838e3ff287570d343db8b1587ca7a6d565ec53eeab13f89407b29"
+    },
+    {
+      "id": "mathguard",
+      "name": "mathguard",
+      "description": "Use when working with large-scale data, similarity search, deduplication, top-K / heavy-hitters, streaming analytics, cardinality estimation, embeddings, recommender systems, signal/image processing, polynomial or big-integer arithmetic, convolution, graph distance, computational geometry, randomized algorithms, or any problem with n >= 10^6 where exact computation is wasteful. Recognizes when classical algorithms hit their lower bound and an approximate or math-heavy technique (Bloom filter, HyperLogLog, Count-Min Sketch, MinHash/LSH, FFT/NTT, Johnson-Lindenstrauss projection, sweep line, kd-tree/BVH, fast exponentiation, monoid parallel reduction, amortized potential method) gives an asymptotic win. Load after lemmaly when a classical O(n log n) is the floor but smarter math wins.",
+      "triggers": [],
+      "categories": [
+        "quality-and-safety",
+        "media-and-images"
+      ],
+      "relative_path": "mathguard/SKILL.md",
+      "sha256": "4414dad616bf4627ccd38d5250a207801de52d79ea7e317a0371b5c009d073fa"
+    },
+    {
+      "id": "MCP Integration",
+      "name": "MCP Integration",
+      "description": "This skill should be used when the user asks to \"add MCP server\", \"integrate MCP\", \"configure MCP in plugin\", \"use .mcp.json\", \"set up Model Context Protocol\", \"connect external service\", mentions \"${CLAUDE_PLUGIN_ROOT} with MCP\", or discusses MCP server types (SSE, stdio, HTTP, WebSocket). Provides comprehensive guidance for integrating Model Context Protocol servers into Claude Code plugins for external tool and service integration.",
+      "triggers": [],
+      "categories": [
+        "context-and-cost",
+        "software-engineering",
+        "design-and-frontend"
+      ],
+      "relative_path": "mcp-integration/SKILL.md",
+      "sha256": "1cbfb6b1cf98f48a7c6938e113869a229cd5a59037712072fe11f21a47c6df0e"
+    },
+    {
+      "id": "messaging-gateway",
+      "name": "messaging-gateway",
+      "description": "Set up Hermes as a chatbot on messaging platforms — Telegram, LINE, Discord, iMessage, WhatsApp, WeChat, Slack, Signal, Matrix. Also covers AstrBot as an alternative frontend with Hermes MCP backend.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "design-and-frontend"
+      ],
+      "relative_path": "messaging-gateway/SKILL.md",
+      "sha256": "520c97e3d2f9fd0a5bfc8d2b263087f906392e84227e544ab84cc896ffe73bcc"
+    },
+    {
+      "id": "minimalist-ui",
+      "name": "minimalist-ui",
+      "description": "Premium utilitarian minimalist UI: warm monochrome, typographic contrast, bento grids, editorial style. Use when: 極簡設計、minimalist UI、clean interface、editorial design、monochrome、flat design、warm minimal、bento grid。",
+      "triggers": [
+        "極簡設計、minimalist UI、clean interface、editorial design、monochrome、flat design、warm minimal、bento grid。"
+      ],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "minimalist-skill/SKILL.md",
+      "sha256": "e1650d0a03bfc6c852abf8cc72a1b2dd173e47fdb198725e5150267548e00777"
+    },
+    {
+      "id": "multi-agent-handoff",
+      "name": "multi-agent-handoff",
+      "description": "Pick up work when another agent (Codex, Claude Code, agy, OpenCode) runs out of credits, crashes, or the user says \"X is done, continue with Y\". Covers context discovery, commit organization, task board updates, and validation.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "context-and-cost",
+        "software-engineering"
+      ],
+      "relative_path": "multi-agent-handoff/SKILL.md",
+      "sha256": "604235621efa1c4c03f23f505c8f99f9afeb8d4557975665bf99bfece6736aa5"
+    },
+    {
+      "id": "multi-agent-orchestrator",
+      "name": "multi-agent-orchestrator",
+      "description": "Design and build multi-agent orchestration systems — SQLite task store, state machines with transition matrices, plan validation with progressive degradation, artifact injection pipelines, optimistic locking for concurrency, CLI-first DX. Use when: 多agent調度、orchestrator、task store、agent routing、state machine、plan validation、multi-agent coordination、任務分派。",
+      "triggers": [
+        "多agent調度、orchestrator、task store、agent routing、state machine、plan validation、multi-agent coordination、任務分派。"
+      ],
+      "categories": [
+        "orchestration",
+        "design-and-frontend"
+      ],
+      "relative_path": "multi-agent-orchestrator/SKILL.md",
+      "sha256": "fa63f4cf78c0530ec87874d2bb55bdfa34c261694eb5f15182b67a7d72e3b0ab"
+    },
+    {
+      "id": "nano-pdf",
+      "name": "nano-pdf",
+      "description": "Edit PDF text/typos/titles via nano-pdf CLI (NL prompts).",
+      "triggers": [],
+      "categories": [
+        "documents-and-publishing"
+      ],
+      "relative_path": "nano-pdf/SKILL.md",
+      "sha256": "4243b329789c6d7fcea95749438228e5f8cbc0234cd44d2d72cd86f837bf1f35"
+    },
+    {
+      "id": "notion",
+      "name": "notion",
+      "description": "Notion API + ntn CLI: pages, databases, markdown, Workers.",
+      "triggers": [],
+      "categories": [
+        "documents-and-publishing",
+        "integrations-and-data"
+      ],
+      "relative_path": "notion/SKILL.md",
+      "sha256": "6a97fc137b0bed3e0ee97be6f60113845c489a4bfbc79a957135360ffdf44c1f"
+    },
+    {
+      "id": "obsidian",
+      "name": "obsidian",
+      "description": "Read, search, create, and edit notes in the Obsidian vault.",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "obsidian/SKILL.md",
+      "sha256": "d2d080f82893dac86190e3885720e27acb6730cbea8bbb1dd7c25aaa53231127"
+    },
+    {
+      "id": "ocr-and-documents",
+      "name": "ocr-and-documents",
+      "description": "Extract text from PDFs/scans (pymupdf, marker-pdf).",
+      "triggers": [],
+      "categories": [
+        "documents-and-publishing"
+      ],
+      "relative_path": "ocr-and-documents/SKILL.md",
+      "sha256": "720a1f1a534167ef29b563199e76e3146b2d77b3455a772c6eae5696ef7a384a"
+    },
+    {
+      "id": "official-code-review",
+      "name": "official-code-review",
+      "description": "Code review a pull request",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "quality-and-safety"
+      ],
+      "relative_path": "official-code-review/SKILL.md",
+      "sha256": "2b0837c5ec0b2e75f8ba4565bdafd76fa916b0dc146608c5733af7ba5802012c"
+    },
+    {
+      "id": "feature-dev",
+      "name": "feature-dev",
+      "description": "Feature Development — 3 個 Agent（code-explorer、code-architect、code-reviewer）配合 /feature-dev 指令，用於端到端功能開發。",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "software-engineering",
+        "quality-and-safety"
+      ],
+      "relative_path": "official-feature-dev/SKILL.md",
+      "sha256": "d73de6d34918454c28e3c492548db89c048827fb7595a4982b241289ea94a3ae"
+    },
+    {
+      "id": "openhue",
+      "name": "openhue",
+      "description": "Control Philips Hue lights, scenes, rooms via OpenHue CLI.",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "openhue/SKILL.md",
+      "sha256": "550f94848d10ab82619db8fec240a4d2b792c33606fba5d391bf3a78bc1119e9"
+    },
+    {
+      "id": "full-output-enforcement",
+      "name": "full-output-enforcement",
+      "description": "Enforce complete, unabridged code output — no truncation, no placeholders. Use when: full output、完整輸出、don't truncate、write full file、no placeholders、完整代碼、exhaustive output、no shortcuts。",
+      "triggers": [
+        "full output、完整輸出、don't truncate、write full file、no placeholders、完整代碼、exhaustive output、no shortcuts。"
+      ],
+      "categories": [
+        "software-engineering"
+      ],
+      "relative_path": "output-skill/SKILL.md",
+      "sha256": "b0a0320b5ebc064357bc3c659d47401a2b5b748e0da228536720103972714678"
+    },
+    {
+      "id": "p5js",
+      "name": "p5js",
+      "description": "p5.js sketches: gen art, shaders, interactive, 3D.",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "p5js/SKILL.md",
+      "sha256": "6a9722e2633ecdb3736e304f56c646258c5e777fd2c15a59c0d2b3ffa91b665a"
+    },
+    {
+      "id": "plan",
+      "name": "plan",
+      "description": "Plan mode: write an actionable markdown plan to .hermes/plans/, no execution. Bite-sized tasks, exact paths, complete code.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "documents-and-publishing"
+      ],
+      "relative_path": "plan/SKILL.md",
+      "sha256": "399038641c1905f44c57c8eabf87206ef972f967028daf3458c9d17f61e64fd8"
+    },
+    {
+      "id": "Plugin Settings",
+      "name": "Plugin Settings",
+      "description": "This skill should be used when the user asks about \"plugin settings\", \"store plugin configuration\", \"user-configurable plugin\", \".local.md files\", \"plugin state files\", \"read YAML frontmatter\", \"per-project plugin settings\", or wants to make plugin behavior configurable. Documents the .claude/plugin-name.local.md pattern for storing plugin-specific configuration with YAML frontmatter and markdown content.",
+      "triggers": [],
+      "categories": [
+        "documents-and-publishing"
+      ],
+      "relative_path": "plugin-settings/SKILL.md",
+      "sha256": "03edd6f2bbf2499468e9ee8cfb75b34b4fbe04dd43b9133d94920db71459306d"
+    },
+    {
+      "id": "Plugin Structure",
+      "name": "Plugin Structure",
+      "description": "This skill should be used when the user asks to \"create a plugin\", \"scaffold a plugin\", \"understand plugin structure\", \"organize plugin components\", \"set up plugin.json\", \"use ${CLAUDE_PLUGIN_ROOT}\", \"add commands/agents/skills/hooks\", \"configure auto-discovery\", or needs guidance on plugin directory layout, manifest configuration, component organization, file naming conventions, or Claude Code plugin architecture best practices.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "software-engineering",
+        "design-and-frontend"
+      ],
+      "relative_path": "plugin-structure/SKILL.md",
+      "sha256": "ee28fd41535313e9ffb2fd04393cc70e6e7e1d7ea143097a2c3b856e8be98132"
+    },
+    {
+      "id": "polymarket",
+      "name": "polymarket",
+      "description": "Query Polymarket: markets, prices, orderbooks, history.",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "polymarket/SKILL.md",
+      "sha256": "becfa71e730b482c3f087c4de4071fd25f0feb475aec1293aee0b845c10fa190"
+    },
+    {
+      "id": "popular-web-designs",
+      "name": "popular-web-designs",
+      "description": "54 real design systems (Stripe, Linear, Vercel) as HTML/CSS.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "popular-web-designs/SKILL.md",
+      "sha256": "cd89bdb86008bb30b35d9bdd30e06587f75ee54055c54e1a79afb20418264b3d"
+    },
+    {
+      "id": "powerpoint",
+      "name": "powerpoint",
+      "description": "Create, read, edit .pptx decks, slides, notes, templates.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "powerpoint/SKILL.md",
+      "sha256": "bb2084f5da312eec50f8ab3b1cb0f6ad3a86f4933f521b273fdc4dd1d4f52ada"
+    },
+    {
+      "id": "pr-review-toolkit",
+      "name": "pr-review-toolkit",
+      "description": "PR Review Toolkit — 6 個專業 Agent：code-reviewer、silent-failure-hunter、code-simplifier、comment-analyzer、pr-test-analyzer、type-design-analyzer。用於全面的 PR 審查。",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "software-engineering",
+        "quality-and-safety",
+        "design-and-frontend"
+      ],
+      "relative_path": "pr-review-toolkit/SKILL.md",
+      "sha256": "d0114de7aaf7b3be055ea2f5b799861add46716385f02cd4f9b8c6e2bd91bfc4"
+    },
+    {
+      "id": "pretext",
+      "name": "pretext",
+      "description": "Use when building creative browser demos with @chenglou/pretext — DOM-free text layout for ASCII art, typographic flow around obstacles, text-as-geometry games, kinetic typography, and text-powered generative art. Produces single-file HTML demos by default.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "pretext/SKILL.md",
+      "sha256": "532570c95d1a0bf671a5565fa3c2a6131d3579f4378dd852012b39335a7668e3"
+    },
+    {
+      "id": "agent-teams",
+      "name": "agent-teams",
+      "description": "Coordinate multiple Claude Code sessions as a team with shared tasks and messaging. Use when: 代理團隊、agent teams、multiple sessions、team coding、shared task list、coordinate agents、多agent協作。",
+      "triggers": [
+        "代理團隊、agent teams、multiple sessions、team coding、shared task list、coordinate agents、多agent協作。"
+      ],
+      "categories": [
+        "orchestration",
+        "software-engineering"
+      ],
+      "relative_path": "pro-agent-teams/SKILL.md",
+      "sha256": "d7ed77d07dafeef1fce8eb6ba8753872768667c9f89dab970d59006eafb81d60"
+    },
+    {
+      "id": "auto-setup",
+      "name": "auto-setup",
+      "description": "Auto-configure quality gates, hooks, and settings for a new project. Detects project type and sets up appropriate tooling. Use when onboarding a new codebase.",
+      "triggers": [],
+      "categories": [
+        "software-engineering"
+      ],
+      "relative_path": "pro-auto-setup/SKILL.md",
+      "sha256": "a03bf1940e4066836256a00fcde9f96cf2608cfacfe1f44892d1616403c6310f"
+    },
+    {
+      "id": "batch-orchestration",
+      "name": "batch-orchestration",
+      "description": "Decompose large-scale changes into independent units and spawn parallel agents in isolated worktrees. Use for migrations, refactors, codemods, and any change touching 10+ files with the same pattern.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "software-engineering"
+      ],
+      "relative_path": "pro-batch-orchestration/SKILL.md",
+      "sha256": "fadb546f1841e772b863350f5146004bfb20bfe8b1e244e21c5354dcf2be4ecd"
+    },
+    {
+      "id": "bug-capture",
+      "name": "bug-capture",
+      "description": "Capture a user-reported defect as a durable GitHub issue written in the project's own domain language. Explores the codebase in parallel for context but never leaks file paths or line numbers into the issue. Use when the user reports a bug conversationally, runs a QA pass, or says \"file an issue\", \"log this as a bug\", \"capture this\".",
+      "triggers": [],
+      "categories": [
+        "context-and-cost",
+        "software-engineering",
+        "integrations-and-data"
+      ],
+      "relative_path": "pro-bug-capture/SKILL.md",
+      "sha256": "280ee9587cd59a5831d637a210b6e3287178ecdd782f6267ffa12040b4de14df"
+    },
+    {
+      "id": "compact-guard",
+      "name": "compact-guard",
+      "description": "Smart context compaction with state preservation. Saves critical files, task progress, and working state before compaction, restores after. Use before manual compact or when auto-compact triggers.",
+      "triggers": [],
+      "categories": [
+        "context-and-cost",
+        "quality-and-safety"
+      ],
+      "relative_path": "pro-compact-guard/SKILL.md",
+      "sha256": "6ffa2e1a62bfce64968adc1dc6a5a4f67f10cb85be2f670defe552087685321a"
+    },
+    {
+      "id": "context-engineering",
+      "name": "context-engineering",
+      "description": "Master context engineering — Write, Select, Compress, Isolate operations for AI sessions. Use when: 上下文工程、context engineering、token budget、compaction、context management、session optimization。",
+      "triggers": [
+        "上下文工程、context engineering、token budget、compaction、context management、session optimization。"
+      ],
+      "categories": [
+        "context-and-cost"
+      ],
+      "relative_path": "pro-context-engineering/SKILL.md",
+      "sha256": "f6963d98e6a9244138bc41bfe1fb0516a5d20853422830f6fe235f102f0f3ec6"
+    },
+    {
+      "id": "context-optimizer",
+      "name": "context-optimizer",
+      "description": "Optimize token usage and context management. Use when sessions feel slow, context is degraded, or you're running out of budget.",
+      "triggers": [],
+      "categories": [
+        "context-and-cost"
+      ],
+      "relative_path": "pro-context-optimizer/SKILL.md",
+      "sha256": "4d974efb9e780e47eae08a6df69d2b5c5662c1b25b71935c953092bb034b69d8"
+    },
+    {
+      "id": "cost-tracker",
+      "name": "cost-tracker",
+      "description": "Track session costs, set budget alerts, and optimize token spend. Use to check costs mid-session or set spending limits.",
+      "triggers": [],
+      "categories": [
+        "context-and-cost"
+      ],
+      "relative_path": "pro-cost-tracker/SKILL.md",
+      "sha256": "14c3382a580c426e546d0a06445f6fa4f5ee6f00c5380e82a166d825b3ab0ee5"
+    },
+    {
+      "id": "deslop",
+      "name": "deslop",
+      "description": "Remove AI-generated code slop, unnecessary comments, and over-engineering from the current branch diff. Cleans up boilerplate, simplifies abstractions, and strips defensive code. Use when cleaning up code, simplifying, removing boilerplate, or before committing.",
+      "triggers": [],
+      "categories": [
+        "software-engineering"
+      ],
+      "relative_path": "pro-deslop/SKILL.md",
+      "sha256": "967b3bf1d7270b68bef652af9bd8c02d696b2184f55203ef45935351cf659ba7"
+    },
+    {
+      "id": "file-watcher",
+      "name": "file-watcher",
+      "description": "Configure file watching hooks to auto-react to config changes, env file updates, and dependency modifications. Use to set up reactive workflows.",
+      "triggers": [],
+      "categories": [
+        "orchestration"
+      ],
+      "relative_path": "pro-file-watcher/SKILL.md",
+      "sha256": "99fa95aa19f8c1207623869b97cf2eb56670acac1c846713f57f4277212d2318"
+    },
+    {
+      "id": "insights",
+      "name": "insights",
+      "description": "Show session analytics, learning patterns, correction trends, heatmaps, and productivity metrics. Computes stats from project memory and session history. Use when asking for stats, statistics, progress, how am I doing, coding history, or dashboard.",
+      "triggers": [],
+      "categories": [
+        "context-and-cost",
+        "integrations-and-data"
+      ],
+      "relative_path": "pro-insights/SKILL.md",
+      "sha256": "f65218a78bf3cea0e36d52df4bbf3a9110b3dc8788bf2c2da2c7d8671cade960"
+    },
+    {
+      "id": "learn-rule",
+      "name": "learn-rule",
+      "description": "Capture a correction or lesson as a persistent learning rule with category, mistake, and correction. Stores, categorises, and retrieves rules for future sessions. Use after mistakes or when the user says \"remember this\", \"don't forget\", \"note this\", or \"learn from this\".",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "pro-learn-rule/SKILL.md",
+      "sha256": "31b6824157c67a0b87dba5bd062864f56332c24c94ef49918920528f5e464283"
+    },
+    {
+      "id": "llm-council",
+      "name": "llm-council",
+      "description": "Provider-agnostic multi-LLM deliberation. Three phases — independent responses, cross-model anonymized ranking, chairman synthesis. Provider config from env (OPENAI/ANTHROPIC/FIREWORKS/OPENROUTER/custom OpenAI-compatible base URL). Persists transcript to a wiki page when --wiki <slug> is passed. Use when the user wants multiple AI perspectives, consensus-building, or the \"LLM Council\" approach for high-stakes reviews, plan critique, or contested learning rules.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "quality-and-safety",
+        "design-and-frontend"
+      ],
+      "relative_path": "pro-llm-council/SKILL.md",
+      "sha256": "8b7b2587dfc5812291ae2456fa5f2ae164392747333ffe5d30e46e8f5061f1a8"
+    },
+    {
+      "id": "llm-gate",
+      "name": "llm-gate",
+      "description": "LLM-powered quality verification using prompt hooks. Validates commit messages, code patterns, and conventions using AI before allowing operations. Use to set up intelligent guardrails.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "quality-and-safety"
+      ],
+      "relative_path": "pro-llm-gate/SKILL.md",
+      "sha256": "4b7da8e85e2041f87812049fb15228efe7defe342b0463f1330542a176d668e6"
+    },
+    {
+      "id": "mcp-audit",
+      "name": "mcp-audit",
+      "description": "Audit connected MCP servers for token overhead, redundancy, and security. Use when sessions feel slow or before adding new MCPs.",
+      "triggers": [],
+      "categories": [
+        "context-and-cost",
+        "software-engineering",
+        "quality-and-safety"
+      ],
+      "relative_path": "pro-mcp-audit/SKILL.md",
+      "sha256": "a7a8973d7bc50258e642ba09226c8129da945f7dc890117e57fe9411146f8932"
+    },
+    {
+      "id": "module-map",
+      "name": "module-map",
+      "description": "Produce a one-screen map of an unfamiliar area of the codebase: entry points, modules, data flow, callers. Designed to be read in fifteen seconds. Use when the user says \"I do not know this area\", \"give me the map\", \"zoom out\", \"orient me\".",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "design-and-frontend"
+      ],
+      "relative_path": "pro-module-map/SKILL.md",
+      "sha256": "12b79ba718e4e85e21ca862808f5fe61647b59c59675fa78e45c272ecb34c4df"
+    },
+    {
+      "id": "orchestrate",
+      "name": "orchestrate",
+      "description": "Wire Commands, Agents, and Skills together for complex multi-phase features. Use when: 編排、orchestration、complex feature、multi-phase development、research-then-implement、coordinate skills、大型功能。",
+      "triggers": [
+        "編排、orchestration、complex feature、multi-phase development、research-then-implement、coordinate skills、大型功能。"
+      ],
+      "categories": [
+        "orchestration",
+        "software-engineering"
+      ],
+      "relative_path": "pro-orchestrate/SKILL.md",
+      "sha256": "15248f2e465a62e8aa9ac384097bd031d2df9ed2cc664cd66d4e4504aeb22132"
+    },
+    {
+      "id": "parallel-worktrees",
+      "name": "parallel-worktrees",
+      "description": "Create git worktrees for parallel coding sessions with zero dead time. Use when: 並行工作樹、git worktree、parallel branches、context switching、work on multiple branches、waiting on tests、zero dead time。",
+      "triggers": [
+        "並行工作樹、git worktree、parallel branches、context switching、work on multiple branches、waiting on tests、zero dead time。"
+      ],
+      "categories": [
+        "context-and-cost",
+        "software-engineering"
+      ],
+      "relative_path": "pro-parallel-worktrees/SKILL.md",
+      "sha256": "afdb7eb1542dcd416e61b17ea2bcc1055c60e8bb1bd78de73d8a686c5eba614a"
+    },
+    {
+      "id": "permission-tuner",
+      "name": "permission-tuner",
+      "description": "Analyze permission denial patterns and generate optimized alwaysAllow and alwaysDeny rules. Use when permission prompts are slowing you down or after sessions with many denials.",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "pro-permission-tuner/SKILL.md",
+      "sha256": "0178a72b6eac740e85fd02aea6a7bf7ae476f9b838f7b349265a6ef4a0b04d99"
+    },
+    {
+      "id": "plan-interrogate",
+      "name": "plan-interrogate",
+      "description": "Stress-test a plan by walking its decision tree one question at a time. Use when the user wants to pressure-test a design before implementation.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "design-and-frontend"
+      ],
+      "relative_path": "pro-plan-interrogate/SKILL.md",
+      "sha256": "b8b5cd8fc8088b2e0d5e909ddb2f7af5f6c923b174870e76b8a42c95d3f829e7"
+    },
+    {
+      "id": "pro-workflow",
+      "name": "pro-workflow",
+      "description": "Complete AI coding workflow: orchestration patterns, hooks, agents, learnings. Use when: 工作流、workflow、AI coding workflow、development process、hook events、agent orchestration、dev workflow。",
+      "triggers": [
+        "工作流、workflow、AI coding workflow、development process、hook events、agent orchestration、dev workflow。"
+      ],
+      "categories": [
+        "orchestration",
+        "software-engineering"
+      ],
+      "relative_path": "pro-pro-workflow/SKILL.md",
+      "sha256": "078b3cd3d198edb761157afb69f71e72cf0a5d521a4630a91cfd3f055621baaa"
+    },
+    {
+      "id": "replay-learnings",
+      "name": "replay-learnings",
+      "description": "Surface past learnings relevant to the current task before starting work. Searches correction history, recalls past mistakes, and applies prior patterns. Use when starting a task, saying \"what do I know about\", \"previous mistakes\", \"lessons learned\", or \"remind me about\".",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "pro-replay-learnings/SKILL.md",
+      "sha256": "2f92ef8eab20f6b0ce0c6711968bb437f7926bda395e045fcb8ab260cb42d3be"
+    },
+    {
+      "id": "safe-mode",
+      "name": "safe-mode",
+      "description": "Enforce directory lockdown when active",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "pro-safe-mode/SKILL.md",
+      "sha256": "f7f0919804bc8dd3bec46afc31eb7bf03a61fea906ea644a87c704ced1ff999e"
+    },
+    {
+      "id": "session-handoff",
+      "name": "session-handoff",
+      "description": "Generate a structured handoff document capturing current progress, open tasks, key decisions, and context needed to resume work. Use when ending a session, saying \"continue later\", \"save progress\", \"session summary\", or \"pick up where I left off\".",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "context-and-cost",
+        "documents-and-publishing"
+      ],
+      "relative_path": "pro-session-handoff/SKILL.md",
+      "sha256": "094b41028196706badab2f6aeaa05773a1d12aa2cfe9b3cd7044efe218ff370a"
+    },
+    {
+      "id": "skill-optimizer",
+      "name": "skill-optimizer",
+      "description": "SkillOpt-flavored offline training loop for any SKILL.md. Treats accumulated learn-rule corrections as training trajectories, proposes bounded patches via an optimizer LLM, gates each candidate against a held-out validation set built from the user's own past corrections, and ships only candidates that demonstrably improve the score. Inspired by Microsoft SkillOpt's ReflACT pipeline (rollout → reflect → aggregate → select → update → evaluate) adapted to pro-workflow's SQLite store. Use when a skill has accumulated 8+ learn-rule rows and the user wants the skill itself to get better, not just longer.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "design-and-frontend"
+      ],
+      "relative_path": "pro-skill-optimizer/SKILL.md",
+      "sha256": "4fc3f1e1155422f69095921a7b61e4dd25ce664b3c31df9a05146383d63ca97a"
+    },
+    {
+      "id": "smart-commit",
+      "name": "smart-commit",
+      "description": "Run quality gates, review staged changes for issues, and create a well-crafted conventional commit. Use when saying \"commit\", \"git commit\", \"save my changes\", or ready to commit after making changes.",
+      "triggers": [],
+      "categories": [
+        "quality-and-safety"
+      ],
+      "relative_path": "pro-smart-commit/SKILL.md",
+      "sha256": "0e85074401c1269d58c04d9e5e46ce54e989c41ed51b1d970cde7c705032b223"
+    },
+    {
+      "id": "sprint-status",
+      "name": "sprint-status",
+      "description": "Track parallel work sessions and prevent confusion across multiple Claude Code instances. Every major step ends with a status line. Every question re-states project, branch, and task.",
+      "triggers": [],
+      "categories": [
+        "software-engineering"
+      ],
+      "relative_path": "pro-sprint-status/SKILL.md",
+      "sha256": "068e502d315d9cd8c8dabe024d21b6b16283a3309386850c58038a651fd9bed9"
+    },
+    {
+      "id": "survey-generator",
+      "name": "survey-generator",
+      "description": "Compile a structured literature survey on any AI/ML topic. Agent curates a research bundle (taxonomy + sections + bibliography of real papers) from a public anchor resource, then a chosen LLM generates the survey artifact. Output target is a wiki page (markdown), not a one-off HTML — survey lands in `<wiki>/derived/surveys/<slug>.md` with full bibliography rows in `sources.md`. Provider-agnostic (Anthropic/OpenAI/OpenRouter/Fireworks/custom OpenAI-compat). Use when the user asks for a \"survey\", \"literature review\", \"lit review\", or \"deep dive\" on a technical topic.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "quality-and-safety",
+        "documents-and-publishing"
+      ],
+      "relative_path": "pro-survey-generator/SKILL.md",
+      "sha256": "4456da67e1317e9b5fa9ad5fcdc5dd8c69c75215cd455e8c9459f3f3d5f05e7d"
+    },
+    {
+      "id": "thoroughness-scoring",
+      "name": "thoroughness-scoring",
+      "description": "Score every decision point with a Thoroughness Rating (1-10). AI makes the marginal cost of doing things properly near-zero — pick the higher-rated option every time. Includes scope checks to distinguish contained vs unbounded work.",
+      "triggers": [],
+      "categories": [
+        "context-and-cost",
+        "design-and-frontend"
+      ],
+      "relative_path": "pro-thoroughness-scoring/SKILL.md",
+      "sha256": "18af2ff5c1e1ee69acff404da48f9fd15624df0fac30bd540d290ebfb793f4a7"
+    },
+    {
+      "id": "token-efficiency",
+      "name": "token-efficiency",
+      "description": "Reduce token waste 40-60% via anti-sycophancy, tool-call budgets, one-pass coding. Use when: token效率、token efficiency、save tokens、reduce cost、verbose output、too many tokens、節省token。",
+      "triggers": [
+        "token效率、token efficiency、save tokens、reduce cost、verbose output、too many tokens、節省token。"
+      ],
+      "categories": [
+        "context-and-cost"
+      ],
+      "relative_path": "pro-token-efficiency/SKILL.md",
+      "sha256": "74ebff994e849030b7ade1fffcc19db0b22b760e80d1bc038fcfbed0f4b25963"
+    },
+    {
+      "id": "wiki-builder",
+      "name": "wiki-builder",
+      "description": "Start, structure, and grow a persistent research wiki indexed in pro-workflow's SQLite knowledge base. Each wiki is a folder of markdown pages with provenance, plus a shadow FTS5 index so any session can recall it. Use when the user says \"start a wiki\", \"add to wiki\", \"compile a page\", \"wiki on X\", or wants a long-lived knowledge base on a topic, paper, product, person, project, or codebase.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "context-and-cost",
+        "software-engineering",
+        "design-and-frontend",
+        "documents-and-publishing"
+      ],
+      "relative_path": "pro-wiki-builder/SKILL.md",
+      "sha256": "c8783dc35ceb2eab0d2c9cdda7c6c323ae6ff6668f1aef8dcc2f249822bfdc80"
+    },
+    {
+      "id": "wiki-query",
+      "name": "wiki-query",
+      "description": "Query pro-workflow wikis via SQLite FTS5 BM25 retrieval. Returns top-K passages with citations. Use when answering a question that any of the user's wikis already covers, when the user says \"what does the wiki say about X\", \"ask wiki\", \"search wikis\", or before drafting a new wiki page (to avoid duplication).",
+      "triggers": [],
+      "categories": [
+        "orchestration"
+      ],
+      "relative_path": "pro-wiki-query/SKILL.md",
+      "sha256": "c55fea3ec4f8c62d46547a66d24587765027050008a505d486f04035979c6952"
+    },
+    {
+      "id": "wiki-research-loop",
+      "name": "wiki-research-loop",
+      "description": "Auto-grow a pro-workflow wiki by running a budget-capped BFS research loop over pluggable source fetchers (web, arXiv, GitHub). Each iteration pops a seed from the queue, fetches sources, drafts a wiki page, dedupes claims against existing pages, enqueues follow-up seeds. Halts on budget cap, depth cap, or convergence. Use when the user says \"research <topic>\", \"grow the <slug> wiki\", \"auto-research\", or wants a knowledge base that builds itself overnight.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "context-and-cost",
+        "design-and-frontend",
+        "integrations-and-data"
+      ],
+      "relative_path": "pro-wiki-research-loop/SKILL.md",
+      "sha256": "def45edaa670a5f4bd91edbf584246b7d61130c68d5a4182f0a4fe7bc75d36cb"
+    },
+    {
+      "id": "wiki-viewer",
+      "name": "wiki-viewer",
+      "description": "Render a self-contained HTML viewer for a pro-workflow wiki. Pages, sources, claims, seed queue, page-link graph and full-text search all in one file. No external dependencies, no JS framework, S3-uploadable. Use when the user wants to browse a wiki visually, share its current state with someone, audit research progress, or hand off a knowledge base. Inspired by Thariq Shihipar's \"Unreasonable Effectiveness of HTML\" — favors information density and shareability over markdown-only outputs.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "context-and-cost",
+        "quality-and-safety",
+        "design-and-frontend",
+        "documents-and-publishing"
+      ],
+      "relative_path": "pro-wiki-viewer/SKILL.md",
+      "sha256": "fec1a5215966cbc408ff3bd39000a00ce61565e9d82902c9d11299b6a643b196"
+    },
+    {
+      "id": "wrap-up",
+      "name": "wrap-up",
+      "description": "End-of-session ritual that audits changes, runs quality checks, captures learnings, and produces a session summary. Use when saying \"wrap up\", \"done for the day\", \"finish coding\", or ending a coding session.",
+      "triggers": [],
+      "categories": [
+        "quality-and-safety"
+      ],
+      "relative_path": "pro-wrap-up/SKILL.md",
+      "sha256": "50d988810fb6ab603aa3ce68e06e3c2feae2f7e443f7236f66d515e60fe7628c"
+    },
+    {
+      "id": "prototype",
+      "name": "prototype",
+      "description": "Build throwaway prototypes to explore designs before committing. Routes to terminal app or multiple UI variations. Use when: 原型設計、prototype、快速迭代、explore design、try designs、mock up UI、play with it、試試看。",
+      "triggers": [
+        "原型設計、prototype、快速迭代、explore design、try designs、mock up UI、play with it、試試看。"
+      ],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "prototype/SKILL.md",
+      "sha256": "e8062083974b0b66f6e1a61ab193dba7fc7ed3e27ef3ded0f75647f4a2b85208"
+    },
+    {
+      "id": "receiving-code-review",
+      "name": "receiving-code-review",
+      "description": "Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "quality-and-safety",
+        "design-and-frontend"
+      ],
+      "relative_path": "receiving-code-review/SKILL.md",
+      "sha256": "c9382e92b8f32363566068ecfed19d3b2651eaf40d3942b24840f839dedfc406"
+    },
+    {
+      "id": "redesign-existing-projects",
+      "name": "redesign-existing-projects",
+      "description": "Upgrade existing websites to premium quality by auditing and fixing generic AI patterns. Use when: 重設計、redesign、UI改造、upgrade design、improve existing site、fix generic look、refresh UI、make it look better。",
+      "triggers": [
+        "重設計、redesign、UI改造、upgrade design、improve existing site、fix generic look、refresh UI、make it look better。"
+      ],
+      "categories": [
+        "quality-and-safety",
+        "design-and-frontend"
+      ],
+      "relative_path": "redesign-skill/SKILL.md",
+      "sha256": "683b70b9ce3480694d11a46c63a39b446746e3bea8a7d8ff20c35d4bfb0352e2"
+    },
+    {
+      "id": "release-skills",
+      "name": "release-skills",
+      "description": "Universal release workflow. Auto-detects version files and changelogs. Supports Node.js, Python, Rust, Claude Plugin, GitHub Releases, annotated tags, historical release backfill, and generic projects. Use when user says \"release\", \"发布\", \"new version\", \"bump version\", \"push\", \"推送\", \"release notes\", \"GitHub Release\", or \"回填 Release\".",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "integrations-and-data"
+      ],
+      "relative_path": "release-skills/SKILL.md",
+      "sha256": "f320492bbc9ced7d00d07c55c4adf5b20e34214a42bf037b68ccaa4a6c62e377"
+    },
+    {
+      "id": "requesting-code-review",
+      "name": "requesting-code-review",
+      "description": "Use when completing tasks, implementing major features, or before merging to verify work meets requirements",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "quality-and-safety",
+        "design-and-frontend"
+      ],
+      "relative_path": "requesting-code-review/SKILL.md",
+      "sha256": "5a3a44a3667800e2dc836829c6b92fada51e6dc58ac144ec05fe59f47d6bcd84"
+    },
+    {
+      "id": "runaway-guard",
+      "name": "runaway-guard",
+      "description": "Use when writing or reviewing code that calls a paid AI / inference API in a loop, queue, retry path, agent step, webhook handler, or background job — Fal.ai, Anthropic, OpenAI, Replicate, ElevenLabs, Together, Groq, Cohere, Mistral, fal-client, @anthropic-ai/sdk, openai, replicate. Treats dollar cost as a third complexity dimension alongside time and space. Forces writing a per-run $-cap, a per-day $-cap, a max-iterations bound, and a concurrency limit BEFORE the call site is written — and forces a matching hard cap at the provider dashboard so a code bug cannot bypass it. The canonical failure is a $200 overnight bill from a retry loop that \"obviously terminates\" but did not. Pairs with invariant-guard (termination is now a wallet invariant) and complexity-cuts (when the runaway already shipped).",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "context-and-cost",
+        "software-engineering",
+        "quality-and-safety"
+      ],
+      "relative_path": "runaway-guard/SKILL.md",
+      "sha256": "ff58c0aa1893ea9ab5d3d81518968fe2f35ef4a8c2b11e2caecf7456b875f9e2"
+    },
+    {
+      "id": "setup-matt-pocock-skills",
+      "name": "setup-matt-pocock-skills",
+      "description": "Sets up an `## Agent skills` block in AGENTS.md/CLAUDE.md and `docs/agents/` so the engineering skills know this repo's issue tracker (GitHub or local markdown), triage label vocabulary, and domain doc layout. Run before first use of `to-issues`, `to-prd`, `triage`, `diagnose`, `tdd`, `improve-codebase-architecture`, or `zoom-out` — or if those skills appear to be missing context about the issue tracker, triage labels, or domain docs.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "context-and-cost",
+        "software-engineering",
+        "quality-and-safety",
+        "documents-and-publishing",
+        "integrations-and-data"
+      ],
+      "relative_path": "setup-matt-pocock-skills/SKILL.md",
+      "sha256": "c778d4e3d86ecc9125c357279a86780657b5db23110e1f7acf4f46d2441e7204"
+    },
+    {
+      "id": "sketch",
+      "name": "sketch",
+      "description": "Throwaway HTML mockups: 2-3 design variants to compare.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "sketch/SKILL.md",
+      "sha256": "c643ff8657341b39284dbe1c70442b4ac746f5702d8457759376d4165d6879e5"
+    },
+    {
+      "id": "Skill Development",
+      "name": "Skill Development",
+      "description": "This skill should be used when the user wants to \"create a skill\", \"add a skill to plugin\", \"write a new skill\", \"improve skill description\", \"organize skill content\", or needs guidance on skill structure, progressive disclosure, or skill development best practices for Claude Code plugins.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "design-and-frontend"
+      ],
+      "relative_path": "skill-development/SKILL.md",
+      "sha256": "d40080c45d652dd3cc481d1e381cd7e6258091a87351fa1de67c6c8ecec3446e"
+    },
+    {
+      "id": "ckm:slides",
+      "name": "ckm:slides",
+      "description": "Create strategic HTML presentations with Chart.js data visualization, responsive layouts, and design tokens. Use when: 做簡報、HTML slides、data-driven presentation、strategic slides、Chart.js、做投影片。",
+      "triggers": [
+        "做簡報、HTML slides、data-driven presentation、strategic slides、Chart.js、做投影片。"
+      ],
+      "categories": [
+        "context-and-cost",
+        "design-and-frontend"
+      ],
+      "relative_path": "slides/SKILL.md",
+      "sha256": "9e5b513302e300d980491bdae6853ae3785dff4085c378e3c06851b30a9612e9"
+    },
+    {
+      "id": "high-end-visual-design",
+      "name": "high-end-visual-design",
+      "description": "Awwwards-tier UI design: premium fonts, cinematic motion, Apple/Linear-level aesthetics. Use when: 高端UI設計、premium design、Awwwards、expensive look、agency-level、haptic depth、micro-interactions、$150k design。",
+      "triggers": [
+        "高端UI設計、premium design、Awwwards、expensive look、agency-level、haptic depth、micro-interactions、$150k design。"
+      ],
+      "categories": [
+        "design-and-frontend",
+        "media-and-images"
+      ],
+      "relative_path": "soft-skill/SKILL.md",
+      "sha256": "66e89949eb1d1b3807b388b5bdb6b86deeb2832ff475b970b79eadd085e12402"
+    },
+    {
+      "id": "songsee",
+      "name": "songsee",
+      "description": "Audio spectrograms/features (mel, chroma, MFCC) via CLI.",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "songsee/SKILL.md",
+      "sha256": "d9d8d1394c630bd83329cd54cd8f18e0e3cd140debe31c3ccf5d9667f054de07"
+    },
+    {
+      "id": "spike",
+      "name": "spike",
+      "description": "Throwaway experiments to validate an idea before build.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "spike/SKILL.md",
+      "sha256": "891bc0a6fbb7aa6cb4164e48e2d20aae56aad7bbd83d20d093ba89a8ed2b48ab"
+    },
+    {
+      "id": "stitch-design-taste",
+      "name": "stitch-design-taste",
+      "description": "Semantic Design System Skill for Google Stitch. Generates agent-friendly DESIGN.md files that enforce premium, anti-generic UI standards — strict typography, calibrated color, asymmetric layouts, perpetual micro-motion, and hardware-accelerated performance.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "design-and-frontend",
+        "integrations-and-data"
+      ],
+      "relative_path": "stitch-skill/SKILL.md",
+      "sha256": "1cd55cf8643f3828bc9a3aaadb5da97ee28f98f745b7071d7e217ffeab92fd2a"
+    },
+    {
+      "id": "styleseed",
+      "name": "styleseed",
+      "description": "Design system with 69 visual rules, 5 motion seeds (Spring/Silk/Snap/Float/Pulse), brand skins, and React components. Use when: design tokens、動畫種子、設計系統、brand skin、motion design、UI規則、視覺一致性。",
+      "triggers": [
+        "design tokens、動畫種子、設計系統、brand skin、motion design、UI規則、視覺一致性。"
+      ],
+      "categories": [
+        "context-and-cost",
+        "design-and-frontend"
+      ],
+      "relative_path": "styleseed/SKILL.md",
+      "sha256": "e5ccef878ff144374fa0649b1adfb0cabc1dab07c188b460cc97ccf03ada42e4"
+    },
+    {
+      "id": "subagent-driven-development",
+      "name": "subagent-driven-development",
+      "description": "Execute implementation plans by dispatching fresh subagents per task with two-stage review. Use when: subagent、多代理開發、execute plan、dispatch agents、parallel tasks、independent tasks、implementation plan。",
+      "triggers": [
+        "subagent、多代理開發、execute plan、dispatch agents、parallel tasks、independent tasks、implementation plan。"
+      ],
+      "categories": [
+        "orchestration",
+        "software-engineering",
+        "quality-and-safety"
+      ],
+      "relative_path": "subagent-driven-development/SKILL.md",
+      "sha256": "cc08188ea17eb813423fa76f009f39e7fd36118c5d835a388be5eefd20742dcc"
+    },
+    {
+      "id": "systematic-debugging",
+      "name": "systematic-debugging",
+      "description": "Systematic debugging — find root cause before fixing. Use when: debug、除錯、調試、bug、test failure、unexpected behavior、出錯、報錯、不work、有問題。Never symptom-fix; always root-cause first.",
+      "triggers": [
+        "debug、除錯、調試、bug、test failure、unexpected behavior、出錯、報錯、不work、有問題。Never symptom-fix; always root-cause first"
+      ],
+      "categories": [
+        "software-engineering"
+      ],
+      "relative_path": "systematic-debugging/SKILL.md",
+      "sha256": "85fe505cc2dfeeca5e5ebefd5dfc61132d9d4e1338684b7610d0ea83de7bf39a"
+    },
+    {
+      "id": "design-taste-frontend",
+      "name": "design-taste-frontend",
+      "description": "Anti-slop frontend design for landing pages, portfolios, and redesigns. Use when: 設計方向、anti-slop、美學風格、landing page設計、portfolio設計、redesign、避免AI感、design direction、taste、anti-generic。",
+      "triggers": [
+        "設計方向、anti-slop、美學風格、landing page設計、portfolio設計、redesign、避免AI感、design direction、taste、anti-generic。"
+      ],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "taste-skill/SKILL.md",
+      "sha256": "900803be2d413d4411a7be2e39e987079f12adb8e4862a08307c34c785792d57"
+    },
+    {
+      "id": "design-taste-frontend-v1",
+      "name": "design-taste-frontend-v1",
+      "description": "The original v1 taste-skill, preserved for projects depending on its exact behavior. The current default is `design-taste-frontend` (v2 experimental), which is a substantial rewrite. Use this v1 install name only if you need exact backward compatibility.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "taste-skill-v1/SKILL.md",
+      "sha256": "70b8cd16f4103017167fc30d613f049dbeab9df75ae93447e0623650fa7c84a9"
+    },
+    {
+      "id": "tdd",
+      "name": "tdd",
+      "description": "Test-driven development with red-green-refactor cycle. Use when: TDD、test-driven、測試驅動、寫測試、unit test、integration test、red-green-refactor、先寫測試、test first、測試優先。",
+      "triggers": [
+        "TDD、test-driven、測試驅動、寫測試、unit test、integration test、red-green-refactor、先寫測試、test first、測試優先。"
+      ],
+      "categories": [
+        "software-engineering"
+      ],
+      "relative_path": "tdd/SKILL.md",
+      "sha256": "8ae3fb3ce33a69cc829586ac52d9f2035d5d08f922507775fcb7eeeeb6132fab"
+    },
+    {
+      "id": "teams-meeting-pipeline",
+      "name": "teams-meeting-pipeline",
+      "description": "Operate the Teams meeting summary pipeline via Hermes CLI — summarize meetings, inspect pipeline status, replay jobs, manage Microsoft Graph subscriptions.",
+      "triggers": [],
+      "categories": [
+        "orchestration"
+      ],
+      "relative_path": "teams-meeting-pipeline/SKILL.md",
+      "sha256": "472e8772146f571fadbe3ea27ff71f0be4b0946f8263a7e5419cfee818168591"
+    },
+    {
+      "id": "test-driven-development",
+      "name": "test-driven-development",
+      "description": "Use when implementing any feature or bugfix, before writing implementation code",
+      "triggers": [],
+      "categories": [
+        "software-engineering"
+      ],
+      "relative_path": "test-driven-development/SKILL.md",
+      "sha256": "7dee67b4af6bdccc7a914ca34533184d64592d0f5b23aeae631538168db14994"
+    },
+    {
+      "id": "threejs-animation",
+      "name": "threejs-animation",
+      "description": "Three.js animation: keyframe, skeletal, morph targets, animation mixing. Use when: 3D動畫、Three.js動畫、animate objects、GLTF animation、procedural motion、blend animations、keyframe animation。",
+      "triggers": [
+        "3D動畫、Three.js動畫、animate objects、GLTF animation、procedural motion、blend animations、keyframe animation。"
+      ],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "threejs-animation/SKILL.md",
+      "sha256": "d61a84971c085e93dddf0f0ac268e176d6afb48e3b551e887cfc27189b67e559"
+    },
+    {
+      "id": "threejs-fundamentals",
+      "name": "threejs-fundamentals",
+      "description": "Three.js scene setup: cameras, renderer, Object3D hierarchy, coordinate systems, transforms. Use when: 3D場景、Three.js基礎、setup 3D scene、camera、renderer、Object3D、scene graph、3D scene。",
+      "triggers": [
+        "3D場景、Three.js基礎、setup 3D scene、camera、renderer、Object3D、scene graph、3D scene。"
+      ],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "threejs-fundamentals/SKILL.md",
+      "sha256": "85004b4370a6565fa29df18d411914326239775fc647d65784e1de3390a1fea2"
+    },
+    {
+      "id": "threejs-geometry",
+      "name": "threejs-geometry",
+      "description": "Three.js geometry creation - built-in shapes, BufferGeometry, custom geometry, instancing. Use when creating 3D shapes, working with vertices, building custom meshes, or optimizing with instanced rendering.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "threejs-geometry/SKILL.md",
+      "sha256": "8337bcf86621411f54ef39727b338c84890815e4b3612ce635d593dd9c321a3e"
+    },
+    {
+      "id": "threejs-interaction",
+      "name": "threejs-interaction",
+      "description": "Three.js interaction - raycasting, controls, mouse/touch input, object selection. Use when handling user input, implementing click detection, adding camera controls, or creating interactive 3D experiences.",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "threejs-interaction/SKILL.md",
+      "sha256": "1bb23f0388d39863432494ff00ea0a96ae7d093c0c6f3149fb223ba1e673fef6"
+    },
+    {
+      "id": "threejs-lighting",
+      "name": "threejs-lighting",
+      "description": "Three.js lighting - light types, shadows, environment lighting. Use when adding lights, configuring shadows, setting up IBL, or optimizing lighting performance.",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "threejs-lighting/SKILL.md",
+      "sha256": "777875f7d6a75219d009ac69310772236231eec7cb57287c0509bb53e994af9d"
+    },
+    {
+      "id": "threejs-loaders",
+      "name": "threejs-loaders",
+      "description": "Three.js asset loading - GLTF, textures, images, models, async patterns. Use when loading 3D models, textures, HDR environments, or managing loading progress.",
+      "triggers": [],
+      "categories": [
+        "media-and-images"
+      ],
+      "relative_path": "threejs-loaders/SKILL.md",
+      "sha256": "03e0d7319692bb7eaa13cfada5d27d39840c7520c5ddc3fc8cc07b645dcba2e9"
+    },
+    {
+      "id": "threejs-materials",
+      "name": "threejs-materials",
+      "description": "Three.js materials - PBR, basic, phong, shader materials, material properties. Use when styling meshes, working with textures, creating custom shaders, or optimizing material performance.",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "threejs-materials/SKILL.md",
+      "sha256": "d5846d1b8254b903eacb3014486efbe331101518604b451098fd31989c3e7fe7"
+    },
+    {
+      "id": "threejs-postprocessing",
+      "name": "threejs-postprocessing",
+      "description": "Three.js post-processing - EffectComposer, bloom, DOF, screen effects. Use when adding visual effects, color grading, blur, glow, or creating custom screen-space shaders.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend",
+        "documents-and-publishing"
+      ],
+      "relative_path": "threejs-postprocessing/SKILL.md",
+      "sha256": "570b86434c30ad9bdc30f4f6d4e8c04124a07dd4ccaa778d4717ecc211dc1d90"
+    },
+    {
+      "id": "threejs-shaders",
+      "name": "threejs-shaders",
+      "description": "Three.js shaders: GLSL, ShaderMaterial, uniforms, custom effects. Use when: 著色器、GLSL、shader、custom visual effects、fragment shader、vertex shader、ShaderMaterial、自訂材質。",
+      "triggers": [
+        "著色器、GLSL、shader、custom visual effects、fragment shader、vertex shader、ShaderMaterial、自訂材質。"
+      ],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "threejs-shaders/SKILL.md",
+      "sha256": "2779041149c4c5cd2a2cdd83295dee8dad841d52d83e9865842ca175ad88834e"
+    },
+    {
+      "id": "threejs-textures",
+      "name": "threejs-textures",
+      "description": "Three.js textures - texture types, UV mapping, environment maps, texture settings. Use when working with images, UV coordinates, cubemaps, HDR environments, or texture optimization.",
+      "triggers": [],
+      "categories": [
+        "media-and-images",
+        "integrations-and-data"
+      ],
+      "relative_path": "threejs-textures/SKILL.md",
+      "sha256": "2a90ce70931e9b172fa5b70c13fd12e7b6f1600482d3ba0c73d95570fe728b65"
+    },
+    {
+      "id": "to-issues",
+      "name": "to-issues",
+      "description": "Break a plan, spec, or PRD into independently-grabbable issues on the project issue tracker using tracer-bullet vertical slices. Use when user wants to convert a plan into issues, create implementation tickets, or break down work into issues.",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "to-issues/SKILL.md",
+      "sha256": "0e6a2973fa5bdf32570227c578f7e474d945dd9281615d31439664c3ef016fce"
+    },
+    {
+      "id": "to-prd",
+      "name": "to-prd",
+      "description": "Turn the current conversation context into a PRD and publish it to the project issue tracker. Use when user wants to create a PRD from the current context.",
+      "triggers": [],
+      "categories": [
+        "context-and-cost"
+      ],
+      "relative_path": "to-prd/SKILL.md",
+      "sha256": "b60e3805e361e4eabc6f3df48d305299e0fde64cb24b6e95443c01de907a2e7d"
+    },
+    {
+      "id": "touchdesigner-mcp",
+      "name": "touchdesigner-mcp",
+      "description": "Control a running TouchDesigner instance via twozero MCP — create operators, set parameters, wire connections, execute Python, build real-time visuals. 36 native tools.",
+      "triggers": [],
+      "categories": [
+        "software-engineering",
+        "design-and-frontend"
+      ],
+      "relative_path": "touchdesigner-mcp/SKILL.md",
+      "sha256": "70a4217786c49122b76f2247fe63b18a61f4a0feaf18f4a4b5d176f2125b3641"
+    },
+    {
+      "id": "triage",
+      "name": "triage",
+      "description": "Triage issues through state-machine workflow. Use when: triage issues、問題分類、bug triage、create issue、review bugs、prepare issues for agent、manage issue workflow、優先級分類。",
+      "triggers": [
+        "triage issues、問題分類、bug triage、create issue、review bugs、prepare issues for agent、manage issue workflow、優先級分類。"
+      ],
+      "categories": [
+        "orchestration",
+        "quality-and-safety"
+      ],
+      "relative_path": "triage/SKILL.md",
+      "sha256": "13159a4b7db82e807d5e91be0307a7d9c680ace37e42233a2885208a2a3c5065"
+    },
+    {
+      "id": "ckm:ui-styling",
+      "name": "ckm:ui-styling",
+      "description": "Create beautiful, accessible user interfaces with shadcn/ui components (built on Radix UI + Tailwind), Tailwind CSS utility-first styling, and canvas-based visual designs. Use when building user interfaces, implementing design systems, creating responsive layouts, adding accessible components (dialogs, dropdowns, forms, tables), customizing themes and colors, implementing dark mode, generating visual designs and posters, or establishing consistent styling patterns across applications.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend",
+        "documents-and-publishing",
+        "media-and-images"
+      ],
+      "relative_path": "ui-styling/SKILL.md",
+      "sha256": "12b07e5b883c72f01e6f103a353f00fba8b512e71ccc29af33ddf1f6aae311ae"
+    },
+    {
+      "id": "ui-ux-pro-max",
+      "name": "ui-ux-pro-max",
+      "description": "UI/UX design intelligence: 50+ styles, 161 color palettes, 57 font pairings, 99 UX guidelines across 10 stacks. Use when: UX設計、使用者體驗、UI設計、交互設計、landing page、dashboard、mobile app、glassmorphism、brutalism、accessibility。",
+      "triggers": [
+        "UX設計、使用者體驗、UI設計、交互設計、landing page、dashboard、mobile app、glassmorphism、brutalism、accessibility。"
+      ],
+      "categories": [
+        "quality-and-safety",
+        "design-and-frontend"
+      ],
+      "relative_path": "ui-ux-pro-max/SKILL.md",
+      "sha256": "f4c7f754c9dc9f9df9db102a88aebf08679c8ccfa12311d97c22b7ac2692408d"
+    },
+    {
+      "id": "understand",
+      "name": "understand",
+      "description": "Analyze a codebase to produce an interactive knowledge graph for understanding architecture, components, and relationships",
+      "triggers": [],
+      "categories": [
+        "context-and-cost",
+        "software-engineering"
+      ],
+      "relative_path": "understand/SKILL.md",
+      "sha256": "e82730b349a1a6a51dab7f3e9b8e19a47da3d46682c122999d3392a905c3a28a"
+    },
+    {
+      "id": "understand-chat",
+      "name": "understand-chat",
+      "description": "Use when you need to ask questions about a codebase or understand code using a knowledge graph",
+      "triggers": [],
+      "categories": [
+        "context-and-cost",
+        "software-engineering"
+      ],
+      "relative_path": "understand-chat/SKILL.md",
+      "sha256": "d8234baaabcee97c2e4be8204a58123de592164e8d7502398caeddf1223b2e17"
+    },
+    {
+      "id": "understand-dashboard",
+      "name": "understand-dashboard",
+      "description": "Launch the interactive web dashboard to visualize a codebase's knowledge graph",
+      "triggers": [],
+      "categories": [
+        "context-and-cost",
+        "software-engineering",
+        "design-and-frontend"
+      ],
+      "relative_path": "understand-dashboard/SKILL.md",
+      "sha256": "5c2155ab1dcdf54e0b7e3e508d666a5c8faaf7c89ad1f7e1753d115eb371a691"
+    },
+    {
+      "id": "understand-diff",
+      "name": "understand-diff",
+      "description": "Use when you need to analyze git diffs or pull requests to understand what changed, affected components, and risks",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "understand-diff/SKILL.md",
+      "sha256": "747a84b1a25f9b65f2b0dea3ed37bb701e70b31d8e5d03d04c4b10805c56a3fd"
+    },
+    {
+      "id": "understand-domain",
+      "name": "understand-domain",
+      "description": "Extract business domain knowledge from a codebase and generate an interactive domain flow graph. Works standalone (lightweight scan) or derives from an existing /understand knowledge graph.",
+      "triggers": [],
+      "categories": [
+        "context-and-cost",
+        "software-engineering"
+      ],
+      "relative_path": "understand-domain/SKILL.md",
+      "sha256": "8c3c3bb810bcd11752f66be7c88347ceb4435e47cdfaf1bf39663fa5f37d0cb4"
+    },
+    {
+      "id": "understand-explain",
+      "name": "understand-explain",
+      "description": "Use when you need a deep-dive explanation of a specific file, function, or module in the codebase",
+      "triggers": [],
+      "categories": [
+        "software-engineering"
+      ],
+      "relative_path": "understand-explain/SKILL.md",
+      "sha256": "5a057cf9ce6717eb2d3ecbb8dd6a68647a41b901ebc1fc0b9439ca186f1b0739"
+    },
+    {
+      "id": "understand-knowledge",
+      "name": "understand-knowledge",
+      "description": "Analyze a Karpathy-pattern LLM wiki knowledge base and generate an interactive knowledge graph with entity extraction, implicit relationships, and topic clustering.",
+      "triggers": [],
+      "categories": [
+        "context-and-cost"
+      ],
+      "relative_path": "understand-knowledge/SKILL.md",
+      "sha256": "9664aabd22f87072c4d3653450a8934dc5df6dc991ffbbc44b6704b23b8439c5"
+    },
+    {
+      "id": "understand-onboard",
+      "name": "understand-onboard",
+      "description": "Use when you need to generate an onboarding guide for new team members joining a project",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "design-and-frontend"
+      ],
+      "relative_path": "understand-onboard/SKILL.md",
+      "sha256": "fad391a6526aeeb90ae8686e071ebe2d29700ebb4ea975e47a1c6da8b66171c3"
+    },
+    {
+      "id": "using-git-worktrees",
+      "name": "using-git-worktrees",
+      "description": "Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback",
+      "triggers": [],
+      "categories": [
+        "integrations-and-data"
+      ],
+      "relative_path": "using-git-worktrees/SKILL.md",
+      "sha256": "085a45ee3de432bdb2768011591d9a882cb6c759e2317f379226451c5618fe8e"
+    },
+    {
+      "id": "using-superpowers",
+      "name": "using-superpowers",
+      "description": "Meta-skill: establishes skill discovery and invocation rules. Use when: starting any session, skill not triggering, find available skills, use superpowers,能力啟用。",
+      "triggers": [
+        "starting any session, skill not triggering, find available skills, use superpowers,能力啟用。"
+      ],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "using-superpowers/SKILL.md",
+      "sha256": "1adce90aedd8b1362381f8bf8a7346966612cbde3591f74ab7e55e539fa1209a"
+    },
+    {
+      "id": "verification-before-completion",
+      "name": "verification-before-completion",
+      "description": "Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "verification-before-completion/SKILL.md",
+      "sha256": "ea52d15aabaf72bc6b558efe2c126f161b53961090ddcd712000273bfe8c7b6c"
+    },
+    {
+      "id": "visual-atelier",
+      "name": "visual-atelier",
+      "description": "超級視覺引擎 — 將文字/數據轉為簡報、圖表、信息圖、動態投影片。Use when: 做簡報、PPT、slides、infographic、分鏡、數據視覺化、storyboard、視覺化。融合 20+ Skills，四種輸出模式，三旋鈕設計調控。",
+      "triggers": [
+        "做簡報、PPT、slides、infographic、分鏡、數據視覺化、storyboard、視覺化。融合 20+ Skills，四種輸出模式，三旋鈕設計調控。"
+      ],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "visual-atelier/SKILL.md",
+      "sha256": "d9ffe1f0cf933b960d63105ccd5201edd2f37d87b59bdb0596948260b4f34a12"
+    },
+    {
+      "id": "web-video-presentation",
+      "name": "web-video-presentation",
+      "description": "Turn articles or scripts into clickable 16:9 web presentations that look like videos. Use when: 影片式簡報、動態PPT、口播稿轉網頁、video presentation、錄屏教程、cinematic demo、B站/YouTube教學、互動式解說。",
+      "triggers": [
+        "影片式簡報、動態PPT、口播稿轉網頁、video presentation、錄屏教程、cinematic demo、B站/YouTube教學、互動式解說。"
+      ],
+      "categories": [
+        "documents-and-publishing",
+        "media-and-images"
+      ],
+      "relative_path": "web-video-presentation/SKILL.md",
+      "sha256": "3b7ad48c06ce1fe218fbe0befd9242224b3874b27e9de9cf63ab00695c95243c"
+    },
+    {
+      "id": "write-a-skill",
+      "name": "write-a-skill",
+      "description": "Create new agent skills with proper structure, progressive disclosure, and bundled resources. Use when user wants to create, write, or build a new skill.",
+      "triggers": [],
+      "categories": [
+        "orchestration",
+        "design-and-frontend"
+      ],
+      "relative_path": "write-a-skill/SKILL.md",
+      "sha256": "be8f20e66309258034b82a7db5040b03798aa40546f9d387662c2bd86be23123"
+    },
+    {
+      "id": "writing-plans",
+      "name": "writing-plans",
+      "description": "Write comprehensive implementation plans from specs before touching code. Use when: 寫計劃、plan、roadmap、implementation plan、multi-step task、spec to plan、規劃、write plan、break down tasks。",
+      "triggers": [
+        "寫計劃、plan、roadmap、implementation plan、multi-step task、spec to plan、規劃、write plan、break down tasks。"
+      ],
+      "categories": [
+        "software-engineering"
+      ],
+      "relative_path": "writing-plans/SKILL.md",
+      "sha256": "ff07e2f04c08f316b2f9823000ac8f95d5584a65229d00a1a6911ff3af6ed11c"
+    },
+    {
+      "id": "Writing Hookify Rules",
+      "name": "Writing Hookify Rules",
+      "description": "This skill should be used when the user asks to \"create a hookify rule\", \"write a hook rule\", \"configure hookify\", \"add a hookify rule\", or needs guidance on hookify rule syntax and patterns.",
+      "triggers": [],
+      "categories": [
+        "design-and-frontend"
+      ],
+      "relative_path": "writing-rules/SKILL.md",
+      "sha256": "cf7a6a0b92092f44c6532bd9af7189748a9c3b4d044005418230b08cc99ac55c"
+    },
+    {
+      "id": "writing-skills",
+      "name": "writing-skills",
+      "description": "Use when creating new skills, editing existing skills, or verifying skills work before deployment",
+      "triggers": [],
+      "categories": [
+        "general"
+      ],
+      "relative_path": "writing-skills/SKILL.md",
+      "sha256": "38ba648975ae6ba512d6695676f146163db61a496b867f716f4bdfb0ee3aca3e"
+    },
+    {
+      "id": "xurl",
+      "name": "xurl",
+      "description": "X/Twitter via xurl CLI: post, search, DM, media, v2 API.",
+      "triggers": [],
+      "categories": [
+        "documents-and-publishing"
+      ],
+      "relative_path": "xurl/SKILL.md",
+      "sha256": "8b1899dc7188328a6589cd62ed594591c2d243c483bdfbd45c8a027f4e0332dd"
+    },
+    {
+      "id": "youtube-content",
+      "name": "youtube-content",
+      "description": "YouTube transcripts to summaries, threads, blogs.",
+      "triggers": [],
+      "categories": [
+        "documents-and-publishing"
+      ],
+      "relative_path": "youtube-content/SKILL.md",
+      "sha256": "f6e573f84f3f62dadaa0839491d1558071b6e6da9db9878e7c765fe1311c66be"
+    },
+    {
+      "id": "zoom-out",
+      "name": "zoom-out",
+      "description": "Zoom out for broader context and higher-level perspective on code. Use when: zoom out、全局視角、bigger picture、how does this fit、understand architecture、宏觀思考、unfamiliar code、high-level overview。",
+      "triggers": [
+        "zoom out、全局視角、bigger picture、how does this fit、understand architecture、宏觀思考、unfamiliar code、high-level overview。"
+      ],
+      "categories": [
+        "context-and-cost",
+        "software-engineering"
+      ],
+      "relative_path": "zoom-out/SKILL.md",
+      "sha256": "0585a252d82f604f387d87f587eb55cb1efbbca33630a98f9d745ca28897d596"
+    }
+  ]
+}

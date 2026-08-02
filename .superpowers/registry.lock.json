@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "source": "https://github.com/juhjuhx/agent-skills.git",
+  "source_ref": "main",
+  "source_commit": "db3b67d5b051c4223da9146b2b836a9ed45e9bac",
+  "skill_count": 214,
+  "artifact_sha256": {
+    "using-superpowers-v2-extensible-architecture.md": "9dfb79ce750369f24ff0fa9af4bf3ee4e0ad3b20ee72586bdb0ed0e0eb0d17a4",
+    "skills-catalog-and-using-superpowers-architecture.md": "b518fe772b286e167d8308028fb3905dc00b2473682605bf83663946ef8fecba",
+    "using-superpowers-v2-routing-policy.yaml": "dfe0f8a1a730daa182b3524b8bcfa0d24d0702942df52026c10b7e17a393c2f5"
+  }
+}
