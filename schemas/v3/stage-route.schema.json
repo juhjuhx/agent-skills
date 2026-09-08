@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/stage-route.schema.json",
+  "title": "Agent Skills Matrix v3 StageRoute",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "route_id",
+    "task_id",
+    "stage",
+    "registry_epoch",
+    "status",
+    "selected_skills",
+    "role_assignments",
+    "adapter",
+    "model_profile",
+    "granted_capabilities",
+    "budget_envelope",
+    "alternatives",
+    "route_reasons",
+    "evidence_required"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "route_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "task_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "stage": {"$ref": "common.schema.json#/$defs/stage"},
+    "registry_epoch": {"$ref": "common.schema.json#/$defs/recordId"},
+    "status": {
+      "type": "string",
+      "enum": ["SKILLS_SELECTED", "NO_SKILL_NEEDED"]
+    },
+    "selected_skills": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/selectedSkill"},
+      "uniqueItems": true
+    },
+    "role_assignments": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/roleAssignment"},
+      "uniqueItems": true
+    },
+    "adapter": {"$ref": "common.schema.json#/$defs/runtimeId"},
+    "model_profile": {"$ref": "common.schema.json#/$defs/recordId"},
+    "granted_capabilities": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/capability"},
+      "uniqueItems": true
+    },
+    "budget_envelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["permission_level"],
+      "properties": {
+        "permission_level": {"$ref": "common.schema.json#/$defs/permissionLevel"},
+        "max_input_tokens": {"type": "integer", "minimum": 0},
+        "max_output_tokens": {"type": "integer", "minimum": 0},
+        "max_tool_calls": {"type": "integer", "minimum": 0},
+        "max_parallel_agents": {"type": "integer", "minimum": 0}
+      }
+    },
+    "alternatives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["skill_id", "reason"],
+        "properties": {
+          "skill_id": {"$ref": "common.schema.json#/$defs/recordId"},
+          "reason": {"$ref": "common.schema.json#/$defs/shortString"}
+        }
+      }
+    },
+    "route_reasons": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "common.schema.json#/$defs/shortString"}
+    },
+    "evidence_required": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/shortString"},
+      "uniqueItems": true
+    },
+    "no_skill_reason": {"$ref": "common.schema.json#/$defs/shortString"},
+    "reroute_trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "reason"],
+      "properties": {
+        "kind": {"type": "string", "enum": ["stage_boundary", "evidence_failure", "capability_change", "budget_change", "user_change"]},
+        "reason": {"$ref": "common.schema.json#/$defs/shortString"},
+        "evidence_refs": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/recordId"}
+        }
+      }
+    },
+    "previous_route_ref": {"$ref": "common.schema.json#/$defs/recordId"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "SKILLS_SELECTED"}}},
+      "then": {
+        "properties": {
+          "selected_skills": {"minItems": 1},
+          "role_assignments": {"minItems": 1}
+        }
+      },
+      "else": {
+        "required": ["no_skill_reason"],
+        "properties": {
+          "selected_skills": {"maxItems": 0},
+          "role_assignments": {"maxItems": 0}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "selectedSkill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["skill_id", "role", "reason"],
+      "properties": {
+        "skill_id": {"$ref": "common.schema.json#/$defs/recordId"},
+        "role": {"$ref": "common.schema.json#/$defs/role"},
+        "reason": {"$ref": "common.schema.json#/$defs/shortString"}
+      }
+    },
+    "roleAssignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["skill_id", "role"],
+      "properties": {
+        "skill_id": {"$ref": "common.schema.json#/$defs/recordId"},
+        "role": {"$ref": "common.schema.json#/$defs/role"}
+      }
+    }
+  }
+}

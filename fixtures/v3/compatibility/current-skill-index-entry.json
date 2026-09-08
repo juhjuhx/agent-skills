@@ -1,0 +1,11 @@
+{
+  "id": "using-superpowers",
+  "name": "using-superpowers",
+  "description": "Meta-skill: establishes skill discovery and invocation rules. Use when: starting any session, skill not triggering, find available skills, use superpowers,能力啟用。",
+  "triggers": [
+    "starting any session, skill not triggering, find available skills, use superpowers,能力啟用。"
+  ],
+  "categories": ["general"],
+  "relative_path": "using-superpowers/SKILL.md",
+  "sha256": "1adce90aedd8b1362381f8bf8a7346966612cbde3591f74ab7e55e539fa1209a"
+}

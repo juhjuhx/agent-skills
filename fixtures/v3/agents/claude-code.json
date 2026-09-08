@@ -1,0 +1,52 @@
+{
+  "schema_version": "3.0",
+  "runtime_id": "claude-code",
+  "runtime_name": "Claude Code",
+  "manifest_version": "fixture-1.0",
+  "instruction_surfaces": {
+    "persistent": {
+      "paths": ["$AGENT_HOME/CLAUDE.md"],
+      "purposes": ["project-context", "routing-bootstrap"]
+    },
+    "session": ["$AGENT_HOME/.claude/session-context.md"]
+  },
+  "skill_discovery": {
+    "native_paths": ["$AGENT_HOME/.claude/skills"],
+    "lazy_loading": true,
+    "compatibility_paths": ["$AGENT_HOME/skills"],
+    "selected_refs_only": true
+  },
+  "commands": {"supported": true, "definitions": [{"id": "claude-command", "purpose": "Native command"}]},
+  "subagents": {"supported": true, "definitions": [{"id": "claude-subagent", "purpose": "Isolated or adversarial work"}]},
+  "plugins": {"supported": true, "definitions": [{"id": "claude-plugin", "purpose": "Packaged extension"}]},
+  "hooks": {"supported": true, "definitions": [{"id": "lifecycle-hook", "purpose": "Deterministic lifecycle enforcement"}]},
+  "mcp": {"supported": true, "lazy_loading": true, "schema_cost_tracked": true, "server_refs": []},
+  "permissions": {"policy_gated": true, "supports_profiles": true, "declared_scopes": ["workspace-read", "workspace-write", "network"]},
+  "sandbox": {"supported": true, "modes": ["read-only", "workspace-write"]},
+  "capabilities": {
+    "editing": true,
+    "browser": false,
+    "subagents": true,
+    "sandbox": true,
+    "MCP": true,
+    "structured_output": true,
+    "parallelism": true,
+    "native_learning": false,
+    "model_selection": true,
+    "reasoning_effort": true,
+    "long_context": true,
+    "multimodal": true
+  },
+  "model_selection": {"profile_based": true, "per_agent": true, "universal_model_ids": false},
+  "reasoning_effort": {"native": true, "artifact_contract": true, "levels": ["low", "medium", "high"]},
+  "parallelism": {"supported": true, "max_parallel": 4, "requires_disjoint_write_set": true},
+  "context_behavior": {
+    "static_prompt_prefix": "stable",
+    "dynamic_runtime_context": "lazy",
+    "tool_schema_budget": "tracked",
+    "tool_ordering": "runtime",
+    "cache_stability": "best-effort"
+  },
+  "generated_config": {"supported": true, "outputs": ["$AGENT_HOME/generated/claude-code.json"], "records_provenance": true},
+  "security_constraints": ["CLAUDE.md carries context, not every skill workflow.", "Hooks are reviewed as executable behavior."]
+}

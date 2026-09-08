@@ -1,6 +1,6 @@
 # Agent Skills Matrix v3
 
-> Status: **proposed architecture and contracts**. This directory is documentation-only. It does not implement a router, migrate metadata, change the installer, or install adapters.
+> Status: **proposed architecture; Phase 1 machine-readable contracts implemented**. This directory does not implement a router, migrate metadata, change the installer, or install adapters.
 
 ## Why v3
 
@@ -80,6 +80,7 @@ Each stage can independently select and reroute skills. A typical stage uses 3�
 - [Plugin, MCP, and CLI Matrix](PLUGIN_MCP_CLI_MATRIX.md) — native capability mapping.
 - [Migration Plan](MIGRATION_PLAN.md) — documentation-first implementation sequence.
 - [Donor Research Notes](DONOR_RESEARCH_NOTES.md) — provenance and adopted patterns.
+- [Phase 1 Machine-Readable Contracts](PHASE1_MACHINE_READABLE_CONTRACTS.md) — schemas, validation, fixtures, and compatibility projection.
 
 ### Native adapter guides
 

@@ -1,10 +1,12 @@
 # Agent Adapter Contract
 
-> Status: **runtime-neutral contract proposal**. Native guides show how each runtime maps to it; no adapter is implemented here.
+> Status: **runtime-neutral contract; Phase 1 manifest schema implemented**. Native guides show how each runtime maps to it; no adapter is implemented here.
 
 ## Purpose
 
 An adapter makes one canonical skill source feel native in a specific agent runtime. It translates a portable `TaskSpec`, selected skill references, capabilities, permissions, model profile, and evidence requirements into native configuration and lifecycle calls.
+
+Phase 1 represents the serializable portion as [`AgentAdapterManifest`](../../schemas/v3/agent-adapter-manifest.schema.json). The manifest advertises capabilities and native surfaces; it does not grant permissions, execute tools, or encode runtime-specific branches in the universal contract.
 
 An adapter must describe, or explicitly mark unavailable:
 

@@ -1,0 +1,100 @@
+{
+  "schema_version": "3.0",
+  "task_id": "T-v3-phase1-contracts-full",
+  "task_type": "implementation",
+  "goal": "Add the first machine-readable v3 contracts without implementing the stage router.",
+  "scope": {
+    "repository": "juhjuhx/agent-skills",
+    "paths": ["schemas/v3", "tools/v3", "tests/v3", "docs/v3"],
+    "include": ["schemas/v3", "tools/v3", "tests/v3"],
+    "exclude": ["install.sh", ".superpowers/ROUTING_POLICY.yaml"]
+  },
+  "complexity": "COMPLEX",
+  "risk": "HIGH",
+  "ambiguity": "MEDIUM",
+  "architecture_impact": "ARCHITECTURE-CHANGING",
+  "objectives": [
+    "Define TaskSpec, SkillMetadataV3, AgentAdapterManifest, ModelProfile, and StageRoute.",
+    "Validate fixtures and preserve the canonical registry as the source of truth."
+  ],
+  "constraints": {
+    "no_runtime_router": true,
+    "no_installer_change": true,
+    "no_registry_migration": true,
+    "publish_branch_only": true
+  },
+  "assumptions": [
+    {
+      "statement": "The current registry remains a v1 snapshot and is imported read-only.",
+      "source": ".superpowers/SKILLS_INDEX.json",
+      "confidence": 1,
+      "invalidation_signal": "A later phase lands a registry migration."
+    }
+  ],
+  "unknowns": [
+    {
+      "question": "Which future runtime will consume the first generated adapter?",
+      "impact": "Adapter-specific implementation is deferred to Phase 2.",
+      "owner": "Phase 2",
+      "status": "deferred"
+    }
+  ],
+  "required_outputs": [
+    "five JSON Schemas",
+    "validation helper",
+    "fixtures",
+    "compatibility tests",
+    "dogfood routing trace"
+  ],
+  "acceptance_criteria": [
+    "Every checked-in fixture validates against its named v3 schema.",
+    "Invalid trust, permission, role, relationship, version, and route-status cases fail.",
+    "The runtime adapter and model profile remain separate records.",
+    "No stage router or installer change is present."
+  ],
+  "stop_conditions": [
+    "Do not migrate .superpowers/SKILLS_INDEX.json.",
+    "Do not add a database or cloud orchestration service.",
+    "Stop before implementing Phase 2 Codex adapter behavior."
+  ],
+  "required_capabilities": [
+    "needs_editing",
+    "needs_sandbox",
+    "needs_structured_output"
+  ],
+  "permission_requirements": {
+    "level": "workspace-write",
+    "filesystem": "workspace-write",
+    "network": "standard",
+    "external_write": false,
+    "secrets": false,
+    "publish": false,
+    "delete": false
+  },
+  "context_budget": {
+    "max_input_tokens": 12000,
+    "max_artifact_tokens": 1000,
+    "max_tool_schema_tokens": 2000,
+    "class": "balanced"
+  },
+  "cost_budget": {
+    "class": "low",
+    "max_units": 10,
+    "currency": "USD"
+  },
+  "latency_budget": {
+    "class": "interactive",
+    "max_ms": 300000
+  },
+  "parallelizable": false,
+  "artifact_requirements": [
+    "TaskSpec",
+    "Decision Record",
+    "Stage Plan",
+    "Evidence",
+    "Verification",
+    "Learning Proposal"
+  ],
+  "stages": ["understand", "research", "design", "plan", "implement", "review", "verify", "harden", "handoff"],
+  "domains": ["schema-design", "agent-orchestration", "repository-maintenance"]
+}

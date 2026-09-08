@@ -1,0 +1,25 @@
+{
+  "schema_version": "3.0",
+  "provider_id": "openai",
+  "model_id": "gpt-compatible-fixture",
+  "profile_version": "fixture-1.0",
+  "capabilities": {
+    "coding": true,
+    "planning": true,
+    "debugging": true,
+    "research": true,
+    "review": true,
+    "security": true,
+    "tool_use": true,
+    "structured_output": true,
+    "multimodal": true,
+    "long_context": true
+  },
+  "reasoning": {"supported": true, "effort_levels": ["low", "medium", "high"]},
+  "limits": {"context_tokens": 128000, "max_output_tokens": 16000, "max_tool_schema_tokens": 12000, "max_parallel_requests": 4},
+  "latency": {"class": "interactive", "p50_ms": null, "p95_ms": null},
+  "cost": {"class": "balanced", "input_per_million": null, "output_per_million": null, "cache_behavior": "stable"},
+  "data_policy": {"region": "unknown", "retention": "unknown", "training_use": "unknown"},
+  "health": {"status": "unknown", "last_probe": null},
+  "measurement_provenance": {"source": "fixture", "method": "static-contract-fixture", "measured_at": null}
+}

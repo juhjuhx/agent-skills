@@ -1,0 +1,11 @@
+{
+  "schema_version": "3.0",
+  "task_id": "T-v3-phase1-contracts",
+  "task_type": "implementation",
+  "complexity": "COMPLEX",
+  "risk": "HIGH",
+  "ambiguity": "MEDIUM",
+  "objectives": [
+    "Define machine-readable v3 contracts without implementing the stage router."
+  ]
+}

@@ -8,24 +8,36 @@ The router accepts a `TaskSpec`, the current stage, the canonical registry snaps
 
 ```yaml
 StageRoute:
+  schema_version: "3.0"
+  route_id: <route-id>
+  task_id: <task-id>
   stage: implement
-  selected:
-    - skill: using-superpowers
+  status: SKILLS_SELECTED
+  selected_skills:
+    - skill_id: using-superpowers
       role: GATE
       reason: orchestration authority
-    - skill: incremental-implementation
+    - skill_id: incremental-implementation
       role: PROCESS
       reason: smallest authorized slice
+  role_assignments:
+    - skill_id: using-superpowers
+      role: GATE
+    - skill_id: incremental-implementation
+      role: PROCESS
   adapter: codex
   model_profile: <profile-ref>
-  granted_capabilities: [editing, structured-output]
-  budget: <stage-envelope>
+  granted_capabilities: [editing, structured_output]
+  budget_envelope:
+    permission_level: workspace-write
   alternatives: []
   evidence_required: [diff, tests, verification]
-  route_epoch: <registry-epoch>
+  registry_epoch: <registry-epoch>
 ```
 
 The router never needs private model reasoning. It needs the TaskSpec, metadata, capabilities, policy, and observable stage artifacts.
+
+The Phase 1 [`StageRoute` schema](../../schemas/v3/stage-route.schema.json) uses `selected_skills`, `role_assignments`, `registry_epoch`, and an explicit route `status`. The YAML above is a conceptual example; no router implementation is introduced here.
 
 ## Role slots
 
@@ -92,7 +104,7 @@ needs_MCP: false
 needs_structured_output: true
 needs_long_context: false
 needs_multimodal: false
-permission_level: local-write
+permission_level: workspace-write
 budget: balanced
 ```
 

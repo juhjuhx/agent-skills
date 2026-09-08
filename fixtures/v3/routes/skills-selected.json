@@ -1,0 +1,38 @@
+{
+  "schema_version": "3.0",
+  "route_id": "R-T-v3-phase1-contracts-implement",
+  "task_id": "T-v3-phase1-contracts-full",
+  "stage": "implement",
+  "registry_epoch": "registry:42c3d5c",
+  "status": "SKILLS_SELECTED",
+  "selected_skills": [
+    {"skill_id": "using-superpowers", "role": "GATE", "reason": "Session-level orchestration authority."},
+    {"skill_id": "test-driven-development", "role": "PROCESS", "reason": "Requires a failing test before implementation."},
+    {"skill_id": "code-review-excellence", "role": "REVIEW", "reason": "Provides the independent quality review checklist."},
+    {"skill_id": "verification-before-completion", "role": "VERIFY", "reason": "Requires fresh evidence before completion claims."}
+  ],
+  "role_assignments": [
+    {"skill_id": "using-superpowers", "role": "GATE"},
+    {"skill_id": "test-driven-development", "role": "PROCESS"},
+    {"skill_id": "code-review-excellence", "role": "REVIEW"},
+    {"skill_id": "verification-before-completion", "role": "VERIFY"}
+  ],
+  "adapter": "codex",
+  "model_profile": "openai/gpt-compatible-fixture@fixture-1",
+  "granted_capabilities": ["editing", "sandbox", "structured_output"],
+  "budget_envelope": {
+    "permission_level": "workspace-write",
+    "max_input_tokens": 12000,
+    "max_output_tokens": 6000,
+    "max_tool_calls": 50,
+    "max_parallel_agents": 0
+  },
+  "alternatives": [
+    {"skill_id": "tdd", "reason": "Equivalent TDD discipline, not needed in addition to the selected process skill."}
+  ],
+  "route_reasons": [
+    "The implementation stage needs a process, independent review, and verification evidence.",
+    "using-superpowers is referenced as the gate authority without reloading its full session instructions."
+  ],
+  "evidence_required": ["tests", "schema validation", "diff", "security review"]
+}

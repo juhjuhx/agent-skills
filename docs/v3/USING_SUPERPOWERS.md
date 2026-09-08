@@ -6,6 +6,10 @@
 
 `using-superpowers` is the orchestration authority. It establishes the routing bootstrap, turns a request into a portable `TaskSpec`, owns stage transitions, and requires an evidence gate before completion. A skill may advise the core; it may not redefine the core's permissions, deny list, budget, or completion criteria.
 
+### Session-level residency
+
+`using-superpowers` is a task/session-level authority, not an ordinary procedure that must reload its full instruction file at every stage. A stage route may reference it in the `GATE` slot so the authority is observable, while the runtime keeps the authority context resident at the task boundary. Phase 1 records this rule in [`StageRoute`](../../schemas/v3/stage-route.schema.json) fixtures but does not implement loading or routing behavior.
+
 The current v2 policy is predominantly task-level: it pins a registry snapshot and selects a bounded set of primary/optional skills once. That is useful baseline behavior, but it cannot adapt cleanly when later stages reveal new domain, review, or verification needs. v3 adds stage-local routing as a design target without changing v2 at runtime.
 
 ## v3 flow
@@ -24,6 +28,8 @@ Task Intake
 ```
 
 The router creates a new route record at each stage. A route change is allowed only at a declared stage boundary or after an evidence gate reports that the current stage cannot satisfy its acceptance criteria. Every reroute records its reason, candidates considered, skills selected, capabilities negotiated, and budget impact.
+
+Phase 1 makes the route record machine-readable. Every active stage must emit an explicit `SKILLS_SELECTED` or `NO_SKILL_NEEDED` status; the validator rejects a silent or contradictory route.
 
 ## Task classification
 
