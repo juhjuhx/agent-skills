@@ -1,6 +1,10 @@
-# Agent Skills
+# Agent Skills Matrix
 
-**238 AI agent skills**, organized into 11 categories. Works with **OpenCode / Claude Code / Gemini CLI / Cursor / Codex / Windsurf / Continue / Aider** and more.
+One canonical skill library. Native workflows for multiple AI agents.
+
+The current machine-readable baseline contains **214 indexed skills**, exposed through **10 installer categories** and **9 registry taxonomy tags**. The registry is authoritative; the installer categories are a separate selection projection. Existing shared-skill workflows support **OpenCode / Claude Code / Gemini CLI / Cursor / Codex / Windsurf / Continue / Aider** and more. Agent Skills Matrix v3 adds native adapter contracts for **Codex / Claude Code / OpenCode / Hermes / MiMo Code / ZCode / DeepSeek Harness** without forking the canonical skills.
+
+> Counts are derived from `.superpowers/SKILLS_INDEX.json` and `categories.json`. The detailed catalog below is a curated presentation; machine-readable metadata wins when prose drifts.
 
 ---
 
@@ -17,9 +21,9 @@ Without flags → **interactive mode**: pick which categories to install / 不�
 | Command | What it installs / 安裝內容 |
 |---|---|
 | `bash install.sh` | Interactive — pick your categories / 互動模式 — 選擇分類 |
-| `bash install.sh --minimal` | Essential + Coding only (~60 skills) / 僅 Essential + Coding |
-| `bash install.sh --default` | Essential + Coding + Design (~85 skills) / Essential + Coding + Design |
-| `bash install.sh --all` | Everything (238 skills) / 全部安裝 |
+| `bash install.sh --minimal` | Essential + Coding only (59 unique manifest skills) / 僅 Essential + Coding |
+| `bash install.sh --default` | Essential + Coding + Design (84 unique manifest skills) / Essential + Coding + Design |
+| `bash install.sh --all` | All 10 installer categories (165 unique manifest skills) / 全部 10 分類 |
 | `bash install.sh --category essential,coding,design` | Specific categories only / 指定分類 |
 
 ---
@@ -30,9 +34,56 @@ Without flags → **interactive mode**: pick which categories to install / 不�
 |---|---|---|
 | `minimal` | essential, coding | Minimum viable agent / 最小可用 Agent |
 | `default` | essential, coding, design | Recommended for most developers / 大多數開發者推薦 |
-| `full` | All 11 categories / 全部 11 分類 | Install everything / 安裝全部 |
+| `full` | All 10 installer categories / 全部 10 分類 | Install every category-listed skill / 安裝分類清單中的全部技能 |
 
 ---
+
+## Architecture v3
+
+Agent Skills Matrix v3 is a documentation-only architecture proposal: **Canonical Core + Generated Native Adapters**. There is one canonical skill source, while each runtime maps it to its own native instructions, skills, commands, subagents, plugins, hooks, MCP, permissions, sandbox, model profiles, reasoning effort, context strategy, and learning surfaces.
+
+### Supported runtime targets
+
+| Runtime | Adapter guide |
+|---|---|
+| Codex | [native Codex adapter](docs/v3/agents/CODEX.md) |
+| Claude Code | [native Claude Code adapter](docs/v3/agents/CLAUDE_CODE.md) |
+| OpenCode | [native OpenCode adapter](docs/v3/agents/OPENCODE.md) |
+| Hermes | [native Hermes adapter](docs/v3/agents/HERMES.md) |
+| MiMo Code | [native MiMo Code adapter](docs/v3/agents/MIMO_CODE.md) |
+| ZCode | [native ZCode adapter](docs/v3/agents/ZCODE.md) |
+| DeepSeek Harness | [native DeepSeek Harness adapter](docs/v3/agents/DEEPSEEK_HARNESS.md) |
+
+These are v3 contract targets, not claims that every adapter is implemented or installed today.
+
+### How routing works
+
+```text
+Task Intake
+  → Risk / Complexity / Ambiguity
+  → TaskSpec
+  → Stage Planner
+  → Stage-local Skill Router
+  → Agent Adapter
+  → Model Profile
+  → Execution
+  → Evidence Gate
+  → Reroute / Next Stage
+```
+
+Stages route independently: Understand, Research, Design, Plan, Implement, Review, Verify, Harden, and Handoff/Learn. A typical stage uses 3–7 relevant skills; a complex stage may use 5–10, and a complex project may naturally produce 30–50+ activations. These are guidance ranges, not quotas: unrelated skills are never loaded to satisfy a number, and skill reuse is expected.
+
+### Documentation
+
+- [v3 documentation index](docs/v3/README.md)
+- [Architecture and ADRs](docs/v3/ARCHITECTURE.md)
+- [Using-Superpowers v3](docs/v3/USING_SUPERPOWERS.md)
+- [Stage Router](docs/v3/STAGE_ROUTER.md)
+- [Skill Metadata and Graph](docs/v3/SKILL_METADATA_AND_GRAPH.md)
+- [Agent and Model contracts](docs/v3/AGENT_ADAPTER_CONTRACT.md)
+- [Learning, evaluation, provenance, and review](docs/v3/LEARNING_AND_EVALS.md)
+
+This proposal does not change the current skills, installer, runtime router, or `.superpowers/ROUTING_POLICY.yaml`.
 
 ## Complete Skills Catalog
 
