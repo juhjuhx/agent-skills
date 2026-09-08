@@ -1,12 +1,18 @@
 <!-- using-superpowers:start -->
-## using-superpowers routing contract
+## using-superpowers v3 routing bootstrap
 
-Treat `.superpowers/SKILLS_INDEX.json` as the current machine-readable skill registry.
-Before execution, resolve the request into intent, risk, required capabilities, and a token budget.
-Use the registry to select the smallest sufficient skill set; load full SKILL.md instructions only after selection.
-For new or changed skills, update the registry through the sync script and validate the generated snapshot.
-Follow `.superpowers/ROUTING_POLICY.yaml` for preflight, permissions, state transitions, and budget limits.
-Use GrillMe-style questioning only for material ambiguity; otherwise make a bounded, explicit assumption.
-Keep generated artifacts and state external to individual agents so other runtimes can consume them.
-See `docs/using-superpowers-v2-extensible-architecture.md` for the cross-agent and cloud contract.
+1. Treat `.superpowers/SKILLS_INDEX.json` as the machine-readable skill truth; use `categories.json` only as the installer projection.
+2. Classify the task by risk, complexity, ambiguity, required capabilities, permissions, and budget.
+3. Create a portable `TaskSpec` with assumptions, unknowns, outputs, acceptance criteria, and stop conditions.
+4. Create only the relevant stages: Understand, Research, Design, Plan, Implement, Review, Verify, Harden, Handoff/Learn.
+5. Route skills independently per stage using the role slots `GATE`, `PROCESS`, `DOMAIN`, `TOOL`, `REVIEW`, and `VERIFY`.
+6. Load only selected `SKILL.md` files and required references/scripts, on demand.
+7. Use the native agent adapter; keep agent runtime identity separate from model/provider profiles.
+8. Require an evidence gate before advancing or claiming completion; reroute only at a declared stage boundary or evidence failure.
+9. Record major runs, route reasons, artifacts, evaluations, and user corrections without exposing private chain-of-thought.
+10. Do not load historical docs or full catalogs by default; follow links only when the current stage requires them.
+
+No minimum skill quota is imposed. Do not load unrelated skills to satisfy a number. Keep this file small: it is a router bootstrap, not the full architecture specification.
+
+See `docs/v3/README.md` for the v3 contracts and `docs/using-superpowers-v2-extensible-architecture.md` for historical v2 context. Follow `.superpowers/ROUTING_POLICY.yaml` until a future implementation explicitly supersedes it.
 <!-- using-superpowers:end -->
