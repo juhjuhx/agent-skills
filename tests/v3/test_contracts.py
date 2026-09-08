@@ -264,6 +264,8 @@ class SchemaDocumentTests(unittest.TestCase):
             "AgentAdapterManifest",
             "ModelProfile",
             "StageRoute",
+            "CompiledExecutionBundle",
+            "CodexNativeProjection",
         )
 
         for name in schema_names:
