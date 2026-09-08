@@ -318,9 +318,9 @@ figures are actual adapter measurements.
 | Selected SKILL.md bodies loaded | 3 |
 | Selected body bytes loaded | 22,911 |
 | Selected estimate at 4 bytes/token | 5,728 tokens |
-| First compile + projection latency | 22.122 ms |
-| Median of 25 subsequent compile + projection runs | 19.707 ms |
-| Subsequent range | 19.345–20.362 ms |
+| First compile + projection latency | 20.766 ms |
+| Median of 25 compile + projection runs | 19.557 ms |
+| 25-run range | 19.333–20.766 ms |
 
 The byte/token ratio is an estimate, not a tokenizer measurement. The result
 supports selected-only loading and provenance checks; it does not claim a
