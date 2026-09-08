@@ -1,6 +1,6 @@
 # Codex Native Adapter
 
-> Status: **Phase 2 vertical slice implemented**. The slice compiles validated data artifacts; it does not install Codex configuration or implement the general stage router.
+> Status: **Phase 2.5 conformance hardening implemented**. The slice compiles validated data artifacts and checks the pinned native config subset; it does not install Codex configuration or implement the general stage router.
 
 ## Native mapping
 
@@ -31,6 +31,22 @@ Codex-native projection, resolves selected Skills, and maps MCP, Subagents,
 permissions, sandbox, and reasoning effort. It returns portable status,
 artifacts, evidence, and failures to the core; native execution side effects
 remain outside this slice.
+
+Phase 2.5 adds a two-layer conformance boundary:
+
+- `CompiledExecutionBundle` remains portable and contains no Codex-specific
+  branch logic.
+- `CodexNativeProjection` emits only verified Codex fields and is checked
+  against the pinned narrow config contract before it is returned.
+- `on-request` and `never` are preserved as native approval values. A full
+  granular approval object is recognized as a native shape but rejected as
+  unsupported until an exact portable mapping exists.
+- `read` and `workspace-write` map exactly. `workspace-read`, external-write,
+  destructive, and unknown future levels fail closed rather than widening to
+  `danger-full-access`.
+- Full `SKILL.md` bodies are execution-local. Serializable results and
+  projections retain references, digests, roles, load state, and byte metrics,
+  not raw instruction content.
 
 ```text
 TaskSpec

@@ -1,6 +1,6 @@
 # Agent Adapter Contract
 
-> Status: **runtime-neutral contract; Phase 1 manifests and the Phase 2 Codex vertical slice implemented**. Other native adapters remain guides only.
+> Status: **runtime-neutral contract; Phase 1 manifests and the Phase 2.5 Codex vertical slice are implemented**. Other native adapters remain guides only.
 
 ## Purpose
 
@@ -54,6 +54,15 @@ Permissions are calculated as a least-privilege intersection of TaskSpec,
 policy, adapter declaration, route budget, and live runtime/sandbox state.
 Model profiles, skill metadata, MCP declarations, and generated projections
 cannot grant an operating-system permission.
+
+The Codex slice applies an additional native-conformance gate before
+projection: emitted config values must match the checked-in narrow contract
+for the pinned Codex source revision. Unsupported native values and portable
+permission levels fail closed; the adapter never substitutes a broader
+sandbox mode. Full loaded `SKILL.md` bodies are ephemeral execution inputs,
+not part of serialized adapter results or evidence by default. Serializable
+skill records retain only references, provenance, role, load state, and byte
+metrics.
 
 ## Proposed interface
 

@@ -95,7 +95,7 @@ constraints:
   needs_structured_output: true
   needs_long_context: false
   needs_multimodal: false
-  permission_level: local-write
+  permission_level: workspace-write
   budget: balanced
 risk:
   level: medium

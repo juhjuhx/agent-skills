@@ -13,6 +13,7 @@
     "instruction_surfaces",
     "skills",
     "config",
+    "permissions",
     "mcp",
     "subagents",
     "plugins",
@@ -126,6 +127,26 @@
         "values": {"$ref": "#/$defs/configValues"}
       }
     },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filesystem", "sandbox_mode", "classification"],
+      "properties": {
+        "filesystem": {
+          "type": "string",
+          "enum": ["read", "workspace-read", "workspace-write"]
+        },
+        "sandbox_mode": {
+          "type": "string",
+          "enum": ["read-only", "workspace-write"]
+        },
+        "classification": {
+          "type": "string",
+          "enum": ["NATIVE_EXACT", "NATIVE_CONSERVATIVE", "HOST_MANAGED", "BLOCKED"]
+        },
+        "reason": {"$ref": "common.schema.json#/$defs/shortString"}
+      }
+    },
     "mcp": {
       "type": "object",
       "additionalProperties": false,
@@ -216,10 +237,18 @@
     "provenance": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["bundle_digest", "generated_config_path", "selected_skill_digests"],
+      "required": [
+        "bundle_digest",
+        "generated_config_path",
+        "codex_source_revision",
+        "native_contract_revision",
+        "selected_skill_digests"
+      ],
       "properties": {
         "bundle_digest": {"$ref": "common.schema.json#/$defs/digest"},
         "generated_config_path": {"$ref": "common.schema.json#/$defs/relativePath"},
+        "codex_source_revision": {"$ref": "common.schema.json#/$defs/shortString"},
+        "native_contract_revision": {"$ref": "common.schema.json#/$defs/shortString"},
         "selected_skill_digests": {
           "type": "array",
           "items": {"$ref": "common.schema.json#/$defs/digest"},
@@ -240,8 +269,11 @@
         "model": {"$ref": "common.schema.json#/$defs/shortString"},
         "model_provider": {"$ref": "common.schema.json#/$defs/shortString"},
         "model_reasoning_effort": {"$ref": "common.schema.json#/$defs/shortString"},
-        "approval_policy": {"$ref": "common.schema.json#/$defs/shortString"},
-        "sandbox_mode": {"$ref": "common.schema.json#/$defs/shortString"},
+        "approval_policy": {"$ref": "#/$defs/approvalPolicy"},
+        "sandbox_mode": {
+          "type": "string",
+          "enum": ["read-only", "workspace-write", "danger-full-access"]
+        },
         "agents": {
           "type": "object",
           "additionalProperties": false,
@@ -252,6 +284,31 @@
             "default_subagent_reasoning_effort": {"$ref": "common.schema.json#/$defs/shortString"}
           }
         }
+      }
+    },
+    "approvalPolicy": {
+      "oneOf": [
+        {"type": "string", "enum": ["on-request", "never"]},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["granular"],
+          "properties": {
+            "granular": {"$ref": "#/$defs/granularApproval"}
+          }
+        }
+      ]
+    },
+    "granularApproval": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["mcp_elicitations", "rules", "sandbox_approval"],
+      "properties": {
+        "mcp_elicitations": {"type": "boolean"},
+        "request_permissions": {"type": "boolean"},
+        "rules": {"type": "boolean"},
+        "sandbox_approval": {"type": "boolean"},
+        "skill_approval": {"type": "boolean"}
       }
     }
   }

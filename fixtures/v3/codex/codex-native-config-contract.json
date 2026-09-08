@@ -1,0 +1,52 @@
+{
+  "contract_version": "1.0",
+  "codex_source_revision": "45305dd229c01e6cb6e122f6559e4f9b805bae6",
+  "native_contract_revision": "codex-rs/core/config.schema.json@45305dd229c01e6cb6e122f6559e4f9b805bae6",
+  "source_file": "codex-rs/core/config.schema.json",
+  "scope": "Narrow contract for keys emitted by the v3 Codex projection; not the complete Codex configuration schema.",
+  "update_process": "Re-check the pinned first-party schema, update this subset and its tests together, and review the adapter mapping before changing the revision. Runtime validation never fetches upstream.",
+  "fields": {
+    "model": {"type": "string"},
+    "model_provider": {"type": "string"},
+    "model_reasoning_effort": {"type": "string", "min_length": 1},
+    "approval_policy": {
+      "one_of": [
+        {"type": "string", "enum": ["on-request"]},
+        {
+          "type": "object",
+          "required": ["granular"],
+          "additional_properties": false,
+          "properties": {
+            "granular": {
+              "type": "object",
+              "required": ["mcp_elicitations", "rules", "sandbox_approval"],
+              "additional_properties": true,
+              "properties": {
+                "mcp_elicitations": {"type": "boolean"},
+                "request_permissions": {"type": "boolean"},
+                "rules": {"type": "boolean"},
+                "sandbox_approval": {"type": "boolean"},
+                "skill_approval": {"type": "boolean"}
+              }
+            }
+          }
+        },
+        {"type": "string", "enum": ["never"]}
+      ]
+    },
+    "sandbox_mode": {
+      "type": "string",
+      "enum": ["read-only", "workspace-write", "danger-full-access"]
+    },
+    "agents": {
+      "type": "object",
+      "additional_properties": true,
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "max_concurrent_threads_per_session": {"type": "integer", "minimum": 1},
+        "default_subagent_model": {"type": "string"},
+        "default_subagent_reasoning_effort": {"type": "string", "min_length": 1}
+      }
+    }
+  }
+}
