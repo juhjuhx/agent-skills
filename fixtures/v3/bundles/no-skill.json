@@ -1,0 +1,21 @@
+{
+  "adapter_manifest_ref": "codex@fixture-1.0",
+  "bundle_digest": "sha256:dc8f406150faeae67fc9158ada7118b9edd2567156b4e3dc1cdaa95af7377d0c",
+  "bundle_id": "bundle:T-v3-phase2-codex-handoff:R-T-v3-phase2-codex-handoff",
+  "bundle_version": "1.0",
+  "context": {"artifact_refs": [], "dynamic_context": "lazy", "static_prefix": "stable", "tool_schema_context": "tracked"},
+  "effective_capabilities": [],
+  "evidence_gate": {"missing": [], "status": "PASS"},
+  "evidence_required": ["handoff summary"],
+  "model_profile_ref": "openai/gpt-compatible-fixture@fixture-1.0",
+  "no_skill_reason": "No additional skill procedure is required after the evidence gate has passed.",
+  "permission_envelope": {"delete": false, "external_write": false, "filesystem": "read", "level": "read-only", "network": "none", "publish": false, "secrets": false},
+  "provenance": {"generated_by": "v3-bundle-compiler", "registry_epoch": "registry:42c3d5c", "skill_records": []},
+  "reasoning_artifact_refs": [],
+  "registry_epoch": "registry:42c3d5c",
+  "schema_version": "3.0",
+  "selected_skills": [],
+  "stage_route_ref": "R-T-v3-phase2-codex-handoff",
+  "status": "READY",
+  "task_spec_ref": "T-v3-phase2-codex-handoff"
+}

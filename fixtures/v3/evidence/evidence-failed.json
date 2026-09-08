@@ -1,0 +1,9 @@
+{
+  "status": "BLOCKED",
+  "missing": ["tests", "schema validation", "diff", "security review"],
+  "reroute": {
+    "trigger": "evidence_failure",
+    "next_stage": "verify",
+    "reason": "Required evidence is missing; completion remains blocked."
+  }
+}
