@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/model-profile.schema.json",
+  "title": "Agent Skills Matrix v3 ModelProfile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "provider_id",
+    "model_id",
+    "profile_version",
+    "capabilities",
+    "reasoning",
+    "limits",
+    "data_policy",
+    "measurement_provenance"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "provider_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "model_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "profile_version": {"$ref": "common.schema.json#/$defs/shortString"},
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": {"type": "boolean"},
+      "properties": {
+        "coding": {"type": "boolean"},
+        "planning": {"type": "boolean"},
+        "debugging": {"type": "boolean"},
+        "research": {"type": "boolean"},
+        "review": {"type": "boolean"},
+        "security": {"type": "boolean"},
+        "tool_use": {"type": "boolean"},
+        "structured_output": {"type": "boolean"},
+        "multimodal": {"type": "boolean"},
+        "long_context": {"type": "boolean"}
+      }
+    },
+    "reasoning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supported", "effort_levels"],
+      "properties": {
+        "supported": {"type": "boolean"},
+        "effort_levels": {
+          "type": "array",
+          "items": {"type": "string", "enum": ["none", "low", "medium", "high", "max", "unknown"]},
+          "uniqueItems": true
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["context_tokens", "max_output_tokens", "max_tool_schema_tokens", "max_parallel_requests"],
+      "properties": {
+        "context_tokens": {"type": ["integer", "null"], "minimum": 0},
+        "max_output_tokens": {"type": ["integer", "null"], "minimum": 0},
+        "max_tool_schema_tokens": {"type": ["integer", "null"], "minimum": 0},
+        "max_parallel_requests": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "latency": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "class": {"type": "string", "enum": ["interactive", "batch", "background", "unknown"]},
+        "p50_ms": {"type": ["number", "null"], "minimum": 0},
+        "p95_ms": {"type": ["number", "null"], "minimum": 0}
+      }
+    },
+    "cost": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "class": {"type": "string", "enum": ["free", "low", "balanced", "high", "unknown"]},
+        "input_per_million": {"type": ["number", "null"], "minimum": 0},
+        "output_per_million": {"type": ["number", "null"], "minimum": 0},
+        "cache_behavior": {"type": "string", "enum": ["stable", "best-effort", "unknown"]}
+      }
+    },
+    "data_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["region", "retention", "training_use"],
+      "properties": {
+        "region": {"$ref": "common.schema.json#/$defs/shortString"},
+        "retention": {"$ref": "common.schema.json#/$defs/shortString"},
+        "training_use": {"$ref": "common.schema.json#/$defs/shortString"}
+      }
+    },
+    "health": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {"type": "string", "enum": ["healthy", "degraded", "unknown", "blocked"]},
+        "last_probe": {
+          "anyOf": [
+            {"$ref": "common.schema.json#/$defs/dateTime"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "measurement_provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "method"],
+      "properties": {
+        "source": {"$ref": "common.schema.json#/$defs/shortString"},
+        "ref": {"$ref": "common.schema.json#/$defs/shortString"},
+        "method": {"$ref": "common.schema.json#/$defs/shortString"},
+        "measured_at": {
+          "anyOf": [
+            {"$ref": "common.schema.json#/$defs/dateTime"},
+            {"type": "null"}
+          ]
+        }
+      }
+    }
+  }
+}

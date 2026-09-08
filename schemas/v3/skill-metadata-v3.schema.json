@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/skill-metadata-v3.schema.json",
+  "title": "Agent Skills Matrix v3 SkillMetadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "skill_id", "name", "description", "source", "trust"],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "skill_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "name": {"$ref": "common.schema.json#/$defs/shortString"},
+    "description": {"$ref": "common.schema.json#/$defs/shortString"},
+    "version": {"$ref": "common.schema.json#/$defs/shortString"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repo", "ref", "digest"],
+      "properties": {
+        "repo": {"type": "string", "format": "uri"},
+        "path": {"$ref": "common.schema.json#/$defs/relativePath"},
+        "ref": {"$ref": "common.schema.json#/$defs/recordId"},
+        "digest": {"$ref": "common.schema.json#/$defs/digest"},
+        "license": {"$ref": "common.schema.json#/$defs/license"},
+        "import_date": {"$ref": "common.schema.json#/$defs/dateTime"}
+      }
+    },
+    "trust": {"$ref": "common.schema.json#/$defs/trust"},
+    "triggers": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/shortString"},
+      "uniqueItems": true
+    },
+    "stages": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/stage"},
+      "uniqueItems": true
+    },
+    "roles": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/role"},
+      "uniqueItems": true
+    },
+    "task_modes": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/shortString"},
+      "uniqueItems": true
+    },
+    "domains": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/shortString"},
+      "uniqueItems": true
+    },
+    "inputs": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/shortString"}
+    },
+    "outputs": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/shortString"}
+    },
+    "required_capabilities": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/capability"},
+      "uniqueItems": true
+    },
+    "tools": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/shortString"},
+      "uniqueItems": true
+    },
+    "permissions": {"$ref": "common.schema.json#/$defs/permissionDeclaration"},
+    "context_cost": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "metadata_tokens": {"type": "integer", "minimum": 0},
+        "instruction_tokens_estimate": {"type": "integer", "minimum": 0},
+        "references_lazy": {"type": "boolean"},
+        "tool_schema_tokens": {"type": "integer", "minimum": 0}
+      }
+    },
+    "runtime_cost": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tool_calls_estimate": {"type": "integer", "minimum": 0},
+        "latency_class": {
+          "type": "string",
+          "enum": ["interactive", "batch", "background", "unknown"]
+        }
+      }
+    },
+    "risk": {"$ref": "common.schema.json#/$defs/riskProfile"},
+    "agent_compatibility": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["runtime", "status"],
+        "properties": {
+          "runtime": {"$ref": "common.schema.json#/$defs/runtimeId"},
+          "adapter_version": {"$ref": "common.schema.json#/$defs/shortString"},
+          "status": {
+            "type": "string",
+            "enum": ["supported", "planned", "unavailable", "deprecated"]
+          },
+          "notes": {"$ref": "common.schema.json#/$defs/shortString"}
+        }
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/relationship"}
+    },
+    "eval_status": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "routing": {"$ref": "#/$defs/evalState"},
+        "activation": {"$ref": "#/$defs/evalState"},
+        "execution": {"$ref": "#/$defs/evalState"},
+        "security": {"$ref": "#/$defs/evalState"},
+        "cross_agent": {"$ref": "#/$defs/evalState"}
+      }
+    },
+    "historical_success": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sample_count": {"type": "integer", "minimum": 0},
+        "success_rate": {
+          "anyOf": [
+            {"type": "number", "minimum": 0, "maximum": 1},
+            {"type": "null"}
+          ]
+        },
+        "last_updated": {
+          "anyOf": [
+            {"$ref": "common.schema.json#/$defs/dateTime"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "historical_routing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "activation_count": {"type": "integer", "minimum": 0},
+        "near_miss_count": {"type": "integer", "minimum": 0},
+        "last_registry_epoch": {"$ref": "common.schema.json#/$defs/recordId"}
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "evalState": {
+      "type": "string",
+      "enum": ["unmeasured", "planned", "pass", "partial", "fail", "blocked"]
+    }
+  }
+}

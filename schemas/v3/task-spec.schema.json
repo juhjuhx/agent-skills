@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/task-spec.schema.json",
+  "title": "Agent Skills Matrix v3 TaskSpec",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "task_id",
+    "task_type",
+    "complexity",
+    "risk",
+    "ambiguity",
+    "objectives"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "task_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "task_type": {
+      "type": "string",
+      "enum": [
+        "implementation",
+        "bugfix",
+        "design",
+        "research",
+        "review",
+        "documentation",
+        "handoff",
+        "maintenance",
+        "other"
+      ]
+    },
+    "goal": {"$ref": "common.schema.json#/$defs/shortString"},
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "repository": {"$ref": "common.schema.json#/$defs/shortString"},
+        "paths": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/relativePath"},
+          "uniqueItems": true
+        },
+        "include": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/relativePath"}
+        },
+        "exclude": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/relativePath"}
+        }
+      }
+    },
+    "complexity": {
+      "type": "string",
+      "enum": ["SIMPLE", "STANDARD", "COMPLEX"]
+    },
+    "risk": {"$ref": "common.schema.json#/$defs/riskLevel"},
+    "ambiguity": {
+      "type": "string",
+      "enum": ["LOW", "MEDIUM", "HIGH"]
+    },
+    "architecture_impact": {
+      "type": "string",
+      "enum": ["NONE", "LOCAL", "ARCHITECTURE-CHANGING"]
+    },
+    "objectives": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "common.schema.json#/$defs/shortString"}
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "no_runtime_router": {"type": "boolean"},
+        "no_installer_change": {"type": "boolean"},
+        "no_registry_migration": {"type": "boolean"},
+        "publish_branch_only": {"type": "boolean"}
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {"$ref": "common.schema.json#/$defs/shortString"},
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["statement"],
+            "properties": {
+              "statement": {"$ref": "common.schema.json#/$defs/shortString"},
+              "source": {"$ref": "common.schema.json#/$defs/shortString"},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+              "invalidation_signal": {"$ref": "common.schema.json#/$defs/shortString"}
+            }
+          }
+        ]
+      }
+    },
+    "unknowns": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {"$ref": "common.schema.json#/$defs/shortString"},
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["question"],
+            "properties": {
+              "question": {"$ref": "common.schema.json#/$defs/shortString"},
+              "impact": {"$ref": "common.schema.json#/$defs/shortString"},
+              "owner": {"$ref": "common.schema.json#/$defs/shortString"},
+              "status": {
+                "type": "string",
+                "enum": ["open", "resolved", "deferred"]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "required_outputs": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/shortString"},
+      "uniqueItems": true
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/shortString"},
+      "uniqueItems": true
+    },
+    "stop_conditions": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/shortString"},
+      "uniqueItems": true
+    },
+    "required_capabilities": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/capability"},
+      "uniqueItems": true
+    },
+    "permission_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "level": {"$ref": "common.schema.json#/$defs/permissionLevel"},
+        "filesystem": {
+          "type": "string",
+          "enum": ["none", "read", "workspace-read", "workspace-write"]
+        },
+        "network": {
+          "type": "string",
+          "enum": ["none", "limited", "standard"]
+        },
+        "external_write": {"type": "boolean"},
+        "secrets": {"type": "boolean"},
+        "publish": {"type": "boolean"},
+        "delete": {"type": "boolean"}
+      }
+    },
+    "context_budget": {"$ref": "common.schema.json#/$defs/tokenBudget"},
+    "cost_budget": {"$ref": "common.schema.json#/$defs/costBudget"},
+    "latency_budget": {"$ref": "common.schema.json#/$defs/latencyBudget"},
+    "parallelizable": {"type": "boolean"},
+    "artifact_requirements": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/shortString"},
+      "uniqueItems": true
+    },
+    "stages": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/stage"},
+      "uniqueItems": true
+    },
+    "domains": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/shortString"},
+      "uniqueItems": true
+    }
+  }
+}

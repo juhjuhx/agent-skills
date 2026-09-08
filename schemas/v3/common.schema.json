@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/common.schema.json",
+  "$defs": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "3.0"
+    },
+    "recordId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9 ._:/@-]*$"
+    },
+    "runtimeId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "shortString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?![A-Za-z]:[\\\\/])(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$)).+$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "license": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "dateTime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "understand",
+        "research",
+        "design",
+        "plan",
+        "implement",
+        "review",
+        "verify",
+        "harden",
+        "handoff",
+        "learn"
+      ]
+    },
+    "role": {
+      "type": "string",
+      "enum": ["GATE", "PROCESS", "DOMAIN", "TOOL", "REVIEW", "VERIFY"]
+    },
+    "relationshipType": {
+      "type": "string",
+      "enum": [
+        "REQUIRES",
+        "RECOMMENDS",
+        "COMPLEMENTS",
+        "CONFLICTS",
+        "SUPERSEDES",
+        "ALTERNATIVE_TO",
+        "REVIEW_WITH",
+        "VERIFY_WITH"
+      ]
+    },
+    "trust": {
+      "type": "string",
+      "enum": [
+        "CORE_TRUSTED",
+        "CURATED",
+        "COMMUNITY",
+        "LOCAL_GENERATED",
+        "QUARANTINE",
+        "BLOCKED"
+      ]
+    },
+    "riskLevel": {
+      "type": "string",
+      "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+    },
+    "capability": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "pattern": "^[A-Za-z][A-Za-z0-9_:-]*$"
+    },
+    "permissionLevel": {
+      "type": "string",
+      "enum": ["read-only", "workspace-write", "external-write", "destructive"]
+    },
+    "permissionDeclaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "filesystem": {
+          "type": "string",
+          "enum": [
+            "none",
+            "read",
+            "workspace-read",
+            "workspace-write",
+            "external-write",
+            "destructive"
+          ]
+        },
+        "network": {
+          "type": "string",
+          "enum": ["none", "limited", "standard"]
+        },
+        "external_write": {"type": "boolean"},
+        "secrets": {
+          "type": "string",
+          "enum": ["none", "declared"]
+        },
+        "publish": {"type": "boolean"},
+        "delete": {"type": "boolean"}
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "target"],
+      "properties": {
+        "type": {"$ref": "common.schema.json#/$defs/relationshipType"},
+        "target": {"$ref": "common.schema.json#/$defs/recordId"},
+        "reason": {"$ref": "common.schema.json#/$defs/shortString"},
+        "source_ref": {"$ref": "common.schema.json#/$defs/recordId"}
+      }
+    },
+    "riskProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "read": {"$ref": "common.schema.json#/$defs/riskLevel"},
+        "local_write": {"$ref": "common.schema.json#/$defs/riskLevel"},
+        "external_write": {"$ref": "common.schema.json#/$defs/riskLevel"},
+        "notes": {"$ref": "common.schema.json#/$defs/shortString"}
+      }
+    },
+    "tokenBudget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_input_tokens": {"type": "integer", "minimum": 0},
+        "max_artifact_tokens": {"type": "integer", "minimum": 0},
+        "max_tool_schema_tokens": {"type": "integer", "minimum": 0},
+        "class": {
+          "type": "string",
+          "enum": ["fast", "balanced", "deep", "custom"]
+        }
+      }
+    },
+    "costBudget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "class": {
+          "type": "string",
+          "enum": ["free", "low", "balanced", "high", "custom"]
+        },
+        "max_units": {"type": "number", "minimum": 0},
+        "currency": {"type": "string", "minLength": 3, "maxLength": 3}
+      }
+    },
+    "latencyBudget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "class": {
+          "type": "string",
+          "enum": ["interactive", "batch", "background", "custom"]
+        },
+        "max_ms": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}
