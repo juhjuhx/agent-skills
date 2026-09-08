@@ -1,0 +1,72 @@
+{
+  "schema_version": "3.0",
+  "skill_id": "using-superpowers",
+  "name": "using-superpowers",
+  "description": "Session-level orchestration authority for skill discovery, stage routing, evidence gates, and stop conditions.",
+  "version": "3.0.0",
+  "source": {
+    "repo": "https://github.com/juhjuhx/agent-skills.git",
+    "path": "using-superpowers/SKILL.md",
+    "ref": "main",
+    "digest": "sha256:1adce90aedd8b1362381f8bf8a7346966612cbde3591f74ab7e55e539fa1209a",
+    "license": "unknown"
+  },
+  "trust": "CORE_TRUSTED",
+  "triggers": ["starting any session", "find available skills", "use superpowers"],
+  "stages": ["understand", "research", "plan", "review", "verify", "handoff"],
+  "roles": ["GATE"],
+  "task_modes": ["implementation", "review", "documentation"],
+  "domains": ["agent-orchestration"],
+  "inputs": ["user request", "TaskSpec", "canonical registry"],
+  "outputs": ["stage route", "evidence gate", "handoff artifacts"],
+  "required_capabilities": ["needs_structured_output"],
+  "tools": ["filesystem", "git", "registry inspection"],
+  "permissions": {
+    "filesystem": "read",
+    "network": "none",
+    "external_write": false,
+    "secrets": "none",
+    "publish": false,
+    "delete": false
+  },
+  "context_cost": {
+    "metadata_tokens": 100,
+    "instruction_tokens_estimate": 1000,
+    "references_lazy": true,
+    "tool_schema_tokens": 0
+  },
+  "runtime_cost": {
+    "tool_calls_estimate": 4,
+    "latency_class": "interactive"
+  },
+  "risk": {
+    "read": "LOW",
+    "local_write": "MEDIUM",
+    "external_write": "HIGH",
+    "notes": "Authority is policy-gated and does not itself grant permissions."
+  },
+  "agent_compatibility": [
+    {"runtime": "codex", "adapter_version": "3.0", "status": "planned"},
+    {"runtime": "claude-code", "adapter_version": "3.0", "status": "planned"}
+  ],
+  "relationships": [
+    {"type": "VERIFY_WITH", "target": "verification-before-completion", "reason": "Evidence must precede completion claims."}
+  ],
+  "eval_status": {
+    "routing": "planned",
+    "activation": "unmeasured",
+    "execution": "unmeasured",
+    "security": "planned",
+    "cross_agent": "unmeasured"
+  },
+  "historical_success": {
+    "sample_count": 0,
+    "success_rate": null,
+    "last_updated": null
+  },
+  "historical_routing": {
+    "activation_count": 0,
+    "near_miss_count": 0,
+    "last_registry_epoch": "42c3d5c"
+  }
+}

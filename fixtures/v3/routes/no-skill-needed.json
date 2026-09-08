@@ -1,0 +1,18 @@
+{
+  "schema_version": "3.0",
+  "route_id": "R-T-v3-phase1-contracts-handoff",
+  "task_id": "T-v3-phase1-contracts-full",
+  "stage": "handoff",
+  "registry_epoch": "registry:42c3d5c",
+  "status": "NO_SKILL_NEEDED",
+  "selected_skills": [],
+  "role_assignments": [],
+  "adapter": "codex",
+  "model_profile": "openai/gpt-compatible-fixture@fixture-1",
+  "granted_capabilities": [],
+  "budget_envelope": {"permission_level": "read-only", "max_input_tokens": 2000, "max_output_tokens": 1000, "max_tool_calls": 2, "max_parallel_agents": 0},
+  "alternatives": [],
+  "route_reasons": ["The handoff consists only of packaging already verified artifacts."],
+  "evidence_required": ["handoff summary"],
+  "no_skill_reason": "No additional skill procedure is required after the evidence gate has passed."
+}
