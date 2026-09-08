@@ -67,4 +67,4 @@
 - [x] **Step 4: Update canonical docs** with pinned source revision, approval/permission support classifications, serialization boundary, and no-runtime-fetch process.
 - [x] **Step 5: Record every active dogfood stage as a route** with selected real skills, reasons, evidence, and final result; do not record hidden reasoning.
 - [x] **Step 6: Update `NEXT_CODEX_PROMPT.md`** with the diversity-driven Phase 3 research/wave strategy, but do not execute Phase 3.
-- [ ] **Step 7: Commit each semantic group, push the stacked branch, and create a draft PR against `feat/v3-codex-adapter` only after fresh verification passes.
+- [x] **Step 7: Commit each semantic group, push the stacked branch, and create a draft PR against `feat/v3-codex-adapter` only after fresh verification passes.

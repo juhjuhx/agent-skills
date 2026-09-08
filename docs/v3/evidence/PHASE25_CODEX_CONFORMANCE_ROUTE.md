@@ -274,7 +274,7 @@ resident GATE reference is not a repeated full context load.
 - OUTPUT ARTIFACTS: semantic commits, remote branch, stacked Draft PR, final repository truth.
 - EVIDENCE REQUIRED: branch based on feat/v3-codex-adapter, clean publish, Draft PR base/head, no merge, Phase 3 not executed.
 - ROUTE RECORD: route_id R-T-v3-phase25-codex-handoff; task_id T-v3-phase25-codex; stage handoff; registry_epoch registry:42c3d5c; status SKILLS_SELECTED.
-- RESULT: PENDING until commit, push, and PR verification.
+- RESULT: PASS. Three semantic commits were pushed to the stacked branch and Draft PR #4 was verified open against feat/v3-codex-adapter; no merge was performed.
 
 ## Results and evidence
 
@@ -285,6 +285,7 @@ resident GATE reference is not a repeated full context load.
 - SERIALIZATION_POLICY: projection and AdapterResult.to_dict contain references/digests/roles/load-state/bytes only; full skill bodies remain in execution_skills.
 - DEEP_UNDERSTANDING: NOT_REQUIRED for this bounded evidence-driven hardening pass.
 - PHASE3: NOT_EXECUTED.
+- DRAFT_PR: #4 https://github.com/juhjuhx/agent-skills/pull/4; base feat/v3-codex-adapter; head fix/v3-codex-adapter-conformance; state OPEN; draft true.
 
 ## Verification results
 
