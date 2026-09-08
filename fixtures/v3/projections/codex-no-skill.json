@@ -8,7 +8,7 @@
   "mcp": {"load_mode": "none", "servers": [], "tool_schema_tokens": 0},
   "plugins": {"enabled": false, "refs": []},
   "projection_version": "1.0",
-  "provenance": {"bundle_digest": "sha256:dc8f406150faeae67fc9158ada7118b9edd2567156b4e3dc1cdaa95af7377d0c", "generated_config_path": ".codex/config.toml", "codex_source_revision": "45305dd229c01e6cb6e122f6559e4f9b805bae6", "native_contract_revision": "codex-rs/core/config.schema.json@45305dd229c01e6cb6e122f6559e4f9b805bae6", "selected_skill_digests": []},
+  "provenance": {"bundle_digest": "sha256:dc8f406150faeae67fc9158ada7118b9edd2567156b4e3dc1cdaa95af7377d0c", "generated_config_path": ".codex/config.toml", "codex_source_revision": "3d2ee51ca2d5db578f328aa75e20aa22c0197c9a", "native_contract_revision": "codex-rs/core/config.schema.json@3d2ee51ca2d5db578f328aa75e20aa22c0197c9a", "runtime_id": "codex", "observed_runtime_version": "0.153.4", "release_tag": "rust-v0.153.4", "release_commit": "3d2ee51ca2d5db578f328aa75e20aa22c0197c9a", "contract_target": "INSTALLED_RUNTIME", "contract_source_commit": "3d2ee51ca2d5db578f328aa75e20aa22c0197c9a", "docs_snapshot_date": "2026-09-08", "contract_digest": "sha256:692da7699367f6f4fbbd46c0021278c1311440bcebf0bcb9b836690c05e56196", "verification_method": "official_tag_resolution+release_schema_fetch+relevant_field_comparison", "support": "NATIVE", "availability": "INSTALLED", "selected_skill_digests": []},
   "runtime_id": "codex",
   "schema_version": "3.0",
   "skills": {"load_mode": "selected-only", "native_roots": [".agents/skills"], "selected": []},
