@@ -1,6 +1,6 @@
 # Agent Skills Matrix v3
 
-> Status: **proposed architecture; Phase 1 machine-readable contracts implemented**. This directory does not implement a router, migrate metadata, change the installer, or install adapters.
+> Status: **proposed architecture; Phase 1 contracts and the Phase 2 Codex vertical slice implemented**. The slice compiles a portable execution bundle and a validated Codex projection; it does not implement the general stage router or install runtime configuration.
 
 ## Why v3
 
@@ -81,6 +81,36 @@ Each stage can independently select and reroute skills. A typical stage uses 3�
 - [Migration Plan](MIGRATION_PLAN.md) — documentation-first implementation sequence.
 - [Donor Research Notes](DONOR_RESEARCH_NOTES.md) — provenance and adopted patterns.
 - [Phase 1 Machine-Readable Contracts](PHASE1_MACHINE_READABLE_CONTRACTS.md) — schemas, validation, fixtures, and compatibility projection.
+- [Codex Official Capability Mapping](CODEX_OFFICIAL_CAPABILITY_MAPPING.md) — first-party surface evidence and support levels for the Phase 2 adapter.
+
+### Phase 2 implementation slice
+
+The first executable boundary is intentionally small:
+
+```text
+validated TaskSpec + StageRoute + manifests
+  -> selected-only SkillResolver
+  -> CompiledExecutionBundle
+  -> CodexNativeProjection
+  -> evidence gate
+```
+
+The public schemas are [`CompiledExecutionBundle`](../../schemas/v3/compiled-execution-bundle.schema.json)
+and [`CodexNativeProjection`](../../schemas/v3/codex-native-projection.schema.json).
+The standard-library implementation lives in
+[`tools/v3/execution_bundle.py`](../../tools/v3/execution_bundle.py),
+[`tools/v3/skill_resolver.py`](../../tools/v3/skill_resolver.py), and
+[`tools/v3/codex_adapter.py`](../../tools/v3/codex_adapter.py), with explicit
+permission and evidence helpers. This is a route consumer, not a router:
+selected skills are verified by source digest and trust before on-demand
+loading, and a resident `using-superpowers` reference is not reloaded in full
+for every stage.
+
+Fixtures and boundary tests cover selected-only and no-skill routes,
+permission non-escalation, provenance, digest invalidation, evidence failure,
+and portable/runtime separation. The projection records native support versus
+host-managed metadata; it has no filesystem side effects and does not claim
+that native Codex execution has already been wired.
 
 ### Native adapter guides
 

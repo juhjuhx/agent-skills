@@ -1,125 +1,188 @@
-# Next Codex Prompt — Phase 2 Codex Native Adapter Vertical Slice
+# Next Codex Prompt — Phase 3 Cross-Runtime Adapter Expansion
 
-Copy the prompt below into the next Codex session. It is intentionally self-contained and must be executed only after Phase 1 is available on the branch being used.
+Copy the prompt below into the next Codex session. It is self-contained and must be executed only after the Phase 2 Codex vertical slice is available.
 
 ---
 
-## Project
+## Mission
 
-Repository: `juhjuhx/agent-skills`
+Repository: juhjuhx/agent-skills
 
-This is **AGENT SKILLS MATRIX v3 — PHASE 2: CODEX NATIVE ADAPTER VERTICAL SLICE**.
+Implement AGENT SKILLS MATRIX v3 — PHASE 3: CROSS-RUNTIME ADAPTER EXPANSION. Expand the portable contracts to native adapter projections for Claude Code, OpenCode, Hermes, MiMo Code, ZCode, and DeepSeek Harness.
 
-Phase 1 added machine-readable contracts, validation, fixtures, and a read-only compatibility projection. Do not redesign v3 and do not begin the Claude/OpenCode/Hermes/MiMo/ZCode/DeepSeek adapters.
+Do not redesign v3. Do not copy the Codex adapter six times. Each runtime requires fresh first-party source research and an adapter-specific projection that maps only real native surfaces. Keep one canonical skill library and keep agent runtime identity separate from model/provider identity.
+
+## Start and source truth
+
+Start by verifying, without resetting local work:
+
+git status --short
+git branch --show-current
+git rev-parse HEAD
+git fetch origin
+
+Base the implementation on the current Phase 2 branch/head and its stacked Phase 1 parent. Inspect the actual repository registry before selecting any skill ID:
+
+- .superpowers/SKILLS_INDEX.json
+- categories.json
+- .superpowers/ROUTING_POLICY.yaml
+- AGENTS.md
+
+Machine-readable registry data wins over prose. Do not migrate or rewrite the production registry in this phase.
 
 ## Required reading
 
-Read the repository `AGENTS.md`, then:
+Read AGENTS.md, then the canonical v3 documents:
 
-- `docs/v3/README.md`
-- `docs/v3/ARCHITECTURE.md`
-- `docs/v3/USING_SUPERPOWERS.md`
-- `docs/v3/STAGE_ROUTER.md`
-- `docs/v3/AGENT_ADAPTER_CONTRACT.md`
-- `docs/v3/MODEL_PROFILE_CONTRACT.md`
-- `docs/v3/REASONING_ARTIFACTS.md`
-- `docs/v3/PHASE1_MACHINE_READABLE_CONTRACTS.md`
-- `docs/v3/evidence/PHASE1_DOGFOOD_ROUTE.md`
-- `schemas/v3/task-spec.schema.json`
-- `schemas/v3/skill-metadata-v3.schema.json`
-- `schemas/v3/agent-adapter-manifest.schema.json`
-- `schemas/v3/model-profile.schema.json`
-- `schemas/v3/stage-route.schema.json`
-- `tools/v3/contract_validation.py`
-- `tools/v3/compatibility.py`
+- docs/v3/README.md
+- docs/v3/ARCHITECTURE.md
+- docs/v3/USING_SUPERPOWERS.md
+- docs/v3/STAGE_ROUTER.md
+- docs/v3/SKILL_METADATA_AND_GRAPH.md
+- docs/v3/AGENT_ADAPTER_CONTRACT.md
+- docs/v3/MODEL_PROFILE_CONTRACT.md
+- docs/v3/REASONING_ARTIFACTS.md
+- docs/v3/LEARNING_AND_EVALS.md
+- docs/v3/SECURITY_AND_PROVENANCE.md
+- docs/v3/REVIEW_PIPELINE.md
+- docs/v3/PHASE1_MACHINE_READABLE_CONTRACTS.md
+- docs/v3/CODEX_OFFICIAL_CAPABILITY_MAPPING.md
+- docs/v3/NEXT_CODEX_PROMPT.md (this file)
 
-Inspect actual source truth before choosing skill IDs:
+Inspect the implemented Phase 2 boundary before changing anything:
 
-- `.superpowers/SKILLS_INDEX.json` (`skill_count: 214`, source commit `db3b67d5b051c4223da9146b2b836a9ed45e9bac` at the Phase 1 baseline)
-- `categories.json` (installer projection, not v3 domains)
-- `.superpowers/ROUTING_POLICY.yaml` (current v2 policy; do not rewrite it)
-- `fixtures/v3/agents/codex.json`
-- `fixtures/v3/models/openai-compatible.json`
-- `fixtures/v3/routes/skills-selected.json`
+- schemas/v3/task-spec.schema.json
+- schemas/v3/skill-metadata-v3.schema.json
+- schemas/v3/agent-adapter-manifest.schema.json
+- schemas/v3/model-profile.schema.json
+- schemas/v3/stage-route.schema.json
+- schemas/v3/compiled-execution-bundle.schema.json
+- schemas/v3/codex-native-projection.schema.json
+- tools/v3/contract_validation.py
+- tools/v3/execution_bundle.py
+- tools/v3/skill_resolver.py
+- tools/v3/permission_intersection.py
+- tools/v3/evidence_gate.py
+- tools/v3/reasoning_artifacts.py
+- tools/v3/codex_adapter.py
+- tests/v3/test_contracts.py
+- tests/v3/test_codex_adapter.py
+- fixtures/v3/agents/
+- fixtures/v3/models/
+- fixtures/v3/routes/
+- fixtures/v3/bundles/
+- fixtures/v3/projections/
+- docs/v3/evidence/PHASE2_CODEX_DOGFOOD_ROUTE.md
 
-## Scope
+## Dogfood requirement
 
-Implement one small Codex adapter vertical slice using the Phase 1 contracts:
+Use using-superpowers as the task/session authority again. Create active stages such as UNDERSTAND, RESEARCH, DESIGN, PLAN, IMPLEMENT, REVIEW, VERIFY, HARDEN, and HANDOFF. Re-run stage-local routing independently at every active stage and emit a StageRoute record with either SKILLS_SELECTED or an explicit NO_SKILL_NEEDED reason. Load only the selected installed SKILL.md files; do not load the whole catalog. Record the run under a concise docs/v3/evidence/PHASE3_CROSS_RUNTIME_DOGFOOD_ROUTE.md without hidden chain-of-thought.
 
-```text
+Treat using-superpowers as resident task/session authority. A stage may list it in the GATE slot without reloading its full body.
+
+## Fresh official-source research is mandatory
+
+For each runtime, research current official documentation and current official source before implementing its projection. Record source URLs, revision/date, verified fields, and support level (NATIVE, EMULATED, HOST_MANAGED, or UNSUPPORTED) in a new canonical mapping document. Do not rely on memory, stale blog posts, or Codex assumptions. Do not put documentation URLs into runtime logic.
+
+Research these native surfaces separately:
+
+### Claude Code
+
+Verify CLAUDE.md, Skills, Hooks, Subagents, Permissions, Plugins, commands, MCP, lazy loading, and model/reasoning controls. Preserve the separation:
+
+- CLAUDE.md is persistent project context.
+- Skills are reusable procedures.
+- Hooks are deterministic lifecycle enforcement.
+- Subagents are isolated/adversarial/parallel work.
+- Permissions are capability boundaries.
+- Plugins package extensions.
+
+Do not turn every instruction into CLAUDE.md content.
+
+### OpenCode
+
+Verify AGENTS.md, the native skill tool, agents/subagents, model-per-agent configuration, permissions, commands, and MCP. Measure or account for MCP context cost. Keep OpenCode-specific model IDs inside the OpenCode projection/fixture only, never in universal routing logic.
+
+### Hermes
+
+Verify the current Hermes source for persistent learned skills, /learn-style distillation, MCP, cross-agent import, and long-running coordination. Preserve the learning donor boundary:
+
+OBSERVE -> DISTILL -> CANDIDATE -> DUPLICATE CHECK -> PROVENANCE -> EVAL -> REVIEW -> PROMOTION
+
+Do not duplicate Hermes memory or auto-promote unknown external skills.
+
+### MiMo Code
+
+Verify Agent Skills, on-demand loading, primary agents, subagents, permissions, MCP, commands, and Compose workflow. Keep MiMo Code as the runtime and MiMo models as model profiles. Compare Compose with using-superpowers stage routing; do not replace Superpowers with Compose.
+
+### ZCode
+
+Verify AGENTS.md, skills, commands, subagents, plugins, MCP, per-subagent model, thinking effort, and tool permissions. Keep ZCode as runtime and GLM as model profile. Treat a ZCode plugin that bundles Skill, Command, Subagent, and MCP as a native packaging target.
+
+### DeepSeek Harness
+
+Verify the harness as a full plugin-based agent runtime, not merely a DeepSeek model client. Research system-prompt assembly, ordered prompt sections, runtime context, prompt variables, tool schemas, agent-scoped overrides, tool ordering, context/token cost, and KV-cache stability. Extend the portable adapter contract only where the evidence supports it; do not copy the implementation directly.
+
+## Implementation boundary
+
+Use the existing runtime-neutral CompiledExecutionBundle as the input to each adapter. Each adapter must consume a validated StageRoute; it must not call a general router or select skills. For every runtime, implement only the smallest useful data/projection boundary:
+
 canonical SkillMetadataV3
-  -> Codex native adapter manifest
-  -> generated native configuration
-  -> canonical skill discovery
-  -> lazy selected-SKILL.md loading
-  -> StageRoute consumption
-  -> explicit reasoning artifacts
-  -> evidence gate
-```
+  -> validated StageRoute
+  -> CompiledExecutionBundle
+  -> runtime-specific NativeProjection
+  -> native surface references/config data
+  -> explicit artifacts and evidence
 
-The adapter must make the canonical skill source feel native to Codex while keeping one source of truth. It must not fork skill content, copy hundreds of workflows into `AGENTS.md`, or add universal model/provider branch logic.
+Selected-only loading, trust checks, source/ref/digest provenance, and the resident using-superpowers rule must remain intact. NO_SKILL_NEEDED must load zero additional skills and preserve its reason. A changed canonical digest must invalidate the derived projection.
 
-## Constraints
+Effective permission remains the least-privilege intersection of TaskSpec, policy, adapter manifest, route budget, and live runtime/sandbox restrictions. Model profiles, skills, MCP declarations, plugins, and generated projections cannot grant OS permissions.
 
-- Use `using-superpowers` as task/session orchestration authority.
-- Decompose the work into active v3 stages and emit a route record for every active stage.
-- Re-run stage-local routing at each active stage; use actual registry/installed skill names only.
-- Keep `AGENTS.md` limited to invariants, routing bootstrap, and context-loading policy.
-- Use Codex-native concepts: `AGENTS.md`, Skills, Plugins, Subagents, MCP, config/permission profiles, and reasoning effort.
-- Model runtime and provider/model profile remain separate. Do not write `if model == codex` and do not encode today's model IDs in universal policy.
-- The adapter advertises capabilities; it does not grant permissions. Effective permissions are the intersection of TaskSpec, policy, adapter, and model profile.
-- MCP/tool schema cost, static prompt prefix, dynamic context, tool ordering, and cache stability must be represented in the generated configuration or evidence.
-- `using-superpowers` may be referenced as the route `GATE`; do not reload its full instruction file as an ordinary skill at every stage.
-- Do not modify `install.sh`, move skills, migrate `.superpowers/SKILLS_INDEX.json`, rewrite `.superpowers/ROUTING_POLICY.yaml`, add a database, or install MCP servers.
-- Do not implement a general Stage Router. Consume an existing validated `StageRoute` only.
+The portable bundle must remain free of runtime-specific branch logic. Runtime identity belongs in the adapter projection only. Model profiles must remain separate records for OpenAI-compatible, Anthropic-compatible, DeepSeek, GLM, MiMo, and future providers.
 
-## Required implementation
+## Fixtures and tests
 
-1. Add a Codex adapter module that consumes a validated `TaskSpec`, `StageRoute`, `SkillMetadataV3` records, the Codex `AgentAdapterManifest`, and a compatible `ModelProfile`.
-2. Implement canonical metadata lookup and selected-only lazy loading of the referenced `SKILL.md` files.
-3. Generate a deterministic Codex-native configuration artifact with:
-   - small `AGENTS.md` bootstrap reference;
-   - native skill location and selected refs;
-   - model profile reference and reasoning effort;
-   - permission/sandbox envelope;
-   - optional plugins, subagents, MCP, and parallelism declarations;
-   - static prefix/dynamic context/tool-schema budget/order/cache fields;
-   - source refs, digests, and generated-config digest.
-4. Consume `StageRoute.status` correctly:
-   - `SKILLS_SELECTED` loads only selected refs and their required resources;
-   - `NO_SKILL_NEEDED` loads no additional skill and preserves `no_skill_reason`.
-5. Emit portable reasoning artifacts: TaskSpec reference, assumptions, unknowns, decision record, stage plan, evidence, risk, verification, and optional learning proposal. Never emit private hidden chain-of-thought.
-6. Implement an evidence gate that blocks completion without required evidence and returns an observable reroute/degradation reason. It must not widen permissions.
+Add capability fixtures for all six runtimes and separate representative model fixtures. These are not production integrations. Add native projection schemas or a small shared projection contract only when justified by the existing boundary; do not create a framework hierarchy.
 
-## Required tests
+Tests must keep all Phase 1 and Phase 2 tests green and cover, for every adapter:
 
-Add tests for:
+- valid manifest and native projection;
+- runtime/model separation;
+- deterministic projection for identical inputs;
+- selected-only skill loading and no-skill loading;
+- digest/provenance preservation and invalidation;
+- trust/quarantine/missing-skill blocking;
+- capability negotiation and unknown capability handling;
+- permission intersection and non-escalation;
+- MCP/tool-schema context cost and lazy activation;
+- explicit observable reasoning artifacts with no hidden-CoT fields;
+- evidence gate pass/failure and reroute/degradation artifact;
+- unsupported native concepts are explicitly classified, never invented;
+- no universal branch on agent == ... or model == ...;
+- no unrelated skill body appears in a generated projection.
 
-- Codex manifest validates against `AgentAdapterManifest`.
-- A route generated from `fixtures/v3/routes/skills-selected.json` consumes the Codex fixture and OpenAI-compatible profile.
-- A `NO_SKILL_NEEDED` route does not load a skill.
-- Only selected canonical refs are loaded; unrelated `SKILL.md` content is not copied into configuration.
-- Generated configuration is deterministic for identical inputs and includes provenance/digest.
-- A changed registry digest invalidates or regenerates configuration rather than silently reusing it.
-- Missing or quarantined skill metadata cannot be loaded as trusted core.
-- Unsupported adapter/model capabilities produce an explicit blocked/degraded artifact.
-- A permission declaration cannot escalate the TaskSpec or policy grant.
-- Reasoning artifacts are portable and contain no hidden-chain-of-thought field.
-- Evidence failure blocks completion and records a reroute trigger.
-- No universal routing code branches on provider/model or runtime identity.
+Add cross-agent fixtures/tests demonstrating the same portable bundle can be projected differently without forking canonical skills. Add regression, security, context-efficiency, and cross-agent handoff cases where evidence supports them.
 
-Run the full Phase 1 suite plus the new adapter tests:
+## Review and security gates
 
-```bash
-python3 -m unittest discover -s tests -p 'test_*.py' -v
-```
+Use actual installed review/security/simplification/verification skills in independent lanes. Inspect every new Manager, Registry, Service, Factory, Coordinator, Gateway, or framework abstraction and remove speculative layers. Schemas, data validation, small helpers, and thin projections are preferred.
 
-## Deliverables
+Audit untrusted metadata, plugin/MCP declarations, scripts/hooks, external commands, network permissions, path traversal, prompt injection, tool-schema cost, and generated configuration. Schemas describe permissions; they never grant them. Unknown external skills/plugins/MCP remain quarantined until provenance, license, evaluation, security review, and human/policy approval.
 
-- Codex adapter implementation and focused tests.
-- Generated configuration fixture and provenance evidence.
-- Canonical v3 doc synchronization only where the adapter makes the contract more precise.
-- A concise Phase 2 routing/evidence trace under `docs/v3/evidence/`.
-- No Claude/OpenCode/Hermes/MiMo/ZCode/DeepSeek implementation.
+Run Alibaba OpenCodeReview checks once:
 
-Stop after verification and open a separate stacked PR based on the Phase 1 branch. Do not merge.
+which ocr
+ocr version
+ocr llm test
+
+If native authentication returns 401, record OCR_NATIVE_DIFF = BLOCKED_BY_AUTH; do not fake a pass or relabel delegate review as native OCR.
+
+## Non-goals
+
+Do not move or fork the existing skills. Do not rewrite install.sh or .superpowers/ROUTING_POLICY.yaml. Do not implement the general Stage Router, database, cloud orchestration, MCP installation, automatic external import, or universal model list. Do not replace using-superpowers with a runtime's workflow feature. Do not execute Phase 4 eval-driven routing.
+
+## Deliverables and handoff
+
+Create a stacked branch from the current Phase 2 implementation. Keep commits small and semantic. Update canonical docs/v3/ only where implementation makes a contract precise. Create a new next prompt for Phase 4 only after verification. Do not merge the PR.
+
+The final response must report repository truth, dogfood stages and selected skills, each runtime's official mapping and source evidence, tests, performance or context evidence, security/OCR/independent reviews, anti-bloat audit, files, commits, draft PR, next prompt path, and remaining blockers.
