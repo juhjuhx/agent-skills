@@ -138,7 +138,7 @@ This task defines durable cross-agent contracts and therefore qualifies as `COMP
 
 - `STAGE`: `implement`
 - `OBJECTIVE`: implement five schemas, small validator, read-only compatibility projection, and fixtures.
-- `SKILLS CONSIDERED`: `using-superpowers`, `test-driven-development`, `addyosmani-api-and-interface-design`, `incremental-implementation`, `verification-before-completion`
+- `SKILLS CONSIDERED`: `using-superpowers`, `test-driven-development`, `addyosmani-api-and-interface-design`, `addyosmani-incremental-implementation`, `verification-before-completion`
 - `SKILLS SELECTED`:
   - `GATE`: `using-superpowers` — stage gate and no-runtime-change invariant.
   - `PROCESS`: `test-driven-development` — failing test before implementation and incremental red/green cycles.
@@ -147,7 +147,7 @@ This task defines durable cross-agent contracts and therefore qualifies as `COMP
 - `ROLE SLOT`: `GATE`, `PROCESS`, `DOMAIN`, `VERIFY`
 - `WHY SELECTED`: schemas are public interfaces; validator behavior must be proven through fixtures and negative cases.
 - `SKILLS REJECTED`:
-  - `incremental-implementation` — the TDD process and focused helpers were sufficient; no second implementation workflow was needed.
+  - `addyosmani-incremental-implementation` — the TDD process and focused helpers were sufficient; no second implementation workflow was needed.
 - `AGENT/RUNTIME`: Codex
 - `MODEL PROFILE`: not applicable
 - `TOOLS`: `apply_patch`, Python standard library, `unittest`, `jq`
