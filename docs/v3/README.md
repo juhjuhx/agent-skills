@@ -1,6 +1,6 @@
 # Agent Skills Matrix v3
 
-> Status: **proposed architecture; Phase 1 contracts and the Phase 2 Codex vertical slice implemented**. The slice compiles a portable execution bundle and a validated Codex projection; it does not implement the general stage router or install runtime configuration.
+> Status: **proposed architecture; Phase 1 contracts and the Phase 2.5 Codex conformance-hardened vertical slice implemented**. The slice compiles a portable execution bundle and a pinned-contract-validated Codex projection; it does not implement the general stage router or install runtime configuration.
 
 ## Why v3
 
@@ -108,9 +108,12 @@ for every stage.
 
 Fixtures and boundary tests cover selected-only and no-skill routes,
 permission non-escalation, provenance, digest invalidation, evidence failure,
-and portable/runtime separation. The projection records native support versus
-host-managed metadata; it has no filesystem side effects and does not claim
-that native Codex execution has already been wired.
+and portable/runtime separation. Phase 2.5 additionally checks emitted config
+values against a pinned narrow Codex contract, fails closed on unrepresentable
+permissions, and keeps raw skill bodies out of serializable results. The
+projection records native support versus host-managed metadata; it has no
+filesystem side effects and does not claim that native Codex execution has
+already been wired.
 
 ### Native adapter guides
 
