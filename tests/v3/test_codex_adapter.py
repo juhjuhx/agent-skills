@@ -283,6 +283,149 @@ class CodexAdapterVerticalSliceTests(CodexAdapterTestCase):
         self.assertEqual(result.status, "BLOCKED")
         self.assertEqual(result.reason_code, "PROJECTION_UNSUPPORTED")
 
+    def test_default_contract_is_bound_to_the_observed_installed_release(self):
+        from tools.v3.codex_native_contract import (
+            INSTALLED_RELEASE_COMMIT,
+            INSTALLED_RELEASE_TAG,
+            INSTALLED_RUNTIME_VERSION,
+            load_native_contract,
+            validate_codex_config,
+        )
+
+        contract = load_native_contract()
+        self.assertEqual(contract["contract_target"], "INSTALLED_RUNTIME")
+        self.assertEqual(contract["observed_runtime_version"], INSTALLED_RUNTIME_VERSION)
+        self.assertEqual(contract["release_tag"], INSTALLED_RELEASE_TAG)
+        self.assertEqual(contract["release_commit"], INSTALLED_RELEASE_COMMIT)
+        self.assertEqual(contract["contract_source_commit"], INSTALLED_RELEASE_COMMIT)
+
+        validation = validate_codex_config({"approval_policy": "on-request"})
+        self.assertTrue(validation.valid, validation.errors)
+        self.assertEqual(validation.reason_code, None)
+
+    def test_release_contract_provenance_is_recorded_in_projection(self):
+        from tools.v3.codex_native_contract import (
+            INSTALLED_CONTRACT_DIGEST,
+            INSTALLED_RELEASE_COMMIT,
+            INSTALLED_RELEASE_TAG,
+        )
+
+        result = self.compile_selected()
+        provenance = result.projection["provenance"]
+
+        self.assertEqual(provenance["contract_target"], "INSTALLED_RUNTIME")
+        self.assertEqual(provenance["release_tag"], INSTALLED_RELEASE_TAG)
+        self.assertEqual(provenance["release_commit"], INSTALLED_RELEASE_COMMIT)
+        self.assertEqual(provenance["contract_source_commit"], INSTALLED_RELEASE_COMMIT)
+        self.assertEqual(provenance["contract_digest"], INSTALLED_CONTRACT_DIGEST)
+        self.assertEqual(provenance["availability"], "INSTALLED")
+
+    def test_source_snapshot_and_installed_runtime_are_distinct_targets(self):
+        from tools.v3.codex_native_contract import (
+            load_native_contract,
+            load_source_snapshot_contract,
+            validate_codex_config,
+        )
+
+        installed = load_native_contract()
+        source_snapshot = load_source_snapshot_contract()
+
+        self.assertEqual(installed["contract_target"], "INSTALLED_RUNTIME")
+        self.assertEqual(source_snapshot["contract_target"], "SOURCE_SNAPSHOT")
+        self.assertNotEqual(
+            installed["contract_source_commit"],
+            source_snapshot["contract_source_commit"],
+        )
+        self.assertNotEqual(installed["contract_digest"], source_snapshot["contract_digest"])
+
+        installed_result = validate_codex_config(
+            {"sandbox_mode": "workspace-write"}, contract=installed
+        )
+        source_result = validate_codex_config(
+            {"sandbox_mode": "workspace-write"},
+            contract=source_snapshot,
+            expected_target="SOURCE_SNAPSHOT",
+        )
+        self.assertTrue(installed_result.valid, installed_result.errors)
+        self.assertTrue(source_result.valid, source_result.errors)
+
+    def test_upstream_source_snapshot_cannot_be_projected_as_installed_native(self):
+        from tools.v3.codex_native_contract import load_source_snapshot_contract
+
+        result = self.adapter(
+            native_contract=load_source_snapshot_contract()
+        ).compile(
+            task_spec=self.task_spec,
+            stage_route=self.stage_route,
+            adapter_manifest=self.adapter_manifest,
+            model_profile=self.model_profile,
+            metadata_records=self.metadata,
+            observed_evidence=self.observed_evidence,
+            reasoning_artifacts=self.reasoning_artifacts,
+        )
+
+        self.assertEqual(result.status, "BLOCKED")
+        self.assertEqual(result.reason_code, "RUNTIME_CONTRACT_UNVERIFIED")
+        self.assertTrue(any("target mismatch" in error for error in result.errors))
+
+    def test_installed_runtime_revision_mismatch_is_explicitly_unverified(self):
+        from tools.v3.codex_native_contract import load_native_contract
+
+        contract = load_native_contract()
+        contract["release_commit"] = "stale-release-commit"
+
+        result = self.adapter(native_contract=contract).compile(
+            task_spec=self.task_spec,
+            stage_route=self.stage_route,
+            adapter_manifest=self.adapter_manifest,
+            model_profile=self.model_profile,
+            metadata_records=self.metadata,
+            observed_evidence=self.observed_evidence,
+            reasoning_artifacts=self.reasoning_artifacts,
+        )
+
+        self.assertEqual(result.status, "BLOCKED")
+        self.assertEqual(result.reason_code, "RUNTIME_CONTRACT_UNVERIFIED")
+        self.assertTrue(any("release_commit" in error for error in result.errors))
+
+    def test_unknown_observed_runtime_version_fails_closed(self):
+        result = self.adapter(observed_runtime_version="0.153.5").compile(
+            task_spec=self.task_spec,
+            stage_route=self.stage_route,
+            adapter_manifest=self.adapter_manifest,
+            model_profile=self.model_profile,
+            metadata_records=self.metadata,
+            observed_evidence=self.observed_evidence,
+            reasoning_artifacts=self.reasoning_artifacts,
+        )
+
+        self.assertEqual(result.status, "BLOCKED")
+        self.assertEqual(result.reason_code, "RUNTIME_CONTRACT_UNVERIFIED")
+        self.assertTrue(any("no verified Codex release mapping" in error for error in result.errors))
+
+    def test_native_contract_validation_is_offline_and_revision_bound(self):
+        from tools.v3.codex_native_contract import (
+            INSTALLED_NATIVE_CONTRACT_REVISION,
+            load_native_contract,
+            validate_codex_config,
+        )
+
+        source = (ROOT / "tools/v3/codex_native_contract.py").read_text(encoding="utf-8")
+        self.assertNotIn("urllib", source)
+        self.assertNotIn("subprocess", source)
+        self.assertEqual(
+            load_native_contract()["native_contract_revision"],
+            INSTALLED_NATIVE_CONTRACT_REVISION,
+        )
+
+        contract = load_native_contract()
+        contract["contract_digest"] = "sha256:" + ("0" * 64)
+        validation = validate_codex_config(
+            {"model": "fixture"}, contract=contract
+        )
+        self.assertFalse(validation.valid)
+        self.assertEqual(validation.reason_code, "RUNTIME_CONTRACT_UNVERIFIED")
+
     def test_native_contract_rejects_obsolete_and_unknown_config_values(self):
         try:
             from tools.v3.codex_native_contract import load_native_contract, validate_codex_config
@@ -333,7 +476,7 @@ class CodexAdapterVerticalSliceTests(CodexAdapterTestCase):
         )
 
         self.assertEqual(result.status, "BLOCKED")
-        self.assertEqual(result.reason_code, "PROJECTION_UNSUPPORTED")
+        self.assertEqual(result.reason_code, "RUNTIME_CONTRACT_UNVERIFIED")
         self.assertTrue(any("revision mismatch" in error for error in result.errors))
 
     def test_malformed_native_contract_fails_closed(self):
@@ -348,7 +491,7 @@ class CodexAdapterVerticalSliceTests(CodexAdapterTestCase):
         )
 
         self.assertEqual(result.status, "BLOCKED")
-        self.assertEqual(result.reason_code, "PROJECTION_UNSUPPORTED")
+        self.assertEqual(result.reason_code, "RUNTIME_CONTRACT_UNVERIFIED")
         self.assertTrue(any("must be an object" in error for error in result.errors))
 
     def test_native_contract_covers_every_emitted_config_field(self):
@@ -359,7 +502,7 @@ class CodexAdapterVerticalSliceTests(CodexAdapterTestCase):
         self.assertEqual(set(contract["fields"]), set(CODEX_NATIVE_CONFIG_FIELDS))
         self.assertEqual(
             contract["native_contract_revision"],
-            "codex-rs/core/config.schema.json@45305dd229c01e6cb6e122f6559e4f9b805bae6",
+            "codex-rs/core/config.schema.json@3d2ee51ca2d5db578f328aa75e20aa22c0197c9a",
         )
 
     def test_permission_projection_classifies_supported_filesystem_levels(self):

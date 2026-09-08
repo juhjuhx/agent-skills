@@ -242,6 +242,17 @@
         "generated_config_path",
         "codex_source_revision",
         "native_contract_revision",
+        "runtime_id",
+        "observed_runtime_version",
+        "release_tag",
+        "release_commit",
+        "contract_target",
+        "contract_source_commit",
+        "docs_snapshot_date",
+        "contract_digest",
+        "verification_method",
+        "support",
+        "availability",
         "selected_skill_digests"
       ],
       "properties": {
@@ -249,6 +260,17 @@
         "generated_config_path": {"$ref": "common.schema.json#/$defs/relativePath"},
         "codex_source_revision": {"$ref": "common.schema.json#/$defs/shortString"},
         "native_contract_revision": {"$ref": "common.schema.json#/$defs/shortString"},
+        "runtime_id": {"$ref": "common.schema.json#/$defs/runtimeId"},
+        "observed_runtime_version": {"$ref": "common.schema.json#/$defs/shortString"},
+        "release_tag": {"$ref": "common.schema.json#/$defs/shortString"},
+        "release_commit": {"$ref": "common.schema.json#/$defs/shortString"},
+        "contract_target": {"$ref": "#/$defs/contractTarget"},
+        "contract_source_commit": {"$ref": "common.schema.json#/$defs/shortString"},
+        "docs_snapshot_date": {"$ref": "common.schema.json#/$defs/shortString"},
+        "contract_digest": {"$ref": "common.schema.json#/$defs/digest"},
+        "verification_method": {"$ref": "common.schema.json#/$defs/shortString"},
+        "support": {"$ref": "#/$defs/supportLevel"},
+        "availability": {"$ref": "#/$defs/availability"},
         "selected_skill_digests": {
           "type": "array",
           "items": {"$ref": "common.schema.json#/$defs/digest"},
@@ -261,6 +283,14 @@
     "supportLevel": {
       "type": "string",
       "enum": ["NATIVE", "EMULATED", "HOST_MANAGED", "UNSUPPORTED"]
+    },
+    "availability": {
+      "type": "string",
+      "enum": ["INSTALLED", "RELEASE_SUPPORTED", "UPSTREAM_ONLY", "UNKNOWN"]
+    },
+    "contractTarget": {
+      "type": "string",
+      "enum": ["INSTALLED_RUNTIME", "SOURCE_SNAPSHOT", "DOCUMENTATION_SNAPSHOT"]
     },
     "configValues": {
       "type": "object",

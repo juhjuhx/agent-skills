@@ -16,7 +16,12 @@ from tools.v3.contract_validation import (
     validate_agent_model_separation,
     validate_instance,
 )
-from tools.v3.codex_native_contract import validate_codex_config
+from tools.v3.codex_native_contract import (
+    INSTALLED_RUNTIME_VERSION,
+    NativeContractError,
+    load_native_contract,
+    validate_codex_config,
+)
 from tools.v3.evidence_gate import evaluate_evidence
 from tools.v3.execution_bundle import compile_execution_bundle, validate_bundle
 from tools.v3.permission_intersection import capability_requirements, intersect_permissions
@@ -74,12 +79,16 @@ class CodexAdapter:
         policy: dict[str, Any] | None = None,
         live_runtime: dict[str, Any] | None = None,
         native_contract: dict[str, Any] | None = None,
+        observed_runtime_version: str | None = INSTALLED_RUNTIME_VERSION,
     ) -> None:
         self.repository_root = Path(repository_root).resolve()
         self.registry_path = Path(registry_path)
         self.policy = copy.deepcopy(policy or {})
         self.live_runtime = copy.deepcopy(live_runtime or {})
         self.native_contract = copy.deepcopy(native_contract)
+        # This is maintenance-time observed evidence, not a live network or
+        # subprocess lookup. An explicit None means the runtime is unknown.
+        self.observed_runtime_version = observed_runtime_version
 
     def compile(
         self,
@@ -257,6 +266,15 @@ class CodexAdapter:
                 loaded_skills=resolution.loaded,
                 reasoning_effort=reasoning_effort,
             )
+        except NativeContractError as exc:
+            return AdapterResult(
+                status="BLOCKED",
+                reason_code=exc.reason_code,
+                errors=[str(exc)],
+                bundle=bundle,
+                evidence=evidence,
+                metrics=self._resolution_metrics(resolution),
+            )
         except ValueError as exc:
             return AdapterResult(
                 status="BLOCKED",
@@ -340,13 +358,22 @@ class CodexAdapter:
                 "max_concurrent_threads_per_session": max(1, int(max_agents or 1)),
             }
 
+        native_contract = (
+            load_native_contract()
+            if self.native_contract is None
+            else self.native_contract
+        )
         native_validation = validate_codex_config(
-            config_values, contract=self.native_contract
+            config_values,
+            contract=native_contract,
+            expected_target="INSTALLED_RUNTIME",
+            observed_runtime_version=self.observed_runtime_version,
         )
         if not native_validation.valid:
-            raise ValueError(
+            raise NativeContractError(
+                native_validation.reason_code or "PROJECTION_UNSUPPORTED",
                 "invalid Codex native config contract: "
-                + "; ".join(native_validation.errors)
+                + "; ".join(native_validation.errors),
             )
         if isinstance(approval_policy, dict) and "granular" in approval_policy:
             raise ValueError(
@@ -450,6 +477,23 @@ class CodexAdapter:
                 "generated_config_path": ".codex/config.toml",
                 "codex_source_revision": native_validation.source_revision,
                 "native_contract_revision": native_validation.native_contract_revision,
+                "runtime_id": native_validation.provenance["runtime_id"],
+                "observed_runtime_version": native_validation.provenance[
+                    "observed_runtime_version"
+                ],
+                "release_tag": native_validation.provenance["release_tag"],
+                "release_commit": native_validation.provenance["release_commit"],
+                "contract_target": native_validation.provenance["contract_target"],
+                "contract_source_commit": native_validation.provenance[
+                    "contract_source_commit"
+                ],
+                "docs_snapshot_date": native_validation.provenance["docs_snapshot_date"],
+                "contract_digest": native_validation.provenance["contract_digest"],
+                "verification_method": native_validation.provenance[
+                    "verification_method"
+                ],
+                "support": native_validation.provenance["support"],
+                "availability": native_validation.provenance["availability"],
                 "selected_skill_digests": sorted(
                     item["digest"] for item in bundle["selected_skills"]
                 ),

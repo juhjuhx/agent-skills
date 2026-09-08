@@ -1,7 +1,7 @@
 # Next Codex Prompt — Phase 3 Cross-Runtime Adapter Expansion
 
 Copy the prompt below into the next Codex session. It is a planning and
-implementation prompt for Phase 3 only. Do not execute it during Phase 2.5.
+implementation prompt for Phase 3 only. Do not execute it during Phase 2.6.
 
 ---
 
@@ -10,7 +10,7 @@ implementation prompt for Phase 3 only. Do not execute it during Phase 2.5.
 Repository: juhjuhx/agent-skills
 
 Implement Agent Skills Matrix v3 — Phase 3: Cross-Runtime Adapter Expansion
-from the hardened Phase 2.5 Codex adapter branch (or its merged base). Extend the portable contracts
+from the hardened Phase 2.6 Codex adapter branch (or its merged base). Extend the portable contracts
 to native projections for Claude Code, DeepSeek Harness, OpenCode, MiMo Code,
 ZCode, and Hermes.
 
@@ -94,6 +94,23 @@ verified fields, and support level (NATIVE, EMULATED, HOST_MANAGED, or
 UNSUPPORTED) in a canonical mapping document. Prefer current first-party
 documentation and source. Do not put documentation URLs or provider-specific
 IDs into universal routing logic.
+
+Every runtime research lane must also record versioned provenance separately
+from support:
+
+- observed installed runtime version, when available;
+- latest stable release/tag and its resolved immutable commit;
+- exact official release/source ref used for the native contract;
+- current upstream source snapshot used for comparison, if any;
+- documentation snapshot date/ref;
+- native support level and availability (`INSTALLED`, `RELEASE_SUPPORTED`,
+  `UPSTREAM_ONLY`, or `UNKNOWN`).
+
+Do not implement an adapter from unversioned “current docs” alone. A source
+preview may inform a comparison, but it cannot prove installed-runtime
+conformance. If an installed version cannot be mapped to a verified release,
+keep the target explicitly unverified or use a deliberately selected
+compatibility mode; never silently fall back to upstream main.
 
 Verify separately:
 
