@@ -281,6 +281,30 @@ class CodexAdapterVerticalSliceTests(CodexAdapterTestCase):
         self.assertEqual(result.reason_code, "PERMISSION_INTERSECTION")
         self.assertTrue(any("intersection read-only" in error for error in result.errors))
 
+    def test_projection_sandbox_cannot_exceed_effective_permission(self):
+        result = self.adapter(
+            live_runtime={
+                "sandbox_mode": "danger-full-access",
+                "network_access": False,
+                "approval_policy": "never",
+            }
+        ).compile(
+            task_spec=self.task_spec,
+            stage_route=self.stage_route,
+            adapter_manifest=self.adapter_manifest,
+            model_profile=self.model_profile,
+            metadata_records=self.metadata,
+            observed_evidence=self.observed_evidence,
+            reasoning_artifacts=self.reasoning_artifacts,
+        )
+
+        self.assertEqual(result.status, "READY")
+        self.assertEqual(
+            result.bundle["permission_envelope"]["filesystem"], "workspace-write"
+        )
+        self.assertEqual(result.projection["config"]["values"]["sandbox_mode"], "workspace-write")
+        self.assertNotIn("approval_policy", result.projection["config"]["values"])
+
     def test_model_profile_cannot_grant_os_permission(self):
         model = copy.deepcopy(self.model_profile)
         model["capabilities"]["tool_use"] = True
@@ -299,6 +323,17 @@ class CodexAdapterVerticalSliceTests(CodexAdapterTestCase):
 
         self.assertEqual(result.status, "BLOCKED")
         self.assertEqual(result.reason_code, "PERMISSION_INTERSECTION")
+
+    def test_skill_metadata_cannot_widen_effective_permission(self):
+        metadata = copy.deepcopy(self.metadata)
+        metadata[0]["permissions"] = {"filesystem": "external-write"}
+
+        result = self.compile_selected(metadata_records=metadata)
+
+        self.assertEqual(result.status, "READY")
+        self.assertEqual(
+            result.bundle["permission_envelope"]["filesystem"], "workspace-write"
+        )
 
     def test_mcp_declaration_cannot_grant_permission(self):
         task = copy.deepcopy(self.task_spec)

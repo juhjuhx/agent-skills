@@ -288,10 +288,10 @@ class CodexAdapter:
             if reasoning_effort not in levels:
                 raise ValueError(f"reasoning effort is not advertised by the model: {reasoning_effort}")
             config_values["model_reasoning_effort"] = reasoning_effort
-        for key in ("approval_policy", "sandbox_mode"):
-            value = self.live_runtime.get(key)
-            if value is not None:
-                config_values[key] = value
+        approval_policy = self.live_runtime.get("approval_policy")
+        if approval_policy in {"untrusted", "on-failure", "on-request"}:
+            config_values["approval_policy"] = approval_policy
+        config_values["sandbox_mode"] = self._sandbox_mode_for(bundle)
         if task_spec.get("parallelizable") and "needs_subagents" in task_spec.get(
             "required_capabilities", []
         ):
@@ -440,3 +440,14 @@ class CodexAdapter:
             "skill_md_files_loaded": resolution.loaded_skill_files,
             "loaded_bytes": resolution.loaded_bytes,
         }
+
+    @staticmethod
+    def _sandbox_mode_for(bundle: dict[str, Any]) -> str:
+        """Map the effective envelope to a Codex mode without widening it."""
+
+        filesystem = bundle["permission_envelope"]["filesystem"]
+        if filesystem in {"none", "read", "workspace-read"}:
+            return "read-only"
+        if filesystem == "workspace-write":
+            return "workspace-write"
+        return "danger-full-access"
