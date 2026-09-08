@@ -16,11 +16,12 @@ from tools.v3.contract_validation import (
     validate_agent_model_separation,
     validate_instance,
 )
+from tools.v3.codex_native_contract import validate_codex_config
 from tools.v3.evidence_gate import evaluate_evidence
 from tools.v3.execution_bundle import compile_execution_bundle, validate_bundle
 from tools.v3.permission_intersection import capability_requirements, intersect_permissions
 from tools.v3.reasoning_artifacts import artifact_refs, validate_reasoning_artifacts
-from tools.v3.skill_resolver import SkillResolution, SkillResolver
+from tools.v3.skill_resolver import LoadedSkill, SkillResolution, SkillResolver
 
 
 CODEX_NATIVE_CONFIG_FIELDS = frozenset(
@@ -44,6 +45,10 @@ class AdapterResult:
     evidence: dict[str, Any] = field(default_factory=dict)
     loaded_skills: list[dict[str, Any]] = field(default_factory=list)
     metrics: dict[str, Any] = field(default_factory=dict)
+    # Loaded bodies stay execution-local and are deliberately not serialized.
+    execution_skills: tuple[LoadedSkill, ...] = field(
+        default_factory=tuple, repr=False, compare=False
+    )
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -68,11 +73,13 @@ class CodexAdapter:
         *,
         policy: dict[str, Any] | None = None,
         live_runtime: dict[str, Any] | None = None,
+        native_contract: dict[str, Any] | None = None,
     ) -> None:
         self.repository_root = Path(repository_root).resolve()
         self.registry_path = Path(registry_path)
         self.policy = copy.deepcopy(policy or {})
         self.live_runtime = copy.deepcopy(live_runtime or {})
+        self.native_contract = copy.deepcopy(native_contract)
 
     def compile(
         self,
@@ -149,6 +156,24 @@ class CodexAdapter:
                 errors=permission_result["reasons"],
                 metrics={"permissions": permission_result},
             )
+        try:
+            permission_projection = self._permission_projection_for(
+                permission_result["effective"]
+            )
+        except ValueError as exc:
+            return AdapterResult(
+                status="BLOCKED",
+                reason_code="PERMISSION_PROJECTION",
+                errors=[str(exc)],
+                metrics={"permissions": permission_result},
+            )
+        if permission_projection["classification"] in {"HOST_MANAGED", "BLOCKED"}:
+            return AdapterResult(
+                status="BLOCKED",
+                reason_code="PERMISSION_PROJECTION",
+                errors=[permission_projection["reason"]],
+                metrics={"permissions": permission_result},
+            )
 
         resolver = SkillResolver(self.repository_root, self.registry_path)
         resolution = resolver.resolve(selected, metadata_records)
@@ -178,7 +203,12 @@ class CodexAdapter:
                 metrics=self._resolution_metrics(resolution),
             )
         evidence = evaluate_evidence(stage_route.get("evidence_required", []), observed_evidence)
-        bundle_status = "READY" if evidence["status"] == "PASS" else "BLOCKED"
+        if evidence["status"] != "PASS":
+            bundle_status = "BLOCKED"
+        elif permission_projection["classification"] == "NATIVE_CONSERVATIVE":
+            bundle_status = "DEGRADED"
+        else:
+            bundle_status = "READY"
         blocked_reason = None
         if evidence["status"] != "PASS":
             blocked_reason = "Evidence gate did not pass; execution completion is blocked."
@@ -236,27 +266,31 @@ class CodexAdapter:
                 evidence=evidence,
                 metrics=self._resolution_metrics(resolution),
             )
-        result_status = "READY" if evidence["status"] == "PASS" else "BLOCKED"
+        if evidence["status"] != "PASS":
+            result_status = "BLOCKED"
+            result_reason_code = "EVIDENCE_MISSING"
+            result_errors = [blocked_reason or "evidence gate blocked"]
+        elif permission_projection["classification"] == "NATIVE_CONSERVATIVE":
+            result_status = "DEGRADED"
+            result_reason_code = "PERMISSION_PROJECTION_DEGRADED"
+            result_errors = [permission_projection["reason"]]
+        else:
+            result_status = "READY"
+            result_reason_code = None
+            result_errors = []
         return AdapterResult(
             status=result_status,
-            reason_code=None if result_status == "READY" else "EVIDENCE_MISSING",
-            errors=[] if result_status == "READY" else [blocked_reason or "evidence gate blocked"],
+            reason_code=result_reason_code,
+            errors=result_errors,
             bundle=bundle,
             projection=projection,
             evidence=evidence,
             loaded_skills=[
-                {
-                    "skill_id": skill.skill_id,
-                    "path": skill.source_path,
-                    "digest": skill.digest,
-                    "role": skill.role,
-                    "bytes": skill.byte_count,
-                    "load_state": skill.load_state,
-                    "content": skill.content,
-                }
+                self._loaded_skill_record(skill)
                 for skill in resolution.loaded
             ],
             metrics=self._resolution_metrics(resolution),
+            execution_skills=tuple(resolution.loaded),
         )
 
     def project(
@@ -289,9 +323,14 @@ class CodexAdapter:
                 raise ValueError(f"reasoning effort is not advertised by the model: {reasoning_effort}")
             config_values["model_reasoning_effort"] = reasoning_effort
         approval_policy = self.live_runtime.get("approval_policy")
-        if approval_policy in {"untrusted", "on-failure", "on-request"}:
-            config_values["approval_policy"] = approval_policy
-        config_values["sandbox_mode"] = self._sandbox_mode_for(bundle)
+        if approval_policy is not None:
+            config_values["approval_policy"] = copy.deepcopy(approval_policy)
+        permission_projection = self._permission_projection_for(
+            bundle["permission_envelope"]
+        )
+        if permission_projection["classification"] in {"HOST_MANAGED", "BLOCKED"}:
+            raise ValueError(permission_projection["reason"])
+        config_values["sandbox_mode"] = permission_projection["sandbox_mode"]
         if task_spec.get("parallelizable") and "needs_subagents" in task_spec.get(
             "required_capabilities", []
         ):
@@ -300,6 +339,20 @@ class CodexAdapter:
                 "enabled": True,
                 "max_concurrent_threads_per_session": max(1, int(max_agents or 1)),
             }
+
+        native_validation = validate_codex_config(
+            config_values, contract=self.native_contract
+        )
+        if not native_validation.valid:
+            raise ValueError(
+                "invalid Codex native config contract: "
+                + "; ".join(native_validation.errors)
+            )
+        if isinstance(approval_policy, dict) and "granular" in approval_policy:
+            raise ValueError(
+                "Codex granular approval is a native object form but is "
+                "UNSUPPORTED by this adapter; no partial syntax was generated"
+            )
 
         loaded = list(loaded_skills)
         selected_projection = [skill.projection_reference() for skill in loaded]
@@ -368,6 +421,7 @@ class CodexAdapter:
                 "selected": selected_projection,
             },
             "config": {"path": ".codex/config.toml", "values": config_values},
+            "permissions": permission_projection,
             "mcp": {
                 "load_mode": mcp_load_mode,
                 "servers": mcp_servers,
@@ -394,6 +448,8 @@ class CodexAdapter:
             "provenance": {
                 "bundle_digest": bundle["bundle_digest"],
                 "generated_config_path": ".codex/config.toml",
+                "codex_source_revision": native_validation.source_revision,
+                "native_contract_revision": native_validation.native_contract_revision,
                 "selected_skill_digests": sorted(
                     item["digest"] for item in bundle["selected_skills"]
                 ),
@@ -442,12 +498,57 @@ class CodexAdapter:
         }
 
     @staticmethod
-    def _sandbox_mode_for(bundle: dict[str, Any]) -> str:
-        """Map the effective envelope to a Codex mode without widening it."""
+    def _loaded_skill_record(skill: LoadedSkill) -> dict[str, Any]:
+        """Return provenance and metrics without serializing the body."""
 
-        filesystem = bundle["permission_envelope"]["filesystem"]
-        if filesystem in {"none", "read", "workspace-read"}:
-            return "read-only"
-        if filesystem == "workspace-write":
-            return "workspace-write"
-        return "danger-full-access"
+        return {
+            "skill_id": skill.skill_id,
+            "path": skill.source_path,
+            "source_ref": skill.source_ref,
+            "digest": skill.digest,
+            "role": skill.role,
+            "bytes": skill.byte_count,
+            "load_state": skill.load_state,
+        }
+
+    @staticmethod
+    def _permission_projection_for(envelope: dict[str, Any]) -> dict[str, Any]:
+        """Map filesystem authority only when Codex can represent it safely."""
+
+        filesystem = envelope.get("filesystem")
+        mappings = {
+            "read": {
+                "sandbox_mode": "read-only",
+                "classification": "NATIVE_EXACT",
+            },
+            "workspace-read": {
+                "sandbox_mode": "read-only",
+                "classification": "HOST_MANAGED",
+                "reason": "Codex has no verified workspace-read sandbox mode; host path enforcement is required.",
+            },
+            "workspace-write": {
+                "sandbox_mode": "workspace-write",
+                "classification": "NATIVE_EXACT",
+            },
+        }
+        mapping = mappings.get(filesystem)
+        if mapping is None:
+            return {
+                "filesystem": filesystem,
+                "sandbox_mode": None,
+                "classification": "BLOCKED",
+                "reason": (
+                    "portable filesystem permission "
+                    f"{filesystem!r} cannot be represented without broader Codex authority; BLOCKED"
+                ),
+            }
+        return {"filesystem": filesystem, **mapping}
+
+    @classmethod
+    def _sandbox_mode_for(cls, bundle: dict[str, Any]) -> str:
+        """Return a safe Codex mode or fail closed for an unrepresentable envelope."""
+
+        projection = cls._permission_projection_for(bundle["permission_envelope"])
+        if projection["classification"] in {"HOST_MANAGED", "BLOCKED"}:
+            raise ValueError(projection["reason"])
+        return projection["sandbox_mode"]
