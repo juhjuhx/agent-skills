@@ -1,0 +1,47 @@
+{
+  "adapter_manifest_ref": "codex@fixture-1.0",
+  "bundle_digest": "sha256:a8c21d2f98c87f9751437546c87b7cab711d7a3a9185ac52858c22e0280d6d2d",
+  "bundle_id": "bundle:T-v3-phase2-codex:R-T-v3-phase2-codex-implement",
+  "bundle_version": "1.0",
+  "context": {
+    "artifact_refs": ["Assumptions", "DecisionRecord", "Evidence", "StagePlan", "TaskSpec", "Verification"],
+    "dynamic_context": "lazy",
+    "static_prefix": "stable",
+    "tool_schema_context": "tracked"
+  },
+  "effective_capabilities": ["editing", "sandbox", "structured_output"],
+  "evidence_gate": {"missing": [], "status": "PASS"},
+  "evidence_required": ["tests", "schema validation", "diff", "security review"],
+  "model_profile_ref": "openai/gpt-compatible-fixture@fixture-1.0",
+  "permission_envelope": {
+    "delete": false,
+    "external_write": false,
+    "filesystem": "workspace-write",
+    "level": "workspace-write",
+    "network": "none",
+    "publish": false,
+    "secrets": false
+  },
+  "provenance": {
+    "generated_by": "v3-bundle-compiler",
+    "registry_epoch": "registry:42c3d5c",
+    "skill_records": [
+      {"digest": "sha256:0a17fe3afac4b34d823e582aee0bfebb6430246fa78d06704b1aa94eef6e4b35", "skill_id": "code-review-excellence", "source_ref": "https://github.com/juhjuhx/agent-skills.git@main"},
+      {"digest": "sha256:7dee67b4af6bdccc7a914ca34533184d64592d0f5b23aeae631538168db14994", "skill_id": "test-driven-development", "source_ref": "https://github.com/juhjuhx/agent-skills.git@main"},
+      {"digest": "sha256:1adce90aedd8b1362381f8bf8a7346966612cbde3591f74ab7e55e539fa1209a", "skill_id": "using-superpowers", "source_ref": "https://github.com/juhjuhx/agent-skills.git@main"},
+      {"digest": "sha256:ea52d15aabaf72bc6b558efe2c126f161b53961090ddcd712000273bfe8c7b6c", "skill_id": "verification-before-completion", "source_ref": "https://github.com/juhjuhx/agent-skills.git@main"}
+    ]
+  },
+  "reasoning_artifact_refs": ["Assumptions", "DecisionRecord", "Evidence", "StagePlan", "TaskSpec", "Verification"],
+  "registry_epoch": "registry:42c3d5c",
+  "schema_version": "3.0",
+  "selected_skills": [
+    {"digest": "sha256:0a17fe3afac4b34d823e582aee0bfebb6430246fa78d06704b1aa94eef6e4b35", "load_state": "LOADED", "role": "REVIEW", "skill_id": "code-review-excellence", "source_path": "code-review-skill-main/SKILL.md", "source_ref": "https://github.com/juhjuhx/agent-skills.git@main"},
+    {"digest": "sha256:7dee67b4af6bdccc7a914ca34533184d64592d0f5b23aeae631538168db14994", "load_state": "LOADED", "role": "PROCESS", "skill_id": "test-driven-development", "source_path": "test-driven-development/SKILL.md", "source_ref": "https://github.com/juhjuhx/agent-skills.git@main"},
+    {"digest": "sha256:1adce90aedd8b1362381f8bf8a7346966612cbde3591f74ab7e55e539fa1209a", "load_state": "RESIDENT", "role": "GATE", "skill_id": "using-superpowers", "source_path": "using-superpowers/SKILL.md", "source_ref": "https://github.com/juhjuhx/agent-skills.git@main"},
+    {"digest": "sha256:ea52d15aabaf72bc6b558efe2c126f161b53961090ddcd712000273bfe8c7b6c", "load_state": "LOADED", "role": "VERIFY", "skill_id": "verification-before-completion", "source_path": "verification-before-completion/SKILL.md", "source_ref": "https://github.com/juhjuhx/agent-skills.git@main"}
+  ],
+  "stage_route_ref": "R-T-v3-phase2-codex-implement",
+  "status": "READY",
+  "task_spec_ref": "T-v3-phase2-codex"
+}

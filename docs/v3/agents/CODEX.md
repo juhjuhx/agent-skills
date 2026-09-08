@@ -1,6 +1,6 @@
 # Codex Native Adapter
 
-> Status: **planned adapter guide**. This document maps native concepts; it does not install or implement a Codex adapter.
+> Status: **Phase 2 vertical slice implemented**. The slice compiles validated data artifacts; it does not install Codex configuration or implement the general stage router.
 
 ## Native mapping
 
@@ -26,7 +26,11 @@ It must not contain hundreds of skill workflows. The canonical registry and lazy
 
 ## Stage execution
 
-The planned adapter receives a stage route, renders Codex-native instructions/configuration, selects native Skills, and maps MCP, Subagents, permissions, sandbox, and reasoning effort. It returns portable status, artifacts, evidence, and failures to the core.
+The Phase 2 adapter receives a validated stage route, renders a data-only
+Codex-native projection, resolves selected Skills, and maps MCP, Subagents,
+permissions, sandbox, and reasoning effort. It returns portable status,
+artifacts, evidence, and failures to the core; native execution side effects
+remain outside this slice.
 
 ```text
 TaskSpec
@@ -37,8 +41,26 @@ TaskSpec
   -> explicit artifacts and evidence
 ```
 
-The adapter may expose Codex-specific details internally. The universal core sees only capabilities, grants, model profile reference, and artifacts. Generated configuration must include canonical source refs, adapter version, and digest.
+The adapter may expose Codex-specific details internally. The universal core
+sees only capabilities, grants, model profile reference, and artifacts. Any
+future generated configuration must include canonical source refs, adapter
+version, and digest; the current slice records those in the portable bundle
+and projection provenance.
+
+The current slice makes the route-consumer portion concrete in
+[`tools/v3/codex_adapter.py`](../../../tools/v3/codex_adapter.py):
+[`CompiledExecutionBundle`](../../../schemas/v3/compiled-execution-bundle.schema.json)
+is compiled first, then projected to
+[`CodexNativeProjection`](../../../schemas/v3/codex-native-projection.schema.json).
+The projection is validated data only; it does not write `.codex/config.toml`,
+install MCP, enable plugins, or change permissions. See the [official surface
+mapping](../CODEX_OFFICIAL_CAPABILITY_MAPPING.md) for source evidence and
+support classifications.
 
 ## Deferred implementation
 
-The current PR does not modify root `AGENTS.md` beyond the compact bootstrap, create Codex files, change permissions, or add a model ID. Phase 2 in the [Migration Plan](../MIGRATION_PLAN.md) is the implementation target.
+The current slice does not modify root `AGENTS.md` beyond the compact
+bootstrap, create Codex runtime files, change permissions, or add a model ID.
+It is the Phase 2 implementation target in the [Migration Plan](../MIGRATION_PLAN.md);
+native execution, config generation side effects, and other runtime adapters
+remain follow-up work.

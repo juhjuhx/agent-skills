@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/compiled-execution-bundle.schema.json",
+  "title": "Agent Skills Matrix v3 CompiledExecutionBundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "bundle_version",
+    "bundle_id",
+    "task_spec_ref",
+    "stage_route_ref",
+    "adapter_manifest_ref",
+    "model_profile_ref",
+    "status",
+    "selected_skills",
+    "effective_capabilities",
+    "permission_envelope",
+    "context",
+    "reasoning_artifact_refs",
+    "evidence_required",
+    "evidence_gate",
+    "registry_epoch",
+    "provenance",
+    "bundle_digest"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "bundle_version": {"$ref": "common.schema.json#/$defs/shortString"},
+    "bundle_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "task_spec_ref": {"$ref": "common.schema.json#/$defs/recordId"},
+    "stage_route_ref": {"$ref": "common.schema.json#/$defs/recordId"},
+    "adapter_manifest_ref": {"$ref": "common.schema.json#/$defs/recordId"},
+    "model_profile_ref": {"$ref": "common.schema.json#/$defs/recordId"},
+    "status": {
+      "type": "string",
+      "enum": ["READY", "DEGRADED", "BLOCKED"]
+    },
+    "selected_skills": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["skill_id", "source_ref", "source_path", "digest", "role", "load_state"],
+        "properties": {
+          "skill_id": {"$ref": "common.schema.json#/$defs/recordId"},
+          "source_ref": {"$ref": "common.schema.json#/$defs/recordId"},
+          "source_path": {"$ref": "common.schema.json#/$defs/relativePath"},
+          "digest": {"$ref": "common.schema.json#/$defs/digest"},
+          "role": {"$ref": "common.schema.json#/$defs/role"},
+          "load_state": {
+            "type": "string",
+            "enum": ["LOADED", "RESIDENT", "NOT_LOADED"]
+          }
+        }
+      }
+    },
+    "effective_capabilities": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/capability"},
+      "uniqueItems": true
+    },
+    "permission_envelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "filesystem", "network", "external_write", "secrets", "publish", "delete"],
+      "properties": {
+        "level": {"$ref": "common.schema.json#/$defs/permissionLevel"},
+        "filesystem": {
+          "type": "string",
+          "enum": ["none", "read", "workspace-read", "workspace-write", "external-write", "destructive"]
+        },
+        "network": {
+          "type": "string",
+          "enum": ["none", "limited", "standard"]
+        },
+        "external_write": {"type": "boolean"},
+        "secrets": {"type": "boolean"},
+        "publish": {"type": "boolean"},
+        "delete": {"type": "boolean"}
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["static_prefix", "dynamic_context", "tool_schema_context", "artifact_refs"],
+      "properties": {
+        "static_prefix": {
+          "type": "string",
+          "enum": ["stable", "variable", "unknown"]
+        },
+        "dynamic_context": {
+          "type": "string",
+          "enum": ["lazy", "eager", "unknown"]
+        },
+        "tool_schema_context": {
+          "type": "string",
+          "enum": ["tracked", "untracked", "unknown"]
+        },
+        "artifact_refs": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/recordId"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "reasoning_artifact_refs": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/recordId"},
+      "uniqueItems": true
+    },
+    "evidence_required": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/shortString"},
+      "uniqueItems": true
+    },
+    "evidence_gate": {"$ref": "#/$defs/evidenceGate"},
+    "no_skill_reason": {"$ref": "common.schema.json#/$defs/shortString"},
+    "blocked_reason": {"$ref": "common.schema.json#/$defs/shortString"},
+    "registry_epoch": {"$ref": "common.schema.json#/$defs/recordId"},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generated_by", "registry_epoch", "skill_records"],
+      "properties": {
+        "generated_by": {"$ref": "common.schema.json#/$defs/shortString"},
+        "registry_epoch": {"$ref": "common.schema.json#/$defs/recordId"},
+        "skill_records": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["skill_id", "source_ref", "digest"],
+            "properties": {
+              "skill_id": {"$ref": "common.schema.json#/$defs/recordId"},
+              "source_ref": {"$ref": "common.schema.json#/$defs/recordId"},
+              "digest": {"$ref": "common.schema.json#/$defs/digest"}
+            }
+          }
+        }
+      }
+    },
+    "bundle_digest": {"$ref": "common.schema.json#/$defs/digest"}
+  },
+  "$defs": {
+    "evidenceGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "missing"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["PASS", "PENDING", "BLOCKED"]
+        },
+        "missing": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/shortString"},
+          "uniqueItems": true
+        },
+        "reroute": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["trigger", "reason"],
+          "properties": {
+            "trigger": {"$ref": "common.schema.json#/$defs/shortString"},
+            "next_stage": {"$ref": "common.schema.json#/$defs/stage"},
+            "reason": {"$ref": "common.schema.json#/$defs/shortString"}
+          }
+        }
+      }
+    }
+  }
+}

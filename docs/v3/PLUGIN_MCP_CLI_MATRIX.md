@@ -16,6 +16,8 @@
 
 Every row must report unsupported features explicitly. “Native” means the adapter maps the concept into that runtime; it does not mean the universal core copies runtime files.
 
+For the researched Codex row, see the [official Codex capability mapping](CODEX_OFFICIAL_CAPABILITY_MAPPING.md).
+
 ## Plugin packaging target
 
 Where the runtime supports plugins, a generated package may bundle:

@@ -1,0 +1,25 @@
+{
+  "bundle_digest": "sha256:a8c21d2f98c87f9751437546c87b7cab711d7a3a9185ac52858c22e0280d6d2d",
+  "config": {"path": ".codex/config.toml", "values": {"approval_policy": "on-request", "model": "gpt-compatible-fixture", "model_provider": "openai", "model_reasoning_effort": "high", "sandbox_mode": "workspace-write"}},
+  "context": {"cache_stability": "HOST_MANAGED", "dynamic_runtime_context": "HOST_MANAGED", "static_prefix": "HOST_MANAGED", "tool_ordering": "HOST_MANAGED", "tool_schema_budget": "HOST_MANAGED"},
+  "hooks": {"enabled": false, "paths": []},
+  "instruction_surfaces": {"persistent": [{"path": "AGENTS.md", "purposes": ["invariants", "routing-bootstrap", "context-policy"], "scope": "project"}]},
+  "mcp": {"load_mode": "none", "servers": [], "tool_schema_tokens": 0},
+  "plugins": {"enabled": false, "refs": []},
+  "projection_version": "1.0",
+  "provenance": {"bundle_digest": "sha256:a8c21d2f98c87f9751437546c87b7cab711d7a3a9185ac52858c22e0280d6d2d", "generated_config_path": ".codex/config.toml", "selected_skill_digests": ["sha256:0a17fe3afac4b34d823e582aee0bfebb6430246fa78d06704b1aa94eef6e4b35", "sha256:1adce90aedd8b1362381f8bf8a7346966612cbde3591f74ab7e55e539fa1209a", "sha256:7dee67b4af6bdccc7a914ca34533184d64592d0f5b23aeae631538168db14994", "sha256:ea52d15aabaf72bc6b558efe2c126f161b53961090ddcd712000273bfe8c7b6c"]},
+  "runtime_id": "codex",
+  "schema_version": "3.0",
+  "skills": {
+    "load_mode": "selected-only",
+    "native_roots": [".agents/skills"],
+    "selected": [
+      {"digest": "sha256:1adce90aedd8b1362381f8bf8a7346966612cbde3591f74ab7e55e539fa1209a", "load": "resident", "path": "using-superpowers/SKILL.md", "role": "GATE", "skill_id": "using-superpowers"},
+      {"digest": "sha256:7dee67b4af6bdccc7a914ca34533184d64592d0f5b23aeae631538168db14994", "load": "on-demand", "path": "test-driven-development/SKILL.md", "role": "PROCESS", "skill_id": "test-driven-development"},
+      {"digest": "sha256:0a17fe3afac4b34d823e582aee0bfebb6430246fa78d06704b1aa94eef6e4b35", "load": "on-demand", "path": "code-review-skill-main/SKILL.md", "role": "REVIEW", "skill_id": "code-review-excellence"},
+      {"digest": "sha256:ea52d15aabaf72bc6b558efe2c126f161b53961090ddcd712000273bfe8c7b6c", "load": "on-demand", "path": "verification-before-completion/SKILL.md", "role": "VERIFY", "skill_id": "verification-before-completion"}
+    ]
+  },
+  "subagents": {"enabled": false, "roles": []},
+  "support_levels": {"AGENTS.md": "NATIVE", "Hooks": "NATIVE", "MCP": "NATIVE", "Plugins": "NATIVE", "Skills": "NATIVE", "Subagents": "NATIVE", "approvals": "NATIVE", "config": "NATIVE", "dynamic_context": "HOST_MANAGED", "evidence_gate": "HOST_MANAGED", "native_learning": "UNSUPPORTED", "reasoning_effort": "NATIVE", "sandbox": "NATIVE", "static_context": "HOST_MANAGED", "tool_schema_context": "HOST_MANAGED"}
+}

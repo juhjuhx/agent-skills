@@ -26,6 +26,8 @@ SCHEMA_FILES = {
     "AgentAdapterManifest": "agent-adapter-manifest.schema.json",
     "ModelProfile": "model-profile.schema.json",
     "StageRoute": "stage-route.schema.json",
+    "CompiledExecutionBundle": "compiled-execution-bundle.schema.json",
+    "CodexNativeProjection": "codex-native-projection.schema.json",
 }
 
 KNOWN_CAPABILITIES = frozenset(
@@ -89,7 +91,7 @@ class SchemaError(ValueError):
 
 
 def load_schema(contract: str) -> dict[str, Any]:
-    """Load one of the five public v3 schemas by contract name."""
+    """Load one of the public v3 schemas by contract name."""
 
     try:
         filename = SCHEMA_FILES[contract]
@@ -259,6 +261,8 @@ def _validate_capabilities(
         candidates = list(capabilities) if isinstance(capabilities, dict) else []
     elif contract == "StageRoute":
         candidates = instance.get("granted_capabilities", [])
+    elif contract == "CompiledExecutionBundle":
+        candidates = instance.get("effective_capabilities", [])
     else:
         candidates = []
 
@@ -275,7 +279,11 @@ def _validate_capabilities(
 
     # A route is an authorization/evidence record. Callers cannot opt out of
     # the invariant that an unknown capability is never recorded as granted.
-    strict = True if contract == "StageRoute" else bool(strict_unknown_capabilities)
+    strict = (
+        True
+        if contract in {"StageRoute", "CompiledExecutionBundle"}
+        else bool(strict_unknown_capabilities)
+    )
     message = "unknown capability remains unsatisfied: "
     if strict:
         result.errors.extend(f"{message}{capability}" for capability in unknown)

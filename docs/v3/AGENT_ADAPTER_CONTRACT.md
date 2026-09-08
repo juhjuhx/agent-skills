@@ -1,6 +1,6 @@
 # Agent Adapter Contract
 
-> Status: **runtime-neutral contract; Phase 1 manifest schema implemented**. Native guides show how each runtime maps to it; no adapter is implemented here.
+> Status: **runtime-neutral contract; Phase 1 manifests and the Phase 2 Codex vertical slice implemented**. Other native adapters remain guides only.
 
 ## Purpose
 
@@ -24,6 +24,36 @@ An adapter must describe, or explicitly mark unavailable:
 - native learning;
 - structured output;
 - generated configuration and provenance.
+
+## Phase 2 two-layer boundary
+
+The first adapter implementation keeps the portable record separate from the
+Codex projection:
+
+```text
+TaskSpec + validated StageRoute + selected metadata
+  -> CompiledExecutionBundle (portable)
+  -> CodexNativeProjection (Codex-specific)
+```
+
+`CodexAdapter` consumes a route; it never invokes the general router. For a
+`SKILLS_SELECTED` route it resolves only selected metadata, checks trust and
+source digest, loads selected `SKILL.md` bodies on demand, and emits a bundle
+and projection. For `NO_SKILL_NEEDED` it loads zero additional skills and
+preserves `no_skill_reason`. The `using-superpowers` gate is a task/session
+authority and may remain resident rather than reloading its full instructions
+at every stage.
+
+The portable bundle contains no Codex branch logic. The Codex projection emits
+only researched native surfaces and labels static context, dynamic context,
+tool-schema accounting, evidence gates, and native learning as host-managed or
+unsupported where Codex has no equivalent. See the [Codex official capability
+mapping](CODEX_OFFICIAL_CAPABILITY_MAPPING.md).
+
+Permissions are calculated as a least-privilege intersection of TaskSpec,
+policy, adapter declaration, route budget, and live runtime/sandbox state.
+Model profiles, skill metadata, MCP declarations, and generated projections
+cannot grant an operating-system permission.
 
 ## Proposed interface
 

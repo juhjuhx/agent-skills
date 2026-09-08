@@ -1,0 +1,258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/codex-native-projection.schema.json",
+  "title": "Agent Skills Matrix v3 CodexNativeProjection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "projection_version",
+    "runtime_id",
+    "bundle_digest",
+    "support_levels",
+    "instruction_surfaces",
+    "skills",
+    "config",
+    "mcp",
+    "subagents",
+    "plugins",
+    "hooks",
+    "context",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "projection_version": {"$ref": "common.schema.json#/$defs/shortString"},
+    "runtime_id": {"type": "string", "const": "codex"},
+    "bundle_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "support_levels": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "AGENTS.md",
+        "Skills",
+        "MCP",
+        "Subagents",
+        "Plugins",
+        "Hooks",
+        "config",
+        "sandbox",
+        "approvals",
+        "reasoning_effort",
+        "static_context",
+        "dynamic_context",
+        "tool_schema_context",
+        "evidence_gate",
+        "native_learning"
+      ],
+      "properties": {
+        "AGENTS.md": {"$ref": "#/$defs/supportLevel"},
+        "Skills": {"$ref": "#/$defs/supportLevel"},
+        "MCP": {"$ref": "#/$defs/supportLevel"},
+        "Subagents": {"$ref": "#/$defs/supportLevel"},
+        "Plugins": {"$ref": "#/$defs/supportLevel"},
+        "Hooks": {"$ref": "#/$defs/supportLevel"},
+        "config": {"$ref": "#/$defs/supportLevel"},
+        "sandbox": {"$ref": "#/$defs/supportLevel"},
+        "approvals": {"$ref": "#/$defs/supportLevel"},
+        "reasoning_effort": {"$ref": "#/$defs/supportLevel"},
+        "static_context": {"$ref": "#/$defs/supportLevel"},
+        "dynamic_context": {"$ref": "#/$defs/supportLevel"},
+        "tool_schema_context": {"$ref": "#/$defs/supportLevel"},
+        "evidence_gate": {"$ref": "#/$defs/supportLevel"},
+        "native_learning": {"$ref": "#/$defs/supportLevel"}
+      }
+    },
+    "instruction_surfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["persistent"],
+      "properties": {
+        "persistent": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "scope", "purposes"],
+            "properties": {
+              "path": {"$ref": "common.schema.json#/$defs/relativePath"},
+              "scope": {"type": "string", "enum": ["project", "user", "system"]},
+              "purposes": {
+                "type": "array",
+                "items": {"$ref": "common.schema.json#/$defs/shortString"},
+                "uniqueItems": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "skills": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["load_mode", "native_roots", "selected"],
+      "properties": {
+        "load_mode": {"type": "string", "const": "selected-only"},
+        "native_roots": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/relativePath"},
+          "uniqueItems": true
+        },
+        "selected": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["skill_id", "path", "digest", "role", "load"],
+            "properties": {
+              "skill_id": {"$ref": "common.schema.json#/$defs/recordId"},
+              "path": {"$ref": "common.schema.json#/$defs/relativePath"},
+              "digest": {"$ref": "common.schema.json#/$defs/digest"},
+              "role": {"$ref": "common.schema.json#/$defs/role"},
+              "load": {"type": "string", "enum": ["on-demand", "resident"]}
+            }
+          }
+        }
+      }
+    },
+    "config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "values"],
+      "properties": {
+        "path": {"$ref": "common.schema.json#/$defs/relativePath"},
+        "values": {"$ref": "#/$defs/configValues"}
+      }
+    },
+    "mcp": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["load_mode", "servers", "tool_schema_tokens"],
+      "properties": {
+        "load_mode": {"type": "string", "enum": ["stage-local", "none"]},
+        "servers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "permission_scope"],
+            "properties": {
+              "id": {"$ref": "common.schema.json#/$defs/recordId"},
+              "permission_scope": {"$ref": "common.schema.json#/$defs/shortString"},
+              "tool_refs": {
+                "type": "array",
+                "items": {"$ref": "common.schema.json#/$defs/recordId"},
+                "uniqueItems": true
+              }
+            }
+          }
+        },
+        "tool_schema_tokens": {"type": "integer", "minimum": 0}
+      }
+    },
+    "subagents": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "roles"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "roles": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "activation"],
+            "properties": {
+              "id": {"$ref": "common.schema.json#/$defs/recordId"},
+              "activation": {"type": "string", "enum": ["route-required", "not-requested"]},
+              "config_path": {"$ref": "common.schema.json#/$defs/relativePath"}
+            }
+          }
+        }
+      }
+    },
+    "plugins": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "refs"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "refs": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/recordId"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "hooks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "paths"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "paths": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/relativePath"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["static_prefix", "dynamic_runtime_context", "tool_schema_budget", "tool_ordering", "cache_stability"],
+      "properties": {
+        "static_prefix": {"$ref": "#/$defs/supportLevel"},
+        "dynamic_runtime_context": {"$ref": "#/$defs/supportLevel"},
+        "tool_schema_budget": {"$ref": "#/$defs/supportLevel"},
+        "tool_ordering": {"$ref": "#/$defs/supportLevel"},
+        "cache_stability": {"$ref": "#/$defs/supportLevel"}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bundle_digest", "generated_config_path", "selected_skill_digests"],
+      "properties": {
+        "bundle_digest": {"$ref": "common.schema.json#/$defs/digest"},
+        "generated_config_path": {"$ref": "common.schema.json#/$defs/relativePath"},
+        "selected_skill_digests": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/digest"},
+          "uniqueItems": true
+        }
+      }
+    }
+  },
+  "$defs": {
+    "supportLevel": {
+      "type": "string",
+      "enum": ["NATIVE", "EMULATED", "HOST_MANAGED", "UNSUPPORTED"]
+    },
+    "configValues": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "model": {"$ref": "common.schema.json#/$defs/shortString"},
+        "model_provider": {"$ref": "common.schema.json#/$defs/shortString"},
+        "model_reasoning_effort": {"$ref": "common.schema.json#/$defs/shortString"},
+        "approval_policy": {"$ref": "common.schema.json#/$defs/shortString"},
+        "sandbox_mode": {"$ref": "common.schema.json#/$defs/shortString"},
+        "agents": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "max_concurrent_threads_per_session": {"type": "integer", "minimum": 1},
+            "default_subagent_model": {"$ref": "common.schema.json#/$defs/shortString"},
+            "default_subagent_reasoning_effort": {"$ref": "common.schema.json#/$defs/shortString"}
+          }
+        }
+      }
+    }
+  }
+}
