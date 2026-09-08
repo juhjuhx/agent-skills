@@ -113,4 +113,4 @@ All eight decisions below are **Proposed** in this documentation pass. A future 
 | Learning | Existing local strengths and ad hoc records | Quarantine, provenance, eval, approval, promotion |
 | Review | Existing skills/tools | Independent evidence lane taxonomy |
 
-The target rows are not implemented by this PR. See [Migration Plan](MIGRATION_PLAN.md).
+Phase 1 implements only the portable contract schemas, validation, fixtures, and compatibility projection. The target routing, adapter, learning, and review behaviors remain unimplemented. See [Phase 1 Machine-Readable Contracts](PHASE1_MACHINE_READABLE_CONTRACTS.md) and [Migration Plan](MIGRATION_PLAN.md).

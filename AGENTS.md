@@ -15,4 +15,6 @@
 No minimum skill quota is imposed. Do not load unrelated skills to satisfy a number. Keep this file small: it is a router bootstrap, not the full architecture specification.
 
 See `docs/v3/README.md` for the v3 contracts and `docs/using-superpowers-v2-extensible-architecture.md` for historical v2 context. Follow `.superpowers/ROUTING_POLICY.yaml` until a future implementation explicitly supersedes it.
+
+Phase 1 contract schemas and fixtures live under `schemas/v3/`, `fixtures/v3/`, and `tests/v3/`; validate them with `python3 -m unittest discover -s tests -p 'test_*.py' -v`.
 <!-- using-superpowers:end -->

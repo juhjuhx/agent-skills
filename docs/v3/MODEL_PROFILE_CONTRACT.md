@@ -1,6 +1,6 @@
 # Model Profile Contract
 
-> Status: **provider/profile contract proposal**. The universal routing core does not register or hard-code new model names in this PR.
+> Status: **provider/profile contract; Phase 1 schema implemented**. The universal routing core does not register or hard-code new model names in this phase.
 
 ## Separation
 
@@ -14,6 +14,8 @@ Model/provider profiles:
 
 An agent runtime supplies orchestration surfaces. A model profile describes an inference endpoint or local model's measured capabilities. `ZCode` is not `GLM`; `MiMo Code` is not a MiMo model; `DeepSeek Harness` is not merely a DeepSeek client.
 
+The serializable Phase 1 boundary is [`ModelProfile`](../../schemas/v3/model-profile.schema.json). Its provider and model IDs are data in a profile record, not universal routing branch conditions.
+
 The universal core must never contain logic such as:
 
 ```text
@@ -26,38 +28,47 @@ Capability and policy negotiation belongs in the adapter/profile boundary. Ident
 
 ```yaml
 model_profile:
-  id: provider/model@immutable-ref
-  provider: <provider-id>
-  model: <provider-model-id>
-  adapter_protocol: <native-or-compatible-protocol>
+  schema_version: "3.0"
+  provider_id: <provider-id>
+  model_id: <provider-model-id>
+  profile_version: <profile-version>
   capabilities:
-    text: true
-    multimodal: false
-    tools: true
+    coding: true
+    planning: true
+    debugging: true
+    research: true
+    review: true
+    security: false
+    tool_use: true
     structured_output: true
-    streaming: true
-    reasoning_effort: [low, medium, high]
-    code_editing: measured
-    long_context: measured
+    multimodal: false
+    long_context: true
+  reasoning:
+    supported: true
+    effort_levels: [low, medium, high]
   limits:
-    context_tokens: <number-or-unknown>
-    max_output_tokens: <number-or-unknown>
-    max_tool_schema_tokens: <number-or-unknown>
-    max_parallel_requests: <number-or-unknown>
-  economics:
-    input_cost: <measured-or-unknown>
-    output_cost: <measured-or-unknown>
-    cache_behavior: <measured-or-unknown>
-  reliability:
-    tool_success_rate: <measurement>
-    structured_output_rate: <measurement>
-    latency_p50: <measurement>
-    latency_p95: <measurement>
-    last_probe: <timestamp>
+    context_tokens: <number-or-null>
+    max_output_tokens: <number-or-null>
+    max_tool_schema_tokens: <number-or-null>
+    max_parallel_requests: <number-or-null>
+  latency:
+    class: <interactive-or-batch-or-background-or-unknown>
+    p50_ms: <number-or-null>
+    p95_ms: <number-or-null>
+  cost:
+    class: <free-or-low-or-balanced-or-high-or-unknown>
+    input_per_million: <number-or-null>
+    output_per_million: <number-or-null>
+    cache_behavior: <stable-or-best-effort-or-unknown>
   data_policy:
     region: <declared-or-unknown>
     retention: <declared-or-unknown>
     training_use: <declared-or-unknown>
+  measurement_provenance:
+    source: <measurement-source>
+    ref: <measurement-ref>
+    method: <measurement-method>
+    measured_at: <timestamp-or-null>
 ```
 
 ## Negotiation order

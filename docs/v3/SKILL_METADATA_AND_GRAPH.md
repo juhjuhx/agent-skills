@@ -1,10 +1,10 @@
 # Skill Metadata and Graph
 
-> Status: **future schema design**. No schema migration is introduced by this PR.
+> Status: **Phase 1 schema implemented; registry migration deferred**. No production registry migration is introduced by this phase.
 
 ## Source of truth
 
-The canonical skill source remains the repository's `SKILL.md` files. The current `.superpowers/SKILLS_INDEX.json` is a machine-readable snapshot used for discovery, while `categories.json` is the installer/profile projection. v3 enriches the metadata contract without replacing either file in this documentation pass.
+The canonical skill source remains the repository's `SKILL.md` files. The current `.superpowers/SKILLS_INDEX.json` is a machine-readable snapshot used for discovery, while `categories.json` is the installer/profile projection. v3 enriches the metadata contract without replacing either file. The implemented Phase 1 schema is [`schemas/v3/skill-metadata-v3.schema.json`](../../schemas/v3/skill-metadata-v3.schema.json).
 
 ## Proposed v3 record
 
@@ -12,15 +12,15 @@ Every future record should expose the following fields:
 
 ```json
 {
-  "id": "namespace.skill-id",
+  "skill_id": "namespace.skill-id",
   "source": {
-    "repository": "https://example.invalid/skill-source",
+    "repo": "https://example.invalid/skill-source",
     "path": "skills/example/SKILL.md",
     "ref": "immutable-ref",
-    "digest": "sha256:..."
+    "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "license": "MIT"
   },
   "version": "1.0.0",
-  "license": "MIT",
   "trust": "CORE_TRUSTED",
   "description": "Short capability description.",
   "triggers": ["trigger phrase"],
@@ -48,9 +48,9 @@ Every future record should expose the following fields:
     "latency_class": "interactive"
   },
   "risk": {
-    "read": "low",
-    "local_write": "medium",
-    "external_write": "high"
+    "read": "LOW",
+    "local_write": "MEDIUM",
+    "external_write": "HIGH"
   },
   "agent_compatibility": [
     {"runtime": "codex", "adapter_version": "v3", "status": "planned"}
