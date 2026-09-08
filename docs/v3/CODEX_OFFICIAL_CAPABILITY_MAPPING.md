@@ -1,17 +1,24 @@
 # Codex Official Capability Mapping
 
-> Evidence snapshot: 2026-09-08. This is a source map for the Phase 2.5
-> vertical slice, not runtime logic and not a claim that this repository
-> installs Codex configuration.
+> Evidence snapshot: 2026-09-08. This is a source map for the Phase 2.6
+> runtime-provenance correction, not runtime logic and not a claim that this
+> repository installs Codex configuration.
 
 ## Sources
 
-The mapping was checked against the local Codex CLI (`codex-cli 0.153.4`) and
-first-party documentation/source:
+The observed local runtime is `codex-cli 0.153.4`. The installed-runtime
+contract is bound to the official `rust-v0.153.4` release tag, which resolves
+to commit `3d2ee51ca2d5db578f328aa75e20aa22c0197c9a`. The source snapshot used
+by the earlier Phase 2.5 slice is a different upstream commit and is retained
+only for explicit comparison.
+
+First-party evidence used for this mapping:
 
 - [Codex customization](https://developers.openai.com/codex/concepts/customization)
 - [Codex Skills](https://developers.openai.com/codex/skills)
-- [Codex configuration schema at the researched source revision](https://github.com/openai/codex/blob/45305dd229c01e6cb6e122f6559e4f9b805bae6/codex-rs/core/config.schema.json)
+- [Codex 0.153.4 release](https://github.com/openai/codex/releases/tag/rust-v0.153.4)
+- [Codex 0.153.4 configuration schema](https://github.com/openai/codex/blob/3d2ee51ca2d5db578f328aa75e20aa22c0197c9a/codex-rs/core/config.schema.json)
+- [Earlier Codex source snapshot](https://github.com/openai/codex/blob/45305dd229c01e6cb6e122f6559e4f9b805bae6/codex-rs/core/config.schema.json)
 - [Codex subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)
 - [Codex basic configuration](https://learn.chatgpt.com/docs/config-file/config-basic)
 - [Codex advanced configuration](https://learn.chatgpt.com/docs/config-file/config-advanced)
@@ -19,11 +26,35 @@ first-party documentation/source:
 - [Codex sandboxing](https://learn.chatgpt.com/docs/sandboxing)
 - [Codex MCP](https://learn.chatgpt.com/docs/extend/mcp?surface=cli)
 - [Codex plugins](https://learn.chatgpt.com/docs/build-plugins)
+- [Codex schema generation notes](https://github.com/openai/codex/blob/main/codex-rs/core/src/config/schema.md)
 
-The source revision recorded for reproducibility is
-`45305dd229c01e6cb6e122f6559e4f9b805bae6`, the `openai/codex` main revision
-inspected for this slice. URLs are evidence only; the adapter does not
-hard-code them.
+URLs are evidence only; the adapter does not hard-code them. The exact
+release/tag resolution and source digests are recorded below and in the
+checked-in contract fixtures.
+
+## Versioned contract targets
+
+| Target | Runtime evidence | Contract source commit | Full schema digest | Support | Availability | Executable default |
+|---|---|---|---|---|---|---|
+| `INSTALLED_RUNTIME` | `codex-cli 0.153.4`; `rust-v0.153.4` | `3d2ee51ca2d5db578f328aa75e20aa22c0197c9a` | `sha256:692da7699367f6f4fbbd46c0021278c1311440bcebf0bcb9b836690c05e56196` | `NATIVE` | `INSTALLED` | **yes** |
+| `SOURCE_SNAPSHOT` / `UPSTREAM_PREVIEW` | no installed-runtime claim | `45305dd229c01e6cb6e122f6559e4f9b805bae6` | `sha256:2e1fcf1cbb20f255c3baca2e174b4a3c954cef577a130587b8935e2d12c8ade6` | `NATIVE` | `UPSTREAM_ONLY` | no |
+
+The complete schema digests differ. That does not by itself imply a change to
+the projection contract: after resolving the relevant `$ref`/`allOf` shapes,
+the six emitted fields compare as follows:
+
+| Projected field | Release vs source snapshot |
+|---|---|
+| `model` | `IDENTICAL` |
+| `model_provider` | `IDENTICAL` |
+| `model_reasoning_effort` | `IDENTICAL` |
+| `approval_policy` | `IDENTICAL` |
+| `sandbox_mode` | `IDENTICAL` |
+| `agents` | `IDENTICAL` |
+
+`IDENTICAL` here means identical relevant resolved field shape, not identical
+full upstream files. The release target remains the only default executable
+target because field compatibility does not establish runtime provenance.
 
 ## Portable concept to native surface
 
@@ -47,12 +78,21 @@ hard-code them.
 ## Pinned native config contract
 
 The adapter validates the small set of config keys it emits against the
-checked-in narrow contract at
+checked-in installed-runtime contract at
 [`fixtures/v3/codex/codex-native-config-contract.json`](../../fixtures/v3/codex/codex-native-config-contract.json).
-That fixture is derived from the pinned
-[`codex-rs/core/config.schema.json`](https://github.com/openai/codex/blob/45305dd229c01e6cb6e122f6559e4f9b805bae6/codex-rs/core/config.schema.json)
-revision `45305dd229c01e6cb6e122f6559e4f9b805bae6`. Runtime validation does
-not fetch upstream.
+That fixture is derived from the release
+[`codex-rs/core/config.schema.json`](https://github.com/openai/codex/blob/3d2ee51ca2d5db578f328aa75e20aa22c0197c9a/codex-rs/core/config.schema.json)
+at `rust-v0.153.4` →
+`3d2ee51ca2d5db578f328aa75e20aa22c0197c9a`. Its `contract_digest` is the
+SHA-256 of that complete upstream schema file. Runtime validation does not
+fetch upstream or inspect the installed binary.
+
+The earlier source comparison is retained at
+[`fixtures/v3/codex/codex-native-config-contract-source-snapshot.json`](../../fixtures/v3/codex/codex-native-config-contract-source-snapshot.json).
+It is explicitly `SOURCE_SNAPSHOT` / `UPSTREAM_ONLY`; it cannot satisfy an
+`INSTALLED_RUNTIME` validation request. If the observed runtime version has no
+verified release mapping, the adapter returns `RUNTIME_CONTRACT_UNVERIFIED`
+instead of silently falling back to a current-main or preview contract.
 
 At this pinned source revision, `AskForApproval` accepts scalar
 `on-request`, scalar `never`, or a full `granular` object. The Codex adapter
@@ -63,10 +103,15 @@ partial granular syntax. The pinned schema is authoritative for this
 projection snapshot, so obsolete or unverified values such as `untrusted` and
 `on-failure` fail closed even if a general documentation page mentions them.
 
-The contract fixture records the source revision, native contract revision,
-scope, and update process. Changing the revision requires re-checking the
-first-party schema, updating the narrow subset and tests together, and
-reviewing the adapter mapping.
+The contract fixtures record `runtime_id`, observed version, release tag and
+commit when available, `contract_target`, source commit, documentation
+snapshot date, full-source digest, verification method, support, availability,
+source revision, native contract revision, scope, and update process. Changing
+the release or source target requires re-checking the first-party schema,
+updating the narrow subset and tests together, and reviewing the adapter
+mapping. Support (`NATIVE`, `EMULATED`, `HOST_MANAGED`, `UNSUPPORTED`) remains
+separate from availability (`INSTALLED`, `RELEASE_SUPPORTED`, `UPSTREAM_ONLY`,
+`UNKNOWN`).
 
 ## Permission projection fidelity
 

@@ -1,6 +1,6 @@
 # Agent Adapter Contract
 
-> Status: **runtime-neutral contract; Phase 1 manifests and the Phase 2.5 Codex vertical slice are implemented**. Other native adapters remain guides only.
+> Status: **runtime-neutral contract; Phase 1 manifests and the Phase 2.6 provenance-hardened Codex vertical slice are implemented**. Other native adapters remain guides only.
 
 ## Purpose
 
@@ -57,9 +57,10 @@ cannot grant an operating-system permission.
 
 The Codex slice applies an additional native-conformance gate before
 projection: emitted config values must match the checked-in narrow contract
-for the pinned Codex source revision. Unsupported native values and portable
-permission levels fail closed; the adapter never substitutes a broader
-sandbox mode. Full loaded `SKILL.md` bodies are ephemeral execution inputs,
+for the verified installed Codex release. The former source snapshot remains
+an explicit comparison target and cannot satisfy an installed-runtime request.
+Unsupported native values and portable permission levels fail closed; the
+adapter never substitutes a broader sandbox mode. Full loaded `SKILL.md` bodies are ephemeral execution inputs,
 not part of serialized adapter results or evidence by default. Serializable
 skill records retain only references, provenance, role, load state, and byte
 metrics.

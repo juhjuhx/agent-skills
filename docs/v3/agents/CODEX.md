@@ -1,6 +1,6 @@
 # Codex Native Adapter
 
-> Status: **Phase 2.5 conformance hardening implemented**. The slice compiles validated data artifacts and checks the pinned native config subset; it does not install Codex configuration or implement the general stage router.
+> Status: **Phase 2.6 runtime-contract provenance hardening implemented**. The slice compiles validated data artifacts and checks the installed-runtime-bound native config subset; it does not install Codex configuration or implement the general stage router.
 
 ## Native mapping
 
@@ -32,7 +32,8 @@ permissions, sandbox, and reasoning effort. It returns portable status,
 artifacts, evidence, and failures to the core; native execution side effects
 remain outside this slice.
 
-Phase 2.5 adds a two-layer conformance boundary:
+Phase 2.5 added a two-layer conformance boundary; Phase 2.6 binds that
+boundary to runtime provenance:
 
 - `CompiledExecutionBundle` remains portable and contains no Codex-specific
   branch logic.
@@ -47,6 +48,14 @@ Phase 2.5 adds a two-layer conformance boundary:
 - Full `SKILL.md` bodies are execution-local. Serializable results and
   projections retain references, digests, roles, load state, and byte metrics,
   not raw instruction content.
+- The default contract target is `codex-cli 0.153.4`, release tag
+  `rust-v0.153.4`, commit
+  `3d2ee51ca2d5db578f328aa75e20aa22c0197c9a`. The former `45305dd` contract is
+  retained as `SOURCE_SNAPSHOT` / `UPSTREAM_ONLY` for explicit comparison and
+  cannot prove installed-runtime support.
+- Support level and availability are separate fields. An unknown observed
+  runtime version, source revision, release commit, or contract digest fails
+  closed as `RUNTIME_CONTRACT_UNVERIFIED`.
 
 ```text
 TaskSpec

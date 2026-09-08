@@ -1,5 +1,12 @@
 # Phase 2.5 Codex Conformance Dogfood Routing Trace
 
+> Phase 2.6 provenance correction: this historical record describes the
+> `45305dd` source snapshot used at the time. Its mention of local
+> `codex-cli 0.153.4` is not installed-runtime conformance evidence. The
+> current executable target and the explicit source-preview classification are
+> recorded in [`CODEX_OFFICIAL_CAPABILITY_MAPPING.md`](../CODEX_OFFICIAL_CAPABILITY_MAPPING.md)
+> and [`PHASE26_RUNTIME_PROVENANCE_ROUTE.md`](PHASE26_RUNTIME_PROVENANCE_ROUTE.md).
+
 This evidence artifact records the first Phase 2.5 conformance and hardening
 run. It records explicit route decisions, source evidence, test results, and
 operational artifacts only. It does not record hidden chain-of-thought,
