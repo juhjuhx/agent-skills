@@ -164,7 +164,11 @@ class CodexAdapterVerticalSliceTests(CodexAdapterTestCase):
             item for item in result.loaded_skills if item["skill_id"] == "using-superpowers"
         )
         self.assertEqual(resident["load_state"], "RESIDENT")
-        self.assertEqual(resident["content"], "")
+        self.assertNotIn("content", resident)
+        resident_body = next(
+            skill for skill in result.execution_skills if skill.skill_id == "using-superpowers"
+        )
+        self.assertEqual(resident_body.content, "")
         self.assertEqual(result.metrics["metadata_records_inspected"], 4)
         self.assertEqual(result.metrics["registry_records_seen"], 0)
         self.assertEqual(result.metrics["source_files_verified"], 4)
@@ -173,6 +177,289 @@ class CodexAdapterVerticalSliceTests(CodexAdapterTestCase):
         self.assertEqual(
             {item["skill_id"] for item in result.projection["skills"]["selected"]},
             set(self.selected_ids),
+        )
+
+    def test_current_approval_policies_are_not_dropped_from_projection(self):
+        for approval_policy in ("on-request", "never"):
+            with self.subTest(approval_policy=approval_policy):
+                result = self.adapter(
+                    live_runtime={
+                        "sandbox_mode": "workspace-write",
+                        "network_access": False,
+                        "approval_policy": approval_policy,
+                    }
+                ).compile(
+                    task_spec=self.task_spec,
+                    stage_route=self.stage_route,
+                    adapter_manifest=self.adapter_manifest,
+                    model_profile=self.model_profile,
+                    metadata_records=self.metadata,
+                    observed_evidence=self.observed_evidence,
+                    reasoning_artifacts=self.reasoning_artifacts,
+                )
+
+                self.assertEqual(result.status, "READY")
+                self.assertEqual(
+                    result.projection["config"]["values"]["approval_policy"],
+                    approval_policy,
+                )
+
+    def test_obsolete_approval_policy_is_blocked_instead_of_dropped(self):
+        for approval_policy in ("untrusted", "on-failure"):
+            with self.subTest(approval_policy=approval_policy):
+                result = self.adapter(
+                    live_runtime={
+                        "sandbox_mode": "workspace-write",
+                        "network_access": False,
+                        "approval_policy": approval_policy,
+                    }
+                ).compile(
+                    task_spec=self.task_spec,
+                    stage_route=self.stage_route,
+                    adapter_manifest=self.adapter_manifest,
+                    model_profile=self.model_profile,
+                    metadata_records=self.metadata,
+                    observed_evidence=self.observed_evidence,
+                    reasoning_artifacts=self.reasoning_artifacts,
+                )
+
+                self.assertEqual(result.status, "BLOCKED")
+                self.assertEqual(result.reason_code, "PROJECTION_UNSUPPORTED")
+
+    def test_granular_approval_is_not_reduced_to_an_invented_scalar(self):
+        result = self.adapter(
+            live_runtime={
+                "sandbox_mode": "workspace-write",
+                "network_access": False,
+                "approval_policy": "granular",
+            }
+        ).compile(
+            task_spec=self.task_spec,
+            stage_route=self.stage_route,
+            adapter_manifest=self.adapter_manifest,
+            model_profile=self.model_profile,
+            metadata_records=self.metadata,
+            observed_evidence=self.observed_evidence,
+            reasoning_artifacts=self.reasoning_artifacts,
+        )
+
+        self.assertEqual(result.status, "BLOCKED")
+        self.assertEqual(result.reason_code, "PROJECTION_UNSUPPORTED")
+
+    def test_full_granular_native_shape_is_validated_but_not_synthesized(self):
+        try:
+            from tools.v3.codex_native_contract import load_native_contract, validate_codex_config
+        except ModuleNotFoundError as exc:
+            self.fail(f"native Codex contract validator is missing: {exc}")
+
+        granular = {
+            "granular": {
+                "mcp_elicitations": False,
+                "rules": True,
+                "sandbox_approval": True,
+            }
+        }
+        validation = validate_codex_config(
+            {"approval_policy": granular}, contract=load_native_contract()
+        )
+
+        self.assertTrue(validation.valid, validation.errors)
+        result = self.adapter(
+            live_runtime={
+                "sandbox_mode": "workspace-write",
+                "network_access": False,
+                "approval_policy": granular,
+            }
+        ).compile(
+            task_spec=self.task_spec,
+            stage_route=self.stage_route,
+            adapter_manifest=self.adapter_manifest,
+            model_profile=self.model_profile,
+            metadata_records=self.metadata,
+            observed_evidence=self.observed_evidence,
+            reasoning_artifacts=self.reasoning_artifacts,
+        )
+
+        self.assertEqual(result.status, "BLOCKED")
+        self.assertEqual(result.reason_code, "PROJECTION_UNSUPPORTED")
+
+    def test_native_contract_rejects_obsolete_and_unknown_config_values(self):
+        try:
+            from tools.v3.codex_native_contract import load_native_contract, validate_codex_config
+        except ModuleNotFoundError as exc:
+            self.fail(f"native Codex contract validator is missing: {exc}")
+
+        contract = load_native_contract()
+        for config in (
+            {"approval_policy": "untrusted"},
+            {"approval_policy": "on-failure"},
+            {"approval_policy": "granular"},
+            {"sandbox_mode": "not-a-codex-mode"},
+            {"invented_codex_setting": "shortString"},
+        ):
+            with self.subTest(config=config):
+                validation = validate_codex_config(config, contract=contract)
+                self.assertFalse(validation.valid)
+
+    def test_native_contract_revision_mismatch_invalidates_projection(self):
+        try:
+            from tools.v3.codex_native_contract import load_native_contract, validate_codex_config
+        except ModuleNotFoundError as exc:
+            self.fail(f"native Codex contract validator is missing: {exc}")
+
+        contract = load_native_contract()
+        contract["codex_source_revision"] = "different-revision"
+        validation = validate_codex_config(
+            {"approval_policy": "on-request"}, contract=contract
+        )
+
+        self.assertFalse(validation.valid)
+        self.assertTrue(any("revision" in error for error in validation.errors))
+
+    def test_native_contract_revision_mismatch_blocks_adapter_projection(self):
+        from tools.v3.codex_native_contract import load_native_contract
+
+        contract = load_native_contract()
+        contract["native_contract_revision"] = "codex-rs/core/config.schema.json@stale"
+
+        result = self.adapter(native_contract=contract).compile(
+            task_spec=self.task_spec,
+            stage_route=self.stage_route,
+            adapter_manifest=self.adapter_manifest,
+            model_profile=self.model_profile,
+            metadata_records=self.metadata,
+            observed_evidence=self.observed_evidence,
+            reasoning_artifacts=self.reasoning_artifacts,
+        )
+
+        self.assertEqual(result.status, "BLOCKED")
+        self.assertEqual(result.reason_code, "PROJECTION_UNSUPPORTED")
+        self.assertTrue(any("revision mismatch" in error for error in result.errors))
+
+    def test_malformed_native_contract_fails_closed(self):
+        result = self.adapter(native_contract=[]).compile(
+            task_spec=self.task_spec,
+            stage_route=self.stage_route,
+            adapter_manifest=self.adapter_manifest,
+            model_profile=self.model_profile,
+            metadata_records=self.metadata,
+            observed_evidence=self.observed_evidence,
+            reasoning_artifacts=self.reasoning_artifacts,
+        )
+
+        self.assertEqual(result.status, "BLOCKED")
+        self.assertEqual(result.reason_code, "PROJECTION_UNSUPPORTED")
+        self.assertTrue(any("must be an object" in error for error in result.errors))
+
+    def test_native_contract_covers_every_emitted_config_field(self):
+        from tools.v3.codex_native_contract import load_native_contract
+
+        contract = load_native_contract()
+
+        self.assertEqual(set(contract["fields"]), set(CODEX_NATIVE_CONFIG_FIELDS))
+        self.assertEqual(
+            contract["native_contract_revision"],
+            "codex-rs/core/config.schema.json@45305dd229c01e6cb6e122f6559e4f9b805bae6",
+        )
+
+    def test_permission_projection_classifies_supported_filesystem_levels(self):
+        expected = {
+            "read": ("read-only", "NATIVE_EXACT"),
+            "workspace-read": ("read-only", "HOST_MANAGED"),
+            "workspace-write": ("workspace-write", "NATIVE_EXACT"),
+        }
+
+        for filesystem, (sandbox_mode, classification) in expected.items():
+            with self.subTest(filesystem=filesystem):
+                projection = CodexAdapter._permission_projection_for(
+                    {"filesystem": filesystem}
+                )
+                self.assertEqual(projection["sandbox_mode"], sandbox_mode)
+                self.assertEqual(projection["classification"], classification)
+
+    def test_unrepresentable_filesystem_permission_has_explicit_blocked_classification(self):
+        for filesystem in ("none", "external-write", "destructive", "future-write"):
+            with self.subTest(filesystem=filesystem):
+                projection = CodexAdapter._permission_projection_for(
+                    {"filesystem": filesystem}
+                )
+                self.assertEqual(projection["classification"], "BLOCKED")
+                self.assertIsNone(projection["sandbox_mode"])
+
+    def test_unsupported_filesystem_permissions_fail_closed(self):
+        for filesystem in ("none", "external-write", "destructive", "future-write"):
+            with self.subTest(filesystem=filesystem):
+                with self.assertRaises(ValueError):
+                    CodexAdapter._sandbox_mode_for(
+                        {"permission_envelope": {"filesystem": filesystem}}
+                    )
+
+    def test_external_write_never_becomes_danger_full_access(self):
+        task = copy.deepcopy(self.task_spec)
+        task["permission_requirements"] = {
+            "level": "external-write",
+            "network": "none",
+        }
+        route = copy.deepcopy(self.stage_route)
+        route["budget_envelope"]["permission_level"] = "external-write"
+        manifest = copy.deepcopy(self.adapter_manifest)
+        manifest["permissions"]["declared_scopes"].append("external-write")
+        policy = copy.deepcopy(self.policy)
+        policy.update(level="external-write", filesystem="external-write", external_write=True)
+        live_runtime = {"sandbox_mode": "danger-full-access", "network_access": False}
+
+        result = self.adapter(policy=policy, live_runtime=live_runtime).compile(
+            task_spec=task,
+            stage_route=route,
+            adapter_manifest=manifest,
+            model_profile=self.model_profile,
+            metadata_records=self.metadata,
+            observed_evidence=self.observed_evidence,
+            reasoning_artifacts=self.reasoning_artifacts,
+        )
+
+        self.assertEqual(result.status, "BLOCKED")
+        self.assertEqual(result.reason_code, "PERMISSION_PROJECTION")
+        self.assertIsNone(result.projection)
+        self.assertTrue(all("danger-full-access" not in error for error in result.errors))
+
+    def test_workspace_read_projection_requires_host_boundary(self):
+        task = copy.deepcopy(self.task_spec)
+        task["permission_requirements"] = {
+            "level": "workspace-write",
+            "filesystem": "workspace-read",
+            "network": "none",
+        }
+        policy = {"level": "workspace-write", "filesystem": "workspace-write", "network": "none"}
+        live_runtime = {"sandbox_mode": "workspace-write", "network_access": False}
+
+        result = self.adapter(policy=policy, live_runtime=live_runtime).compile(
+            task_spec=task,
+            stage_route=self.stage_route,
+            adapter_manifest=self.adapter_manifest,
+            model_profile=self.model_profile,
+            metadata_records=self.metadata,
+            observed_evidence=self.observed_evidence,
+            reasoning_artifacts=self.reasoning_artifacts,
+        )
+
+        self.assertEqual(result.status, "BLOCKED")
+        self.assertEqual(result.reason_code, "PERMISSION_PROJECTION")
+        self.assertIsNone(result.projection)
+        self.assertTrue(any("host path enforcement" in error for error in result.errors))
+
+    def test_serializable_result_excludes_raw_skill_bodies_but_execution_keeps_them(self):
+        result = self.compile_selected()
+        serialized = result.to_dict()
+        serialized_text = json.dumps(serialized, sort_keys=True)
+
+        self.assertNotIn("content", serialized_text)
+        self.assertNotIn("Use test-driven development", serialized_text)
+        self.assertTrue(result.execution_skills)
+        self.assertTrue(any(skill.content for skill in result.execution_skills))
+        self.assertEqual(
+            set(serialized["loaded_skills"][0]),
+            {"skill_id", "path", "source_ref", "digest", "role", "bytes", "load_state"},
         )
 
     def test_unrelated_skill_body_never_enters_generated_projection(self):
@@ -303,7 +590,7 @@ class CodexAdapterVerticalSliceTests(CodexAdapterTestCase):
             result.bundle["permission_envelope"]["filesystem"], "workspace-write"
         )
         self.assertEqual(result.projection["config"]["values"]["sandbox_mode"], "workspace-write")
-        self.assertNotIn("approval_policy", result.projection["config"]["values"])
+        self.assertEqual(result.projection["config"]["values"]["approval_policy"], "never")
 
     def test_model_profile_cannot_grant_os_permission(self):
         model = copy.deepcopy(self.model_profile)
@@ -424,6 +711,15 @@ class CodexAdapterVerticalSliceTests(CodexAdapterTestCase):
         invalid_projection["config"]["values"]["invented_codex_setting"] = True
         validation = validate_instance("CodexNativeProjection", invalid_projection)
         self.assertFalse(validation.valid)
+
+        for field, value in (
+            ("approval_policy", "untrusted"),
+            ("sandbox_mode", "not-a-codex-mode"),
+        ):
+            invalid_native = copy.deepcopy(result.projection)
+            invalid_native["config"]["values"][field] = value
+            with self.subTest(field=field):
+                self.assertFalse(validate_instance("CodexNativeProjection", invalid_native).valid)
 
     def test_unsupported_model_reasoning_is_an_explicit_projection_block(self):
         model = copy.deepcopy(self.model_profile)
