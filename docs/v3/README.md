@@ -1,6 +1,6 @@
 # Agent Skills Matrix v3
 
-> Status: **proposed architecture; Phase 1 contracts, the Phase 2.6 provenance-hardened Codex vertical slice, and the Phase 3A.2 deterministic Stage Router quality pass implemented**. The router is metadata-first and stage-local; it does not install runtime configuration, choose models, or implement the other native adapters.
+> Status: **proposed architecture; Phase 1 contracts, the Phase 2.6 provenance-hardened Codex vertical slice, the Phase 3A.2 deterministic Stage Router quality pass, and the Phase 3B runtime/model evaluation contracts implemented**. The router is metadata-first and stage-local; the evaluation harness records candidates and evidence but does not activate adaptive model routing or implement the other native adapters.
 
 ## Why v3
 
@@ -83,6 +83,9 @@ Each stage can independently select and reroute skills. A typical stage uses 3�
 - [Phase 1 Machine-Readable Contracts](PHASE1_MACHINE_READABLE_CONTRACTS.md) — schemas, validation, fixtures, and compatibility projection.
 - [Codex Official Capability Mapping](CODEX_OFFICIAL_CAPABILITY_MAPPING.md) — first-party surface evidence and support levels for the Phase 2 adapter.
 - [Phase 2.6 Runtime Provenance Evidence](evidence/PHASE26_RUNTIME_PROVENANCE_ROUTE.md) — installed-release binding and source-snapshot distinction.
+- [Runtime Capability Matrix](evidence/RUNTIME_CAPABILITY_MATRIX.md) — observed local runtimes, provenance, capability granularity, and availability.
+- [Model/Runtime Evaluation V1](evidence/MODEL_RUNTIME_EVAL_V1.md) — development/holdout design, baselines, evidence classes, and current verdict.
+- [Phase 3B dogfood route](evidence/PHASE3B_MODEL_RUNTIME_DOGFOOD_ROUTE.md) — the first task-level use of the evaluation contracts.
 
 ### Phase 2 implementation slice
 
@@ -176,6 +179,24 @@ that all metadata is author-declared. The curation and registry-gap decisions
 are recorded in [`ROUTING_METADATA_CURATION.md`](evidence/ROUTING_METADATA_CURATION.md).
 Phase 3A.2 does not migrate the production registry, silently promote inferred
 metadata, implement a model router, or add another runtime adapter.
+
+### Phase 3B Runtime and Model Evaluation Harness
+
+Phase 3B adds runtime-neutral records for runtime candidates, model
+candidates, execution configurations, evaluation runs/results, and explicit
+runtime handoffs. Runtime selection is task/session-level; model selection is
+limited to task, stage, or subagent boundaries advertised by the runtime; per
+inference-call routing remains design-only. `ModelProfile` and
+`ModelCandidate` describe inference capability and measurement only: they
+cannot grant filesystem, network, MCP, publish, delete, or sandbox authority.
+
+The harness provides four deterministic evaluation baselines and a separate
+Pareto comparison over quality, cost, latency, and recovery. It keeps the
+existing A–J Stage Router fixtures as development/regression data and adds a
+12-workload holdout set without expected runtime/model identities. Static
+fixtures prove contract compatibility only; quality conclusions require
+`REAL_EXECUTION`. No live task/model quality runs are claimed in this phase,
+so the current verdict is `INSUFFICIENT_LIVE_EVIDENCE`.
 
 ## Non-goals for this proposal
 

@@ -79,7 +79,7 @@ model_profile:
 4. Keep provider fallback within the same policy, data, permission, and acceptance envelope.
 5. Record the profile, adapter, probe epoch, cost, and any fallback in the stage artifact.
 
-The model profile never receives authority to install a skill, widen a sandbox, add an MCP server, or mark a task complete.
+The model profile never receives authority to install a skill, widen a sandbox, add an MCP server, or mark a task complete. Phase 3B's `ModelCandidate` is an evaluation wrapper around this profile; its availability and measurements are evidence, not a production preference.
 
 ## Cost and context
 
@@ -98,3 +98,19 @@ The profile exposes both prompt cost and tool-schema cost. A route can fail a bu
 | DeepSeek Harness | DeepSeek and compatible profiles | Harness adapter maps prompt/tool/cache contracts |
 
 The table is a design target, not a claim that every integration is installed or supported today.
+
+## Evaluation boundary
+
+Phase 3B keeps three decisions separate:
+
+1. **Runtime/harness:** normally chosen for the task or session after checking tools, permissions, persistence, and handoff cost.
+2. **Model:** chosen at task, stage, or subagent scope only when the runtime advertises that granularity. A runtime that pins one model produces `TASK_PINNED`; the harness does not simulate stage switching.
+3. **Step/call:** per-inference-call routing is future design only.
+
+The machine-readable candidates and execution configurations live under
+[`schemas/v3/`](../../schemas/v3/) and are exercised by
+[`tools/v3/runtime_model_evaluation.py`](../../tools/v3/runtime_model_evaluation.py).
+`REAL_EXECUTION` may support quality comparison. `HOST_MANAGED_FIXTURE` and
+`MOCK` support compatibility/unit-test claims only. Historical observations
+can produce proposal records, but the harness never writes
+`ROUTING_POLICY.yaml` or model preferences.
