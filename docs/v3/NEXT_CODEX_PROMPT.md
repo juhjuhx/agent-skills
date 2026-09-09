@@ -1,29 +1,21 @@
-# Next Codex Prompt — Phase 3B Model / Agent Routing Evaluation
+# Next Codex Prompt — Phase 3C Bounded Live Benchmark Lanes
 
-Copy this prompt into the next Codex session. It defines the next bounded
-evaluation task. Do not execute Phase 3B during Phase 3A.2.
-
----
+Copy this prompt into the next Codex session. It is the next bounded task
+after Phase 3B. Do not execute it during Phase 3B.
 
 ## Mission
 
 Repository: `juhjuhx/agent-skills`
 
-Implement **Agent Skills Matrix v3 — Phase 3B: Model / Agent Routing
-Evaluation** from the verified and quality-converged Phase 3A.2 Stage Router
-MVP. Do not redesign v3, clone the Codex adapter, or implement the six
-remaining native adapters in this phase.
+Run a small, safe, evidence-producing benchmark of runtime/model execution
+configurations using the Phase 3B contracts. The current verdict is
+`INSUFFICIENT_LIVE_EVIDENCE`; the purpose of Phase 3C is to collect bounded
+`REAL_EXECUTION` evidence, not to activate adaptive routing.
 
-The question is:
-
-```text
-For the same TaskSpec and stage route, what evidence supports a choice of
-agent runtime + model profile for this stage?
-```
-
-Choices must emerge from measured fixtures. Never hard-code rules such as
-`Claude for architecture`, `Codex for implementation`, `if agent == codex`, or
-`if model == glm`.
+Do not redesign v3. Do not modify Stage Router weights. Do not implement
+per-call routing, a learned router, bandits, model preferences, or the other
+native adapters. Do not install runtimes, models, MCP servers, dependencies,
+or credentials.
 
 ## Start and source truth
 
@@ -36,242 +28,172 @@ git rev-parse HEAD
 git fetch origin
 ```
 
-Start from the current Phase 3A.2 branch or its merged base. Read the actual
-repository registry before selecting any skill ID. At the time this prompt is
-generated, the source truth is 214 canonical records at registry commit
-`db3b67d5b051c4223da9146b2b836a9ed45e9bac`, plus the checked-in routing
-overlay and its digest-bound source metadata:
+Read the current contracts and implementations:
 
-- `registry/v3/skill-routing-metadata.json`
-- generated overlay: `registry/v3/skill-routing-generated.json`
-- curated patch layer: `registry/v3/skill-routing-curated.json`
-- compiled overlay version `v3-routing-metadata-2`
-- compiled overlay digest `sha256:482720a45d8b74f5e9cda4eddc283993611510ba31403d991c4f297605f66f4b`
-- session-resident snapshot: `snapshot:2349a6fe70aaf346`
-- [`CATALOG_ROUTING_METADATA_CENSUS.md`](evidence/CATALOG_ROUTING_METADATA_CENSUS.md)
-- [`STAGE_ROUTER_EVAL_V2.md`](evidence/STAGE_ROUTER_EVAL_V2.md)
-- [`STAGE_ROUTER_EVAL_V3.md`](evidence/STAGE_ROUTER_EVAL_V3.md)
-- [`ROUTING_METADATA_CURATION.md`](evidence/ROUTING_METADATA_CURATION.md)
-
-Use the overlay as the metadata-first routing input. Do not read all 214
-procedure bodies during normal route or model evaluation; load only bodies
-selected by a validated route. The overlay is not a second skill library and
-its inferred fields are not author-declared truth.
-
-Read:
-
-- `.superpowers/SKILLS_INDEX.json`
-- `categories.json`
-- `.superpowers/ROUTING_POLICY.yaml`
-- `AGENTS.md`
-- `schemas/v3/`
+- `schemas/v3/runtime-candidate.schema.json`
+- `schemas/v3/model-candidate.schema.json`
+- `schemas/v3/execution-configuration.schema.json`
+- `schemas/v3/evaluation-run.schema.json`
+- `schemas/v3/evaluation-result.schema.json`
+- `schemas/v3/runtime-handoff.schema.json`
+- `tools/v3/runtime_model_evaluation.py`
 - `tools/v3/stage_router.py`
 - `tools/v3/codex_adapter.py`
-- `tools/v3/execution_bundle.py`
-- `tools/v3/skill_resolver.py`
-- `fixtures/v3/router/routing-eval-v1.json`
-- `docs/v3/evidence/STAGE_ROUTER_EVAL_V1.md`
-- `docs/v3/evidence/STAGE_ROUTER_EVAL_V2.md`
-- `docs/v3/evidence/CATALOG_ROUTING_METADATA_CENSUS.md`
-- `docs/v3/evidence/STAGE_ROUTER_EVAL_V3.md`
-- `docs/v3/evidence/ROUTING_METADATA_CURATION.md`
+- `fixtures/v3/model-routing/`
+- `docs/v3/evidence/MODEL_RUNTIME_EVAL_V1.md`
+- `docs/v3/evidence/RUNTIME_CAPABILITY_MATRIX.md`
 
-Machine-readable registry data wins over stale prose. Keep the production
-registry, installer, and v2 policy unchanged.
+Machine-readable registry data wins over prose. Keep the canonical skill
+library, installer, Stage Router, and `.superpowers/ROUTING_POLICY.yaml`
+unchanged.
 
-## Preserve the Phase 3A boundary
+## Dogfood and routing
 
-The current route flow is:
+Use `using-superpowers` as resident task/session authority. For each active
+stage, invoke the existing Stage Router and emit a StageRoute with
+`SKILLS_SELECTED` or `NO_SKILL_NEEDED`. Load only selected skill bodies after
+route selection. Do not reload the resident `using-superpowers` body at every
+stage and do not use model choice to alter skill ranking.
 
-```text
-TaskSpec + Stage + SkillMetadataV3 catalog
-  -> StageRouter
-  -> StageRoute
-  -> agent adapter
-  -> execution/evidence artifacts
-```
+## Fresh provenance before live work
 
-Phase 3B may use `ModelProfile` and `AgentAdapterManifest` as capability and
-measurement records, but it must not move model choice into the skill router.
-The Stage Router still selects skills; this phase evaluates the next boundary:
+For every runtime/model actually exercised, record:
 
-```text
-validated StageRoute + runtime capability envelope + ModelProfile
-  -> candidate execution configurations
-  -> comparable evidence
-```
+- observed installed version and executable probe;
+- latest stable release/tag and resolved immutable source commit when
+  available;
+- exact official source/release reference used for the native contract;
+- current upstream source/documentation snapshot and snapshot date;
+- native support: `NATIVE`, `EMULATED`, `HOST_MANAGED`, or `UNSUPPORTED`;
+- availability: `INSTALLED`, `RELEASE_SUPPORTED`, `UPSTREAM_ONLY`, or
+  `UNKNOWN`;
+- model selection granularity actually supported by that runtime.
 
-`using-superpowers` remains the task/session orchestration authority and is not
-a repeatedly loaded candidate skill. All active dogfood stages must emit a
-valid `StageRoute` with `SKILLS_SELECTED` or `NO_SKILL_NEEDED`.
+Do not treat current-main documentation as installed-release proof. Do not
+encode provider-specific IDs or URLs in universal routing code.
 
-## Dogfood and stage-local routing
+## Safe benchmark lanes
 
-Use the actual installed `using-superpowers` workflow as resident authority.
-Create only relevant stages, for example `UNDERSTAND`, `RESEARCH`, `DESIGN`,
-`PLAN`, `IMPLEMENT`, `REVIEW`, `VERIFY`, `HARDEN`, and `HANDOFF`. Re-run the
-Phase 3A Stage Router independently at each active stage. Load only selected
-`SKILL.md` bodies downstream; do not load the whole catalog. Record the run in
-a concise `docs/v3/evidence/PHASE3B_MODEL_AGENT_DOGFOOD_ROUTE.md` artifact
-without hidden chain-of-thought.
+Use isolated temporary worktrees or fixture repositories. A lane may run only
+when the executable is installed, its existing credentials/configuration are
+already available, the task is safe, and cost is bounded. Never print or
+serialize credentials. If a runtime/model is not available, record a missing
+lane; do not substitute a mock and call it live evidence.
 
-## Research and provenance lanes
+Start with a small, representative subset of the holdout set, for example:
 
-Before comparing runtimes or model profiles, perform fresh source-driven
-research. For every runtime under test record, when available:
+- H01 bugfix;
+- H02 multi-file feature;
+- H03 API design;
+- H06 security task;
+- H07 deep source research;
+- H09 release verification;
+- H12 tool/MCP integration.
 
-- observed installed version;
-- latest stable release/tag and resolved immutable commit;
-- official source/release ref used for the contract;
-- current upstream source snapshot;
-- documentation snapshot date/ref;
-- native support (`NATIVE`, `EMULATED`, `HOST_MANAGED`, `UNSUPPORTED`);
-- availability (`INSTALLED`, `RELEASE_SUPPORTED`, `UPSTREAM_ONLY`, `UNKNOWN`).
+Keep A–J as development/regression data. Do not tune routing weights on the
+holdout tasks. Record repetition `n` for every workload/configuration cell;
+do not claim broad superiority from `n=1`.
 
-Keep support and availability separate. Do not claim installed conformance from
-unversioned current documentation. Do not put provider-specific model IDs or
-documentation URLs into universal routing logic.
+## Runtime/model boundary
 
-Research the runtime layer separately from the model layer:
+Evaluate runtime/harness compatibility at task/session scope. Within an
+eligible runtime, evaluate a model at task, stage, or subagent scope only when
+the runtime candidate advertises that granularity. If the runtime pins one
+model, record `TASK_PINNED`; do not simulate stage switching. Per-inference
+call routing remains design-only.
 
-- runtimes: Codex, Claude Code, OpenCode, Hermes, MiMo Code, ZCode, DeepSeek
-  Harness;
-- model/provider profiles: OpenAI-compatible, Anthropic-compatible, DeepSeek,
-  GLM, MiMo, plus future profiles.
+Changing runtimes is an explicit `RuntimeHandoff` containing source and
+destination, reason, portable artifacts, working-tree state, permission
+envelope, lost capabilities, and handoff cost. Do not make automatic handoff.
 
-If only the Codex adapter is executable in the current repository, use native
-Codex execution plus explicit host-managed/mock projections for other runtimes.
-Do not pretend a fixture is a production adapter.
-
-## Evaluation matrix
-
-Build a matrix of real task fixtures × active stages × compatible agent/model
-configurations. Reuse the ten Phase 3A workloads and add representative
-multi-stage workloads only when needed:
-
-- coding and bugfix;
-- API/architecture design;
-- frontend/browser-visible work;
-- source research;
-- security-sensitive change;
-- repository audit;
-- release/handoff.
-
-For each cell capture:
+Effective authority remains:
 
 ```text
-task_id
-stage
-agent_runtime
-model_profile
-selected_skills
-adapter_capabilities
-permission envelope
-context bytes/tokens
-tool schemas and tool calls
-duration/latency class
-reroutes
-files changed
-tests
-verification evidence
-user correction
-completion result
-security findings
+TaskSpec ∩ policy ∩ AgentAdapterManifest ∩ live runtime restrictions
 ```
 
-Use independent evidence classes. A model's self-report is not equivalent to
-test evidence, runtime evidence, or a native security scan.
+ModelCandidate, skill metadata, MCP declarations, plugins, and generated
+configuration cannot widen it.
 
-## Comparison metrics
+## Evidence records
 
-Report separate, interpretable measures rather than one synthetic quality
-number:
+For each run create an `EvaluationRun` and `EvaluationResult` with:
 
-- route compatibility and capability coverage;
-- task completion and acceptance-criteria coverage;
-- evidence quality and verification pass rate;
-- near-miss activation and over/under-routing;
-- context/token and tool-schema cost;
-- tool-call count and latency/duration;
-- reroute count and recovery quality;
-- user corrections and regression rate;
-- security/provenance failures;
-- cross-agent artifact portability.
+- evidence class and execution mode;
+- runtime/model/configuration refs;
+- selected skills and StageRoute refs;
+- stage outcomes and one terminal task outcome;
+- separate quality, efficiency, reliability, security, and portability axes;
+- context/tokens, tool calls, latency, wall time, cost, reroutes, retries,
+  files changed, tests, verification, and user correction;
+- immutable input/artifact digests and source provenance.
 
-Unknown or missing measurements stay explicit. Historical observations may
-generate a proposal, but they must not silently rewrite routing policy or
-model-selection policy.
+Only `REAL_EXECUTION` may support quality/ranking conclusions.
+`HOST_MANAGED_FIXTURE` supports compatibility only. `MOCK` supports unit
+behavior only. Keep unknown measurements as `null` or an explicit
+missing-evidence record.
 
-## Capability negotiation and permissions
+## Baselines and comparison
 
-Use `TaskSpec.required_capabilities` and the adapter manifest to negotiate
-capabilities. Model profiles describe inference capabilities and limits only;
-they never grant filesystem, network, MCP, sandbox, publishing, or deletion
-authority. The effective permission remains the least-privilege intersection
-of TaskSpec, policy, adapter, route, and live runtime restrictions.
+Run every live lane against the existing evaluation-only baselines where
+eligible:
 
-Test that:
+- `BASELINE_STRONGEST`
+- `BASELINE_CHEAPEST`
+- `BASELINE_DEFAULT`
+- `BASELINE_HEURISTIC`
 
-- an unknown runtime/model capability fails closed or is marked unavailable;
-- a model profile cannot widen OS permissions;
-- a skill, MCP declaration, plugin, or generated output cannot widen them;
-- incompatible runtime/model combinations are not executable;
-- host-managed or unsupported surfaces are not emitted as fake native fields.
+Do not assume a baseline is good; measure it. Compare quality, cost, latency,
+reliability, security, and portability separately. Produce Pareto frontiers
+without a universal scalar score. A future recommendation must identify the
+data and repetition supporting it, and remains a proposal until policy review.
 
-## Tests
+## Tests and safety gates
 
-Keep all Phase 1, Codex, and Phase 3A tests green. Add focused tests for:
+Keep all current tests green. Add tests for live-run record shape, artifact
+digests, task/stage model scope, terminal result capture, missing evidence,
+runtime handoff, and no credential serialization. Verify that:
 
-- deterministic candidate matrices and repeated measurements;
-- agent/model identifier separation;
-- same TaskSpec producing comparable but runtime-specific projections;
-- no provider hard-coding in universal routing decisions;
-- capability and permission negotiation;
-- near-miss fixture triggering;
-- cross-agent artifact/evidence comparison;
-- context/tool cost accounting;
-- regression detection and proposal-only history;
-- security and provenance failures;
-- `NO_SKILL_NEEDED` remaining free of model selection side effects.
+- a `NO_SKILL_NEEDED` route does no model-routing work;
+- unsupported runtime switching is `TASK_PINNED` or explicitly unavailable;
+- mock/fixture results never enter quality ranking;
+- permissions never widen during configuration or handoff;
+- no live run reads unrelated skill bodies;
+- history remains append-only and proposal-only.
 
-No external runtime side effect is required unless a verified installed runtime
-is available. Do not install MCP servers or new dependencies merely to create a
-matrix cell.
+Run:
 
-## Reviews and anti-bloat
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover -s tests -p 'test_*.py' -v
+git diff --check
+```
 
-Use independent installed skills for architecture/code review, simplification,
-security/hardening, doubt-driven evaluation, and verification. Do not hand one
-reviewer's conclusion to the next reviewer before independent analysis.
+Run the Alibaba OpenCodeReview auth/network precheck once. If native auth is
+still `401`, record `OCR_NATIVE_DIFF = BLOCKED_BY_AUTH`; do not relabel a
+delegate review as native OCR.
 
-Run the Alibaba OpenCodeReview precheck once. If native authentication returns
-401, record `OCR_NATIVE_DIFF = BLOCKED_BY_AUTH`; do not relabel delegate review
-as native OCR.
+## Output
 
-Keep implementation to data, measurement, validators, and small comparison
-helpers. Do not add a database, event bus, worker pool, provider registry,
-general scheduler, cloud orchestrator, or new adapter framework without a
-demonstrated boundary requirement.
+Create concise append-only evidence, for example:
 
-## Non-goals
+- `docs/v3/evidence/MODEL_RUNTIME_EVAL_V2.md`
+- `fixtures/v3/model-routing/runs/` or the repository's established evidence
+  location
 
-Do not implement Phase 3 cross-runtime adapters, rewrite `install.sh` or
-`.superpowers/ROUTING_POLICY.yaml`, migrate the production registry, install
-MCP servers, auto-import external skills, expose hidden chain-of-thought, or
-silently change policy from evaluation history. Do not execute a later phase in
-this task.
+Report live lane count and `n`, missing lanes, terminal outcomes, stage
+outcomes, quality/efficiency/reliability/security/portability evidence,
+baseline comparisons, Pareto results, and provenance. Do not hide failures or
+turn absent data into a preference.
 
-## Deliverables
+## Decision at the end
 
-Keep commits small and semantic. Produce:
+Choose exactly one next state from evidence:
 
-- source/provenance notes for every researched runtime/model lane;
-- comparison fixtures and machine-readable measurements;
-- focused validation and compatibility tests;
-- concise dogfood and evaluation evidence under `docs/v3/evidence/`;
-- canonical documentation updates only where the measured contract becomes
-  more precise;
-- a Draft stacked PR with explicit limitations and failed/blocked lanes.
+- `INSUFFICIENT_LIVE_EVIDENCE` — collect more safe repetitions or lanes;
+- `ROUTING_EVIDENCE_READY` — a conservative Model Router MVP may be designed,
+  still without adaptive policy activation;
+- `RUNTIME_CAPABILITY_GAPS` — implement only the adapter/capability boundary
+  required by a demonstrated live gap.
 
-The result must make a measured recommendation—or explicitly conclude that the
-evidence is insufficient—without hard-coded runtime/model preferences.
+Generate a follow-up prompt from the observed state. Do not execute the
+follow-up phase or merge any PR.

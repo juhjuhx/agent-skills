@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/model-candidate.schema.json",
+  "title": "Agent Skills Matrix v3 ModelCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "candidate_id",
+    "provider_id",
+    "model_id",
+    "profile_ref",
+    "availability",
+    "capabilities",
+    "reasoning",
+    "limits",
+    "evidence_provenance"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "candidate_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "provider_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "model_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "profile_ref": {"$ref": "common.schema.json#/$defs/recordId"},
+    "version_ref": {"type": ["string", "null"]},
+    "availability": {
+      "type": "string",
+      "enum": ["INSTALLED", "AVAILABLE", "NOT_INSTALLED", "UNKNOWN", "RELEASE_SUPPORTED", "UPSTREAM_ONLY"]
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": {"type": "boolean"}
+    },
+    "reasoning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supported", "effort_levels"],
+      "properties": {
+        "supported": {"type": "boolean"},
+        "effort_levels": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/shortString"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["context_tokens", "max_output_tokens", "max_tool_schema_tokens"],
+      "properties": {
+        "context_tokens": {"type": ["integer", "null"], "minimum": 0},
+        "max_output_tokens": {"type": ["integer", "null"], "minimum": 0},
+        "max_tool_schema_tokens": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "tool_support": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "function_calling": {"type": "boolean"},
+        "structured_output": {"type": "boolean"}
+      }
+    },
+    "latency": {"$ref": "#/$defs/measurement"},
+    "cost": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "class": {"type": "string", "enum": ["free", "low", "balanced", "high", "unknown"]},
+        "measured_units": {"type": ["number", "null"], "minimum": 0},
+        "currency": {"type": ["string", "null"]}
+      }
+    },
+    "data_policy": {"$ref": "common.schema.json#/$defs/shortString"},
+    "evidence_provenance": {"$ref": "#/$defs/evidenceProvenance"}
+  },
+  "$defs": {
+    "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "class": {"type": "string", "enum": ["interactive", "batch", "background", "unknown"]},
+        "p50_ms": {"type": ["number", "null"], "minimum": 0},
+        "p95_ms": {"type": ["number", "null"], "minimum": 0}
+      }
+    },
+    "evidenceProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_class", "source", "method"],
+      "properties": {
+        "evidence_class": {"$ref": "common.schema.json#/$defs/evidenceClass"},
+        "source": {"$ref": "common.schema.json#/$defs/shortString"},
+        "reference": {"$ref": "common.schema.json#/$defs/shortString"},
+        "method": {"$ref": "common.schema.json#/$defs/shortString"},
+        "verified_at": {"type": ["string", "null"], "format": "date-time"},
+        "notes": {"$ref": "common.schema.json#/$defs/shortString"}
+      }
+    }
+  }
+}

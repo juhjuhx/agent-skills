@@ -105,3 +105,24 @@ History may generate a routing proposal, an eval fixture, or a compatibility war
 ## Cost and independence
 
 Evaluation tracks context, tool-schema budget, duration, reroutes, and correction—not only final success. Routing and execution evaluation should avoid using the exact same generated judgment as both selector and grader. Independent review lanes remain independent; see [Review Pipeline](REVIEW_PIPELINE.md).
+
+## Phase 3B evaluation harness
+
+The first implementation keeps evaluation data separate from policy. The
+runtime-neutral contracts are [`RuntimeCandidate`](../../schemas/v3/runtime-candidate.schema.json),
+[`ModelCandidate`](../../schemas/v3/model-candidate.schema.json),
+[`ExecutionConfiguration`](../../schemas/v3/execution-configuration.schema.json),
+[`EvaluationRun`](../../schemas/v3/evaluation-run.schema.json),
+[`EvaluationResult`](../../schemas/v3/evaluation-result.schema.json), and
+[`RuntimeHandoff`](../../schemas/v3/runtime-handoff.schema.json). The helper
+module performs eligibility checks, deterministic baseline selection, terminal
+outcome recording, and Pareto filtering; it does not invoke a runtime or
+change production routing.
+
+The development set replays the existing A–J Stage Router workloads. The
+holdout set is independent and has no expected runtime or model labels. Each
+run records evidence class, repetition, stage outcomes, terminal outcome, and
+separate quality/efficiency/reliability/security/portability axes. Fixture
+records are never treated as live quality evidence. See
+[`MODEL_RUNTIME_EVAL_V1.md`](evidence/MODEL_RUNTIME_EVAL_V1.md) and the
+[`runtime/model candidate fixtures`](../../fixtures/v3/model-routing/).

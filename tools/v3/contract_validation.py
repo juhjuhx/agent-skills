@@ -31,6 +31,12 @@ SCHEMA_FILES = {
     "SkillRoutingMetadata": "skill-routing-metadata.schema.json",
     "SkillRoutingGenerated": "skill-routing-generated.schema.json",
     "SkillRoutingCurated": "skill-routing-curated.schema.json",
+    "RuntimeCandidate": "runtime-candidate.schema.json",
+    "ModelCandidate": "model-candidate.schema.json",
+    "ExecutionConfiguration": "execution-configuration.schema.json",
+    "EvaluationRun": "evaluation-run.schema.json",
+    "EvaluationResult": "evaluation-result.schema.json",
+    "RuntimeHandoff": "runtime-handoff.schema.json",
 }
 
 KNOWN_CAPABILITIES = frozenset(
@@ -55,16 +61,46 @@ KNOWN_CAPABILITIES = frozenset(
         "reasoning_effort",
         "long_context",
         "multimodal",
+        "vision",
         "commands",
         "plugins",
         "hooks",
         "tool_use",
+        "tool_use_reliability",
         "coding",
         "planning",
         "debugging",
         "research",
         "review",
         "security",
+        "skills",
+        "persistent_context",
+        "filesystem",
+        "network",
+        "permission_profiles",
+        "mcp_tool_calls",
+    }
+)
+
+MODEL_AUTHORITY_FORBIDDEN_CAPABILITIES = frozenset(
+    {
+        "editing",
+        "browser",
+        "subagents",
+        "sandbox",
+        "MCP",
+        "skills",
+        "persistent_context",
+        "filesystem",
+        "network",
+        "permission_profiles",
+        "plugins",
+        "hooks",
+        "commands",
+        "native_learning",
+        "model_selection",
+        "reasoning_effort",
+        "parallelism",
     }
 )
 
@@ -129,6 +165,13 @@ def validate_instance(
     result = ValidationResult()
     _validate(instance, schema, schema, SCHEMA_DIR, "$", result.errors)
     _validate_capabilities(contract, instance, result, strict_unknown_capabilities)
+    if contract in {"ModelProfile", "ModelCandidate"} and isinstance(instance, dict):
+        capabilities = instance.get("capabilities", {})
+        if isinstance(capabilities, dict):
+            for capability in sorted(set(capabilities) & MODEL_AUTHORITY_FORBIDDEN_CAPABILITIES):
+                result.errors.append(
+                    f"model: capability {capability!r} belongs to a runtime and cannot grant authority"
+                )
     return result
 
 
@@ -268,6 +311,11 @@ def _validate_capabilities(
         candidates = instance.get("effective_capabilities", [])
     elif contract in {"SkillRoutingGenerated", "SkillRoutingCurated", "SkillRoutingMetadata"}:
         candidates = []
+    elif contract in {"RuntimeCandidate", "ModelCandidate"}:
+        capabilities = instance.get("capabilities", {})
+        candidates = list(capabilities) if isinstance(capabilities, dict) else []
+    elif contract == "ExecutionConfiguration":
+        candidates = instance.get("effective_capabilities", [])
     else:
         candidates = []
 

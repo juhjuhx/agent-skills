@@ -1,0 +1,19 @@
+{
+  "schema_version": "3.0",
+  "suite": "model-runtime-development-v1",
+  "fixture_set": "DEVELOPMENT",
+  "source_fixture_file": "fixtures/v3/router/routing-eval-v1.json",
+  "purpose": "The ten existing Stage Router workloads remain development/regression data for runtime/model harness compatibility. They do not encode expected runtime or model identities.",
+  "fixtures": [
+    {"fixture_id": "model-A-readme-typo", "source_fixture_id": "A-readme-typo", "expected_runtime": null, "expected_model": null},
+    {"fixture_id": "model-B-ordinary-bug", "source_fixture_id": "B-ordinary-bug", "expected_runtime": null, "expected_model": null},
+    {"fixture_id": "model-C-api-architecture", "source_fixture_id": "C-api-architecture", "expected_runtime": null, "expected_model": null},
+    {"fixture_id": "model-D-large-frontend-feature", "source_fixture_id": "D-large-frontend-feature", "expected_runtime": null, "expected_model": null},
+    {"fixture_id": "model-E-security-sensitive-change", "source_fixture_id": "E-security-sensitive-change", "expected_runtime": null, "expected_model": null},
+    {"fixture_id": "model-F-deep-source-research", "source_fixture_id": "F-deep-source-research", "expected_runtime": null, "expected_model": null},
+    {"fixture_id": "model-G-visual-design", "source_fixture_id": "G-visual-design", "expected_runtime": null, "expected_model": null},
+    {"fixture_id": "model-H-github-repository-audit", "source_fixture_id": "H-github-repository-audit", "expected_runtime": null, "expected_model": null},
+    {"fixture_id": "model-I-new-product-specification", "source_fixture_id": "I-new-product-specification", "expected_runtime": null, "expected_model": null},
+    {"fixture_id": "model-J-release-gate", "source_fixture_id": "J-release-gate", "expected_runtime": null, "expected_model": null}
+  ]
+}

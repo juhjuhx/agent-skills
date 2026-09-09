@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/runtime-candidate.schema.json",
+  "title": "Agent Skills Matrix v3 RuntimeCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "candidate_id",
+    "runtime_id",
+    "availability",
+    "adapter_status",
+    "capabilities",
+    "model_selection",
+    "permissions",
+    "evidence_provenance"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "candidate_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "runtime_id": {"$ref": "common.schema.json#/$defs/runtimeId"},
+    "runtime_name": {"$ref": "common.schema.json#/$defs/shortString"},
+    "observed_version": {"type": ["string", "null"]},
+    "release_tag": {"type": ["string", "null"]},
+    "release_commit": {"type": ["string", "null"]},
+    "documentation_snapshot": {"type": ["string", "null"]},
+    "adapter_manifest_ref": {"type": ["string", "null"]},
+    "availability": {
+      "type": "string",
+      "enum": ["INSTALLED", "NOT_INSTALLED", "UNKNOWN"]
+    },
+    "adapter_status": {
+      "type": "string",
+      "enum": ["IMPLEMENTED", "GUIDE_ONLY", "UNAVAILABLE", "UNVERIFIED"]
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": {"type": "boolean"}
+    },
+    "model_selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task", "stage", "subagent", "step"],
+      "properties": {
+        "task": {"$ref": "#/$defs/granularity"},
+        "stage": {"$ref": "#/$defs/granularity"},
+        "subagent": {"$ref": "#/$defs/granularity"},
+        "step": {
+          "type": "string",
+          "enum": ["DESIGN_ONLY", "UNSUPPORTED", "UNKNOWN"]
+        }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_gated", "supported_levels"],
+      "properties": {
+        "policy_gated": {"type": "boolean"},
+        "supported_levels": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/permissionLevel"},
+          "uniqueItems": true
+        },
+        "declared_scopes": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/shortString"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "evidence_provenance": {"$ref": "#/$defs/evidenceProvenance"}
+  },
+  "$defs": {
+    "granularity": {
+      "type": "string",
+      "enum": ["SUPPORTED", "TASK_PINNED", "UNSUPPORTED", "UNKNOWN"]
+    },
+    "evidenceProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_class", "source", "method"],
+      "properties": {
+        "evidence_class": {"$ref": "common.schema.json#/$defs/evidenceClass"},
+        "source": {"$ref": "common.schema.json#/$defs/shortString"},
+        "reference": {"$ref": "common.schema.json#/$defs/shortString"},
+        "method": {"$ref": "common.schema.json#/$defs/shortString"},
+        "verified_at": {"type": ["string", "null"], "format": "date-time"},
+        "notes": {"$ref": "common.schema.json#/$defs/shortString"}
+      }
+    }
+  }
+}

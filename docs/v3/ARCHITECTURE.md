@@ -1,6 +1,6 @@
 # v3 Architecture and ADRs
 
-> Status: **proposed**. Phase 1 contracts, the provenance-bound Codex execution slice, and the Phase 3A.2 metadata-first Stage Router quality pass are implemented; the current production registry and v2 runtime policy remain unchanged.
+> Status: **proposed**. Phase 1 contracts, the provenance-bound Codex execution slice, the Phase 3A.2 metadata-first Stage Router quality pass, and the Phase 3B runtime/model evaluation harness are implemented; the current production registry, v2 runtime policy, and production model policy remain unchanged.
 
 ## System shape
 
@@ -109,8 +109,9 @@ All eight decisions below are **Proposed** in this documentation pass. A future 
 | Registry | Existing machine snapshot and category manifest | Versioned metadata graph with richer fields |
 | Routing | v2 task-level policy and caps | Stage-local route records, generated/curated metadata, immutable snapshots, and reroutes |
 | Agent integration | Shared files and existing native conventions | Generated/native adapters under one contract |
+| Runtime/model evaluation | No cross-runtime evidence contract | Separate runtime/model candidates, evidence classes, baselines, terminal outcomes, and Pareto comparison |
 | Reasoning | Runtime-specific plans and text | Portable observable artifacts |
 | Learning | Existing local strengths and ad hoc records | Quarantine, provenance, eval, approval, promotion |
 | Review | Existing skills/tools | Independent evidence lane taxonomy |
 
-Phase 1 implements the portable contract schemas, validation, fixtures, and compatibility projection. Phase 3A adds a deterministic one-stage selector over that compatibility view; Phase 3A.1 adds offline generated routing inference; and Phase 3A.2 adds curated field patches, role/cost convergence, and an immutable session snapshot. The resulting `StageRoute` remains consumable by the existing Codex adapter. General stage planning, model/provider routing, reroute execution, learning promotion, and the other native adapters remain unimplemented. See [Stage Router](STAGE_ROUTER.md), [V3 quality evidence](evidence/STAGE_ROUTER_EVAL_V3.md), [Phase 1 Machine-Readable Contracts](PHASE1_MACHINE_READABLE_CONTRACTS.md), and [Migration Plan](MIGRATION_PLAN.md).
+Phase 1 implements the portable contract schemas, validation, fixtures, and compatibility projection. Phase 3A adds a deterministic one-stage selector over that compatibility view; Phase 3A.1 adds offline generated routing inference; and Phase 3A.2 adds curated field patches, role/cost convergence, and an immutable session snapshot. The resulting `StageRoute` remains consumable by the existing Codex adapter. Phase 3B adds only evaluation records and deterministic baselines; it does not select a production model, invoke adaptive routing, perform per-call routing, execute automatic handoffs, or implement the other native adapters. General stage planning, model/provider policy, reroute execution, learning promotion, and the other native adapters remain unimplemented. See [Stage Router](STAGE_ROUTER.md), [V3 quality evidence](evidence/STAGE_ROUTER_EVAL_V3.md), [Runtime/model evaluation evidence](evidence/MODEL_RUNTIME_EVAL_V1.md), [Phase 1 Machine-Readable Contracts](PHASE1_MACHINE_READABLE_CONTRACTS.md), and [Migration Plan](MIGRATION_PLAN.md).

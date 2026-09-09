@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/execution-configuration.schema.json",
+  "title": "Agent Skills Matrix v3 ExecutionConfiguration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "configuration_id",
+    "task_spec_ref",
+    "stage_route_ref",
+    "runtime_candidate_ref",
+    "model_candidate_ref",
+    "selection_scope",
+    "status",
+    "effective_capabilities",
+    "permission_envelope",
+    "context_envelope",
+    "tool_envelope",
+    "evidence_mode",
+    "provenance",
+    "configuration_digest"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "configuration_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "task_spec_ref": {"$ref": "common.schema.json#/$defs/recordId"},
+    "stage_route_ref": {"$ref": "common.schema.json#/$defs/recordId"},
+    "runtime_candidate_ref": {"$ref": "common.schema.json#/$defs/recordId"},
+    "model_candidate_ref": {"type": ["string", "null"]},
+    "selection_scope": {
+      "type": "string",
+      "enum": ["TASK_DEFAULT", "STAGE", "SUBAGENT", "TASK_PINNED"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["ELIGIBLE", "DEGRADED", "INCOMPATIBLE", "UNAVAILABLE", "UNVERIFIED", "TASK_PINNED"]
+    },
+    "effective_capabilities": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/capability"},
+      "uniqueItems": true
+    },
+    "permission_envelope": {"$ref": "#/$defs/permissionEnvelope"},
+    "context_envelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["static_prefix", "dynamic_context", "tool_schema_tokens", "artifact_refs"],
+      "properties": {
+        "static_prefix": {"type": "string", "enum": ["stable", "variable", "unknown"]},
+        "dynamic_context": {"type": "string", "enum": ["lazy", "eager", "unknown"]},
+        "tool_schema_tokens": {"type": "integer", "minimum": 0},
+        "context_tokens": {"type": ["integer", "null"], "minimum": 0},
+        "artifact_refs": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/recordId"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "tool_envelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_tools", "mcp_refs", "schema_tokens", "permission_gated"],
+      "properties": {
+        "required_tools": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/recordId"}, "uniqueItems": true},
+        "mcp_refs": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/recordId"}, "uniqueItems": true},
+        "schema_tokens": {"type": "integer", "minimum": 0},
+        "permission_gated": {"type": "boolean"}
+      }
+    },
+    "evidence_mode": {"$ref": "common.schema.json#/$defs/evidenceClass"},
+    "no_model_work_reason": {"$ref": "common.schema.json#/$defs/shortString"},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registry_epoch", "runtime_candidate_ref", "evidence_class"],
+      "properties": {
+        "registry_epoch": {"$ref": "common.schema.json#/$defs/recordId"},
+        "runtime_candidate_ref": {"$ref": "common.schema.json#/$defs/recordId"},
+        "model_candidate_ref": {"type": ["string", "null"]},
+        "evidence_class": {"$ref": "common.schema.json#/$defs/evidenceClass"},
+        "source_refs": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/shortString"}, "uniqueItems": true},
+        "status_reasons": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/shortString"}, "uniqueItems": true}
+      }
+    },
+    "configuration_digest": {"$ref": "common.schema.json#/$defs/digest"}
+  },
+  "$defs": {
+    "permissionEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "filesystem", "network", "external_write", "secrets", "publish", "delete"],
+      "properties": {
+        "level": {"$ref": "common.schema.json#/$defs/permissionLevel"},
+        "filesystem": {"type": "string", "enum": ["none", "read", "workspace-read", "workspace-write", "external-write", "destructive"]},
+        "network": {"type": "string", "enum": ["none", "limited", "standard"]},
+        "external_write": {"type": "boolean"},
+        "secrets": {"type": "boolean"},
+        "publish": {"type": "boolean"},
+        "delete": {"type": "boolean"}
+      }
+    }
+  }
+}

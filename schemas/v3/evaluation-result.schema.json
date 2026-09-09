@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/evaluation-result.schema.json",
+  "title": "Agent Skills Matrix v3 EvaluationResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "result_id",
+    "run_id",
+    "evidence_class",
+    "outcome",
+    "terminal_outcome",
+    "stage_outcomes",
+    "quality",
+    "efficiency",
+    "reliability",
+    "security",
+    "portability",
+    "quality_evidence_eligible",
+    "ranking_eligible",
+    "ranking_reason",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "result_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "run_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "evidence_class": {"$ref": "common.schema.json#/$defs/evidenceClass"},
+    "outcome": {"type": "string", "enum": ["PASS", "PARTIAL", "FAIL", "BLOCKED", "UNKNOWN"]},
+    "terminal_outcome": {"type": "string", "enum": ["VERIFIED_SUCCESS", "PARTIAL", "FAILED", "BLOCKED", "UNKNOWN"]},
+    "stage_outcomes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["stage", "outcome"],
+        "properties": {
+          "stage": {"$ref": "common.schema.json#/$defs/stage"},
+          "outcome": {"type": "string", "enum": ["PASS", "PARTIAL", "FAIL", "BLOCKED", "UNKNOWN"]},
+          "evidence_refs": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/recordId"}, "uniqueItems": true},
+          "notes": {"$ref": "common.schema.json#/$defs/shortString"}
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["acceptance_criteria_coverage", "test_pass", "artifact_correctness", "review_findings", "source_accuracy", "user_correction"],
+      "properties": {
+        "acceptance_criteria_coverage": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "test_pass": {"type": ["boolean", "null"]},
+        "artifact_correctness": {"type": ["boolean", "null"]},
+        "review_findings": {"type": ["integer", "null"], "minimum": 0},
+        "source_accuracy": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "user_correction": {"type": ["boolean", "null"]}
+      }
+    },
+    "efficiency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["latency_ms", "wall_time_ms", "model_calls", "tool_calls", "context_tokens", "tokens_total", "cost_units"],
+      "properties": {
+        "latency_ms": {"type": ["number", "null"], "minimum": 0},
+        "wall_time_ms": {"type": ["number", "null"], "minimum": 0},
+        "model_calls": {"type": ["integer", "null"], "minimum": 0},
+        "tool_calls": {"type": ["integer", "null"], "minimum": 0},
+        "context_tokens": {"type": ["integer", "null"], "minimum": 0},
+        "tokens_total": {"type": ["integer", "null"], "minimum": 0},
+        "cost_units": {"type": ["number", "null"], "minimum": 0}
+      }
+    },
+    "reliability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reroutes", "failed_tool_calls", "retries", "invalid_edits", "recovery_success"],
+      "properties": {
+        "reroutes": {"type": ["integer", "null"], "minimum": 0},
+        "failed_tool_calls": {"type": ["integer", "null"], "minimum": 0},
+        "retries": {"type": ["integer", "null"], "minimum": 0},
+        "invalid_edits": {"type": ["integer", "null"], "minimum": 0},
+        "recovery_success": {"type": ["boolean", "null"]}
+      }
+    },
+    "security": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["permission_violation", "unsafe_proposal", "secret_exposure", "sandbox_mismatch"],
+      "properties": {
+        "permission_violation": {"type": ["boolean", "null"]},
+        "unsafe_proposal": {"type": ["boolean", "null"]},
+        "secret_exposure": {"type": ["boolean", "null"]},
+        "sandbox_mismatch": {"type": ["boolean", "null"]}
+      }
+    },
+    "portability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["handoff_artifact_complete", "runtime_specific_leakage", "capabilities_lost"],
+      "properties": {
+        "handoff_artifact_complete": {"type": ["boolean", "null"]},
+        "runtime_specific_leakage": {"type": ["boolean", "null"]},
+        "capabilities_lost": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/capability"}, "uniqueItems": true}
+      }
+    },
+    "quality_evidence_eligible": {"type": "boolean"},
+    "ranking_eligible": {"type": "boolean"},
+    "ranking_reason": {"$ref": "common.schema.json#/$defs/shortString"},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "method", "evidence_class"],
+      "properties": {
+        "source": {"$ref": "common.schema.json#/$defs/shortString"},
+        "reference": {"$ref": "common.schema.json#/$defs/shortString"},
+        "method": {"$ref": "common.schema.json#/$defs/shortString"},
+        "evidence_class": {"$ref": "common.schema.json#/$defs/evidenceClass"}
+      }
+    },
+    "notes": {"$ref": "common.schema.json#/$defs/shortString"}
+  }
+}
