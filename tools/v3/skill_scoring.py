@@ -749,7 +749,61 @@ def _inferred_fields(record: dict[str, Any]) -> set[str]:
 
 
 def field_is_inferred(record: dict[str, Any], field: str) -> bool:
-    return field in _inferred_fields(record)
+    provenance = field_provenance(record, field)
+    return provenance in {"INFERRED_HIGH_CONFIDENCE", "INFERRED"} or field in _inferred_fields(record)
+
+
+_PROVENANCE_WEIGHTS = {
+    "AUTHOR_DECLARED": 1.0,
+    "CURATED": 1.0,
+    "INFERRED_HIGH_CONFIDENCE": 0.8,
+    "INFERRED": 0.55,
+    "UNKNOWN": 0.0,
+}
+
+
+def field_provenance(record: dict[str, Any], field: str) -> str:
+    """Return the overlay provenance for one field without reading a body."""
+
+    routing = (record.get("extensions", {}) or {}).get("routing", {}) or {}
+    fields = (
+        (routing.get("metadata_provenance", {}) or {}).get("fields", {}) or {}
+    )
+    info = fields.get(field)
+    if isinstance(info, dict) and info.get("source") in _PROVENANCE_WEIGHTS:
+        return str(info["source"])
+    if field in routing.get("inferred_fields", []):
+        return "INFERRED"
+    return "AUTHOR_DECLARED" if record.get(field) else "UNKNOWN"
+
+
+def metadata_quality(record: dict[str, Any]) -> float:
+    """Return a modest, transparent weight for derived routing metadata."""
+
+    values = [
+        _PROVENANCE_WEIGHTS[field_provenance(record, field)]
+        for field in ("roles", "stages", "task_modes", "domains")
+        if record.get(field)
+    ]
+    if not values:
+        return 0.0
+    return round(sum(values) / len(values), 3)
+
+
+def field_is_routable(record: dict[str, Any], field: str) -> bool:
+    """Whether a field is usable for candidate eligibility.
+
+    The generated overlay allows inferred records to participate with a
+    confidence penalty. The older compatibility view still requires an
+    explicit or hinted field so broad legacy keyword matches remain filtered.
+    """
+
+    if not record.get(field):
+        return False
+    routing = (record.get("extensions", {}) or {}).get("routing", {}) or {}
+    if routing.get("source") == "v3_routing_metadata_overlay":
+        return field_provenance(record, field) != "UNKNOWN"
+    return not field_is_inferred(record, field) or field_is_hinted(record, field)
 
 
 def field_is_enforced(record: dict[str, Any], field: str) -> bool:
@@ -757,6 +811,12 @@ def field_is_enforced(record: dict[str, Any], field: str) -> bool:
 
     routing = (record.get("extensions", {}) or {}).get("routing", {}) or {}
     hinted = routing.get("hinted_fields", [])
+    if routing.get("source") == "v3_routing_metadata_overlay":
+        return field_provenance(record, field) in {
+            "AUTHOR_DECLARED",
+            "CURATED",
+            "INFERRED_HIGH_CONFIDENCE",
+        }
     return not field_is_inferred(record, field) or field in hinted
 
 
@@ -1104,6 +1164,7 @@ def score_candidate(
         "relationship_bonus": float(relationship_bonus),
         "capability_fit": 1.0,
         "trust": 2.0 if record.get("trust") == "CORE_TRUSTED" else 1.0,
+        "metadata_confidence": metadata_quality(record),
         "historical_evidence": 0.0,
     }
     cost = estimated_cost(record)

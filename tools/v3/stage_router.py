@@ -13,8 +13,9 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Iterable
 
-from tools.v3.compatibility import import_skill_index_entry, load_current_registry
+from tools.v3.compatibility import import_skill_index_entry
 from tools.v3.contract_validation import KNOWN_CAPABILITIES, validate_instance
+from tools.v3.metadata_enrichment import load_enriched_catalog
 from tools.v3.skill_graph import SkillGraph
 from tools.v3.skill_scoring import (
     ROLES,
@@ -22,9 +23,8 @@ from tools.v3.skill_scoring import (
     deep_understanding_gate,
     derive_routing_metadata,
     estimated_cost,
-    field_is_inferred,
     field_is_enforced,
-    field_is_hinted,
+    field_is_routable,
     is_trivial_task,
     required_roles_for,
     score_candidate,
@@ -83,10 +83,9 @@ class CandidateEvaluation:
 
 
 def load_current_catalog(path: str | Path) -> list[dict[str, Any]]:
-    """Return a read-only v3 compatibility view of the current registry."""
+    """Return the current registry with its optional v3 routing overlay."""
 
-    registry = load_current_registry(path)
-    return [import_skill_index_entry(entry, registry) for entry in registry["skills"]]
+    return load_enriched_catalog(path)
 
 
 def _canonical(value: Any) -> str:
@@ -313,13 +312,16 @@ def _hard_filter(
     if _legacy_status(record):
         reasons.append("skill is deprecated")
     routing_fields = ("roles", "stages", "domains")
-    has_curated_routing_field = any(
-        bool(record.get(field))
-        and (not field_is_inferred(record, field) or field_is_hinted(record, field))
-        for field in routing_fields
-    )
-    if not has_curated_routing_field:
-        reasons.append("legacy metadata lacks curated routing fields")
+    has_routable_field = any(field_is_routable(record, field) for field in routing_fields)
+    if not has_routable_field:
+        routing_source = (record.get("extensions", {}).get("routing", {}) or {}).get(
+            "source"
+        )
+        reasons.append(
+            "metadata lacks a trusted or reviewable routing field"
+            if routing_source == "v3_routing_metadata_overlay"
+            else "legacy metadata lacks curated routing fields"
+        )
     if skill_id == "deep-understanding" or (
         record.get("extensions", {}).get("routing", {}) or {}
     ).get("deep_understanding"):
