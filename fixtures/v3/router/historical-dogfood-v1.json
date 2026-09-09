@@ -1,0 +1,84 @@
+{
+  "schema_version": "3.0",
+  "suite": "historical-dogfood-comparison-v1",
+  "purpose": "Comparison observations only; these traces are not routing ground truth.",
+  "traces": [
+    {
+      "phase": "phase1",
+      "source": "docs/v3/evidence/PHASE1_DOGFOOD_ROUTE.md",
+      "start_head": "e1c588c96f8b105d805b607a2e64678c3dc1ed36",
+      "route_style": "manual StageRoute-shaped evidence",
+      "selected_skill_ids": [
+        "using-superpowers",
+        "understand",
+        "context-engineering",
+        "addyosmani-source-driven-development",
+        "addyosmani-api-and-interface-design",
+        "addyosmani-documentation-and-adrs",
+        "writing-plans",
+        "test-driven-development",
+        "code-review-excellence",
+        "addyosmani-code-simplification",
+        "verification-before-completion",
+        "addyosmani-security-and-hardening"
+      ],
+      "classification": "AMBIGUOUS"
+    },
+    {
+      "phase": "phase2",
+      "source": "docs/v3/evidence/PHASE2_CODEX_DOGFOOD_ROUTE.md",
+      "start_head": "fb46e564c084e0b04526a782b0d07d91c5a952a4",
+      "route_style": "manual StageRoute-shaped evidence",
+      "selected_skill_ids": [
+        "using-superpowers",
+        "understand",
+        "context-engineering",
+        "codebase-inspection",
+        "improve-codebase-architecture",
+        "writing-plans",
+        "test-driven-development",
+        "code-review-excellence",
+        "verification-before-completion",
+        "mcp-audit"
+      ],
+      "classification": "AMBIGUOUS"
+    },
+    {
+      "phase": "phase2.5",
+      "source": "docs/v3/evidence/PHASE25_CODEX_CONFORMANCE_ROUTE.md",
+      "start_head": "5e18083eb149378e6208f6f55b5ec069002b9ed3",
+      "route_style": "manual StageRoute-shaped evidence",
+      "selected_skill_ids": [
+        "using-superpowers",
+        "codebase-inspection",
+        "context-engineering",
+        "addyosmani-source-driven-development",
+        "addyosmani-api-and-interface-design",
+        "writing-plans",
+        "test-driven-development",
+        "code-review-excellence",
+        "addyosmani-code-simplification",
+        "addyosmani-security-and-hardening",
+        "verification-before-completion",
+        "mcp-audit"
+      ],
+      "classification": "AMBIGUOUS"
+    },
+    {
+      "phase": "phase2.6",
+      "source": "docs/v3/evidence/PHASE26_RUNTIME_PROVENANCE_ROUTE.md",
+      "start_head": "e027b8a4c35b1e2aa5f79808e0dcee4a545b4438",
+      "route_style": "manual StageRoute-shaped evidence",
+      "selected_skill_ids": [
+        "using-superpowers",
+        "addyosmani-source-driven-development",
+        "addyosmani-api-and-interface-design",
+        "addyosmani-code-simplification",
+        "addyosmani-security-and-hardening",
+        "code-review-excellence",
+        "verification-before-completion"
+      ],
+      "classification": "AMBIGUOUS"
+    }
+  ]
+}

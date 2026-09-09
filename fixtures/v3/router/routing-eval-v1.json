@@ -1,0 +1,318 @@
+{
+  "schema_version": "3.0",
+  "suite": "stage-router-eval-v1",
+  "catalog": ".superpowers/SKILLS_INDEX.json",
+  "fixtures": [
+    {
+      "fixture_id": "A-readme-typo",
+      "task_spec": {
+        "schema_version": "3.0",
+        "task_id": "T-router-A-readme-typo",
+        "task_type": "documentation",
+        "goal": "Fix one README typo",
+        "complexity": "SIMPLE",
+        "risk": "LOW",
+        "ambiguity": "LOW",
+        "architecture_impact": "NONE",
+        "objectives": ["Fix one README typo"]
+      },
+      "stage": {
+        "id": "implement",
+        "objective": "Fix one README typo",
+        "task_type": "documentation",
+        "domains": ["documentation"],
+        "required_outputs": [],
+        "evidence_required": []
+      },
+      "expected": {
+        "status": "NO_SKILL_NEEDED",
+        "forbidden_skill_ids": ["deep-understanding", "brooks-audit", "safe-mode", "fixing-motion-performance"]
+      }
+    },
+    {
+      "fixture_id": "B-ordinary-bug",
+      "task_spec": {
+        "schema_version": "3.0",
+        "task_id": "T-router-B-ordinary-bug",
+        "task_type": "bugfix",
+        "goal": "Find and fix a failing unit test caused by an ordinary bug",
+        "complexity": "STANDARD",
+        "risk": "MEDIUM",
+        "ambiguity": "MEDIUM",
+        "architecture_impact": "LOCAL",
+        "objectives": ["Find the root cause", "Fix the bug", "Prove the fix with tests"],
+        "domains": ["software-engineering"],
+        "artifact_requirements": ["tests", "verification"]
+      },
+      "stage": {
+        "id": "implement",
+        "objective": "Diagnose and fix the failing unit test",
+        "task_type": "bugfix",
+        "domains": ["software-engineering"],
+        "required_outputs": ["patch", "tests"],
+        "evidence_required": ["tests", "verification"]
+      },
+      "expected": {
+        "required_any": ["systematic-debugging", "diagnose", "debugging-code"],
+        "required_any_2": ["tdd", "test-driven-development"],
+        "required_any_3": ["verification-before-completion"],
+        "forbidden_skill_ids": ["mcp-audit"]
+      }
+    },
+    {
+      "fixture_id": "C-api-architecture",
+      "task_spec": {
+        "schema_version": "3.0",
+        "task_id": "T-router-C-api-architecture",
+        "task_type": "design",
+        "goal": "Make an API architecture decision for a versioned interface",
+        "complexity": "COMPLEX",
+        "risk": "HIGH",
+        "ambiguity": "HIGH",
+        "architecture_impact": "ARCHITECTURE-CHANGING",
+        "objectives": ["Compare API interface alternatives", "Record an ADR", "Verify the selected contract"],
+        "domains": ["api-architecture", "architecture"],
+        "required_outputs": ["ADR", "interface contract"],
+        "artifact_requirements": ["decision record", "verification"]
+      },
+      "stage": {
+        "id": "design",
+        "objective": "Compare and decide the versioned API architecture",
+        "task_type": "design",
+        "domains": ["api-architecture", "architecture"],
+        "required_outputs": ["ADR", "interface contract"],
+        "evidence_required": ["decision record", "verification"],
+        "required_roles": ["PROCESS", "DOMAIN", "REVIEW", "VERIFY"]
+      },
+      "expected": {
+        "required_any": ["brooks-audit", "improve-codebase-architecture", "grill-with-docs"],
+        "required_any_2": ["writing-plans", "plan", "to-prd", "grill-with-docs"],
+        "required_any_3": ["brooks-review", "code-review-excellence", "official-code-review"],
+        "required_any_4": ["verification-before-completion"],
+        "forbidden_skill_ids": ["mcp-audit"]
+      }
+    },
+    {
+      "fixture_id": "D-large-frontend-feature",
+      "task_spec": {
+        "schema_version": "3.0",
+        "task_id": "T-router-D-large-frontend-feature",
+        "task_type": "implementation",
+        "goal": "Build a large frontend feature with browser-visible UI behavior",
+        "complexity": "COMPLEX",
+        "risk": "MEDIUM",
+        "ambiguity": "MEDIUM",
+        "architecture_impact": "LOCAL",
+        "objectives": ["Implement the frontend feature", "Check UI accessibility", "Verify browser-visible behavior"],
+        "domains": ["frontend"],
+        "required_capabilities": ["needs_editing"],
+        "required_outputs": ["frontend patch", "UI verification"],
+        "artifact_requirements": ["tests", "browser verification"]
+      },
+      "stage": {
+        "id": "implement",
+        "objective": "Implement and verify the large frontend feature",
+        "task_type": "implementation",
+        "domains": ["frontend"],
+        "required_outputs": ["frontend patch", "UI verification"],
+        "evidence_required": ["tests", "browser verification"],
+        "required_roles": ["PROCESS", "DOMAIN", "REVIEW", "VERIFY"]
+      },
+      "expected": {
+        "required_any": ["frontend-design", "image-to-code", "design-taste-frontend"],
+        "required_any_2": ["fixing-accessibility", "baseline-ui"],
+        "required_any_3": ["verification-before-completion"],
+        "forbidden_skill_ids": ["safe-mode", "mcp-audit", "fixing-motion-performance"]
+      }
+    },
+    {
+      "fixture_id": "E-security-sensitive-change",
+      "task_spec": {
+        "schema_version": "3.0",
+        "task_id": "T-router-E-security-change",
+        "task_type": "implementation",
+        "goal": "Harden a security-sensitive permission boundary",
+        "complexity": "COMPLEX",
+        "risk": "HIGH",
+        "ambiguity": "MEDIUM",
+        "architecture_impact": "LOCAL",
+        "objectives": ["Restrict unauthorized access", "Review the threat surface", "Verify the hardened boundary"],
+        "domains": ["security"],
+        "required_outputs": ["security patch", "security review"],
+        "artifact_requirements": ["security review", "verification"]
+      },
+      "stage": {
+        "id": "harden",
+        "objective": "Harden and independently review the permission boundary",
+        "task_type": "implementation",
+        "domains": ["security"],
+        "required_outputs": ["security patch", "security review"],
+        "evidence_required": ["security review", "verification"],
+        "required_roles": ["PROCESS", "REVIEW", "VERIFY"]
+      },
+      "expected": {
+        "required_any": ["safe-mode", "permission-tuner", "invariant-guard"],
+        "required_any_2": ["brooks-review", "code-review-excellence", "official-code-review", "permission-tuner"],
+        "required_any_3": ["verification-before-completion"],
+        "forbidden_skill_ids": ["mcp-audit"]
+      }
+    },
+    {
+      "fixture_id": "F-deep-source-research",
+      "task_spec": {
+        "schema_version": "3.0",
+        "task_id": "T-router-F-deep-research",
+        "task_type": "research",
+        "goal": "Research official sources deeply and produce a verified evidence brief",
+        "complexity": "COMPLEX",
+        "risk": "LOW",
+        "ambiguity": "HIGH",
+        "architecture_impact": "NONE",
+        "objectives": ["Find first-party sources", "Compare evidence", "Cite the conclusion"],
+        "domains": ["research"],
+        "required_outputs": ["research brief", "citations"],
+        "artifact_requirements": ["sources", "verification"]
+      },
+      "stage": {
+        "id": "research",
+        "objective": "Research and verify first-party sources",
+        "task_type": "research",
+        "domains": ["research"],
+        "required_outputs": ["research brief", "citations"],
+        "evidence_required": ["sources", "verification"],
+        "required_roles": ["PROCESS", "VERIFY"]
+      },
+      "expected": {
+        "required_any": ["wiki-research-loop", "wiki-builder", "blogwatcher", "baoyu-url-to-markdown"],
+        "required_any_2": ["verification-before-completion", "zoom-out"],
+        "forbidden_skill_ids": ["frontend-design", "tdd", "mcp-audit"]
+      }
+    },
+    {
+      "fixture_id": "G-visual-design",
+      "task_spec": {
+        "schema_version": "3.0",
+        "task_id": "T-router-G-visual-design",
+        "task_type": "design",
+        "goal": "Create a visual design direction and presentation artifact",
+        "complexity": "STANDARD",
+        "risk": "LOW",
+        "ambiguity": "MEDIUM",
+        "architecture_impact": "NONE",
+        "objectives": ["Explore visual directions", "Create the selected visual artifact"],
+        "domains": ["visual-design"],
+        "required_outputs": ["visual design", "presentation"],
+        "artifact_requirements": ["design rationale"]
+      },
+      "stage": {
+        "id": "design",
+        "objective": "Develop and express the visual design direction",
+        "task_type": "design",
+        "domains": ["visual-design"],
+        "required_outputs": ["visual design", "presentation"],
+        "evidence_required": ["design rationale"],
+        "required_roles": ["PROCESS", "DOMAIN"]
+      },
+      "expected": {
+        "required_any": ["ckm:design", "visual-atelier", "design-taste-frontend", "brandkit"],
+        "forbidden_skill_ids": ["tdd", "systematic-debugging", "mcp-audit"]
+      }
+    },
+    {
+      "fixture_id": "H-github-repository-audit",
+      "task_spec": {
+        "schema_version": "3.0",
+        "task_id": "T-router-H-repository-audit",
+        "task_type": "review",
+        "goal": "Audit a GitHub repository's source tree, quality risks, and verification evidence",
+        "complexity": "COMPLEX",
+        "risk": "MEDIUM",
+        "ambiguity": "MEDIUM",
+        "architecture_impact": "LOCAL",
+        "objectives": ["Inspect source structure", "Review code quality", "Report verification gaps"],
+        "domains": ["repository", "software-engineering"],
+        "required_outputs": ["audit report"],
+        "artifact_requirements": ["source findings", "verification"]
+      },
+      "stage": {
+        "id": "review",
+        "objective": "Audit the repository source and quality evidence",
+        "task_type": "review",
+        "domains": ["repository", "software-engineering"],
+        "required_outputs": ["audit report"],
+        "evidence_required": ["source findings", "verification"],
+        "required_roles": ["PROCESS", "REVIEW", "VERIFY"]
+      },
+      "expected": {
+        "required_any": ["codebase-inspection", "module-map", "understand"],
+        "required_any_2": ["brooks-audit", "brooks-review", "code-review-excellence", "logic-review"],
+        "required_any_3": ["verification-before-completion"],
+        "forbidden_skill_ids": ["frontend-design", "tdd"]
+      }
+    },
+    {
+      "fixture_id": "I-new-product-specification",
+      "task_spec": {
+        "schema_version": "3.0",
+        "task_id": "T-router-I-product-spec",
+        "task_type": "design",
+        "goal": "Create a new product specification from an ambiguous idea",
+        "complexity": "COMPLEX",
+        "risk": "MEDIUM",
+        "ambiguity": "HIGH",
+        "architecture_impact": "ARCHITECTURE-CHANGING",
+        "objectives": ["Explore intent", "Clarify requirements", "Write a verifiable product specification"],
+        "domains": ["product", "documentation"],
+        "required_outputs": ["PRD", "specification"],
+        "artifact_requirements": ["decision record"]
+      },
+      "stage": {
+        "id": "plan",
+        "objective": "Clarify the idea and write the product specification",
+        "task_type": "design",
+        "domains": ["product", "documentation"],
+        "required_outputs": ["PRD", "specification"],
+        "evidence_required": ["decision record"],
+        "required_roles": ["PROCESS", "DOMAIN"]
+      },
+      "expected": {
+        "required_any": ["brainstorming", "grill-me", "grill-with-docs"],
+        "required_any_2": ["writing-plans", "plan", "to-prd"],
+        "forbidden_skill_ids": ["executing-plans", "tdd", "frontend-design"]
+      }
+    },
+    {
+      "fixture_id": "J-release-gate",
+      "task_spec": {
+        "schema_version": "3.0",
+        "task_id": "T-router-J-release-gate",
+        "task_type": "handoff",
+        "goal": "Prepare a release gate with review, security, tests, verification, and handoff evidence",
+        "complexity": "COMPLEX",
+        "risk": "HIGH",
+        "ambiguity": "LOW",
+        "architecture_impact": "LOCAL",
+        "objectives": ["Review the release candidate", "Check security and tests", "Verify and hand off the release"],
+        "domains": ["release", "software-engineering"],
+        "required_outputs": ["release decision", "handoff"],
+        "artifact_requirements": ["review", "security", "tests", "verification", "handoff"]
+      },
+      "stage": {
+        "id": "handoff",
+        "objective": "Complete the release gate and hand off the verified release",
+        "task_type": "handoff",
+        "domains": ["release", "software-engineering"],
+        "required_outputs": ["release decision", "handoff"],
+        "evidence_required": ["review", "security", "tests", "verification", "handoff"],
+        "required_roles": ["PROCESS", "REVIEW", "VERIFY"]
+      },
+      "expected": {
+        "required_any": ["release-skills", "release", "handoff", "finishing-a-development-branch"],
+        "required_any_2": ["brooks-review", "code-review-excellence", "official-code-review", "logic-review"],
+        "required_any_3": ["brooks-test", "tdd", "test-driven-development"],
+        "required_any_4": ["verification-before-completion"],
+        "forbidden_skill_ids": ["frontend-design", "mcp-audit"]
+      }
+    }
+  ]
+}
