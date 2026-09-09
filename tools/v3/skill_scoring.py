@@ -955,6 +955,51 @@ def task_text(task_spec: dict[str, Any], stage: dict[str, Any]) -> str:
     ).lower()
 
 
+def negative_routing_signals(record: dict[str, Any]) -> dict[str, list[str]]:
+    """Return reviewed negative signals without treating them as authority."""
+
+    routing = (record.get("extensions", {}) or {}).get("routing", {}) or {}
+    result: dict[str, list[str]] = {}
+    for field in ("negative_triggers", "stage_exclusions", "domain_exclusions"):
+        values = routing.get(field, [])
+        if isinstance(values, list):
+            result[field] = [str(value).lower() for value in values if isinstance(value, str)]
+        else:
+            result[field] = []
+    return result
+
+
+def negative_trigger_matches(
+    record: dict[str, Any], task_spec: dict[str, Any], stage: dict[str, Any]
+) -> tuple[str, ...]:
+    """Find semantic negative signals in the current stage request."""
+
+    text = task_text(task_spec, stage)
+    signals = negative_routing_signals(record)
+    matches = [
+        signal
+        for signal in signals["negative_triggers"]
+        if _contains_term(text, signal)
+    ]
+    stage_id = str(stage.get("id", "")).lower()
+    matches.extend(
+        f"stage:{signal}"
+        for signal in signals["stage_exclusions"]
+        if signal == stage_id
+    )
+    requested_domains = {
+        str(item).lower()
+        for item in list(stage.get("domains", []))
+        + list(task_spec.get("domains", []))
+    }
+    matches.extend(
+        f"domain:{signal}"
+        for signal in signals["domain_exclusions"]
+        if signal in requested_domains
+    )
+    return tuple(sorted(set(matches)))
+
+
 def required_roles_for(task_spec: dict[str, Any], stage: dict[str, Any]) -> list[str]:
     explicit = stage.get("required_roles")
     if explicit is not None:
@@ -1146,6 +1191,7 @@ def score_candidate(
         if output and role == "VERIFY"
     )
     explicit_output = bool(required_outputs & output_values) or textual_output_match
+    negative_matches = negative_trigger_matches(record, task_spec, stage)
     components: dict[str, float] = {
         "task_relevance": float(
             (1 if explicit_mode and inferred_mode else 3 if explicit_mode else 0)
@@ -1167,6 +1213,8 @@ def score_candidate(
         "metadata_confidence": metadata_quality(record),
         "historical_evidence": 0.0,
     }
+    if negative_matches:
+        components["negative_trigger_penalty"] = -min(6.0, 3.0 * len(negative_matches))
     cost = estimated_cost(record)
     components["context_cost_penalty"] = -min(3.0, cost["instruction_tokens"] / 1000.0)
     total = round(sum(components.values()), 3)

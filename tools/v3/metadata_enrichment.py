@@ -19,13 +19,18 @@ from typing import Any
 
 from tools.v3.compatibility import import_skill_index_entry, load_current_registry
 from tools.v3.contract_validation import validate_instance
-from tools.v3.skill_scoring import ROUTING_HINTS
+from tools.v3.skill_scoring import ROUTING_HINTS as LEGACY_ROUTING_HINTS
 
 
-OVERLAY_VERSION = "v3-routing-metadata-1"
+GENERATED_VERSION = "v3-routing-generated-1"
+CURATED_VERSION = "v3-routing-curated-1"
+OVERLAY_VERSION = "v3-routing-metadata-2"
 GENERATOR_VERSION = "0.1.0"
+COMPILER_VERSION = "0.1.0"
 OVERLAY_SOURCE = "v3_routing_metadata_overlay"
 DEFAULT_OVERLAY_RELATIVE_PATH = Path("registry/v3/skill-routing-metadata.json")
+DEFAULT_GENERATED_RELATIVE_PATH = Path("registry/v3/skill-routing-generated.json")
+DEFAULT_CURATED_RELATIVE_PATH = Path("registry/v3/skill-routing-curated.json")
 
 PROVENANCE_LEVELS = (
     "AUTHOR_DECLARED",
@@ -457,13 +462,15 @@ def _build_record(
     registry: dict[str, Any],
     *,
     verified_at: str | None,
+    curated: dict[str, Any] | None = None,
+    include_relationships: bool = False,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     path = _body_path(repository_root, entry)
     raw = path.read_bytes()
     text = raw.decode("utf-8")
     frontmatter = parse_frontmatter(text)
     categories = _as_list(entry.get("categories"))
-    curated = ROUTING_HINTS.get(str(entry["id"]), {})
+    curated = curated or {}
     identity = " ".join(
         [
             str(entry.get("id", "")),
@@ -574,7 +581,11 @@ def _build_record(
     metadata["extensions"] = {"routing": routing_extensions}
     provenance["extensions.routing"] = _provenance("INFERRED", 0.55, "offline enrichment annotations")
 
-    relationships, relationship_provenance = _relationships_for(str(entry["id"]))
+    relationships, relationship_provenance = (
+        _relationships_for(str(entry["id"]))
+        if include_relationships
+        else ([], {})
+    )
     if relationships:
         metadata["relationships"] = relationships
         provenance["relationships"] = _provenance("CURATED", 0.95, "sparse high-confidence overlap/complement mapping")
@@ -685,43 +696,37 @@ def _base_field_presence(registry: dict[str, Any]) -> dict[str, int]:
     return {field: counts[field] for field in fields}
 
 
-def build_overlay(
-    repository_root: str | Path,
-    registry_path: str | Path,
-    *,
-    verified_at: str | None = None,
+def _registry_identity(
+    repository_root: Path, registry_path: Path, registry: dict[str, Any]
 ) -> dict[str, Any]:
-    """Build a deterministic overlay by reading each canonical body as data."""
+    return {
+        "path": str(registry_path.relative_to(repository_root)),
+        "source": registry["source"],
+        "source_ref": registry.get("source_ref", "unknown"),
+        "source_commit": registry.get("source_commit", "unknown"),
+        "skill_count": len(registry["skills"]),
+    }
 
-    repository_root = Path(repository_root).resolve()
-    registry_path = Path(registry_path).resolve()
-    registry = load_current_registry(registry_path)
-    records: dict[str, dict[str, Any]] = {}
-    stats: list[dict[str, Any]] = []
-    for entry in sorted(registry["skills"], key=lambda item: str(item.get("id", ""))):
-        record, item_stats = _build_record(repository_root, entry, registry, verified_at=verified_at)
-        records[record["skill_id"]] = record
-        stats.append(item_stats)
 
-    classification_counts = Counter(item["classification"] for item in stats)
-    tier_counts = Counter(item["tier"] for item in stats)
+def _census_for_records(
+    registry: dict[str, Any], records: dict[str, dict[str, Any]], stats: list[dict[str, Any]], base: dict[str, Any] | None = None
+) -> dict[str, Any]:
+    """Recalculate only compiled routing counters, keeping body census data."""
+
+    census = copy.deepcopy(base or {})
+    classification_counts = Counter(item["classification"] for item in records.values())
+    tier_counts = Counter(item["tier"] for item in records.values())
     provenance_counts = Counter(
-        source
-        for item in stats
-        for source, count in item["provenance_sources"].items()
-        for _ in range(count)
-    )
-    body_signal_counts = Counter(
-        signal
-        for item in stats
-        for signal, present in item["body_equivalent_signals"].items()
-        if present
+        info.get("source", "UNKNOWN")
+        for item in records.values()
+        for info in (item.get("provenance", {}).get("fields", {}) or {}).values()
+        if isinstance(info, dict)
     )
     overlay_field_counts = Counter({field: 0 for field in OVERLAY_CENSUS_FIELDS})
     overlay_field_provenance: dict[str, Counter[str]] = {}
     for record in records.values():
-        metadata = record["metadata"]
-        fields = record["provenance"]["fields"]
+        metadata = record.get("metadata", {})
+        fields = record.get("provenance", {}).get("fields", {}) or {}
         for field, value in metadata.items():
             if value in (None, [], {}):
                 continue
@@ -730,43 +735,81 @@ def build_overlay(
                 census_field = "source.license"
             elif field == "extensions" and isinstance(value, dict) and "routing" in value:
                 census_field = "extensions.routing"
+            if census_field not in overlay_field_counts:
+                continue
             overlay_field_counts[census_field] += 1
             source = fields.get(census_field, {}).get("source", "UNKNOWN")
             overlay_field_provenance.setdefault(census_field, Counter())[source] += 1
+    census.update(
+        {
+            "record_count": len(records),
+            "overlay_field_presence": dict(sorted(overlay_field_counts.items())),
+            "overlay_field_provenance": {
+                field: dict(sorted(counts.items()))
+                for field, counts in sorted(overlay_field_provenance.items())
+            },
+            "classification_counts": dict(sorted(classification_counts.items())),
+            "tier_counts": dict(sorted(tier_counts.items())),
+            "provenance_counts": dict(sorted(provenance_counts.items())),
+            "capability_resolution": copy.deepcopy(CAPABILITY_RESOLUTION),
+            "routing_ready_count": classification_counts["ROUTING_READY"],
+            "tier_1_routing_ready_count": sum(
+                1
+                for record in records.values()
+                if record["tier"] == "TIER_1_CORE"
+                and record["classification"] == "ROUTING_READY"
+            ),
+        }
+    )
+    return census
+
+
+def build_generated_overlay(
+    repository_root: str | Path,
+    registry_path: str | Path,
+    *,
+    verified_at: str | None = None,
+) -> dict[str, Any]:
+    """Build only generated inference by reading canonical bodies as data."""
+
+    repository_root = Path(repository_root).resolve()
+    registry_path = Path(registry_path).resolve()
+    registry = load_current_registry(registry_path)
+    records: dict[str, dict[str, Any]] = {}
+    stats: list[dict[str, Any]] = []
+    for entry in sorted(registry["skills"], key=lambda item: str(item.get("id", ""))):
+        record, item_stats = _build_record(
+            repository_root,
+            entry,
+            registry,
+            verified_at=verified_at,
+            curated={},
+            include_relationships=False,
+        )
+        records[record["skill_id"]] = record
+        stats.append(item_stats)
+
+    body_signal_counts = Counter(
+        signal
+        for item in stats
+        for signal, present in item["body_equivalent_signals"].items()
+        if present
+    )
     base_field_presence = _base_field_presence(registry)
-    census = {
-        "record_count": len(records),
-        "body_files_inspected": len(stats),
-        "body_bytes_inspected": sum(item["body_bytes"] for item in stats),
-        "current_registry_field_presence": base_field_presence,
-        "v3_field_presence_before_overlay": base_field_presence,
-        "body_frontmatter_equivalent_signal_presence": dict(sorted(body_signal_counts.items())),
-        "overlay_field_presence": dict(sorted(overlay_field_counts.items())),
-        "overlay_field_provenance": {
-            field: dict(sorted(counts.items()))
-            for field, counts in sorted(overlay_field_provenance.items())
-        },
-        "classification_counts": dict(sorted(classification_counts.items())),
-        "tier_counts": dict(sorted(tier_counts.items())),
-        "provenance_counts": dict(sorted(provenance_counts.items())),
-        "capability_resolution": copy.deepcopy(CAPABILITY_RESOLUTION),
-        "routing_ready_count": classification_counts["ROUTING_READY"],
-        "tier_1_routing_ready_count": sum(
-            1
-            for record in records.values()
-            if record["tier"] == "TIER_1_CORE" and record["classification"] == "ROUTING_READY"
-        ),
-    }
+    census = _census_for_records(registry, records, stats)
+    census.update(
+        {
+            "body_files_inspected": len(stats),
+            "body_bytes_inspected": sum(item["body_bytes"] for item in stats),
+            "current_registry_field_presence": base_field_presence,
+            "v3_field_presence_before_overlay": base_field_presence,
+            "body_frontmatter_equivalent_signal_presence": dict(sorted(body_signal_counts.items())),
+        }
+    )
     document: dict[str, Any] = {
         "schema_version": "3.0",
-        "overlay_version": OVERLAY_VERSION,
-        "registry": {
-            "path": str(registry_path.relative_to(repository_root)),
-            "source": registry["source"],
-            "source_ref": registry.get("source_ref", "unknown"),
-            "source_commit": registry.get("source_commit", "unknown"),
-            "skill_count": len(registry["skills"]),
-        },
+        "generated_version": GENERATED_VERSION,
+        "registry": _registry_identity(repository_root, registry_path, registry),
         "generator": {
             "version": GENERATOR_VERSION,
             "entrypoint": "tools/v3/metadata_enrichment.py",
@@ -779,6 +822,265 @@ def build_overlay(
     return document
 
 
+def _empty_curated_overlay(registry: dict[str, Any], identity: dict[str, Any]) -> dict[str, Any]:
+    document: dict[str, Any] = {
+        "schema_version": "3.0",
+        "curated_version": CURATED_VERSION,
+        "registry": copy.deepcopy(identity),
+        "curator": {
+            "version": "none",
+            "policy": "SMALL_FIELD_PATCHES_ONLY",
+            "body_policy": "READ_ONLY_NO_EXECUTION",
+        },
+        "skills": {},
+    }
+    document["overlay_digest"] = _digest_json(document)
+    return document
+
+
+def _field_patch_info(patch: dict[str, Any], field: str) -> tuple[Any, dict[str, Any]]:
+    info = patch.get("fields", {}).get(field)
+    if not isinstance(info, dict) or "value" not in info:
+        raise MetadataOverlayError(f"curated field patch is invalid: {field}")
+    provenance = {
+        "source": "CURATED",
+        "confidence": float(info.get("confidence", 1.0)),
+        "evidence": str(info.get("evidence", "reviewed routing override")),
+    }
+    return copy.deepcopy(info["value"]), provenance
+
+
+def _apply_curated_record(
+    generated_record: dict[str, Any], patch: dict[str, Any]
+) -> dict[str, Any]:
+    if patch.get("source_skill_digest") != generated_record.get("source_skill_digest"):
+        raise MetadataOverlayError(
+            f"curated source digest mismatch for {generated_record.get('skill_id')}"
+        )
+    result = copy.deepcopy(generated_record)
+    metadata = result.setdefault("metadata", {})
+    provenance = result.setdefault("provenance", {"default": "UNKNOWN", "fields": {}, "relationships": {}})
+    fields = provenance.setdefault("fields", {})
+    routing = metadata.setdefault("extensions", {}).setdefault("routing", {})
+    routing_fields = {
+        "negative_triggers": "negative_triggers",
+        "stage_exclusions": "stage_exclusions",
+        "domain_exclusions": "domain_exclusions",
+    }
+    for field in (
+        "roles",
+        "stages",
+        "task_modes",
+        "domains",
+        "triggers",
+        "inputs",
+        "outputs",
+        "negative_triggers",
+        "stage_exclusions",
+        "domain_exclusions",
+    ):
+        if field not in patch.get("fields", {}):
+            continue
+        value, info = _field_patch_info(patch, field)
+        target = routing_fields.get(field)
+        if target:
+            routing[target] = value
+            fields["extensions.routing"] = info
+        else:
+            metadata[field] = value
+            fields[field] = info
+
+    relationship_provenance = provenance.setdefault("relationships", {})
+    relationships = metadata.setdefault("relationships", [])
+    for relation in patch.get("relationships", []) or []:
+        item = {
+            key: relation[key]
+            for key in ("type", "target", "reason")
+            if key in relation
+        }
+        if item not in relationships:
+            relationships.append(item)
+        relationship_provenance[f"{item['type']}:{item['target']}"] = {
+            "source": "CURATED",
+            "confidence": float(relation.get("confidence", 1.0)),
+            "evidence": str(relation.get("evidence", relation.get("reason", "reviewed relationship"))),
+        }
+    if relationships:
+        fields["relationships"] = {
+            "source": "CURATED",
+            "confidence": max(
+                [info.get("confidence", 1.0) for info in relationship_provenance.values()]
+                or [1.0]
+            ),
+            "evidence": "sparse reviewed relationship mapping",
+        }
+    if patch.get("tier"):
+        result["tier"] = patch["tier"]
+    review_status = patch.get("review_status")
+    if review_status == "BLOCKED":
+        result["review_status"] = "BLOCKED"
+    elif review_status == "REVIEWED" or patch.get("fields") or patch.get("relationships"):
+        result["review_status"] = "CURATED"
+    if patch.get("confidence") is not None:
+        result["confidence"] = float(patch["confidence"])
+    if "last_verified" in patch:
+        result["last_verified"] = patch["last_verified"]
+    if patch.get("notes"):
+        result["notes"] = patch["notes"]
+
+    curated_routing_fields = patch.get("fields", {}) or {}
+    if result.get("review_status") != "BLOCKED" and all(
+        field in curated_routing_fields
+        for field in ("roles", "stages", "domains")
+    ) and all(
+        metadata.get(field) for field in ("roles", "stages", "domains")
+    ):
+        result["classification"] = "ROUTING_READY"
+    return result
+
+
+def compile_overlay(
+    generated: dict[str, Any], curated: dict[str, Any]
+) -> dict[str, Any]:
+    """Compile generated inference plus small curated patches."""
+
+    generated_records = generated.get("skills", {})
+    curated_records = curated.get("skills", {}) or {}
+    if not isinstance(generated_records, dict) or not isinstance(curated_records, dict):
+        raise MetadataOverlayError("routing layers must contain skills objects")
+    records: dict[str, dict[str, Any]] = {}
+    for skill_id, record in generated_records.items():
+        patch = curated_records.get(skill_id)
+        records[skill_id] = (
+            _apply_curated_record(record, patch)
+            if isinstance(patch, dict)
+            else copy.deepcopy(record)
+        )
+    unknown_patches = sorted(set(curated_records) - set(generated_records))
+    if unknown_patches:
+        raise MetadataOverlayError(
+            "curated overrides reference unknown skills: " + ", ".join(unknown_patches)
+        )
+    document: dict[str, Any] = {
+        "schema_version": "3.0",
+        "overlay_version": OVERLAY_VERSION,
+        "registry": copy.deepcopy(generated.get("registry", {})),
+        "generator": copy.deepcopy(generated.get("generator", {})),
+        "compiled_from": {
+            "generated_overlay_digest": generated.get("overlay_digest"),
+            "curated_overlay_digest": curated.get("overlay_digest"),
+            "compiler_version": COMPILER_VERSION,
+        },
+        "census": _census_for_records(
+            {}, records, [], generated.get("census", {})
+        ),
+        "skills": records,
+    }
+    document["overlay_digest"] = _digest_json(document)
+    return document
+
+
+def build_legacy_curated_overlay(
+    repository_root: str | Path,
+    registry_path: str | Path,
+    *,
+    verified_at: str | None = None,
+) -> dict[str, Any]:
+    """Export the prior audited compatibility hints as small patch records.
+
+    This is a one-time migration aid. Runtime routing reads the checked-in
+    curated JSON layer; it does not read this legacy Python mapping.
+    """
+
+    repository_root = Path(repository_root).resolve()
+    registry_path = Path(registry_path).resolve()
+    registry = load_current_registry(registry_path)
+    identity = _registry_identity(repository_root, registry_path, registry)
+    records: dict[str, Any] = {}
+    for entry in registry["skills"]:
+        skill_id = str(entry.get("id", ""))
+        hint = LEGACY_ROUTING_HINTS.get(skill_id)
+        relationships, relationship_provenance = _relationships_for(skill_id)
+        if not hint and not relationships:
+            continue
+        hint = hint or {}
+        fields: dict[str, Any] = {}
+        for field, value in hint.items():
+            fields[field] = {
+                "value": copy.deepcopy(value),
+                "provenance": "CURATED",
+                "confidence": 1.0,
+                "evidence": "reviewed compatibility routing seed",
+                "last_verified": verified_at,
+            }
+        relationship_patches = []
+        for relationship in relationships:
+            info = relationship_provenance.get(
+                f"{relationship['type']}:{relationship['target']}", {}
+            )
+            relationship_patches.append(
+                {
+                    **relationship,
+                    "provenance": "CURATED",
+                    "confidence": info.get("confidence", 0.85),
+                    "evidence": info.get("evidence", relationship.get("reason", "reviewed relationship")),
+                }
+            )
+        categories = _as_list(entry.get("categories"))
+        if skill_id in TIER_1_CORE_IDS:
+            tier = "TIER_1_CORE"
+        elif set(categories) & {"software-engineering", "quality-and-safety", "design-and-frontend", "media-and-images", "documents-and-publishing"}:
+            tier = "TIER_2_DOMAIN"
+        else:
+            tier = "TIER_3_SPECIALIZED"
+        records[skill_id] = {
+            "skill_id": skill_id,
+            "source_skill_digest": f"sha256:{entry['sha256']}" if not str(entry["sha256"]).startswith("sha256:") else entry["sha256"],
+            "tier": tier,
+            "fields": fields,
+            "relationships": relationship_patches,
+            "review_status": "REVIEWED",
+            "confidence": 1.0,
+            "last_verified": verified_at,
+        }
+    document: dict[str, Any] = {
+        "schema_version": "3.0",
+        "curated_version": CURATED_VERSION,
+        "registry": identity,
+        "curator": {
+            "version": "0.1.0",
+            "policy": "SMALL_FIELD_PATCHES_ONLY",
+            "body_policy": "READ_ONLY_NO_EXECUTION",
+        },
+        "skills": records,
+    }
+    document["overlay_digest"] = _digest_json(document)
+    return document
+
+
+def build_overlay(
+    repository_root: str | Path,
+    registry_path: str | Path,
+    *,
+    verified_at: str | None = None,
+    curated_path: str | Path | None = None,
+) -> dict[str, Any]:
+    """Build the checked-in compiled routing snapshot."""
+
+    repository_root = Path(repository_root).resolve()
+    registry_path = Path(registry_path).resolve()
+    generated = build_generated_overlay(
+        repository_root, registry_path, verified_at=verified_at
+    )
+    candidate = (
+        Path(curated_path).resolve()
+        if curated_path is not None
+        else repository_root / DEFAULT_CURATED_RELATIVE_PATH
+    )
+    curated = load_curated_overlay(candidate, registry_path=registry_path)
+    return compile_overlay(generated, curated)
+
+
 def load_overlay(path: str | Path) -> dict[str, Any]:
     path = Path(path)
     try:
@@ -789,6 +1091,68 @@ def load_overlay(path: str | Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise MetadataOverlayError(f"overlay is not an object: {path}")
     return value
+
+
+def load_curated_overlay(
+    path: str | Path, *, registry_path: str | Path
+) -> dict[str, Any]:
+    """Load the small curated patch layer, or return an empty layer."""
+
+    path = Path(path).resolve()
+    registry_path = Path(registry_path).resolve()
+    registry = load_current_registry(registry_path)
+    if not path.is_file():
+        identity = {
+            "path": registry_path.name,
+            "source": registry["source"],
+            "source_ref": registry.get("source_ref", "unknown"),
+            "source_commit": registry.get("source_commit", "unknown"),
+            "skill_count": len(registry["skills"]),
+        }
+        return _empty_curated_overlay(registry, identity)
+    curated = load_overlay(path)
+    validation = validate_curated_overlay(curated, registry_path=registry_path)
+    if not validation.valid:
+        raise MetadataOverlayError(
+            "invalid curated routing metadata: " + "; ".join(validation.errors)
+        )
+    return curated
+
+
+def validate_curated_overlay(
+    curated: dict[str, Any], *, registry_path: str | Path
+) -> Any:
+    """Validate patch identity, digest freshness, and non-authority boundaries."""
+
+    result = validate_instance("SkillRoutingCurated", curated)
+    if not result.valid:
+        return result
+    registry_path = Path(registry_path).resolve()
+    registry = load_current_registry(registry_path)
+    expected = {entry.get("id"): entry for entry in registry["skills"]}
+    skills = curated.get("skills", {}) or {}
+    registry_info = curated.get("registry", {}) or {}
+    for key in ("source", "source_ref", "source_commit"):
+        if registry_info.get(key) != registry.get(key, "unknown"):
+            result.errors.append(f"curated registry {key} does not match current registry")
+    if registry_info.get("skill_count") != len(registry["skills"]):
+        result.errors.append("curated registry skill_count does not match current registry")
+    if curated.get("overlay_digest") != _digest_json(curated, "overlay_digest"):
+        result.errors.append("curated overlay_digest does not match canonical payload")
+    for skill_id, patch in skills.items():
+        if skill_id not in expected:
+            result.errors.append(f"curated override references unknown skill: {skill_id}")
+            continue
+        expected_digest = expected[skill_id].get("sha256", "")
+        expected_digest = expected_digest if str(expected_digest).startswith("sha256:") else f"sha256:{expected_digest}"
+        if patch.get("source_skill_digest") != expected_digest:
+            result.errors.append(f"curated source digest mismatch for {skill_id}")
+        for relationship in patch.get("relationships", []) or []:
+            if relationship.get("target") not in expected:
+                result.warnings.append(
+                    f"curated relationship target is unresolved: {skill_id} -> {relationship.get('target')}"
+                )
+    return result
 
 
 def _deep_merge(base: dict[str, Any], update: dict[str, Any]) -> dict[str, Any]:
@@ -969,6 +1333,8 @@ if __name__ == "__main__":
     parser.add_argument("--root", type=Path, default=Path.cwd())
     parser.add_argument("--registry", type=Path, default=Path(".superpowers/SKILLS_INDEX.json"))
     parser.add_argument("--output", type=Path, default=DEFAULT_OVERLAY_RELATIVE_PATH)
+    parser.add_argument("--generated-output", type=Path, default=None)
+    parser.add_argument("--curated-output", type=Path, default=None)
     parser.add_argument("--verified-at", default=None)
     args = parser.parse_args()
     output = args.output if args.output.is_absolute() else args.root / args.output
@@ -976,4 +1342,18 @@ if __name__ == "__main__":
     overlay = build_overlay(args.root, registry, verified_at=args.verified_at)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(overlay, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    if args.generated_output is not None:
+        generated_output = args.generated_output if args.generated_output.is_absolute() else args.root / args.generated_output
+        generated_output.parent.mkdir(parents=True, exist_ok=True)
+        generated_output.write_text(
+            json.dumps(build_generated_overlay(args.root, registry, verified_at=args.verified_at), ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+    if args.curated_output is not None:
+        curated_output = args.curated_output if args.curated_output.is_absolute() else args.root / args.curated_output
+        curated_output.parent.mkdir(parents=True, exist_ok=True)
+        curated_output.write_text(
+            json.dumps(build_legacy_curated_overlay(args.root, registry, verified_at=args.verified_at), ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
     print(json.dumps(overlay["census"], ensure_ascii=False, sort_keys=True))

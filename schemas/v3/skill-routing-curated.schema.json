@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/skill-routing-curated.schema.json",
+  "title": "Agent Skills Matrix v3 Curated Routing Overrides",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "curated_version", "registry", "curator", "skills", "overlay_digest"],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "curated_version": {"$ref": "common.schema.json#/$defs/shortString"},
+    "registry": {"$ref": "skill-routing-metadata.schema.json#/$defs/registryIdentity"},
+    "curator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "policy"],
+      "properties": {
+        "version": {"$ref": "common.schema.json#/$defs/shortString"},
+        "policy": {"type": "string", "enum": ["SMALL_FIELD_PATCHES_ONLY"]},
+        "body_policy": {"type": "string", "enum": ["READ_ONLY_NO_EXECUTION"]}
+      }
+    },
+    "skills": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/curatedRecord"}
+    },
+    "overlay_digest": {"$ref": "common.schema.json#/$defs/digest"}
+  },
+  "$defs": {
+    "fieldPatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "provenance", "confidence", "evidence"],
+      "properties": {
+        "value": {},
+        "provenance": {"const": "CURATED"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "evidence": {"$ref": "common.schema.json#/$defs/shortString"},
+        "last_verified": {
+          "anyOf": [
+            {"$ref": "common.schema.json#/$defs/dateTime"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "stringListPatch": {
+      "allOf": [
+        {"$ref": "#/$defs/fieldPatch"},
+        {"properties": {"value": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/shortString"}, "uniqueItems": true}}}
+      ]
+    },
+    "roleListPatch": {
+      "allOf": [
+        {"$ref": "#/$defs/fieldPatch"},
+        {"properties": {"value": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/role"}, "uniqueItems": true}}}
+      ]
+    },
+    "stageListPatch": {
+      "allOf": [
+        {"$ref": "#/$defs/fieldPatch"},
+        {"properties": {"value": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/stage"}, "uniqueItems": true}}}
+      ]
+    },
+    "fields": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "roles": {"$ref": "#/$defs/roleListPatch"},
+        "stages": {"$ref": "#/$defs/stageListPatch"},
+        "task_modes": {"$ref": "#/$defs/stringListPatch"},
+        "domains": {"$ref": "#/$defs/stringListPatch"},
+        "triggers": {"$ref": "#/$defs/stringListPatch"},
+        "negative_triggers": {"$ref": "#/$defs/stringListPatch"},
+        "stage_exclusions": {"$ref": "#/$defs/stageListPatch"},
+        "domain_exclusions": {"$ref": "#/$defs/stringListPatch"},
+        "inputs": {"$ref": "#/$defs/stringListPatch"},
+        "outputs": {"$ref": "#/$defs/stringListPatch"}
+      }
+    },
+    "relationshipPatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "target", "provenance", "confidence", "evidence"],
+      "properties": {
+        "type": {"$ref": "common.schema.json#/$defs/relationshipType"},
+        "target": {"$ref": "common.schema.json#/$defs/recordId"},
+        "reason": {"$ref": "common.schema.json#/$defs/shortString"},
+        "provenance": {"const": "CURATED"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "evidence": {"$ref": "common.schema.json#/$defs/shortString"}
+      }
+    },
+    "curatedRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["skill_id", "source_skill_digest"],
+      "properties": {
+        "skill_id": {"$ref": "common.schema.json#/$defs/recordId"},
+        "source_skill_digest": {"$ref": "common.schema.json#/$defs/digest"},
+        "tier": {"type": "string", "enum": ["TIER_1_CORE", "TIER_2_DOMAIN", "TIER_3_SPECIALIZED", "TIER_4_DEPRECATED"]},
+        "fields": {"$ref": "#/$defs/fields"},
+        "relationships": {"type": "array", "items": {"$ref": "#/$defs/relationshipPatch"}, "uniqueItems": true},
+        "review_status": {"type": "string", "enum": ["REVIEWED", "BLOCKED"]},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "last_verified": {
+          "anyOf": [
+            {"$ref": "common.schema.json#/$defs/dateTime"},
+            {"type": "null"}
+          ]
+        },
+        "notes": {"$ref": "common.schema.json#/$defs/shortString"}
+      }
+    }
+  }
+}

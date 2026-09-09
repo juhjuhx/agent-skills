@@ -1,7 +1,7 @@
 # Next Codex Prompt — Phase 3B Model / Agent Routing Evaluation
 
 Copy this prompt into the next Codex session. It defines the next bounded
-evaluation task. Do not execute Phase 3B during Phase 3A.1.
+evaluation task. Do not execute Phase 3B during Phase 3A.2.
 
 ---
 
@@ -10,7 +10,7 @@ evaluation task. Do not execute Phase 3B during Phase 3A.1.
 Repository: `juhjuhx/agent-skills`
 
 Implement **Agent Skills Matrix v3 — Phase 3B: Model / Agent Routing
-Evaluation** from the verified and metadata-enriched Phase 3A.1 Stage Router
+Evaluation** from the verified and quality-converged Phase 3A.2 Stage Router
 MVP. Do not redesign v3, clone the Codex adapter, or implement the six
 remaining native adapters in this phase.
 
@@ -36,17 +36,22 @@ git rev-parse HEAD
 git fetch origin
 ```
 
-Start from the current Phase 3A.1 branch or its merged base. Read the actual
+Start from the current Phase 3A.2 branch or its merged base. Read the actual
 repository registry before selecting any skill ID. At the time this prompt is
 generated, the source truth is 214 canonical records at registry commit
 `db3b67d5b051c4223da9146b2b836a9ed45e9bac`, plus the checked-in routing
 overlay and its digest-bound source metadata:
 
 - `registry/v3/skill-routing-metadata.json`
-- overlay version `v3-routing-metadata-1`
-- overlay digest `sha256:13896c8ded17a16129f2092b2e83d1bbe6465055867f3f948897e78d42a5dcc5`
+- generated overlay: `registry/v3/skill-routing-generated.json`
+- curated patch layer: `registry/v3/skill-routing-curated.json`
+- compiled overlay version `v3-routing-metadata-2`
+- compiled overlay digest `sha256:482720a45d8b74f5e9cda4eddc283993611510ba31403d991c4f297605f66f4b`
+- session-resident snapshot: `snapshot:2349a6fe70aaf346`
 - [`CATALOG_ROUTING_METADATA_CENSUS.md`](evidence/CATALOG_ROUTING_METADATA_CENSUS.md)
 - [`STAGE_ROUTER_EVAL_V2.md`](evidence/STAGE_ROUTER_EVAL_V2.md)
+- [`STAGE_ROUTER_EVAL_V3.md`](evidence/STAGE_ROUTER_EVAL_V3.md)
+- [`ROUTING_METADATA_CURATION.md`](evidence/ROUTING_METADATA_CURATION.md)
 
 Use the overlay as the metadata-first routing input. Do not read all 214
 procedure bodies during normal route or model evaluation; load only bodies
@@ -68,6 +73,8 @@ Read:
 - `docs/v3/evidence/STAGE_ROUTER_EVAL_V1.md`
 - `docs/v3/evidence/STAGE_ROUTER_EVAL_V2.md`
 - `docs/v3/evidence/CATALOG_ROUTING_METADATA_CENSUS.md`
+- `docs/v3/evidence/STAGE_ROUTER_EVAL_V3.md`
+- `docs/v3/evidence/ROUTING_METADATA_CURATION.md`
 
 Machine-readable registry data wins over stale prose. Keep the production
 registry, installer, and v2 policy unchanged.
