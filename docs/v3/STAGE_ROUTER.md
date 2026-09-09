@@ -1,9 +1,9 @@
 # v3 Stage Router
 
-> Status: **Phase 3A MVP implemented**. This document describes the small,
-> deterministic, metadata-first selector in `tools/v3/`. It does not implement
-> a general stage planner, model router, persistence layer, or additional
-> native adapters.
+> Status: **Phase 3A.2 quality convergence implemented**. This document
+> describes the small, deterministic, metadata-first selector in `tools/v3/`.
+> It does not implement a general stage planner, model router, persistence
+> layer, or additional native adapters.
 
 ## Boundary
 
@@ -11,8 +11,8 @@ The MVP turns one task, one stage, and one metadata catalog into one validated
 `StageRoute`:
 
 ```text
-TaskSpec + Stage + SkillMetadataV3 catalog
-    -> compatibility view
+TaskSpec + Stage + generated/curated metadata
+    -> compiled routing snapshot
     -> hard filters
     -> transparent scoring
     -> role-balanced selection
@@ -32,9 +32,12 @@ Implementation boundaries are intentionally small:
 - [`stage_router.py`](../../tools/v3/stage_router.py) owns one-stage filtering,
   selection, and route evidence.
 - [`skill_scoring.py`](../../tools/v3/skill_scoring.py) owns deterministic
-  text/metadata scoring and escalation signals.
+  text/metadata scoring, negative routing signals, and escalation signals.
 - [`skill_graph.py`](../../tools/v3/skill_graph.py) owns in-memory relationship
-  lookups and dependency expansion.
+  lookups and dependency expansion for a snapshot.
+- [`routing_catalog.py`](../../tools/v3/routing_catalog.py) validates and
+  compiles one immutable metadata/relationship snapshot for reuse across
+  stages.
 - [`CodexAdapter`](../../tools/v3/codex_adapter.py) consumes a validated route;
   it does not choose skills.
 
@@ -74,10 +77,23 @@ required_tools: [browser]
 `TaskSpec` supplies task classification, domains, capabilities, permissions,
 budgets, artifact requirements, and acceptance context. The catalog is a
 `SkillMetadataV3` list or a read-only compatibility projection of the current
-`.superpowers/SKILLS_INDEX.json`. When present, the router's default catalog
-loader consumes the read-only
+`.superpowers/SKILLS_INDEX.json`. The offline maintenance path keeps generated
+inference and curated field patches separate:
+
+```text
+canonical SKILL.md + current registry
+        -> skill-routing-generated.json
+        + skill-routing-curated.json
+        -> skill-routing-metadata.json
+        -> RoutingCatalogSnapshot
+```
+
+The router's default loader consumes only the compiled
 [`registry/v3/skill-routing-metadata.json`](../../registry/v3/skill-routing-metadata.json)
-overlay on top of that projection.
+snapshot. It does not read canonical bodies during normal ranking. The
+generation and compilation boundary is implemented in
+[`metadata_enrichment.py`](../../tools/v3/metadata_enrichment.py), and the
+session-resident snapshot in [`routing_catalog.py`](../../tools/v3/routing_catalog.py).
 
 ### Routing metadata provenance
 
@@ -93,13 +109,14 @@ body text. Every derived field carries one of these provenance levels:
 | `INFERRED` | contextual score only; never a permission grant or hard semantic assertion |
 | `UNKNOWN` | conservative absence; cannot satisfy a hard semantic requirement |
 
-The overlay records the canonical body digest, generator version, review
-status, confidence, and read-only body policy. A stale body digest is a
-maintenance validation failure. `trust` and canonical source identity are
-still inherited from the current registry compatibility projection; the
-overlay deliberately does not invent agent compatibility or permissions.
-Unknown permissions remain unknown/conservative. `QUARANTINE` and `BLOCKED`
-records cannot become executable through a metadata score.
+Each layer records the canonical body digest, generator/compiler version,
+review status, confidence, and read-only body policy. A stale body digest is a
+maintenance validation failure. Curated records are small field patches and
+cannot replace the generated source record or grant permissions, capabilities,
+trust, or runtime compatibility. `trust` and canonical source identity remain
+inherited from the current registry compatibility projection. Unknown
+permissions remain unknown/conservative. `QUARANTINE` and `BLOCKED` records
+cannot become executable through a metadata score.
 
 ## Hard filters before ranking
 
@@ -114,15 +131,17 @@ Candidates are rejected before scoring when the supplied metadata establishes:
 7. impossible context/tool budget;
 8. no executable role slot;
 9. a superseded record, missing `REQUIRES` dependency, or invalid dependency
-   cycle.
+   cycle;
+10. a reviewed stage/domain exclusion or negative trigger when the candidate
+    is only an optional complement.
 
 Unknown required capabilities fail closed. A quarantined or blocked record
 cannot become executable through scoring. The router never treats a candidate
 as safe merely because its description contains a matching keyword.
 
 The current 214-record registry predates v3 routing fields. The compatibility
-view therefore distinguishes explicit fields, auditable `ROUTING_HINTS`, and
-untrusted inferred fields. With the Phase 3A.1 overlay, curated and
+view therefore distinguishes explicit fields, the generated inference layer,
+and curated field patches. With the Phase 3A.2 compiled snapshot, curated and
 high-confidence inferred routing fields are available to the MVP while their
 provenance remains visible in route evidence. A legacy record whose roles,
 stages, and domains are only broad inference is filtered with
@@ -143,10 +162,20 @@ It then adds an optional candidate only when it is a strong fit and either:
 - has a declared positive graph relationship to an already selected skill.
 
 There is no fixed primary/optional quota and no minimum skill quota. A tiny
-correction may produce no skill; a complex stage may use several roles. A
-second skill in the same role is retained only when a dependency or explicit
-artifact/relationship signal makes it useful. Role diversity is preferred to
-the top N semantic scores.
+correction may produce no skill; a complex stage may use several roles. Role
+saturation is a marginal-value control, not a global maximum: the first strong
+`REVIEW` candidate has normal value, a second is allowed only when the stage
+requests independent/adversarial review evidence, and an explicit
+`independent_review_count` may justify a third. `PROCESS` can similarly have a
+second candidate when the stage requires distinct plan/spec/test evidence.
+`ALTERNATIVE_TO` and `SUPERSEDES` reduce duplicate selection, while
+`REVIEW_WITH`/`VERIFY_WITH` and `COMPLEMENTS` add contextual value. Role
+diversity is preferred to the top N semantic scores.
+
+Optional additions also pass a marginal context/tool-cost gate. Required role
+coverage is not removed for cost alone, but an optional high-cost candidate
+must add relevance, evidence, or a relationship signal that justifies its
+incremental context.
 
 ## Transparent baseline score
 
@@ -182,9 +211,10 @@ The in-memory graph supports the v3 relationship vocabulary:
 - `RECOMMENDS`, `COMPLEMENTS`, `REVIEW_WITH`, `VERIFY_WITH`: positive contextual
   signals without a quota.
 
-The graph is rebuilt from the supplied records for each route and has no
-database or background state. Positive relationship cycles are allowed; only
-dependency traversal detects a `REQUIRES` cycle.
+`RoutingCatalogSnapshot` builds the graph once after validation and reuses it
+across stage routes. It has no database, background state, or mutable manager.
+Positive relationship cycles are allowed; only dependency traversal detects a
+`REQUIRES` cycle.
 
 ## Deep Understanding gate
 
@@ -217,21 +247,22 @@ selected canonical files, verifies their source digest/trust, and preserves
 provenance. `NO_SKILL_NEEDED` loads zero additional skills. This keeps one
 canonical skill source and leaves native projection to the adapter.
 
-Phase 3A.1 measures the distinction explicitly: offline enrichment inspected
-all 214 bodies to create the overlay, while normal Stage Router invocations
-inspected 214 metadata records and loaded zero bodies. The selected body byte
-estimate is route evidence for downstream execution; it is not a claim that
-the router loaded those bodies.
+Phase 3A.2 measures the distinction explicitly: offline enrichment inspected
+all 214 bodies to create generated inference, while normal Stage Router
+invocations inspect 214 metadata records and load zero bodies. The immutable
+snapshot amortizes JSON/schema/digest validation and graph construction across
+stages. The selected body byte estimate is route evidence for downstream
+execution; it is not a claim that the router loaded those bodies.
 
 ## Current limits and evidence
 
 The MVP does not yet provide a general stage planner, model/provider routing,
 reroute executor, historical-weight learning, or Claude/OpenCode/Hermes/MiMo/
 ZCode/DeepSeek adapters. The v2 policy and production registry remain
-unchanged. The ten-workload evaluation, historical comparisons, known
-over-routing/under-routing cases, and metadata gaps are recorded in
-[`STAGE_ROUTER_EVAL_V1.md`](evidence/STAGE_ROUTER_EVAL_V1.md).
-The enriched replay and its known regressions are recorded in
-[`STAGE_ROUTER_EVAL_V2.md`](evidence/STAGE_ROUTER_EVAL_V2.md); the complete
-214-record census is in
+unchanged. The ten-workload baseline, enriched replay, and quality-convergence
+replay are recorded in [`STAGE_ROUTER_EVAL_V1.md`](evidence/STAGE_ROUTER_EVAL_V1.md),
+[`STAGE_ROUTER_EVAL_V2.md`](evidence/STAGE_ROUTER_EVAL_V2.md), and
+[`STAGE_ROUTER_EVAL_V3.md`](evidence/STAGE_ROUTER_EVAL_V3.md). The curation
+policy, registry gaps, and this phase's dogfood routes are in
+[`ROUTING_METADATA_CURATION.md`](evidence/ROUTING_METADATA_CURATION.md) and
 [`CATALOG_ROUTING_METADATA_CENSUS.md`](evidence/CATALOG_ROUTING_METADATA_CENSUS.md).

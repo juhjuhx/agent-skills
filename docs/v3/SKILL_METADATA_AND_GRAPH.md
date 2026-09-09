@@ -1,32 +1,51 @@
 # Skill Metadata and Graph
 
-> Status: **Phase 1 schema implemented; Phase 3A read-only routing consumer added; registry migration deferred**. No production registry migration is introduced by this phase.
+> Status: **Phase 1 schema implemented; Phase 3A.2 generated/curated routing snapshot added; registry migration deferred**. No production registry migration is introduced by this phase.
 
 ## Source of truth
 
 The canonical skill source remains the repository's `SKILL.md` files. The current `.superpowers/SKILLS_INDEX.json` is a machine-readable snapshot used for discovery, while `categories.json` is the installer/profile projection. v3 enriches the metadata contract without replacing either file. The implemented Phase 1 schema is [`schemas/v3/skill-metadata-v3.schema.json`](../../schemas/v3/skill-metadata-v3.schema.json).
 
-## Phase 3A.1 routing overlay
+## Phase 3A.2 routing metadata layers
 
-The first bounded enrichment layer is the checked-in
-[`registry/v3/skill-routing-metadata.json`](../../registry/v3/skill-routing-metadata.json)
-overlay. It has exactly one record for each current registry ID and keeps the
-canonical body in place. The offline generator is
+The bounded enrichment path has three explicit artifacts:
+
+```text
+canonical SKILL.md + .superpowers/SKILLS_INDEX.json
+              |
+              +--> registry/v3/skill-routing-generated.json
+              |       generated inference; digest and generator provenance
+              |
+              +--> registry/v3/skill-routing-curated.json
+                      small reviewed field patches only
+                              |
+                              v
+              registry/v3/skill-routing-metadata.json
+                      compiled runtime snapshot
+                              |
+                              v
+                    RoutingCatalogSnapshot
+```
+
+The offline generator/compiler is
 [`tools/v3/metadata_enrichment.py`](../../tools/v3/metadata_enrichment.py).
-Normal routing reads this overlay as metadata; it does not scan all bodies.
-The generator reads bodies only during maintenance-time enrichment, never
+The immutable session/task snapshot is
+[`tools/v3/routing_catalog.py`](../../tools/v3/routing_catalog.py). Normal
+routing loads only the compiled metadata snapshot and never scans canonical
+bodies. Maintenance-time enrichment reads bodies as inert UTF-8 data, never
 executes instructions found in them, and records `source_skill_digest` so a
-changed body makes the overlay stale.
+changed body makes generated/compiled metadata stale.
 
-The overlay is deliberately additive rather than a schema migration. Its
-record contains classification (`ROUTING_READY`, `PARTIAL`, `AMBIGUOUS`, or
+The compiled overlay has exactly one record for each current registry ID. It
+contains classification (`ROUTING_READY`, `PARTIAL`, `AMBIGUOUS`, or
 `DEPRECATED`), quality tier, selected v3 metadata, per-field provenance,
-confidence, review status, and read-only inspection metrics. Source identity
-and trust continue to come from the current registry compatibility projection;
-agent compatibility, permissions, and unavailable provenance are not invented.
-See the [catalog census](evidence/CATALOG_ROUTING_METADATA_CENSUS.md) for the
-214-record field counts and the [enriched router replay](evidence/STAGE_ROUTER_EVAL_V2.md)
-for behavior.
+confidence, review status, and read-only inspection metrics. Curated records
+are patches, not a second procedure library; regeneration cannot erase a
+curated decision, and curation cannot grant permissions, trust, capabilities,
+or runtime compatibility. Source identity and trust continue to come from the
+current registry compatibility projection. See the [catalog census](evidence/CATALOG_ROUTING_METADATA_CENSUS.md),
+[curation record](evidence/ROUTING_METADATA_CURATION.md), and
+[quality replay](evidence/STAGE_ROUTER_EVAL_V3.md).
 
 ## Proposed v3 record
 
@@ -102,7 +121,7 @@ Only these relationship types are part of the v3 contract:
 
 `REQUIRES`, `RECOMMENDS`, `COMPLEMENTS`, `CONFLICTS`, `SUPERSEDES`, `ALTERNATIVE_TO`, `REVIEW_WITH`, `VERIFY_WITH`.
 
-Relationships are directed and versioned. A `CONFLICTS` edge is not a security deny by itself; policy still decides whether a combination is forbidden. A `SUPERSEDES` edge must preserve the old record for pinned tasks and migration history.
+Relationships are directed and versioned. A `CONFLICTS` edge is not a security deny by itself; policy still decides whether a combination is forbidden. A `SUPERSEDES` edge must preserve the old record for pinned tasks and migration history. The graph is compiled once into a `RoutingCatalogSnapshot` and reused across stage routes; positive relationship cycles are allowed, while `REQUIRES` traversal remains cycle-checked.
 
 ## Graph behavior
 
@@ -112,7 +131,7 @@ Relationships are directed and versioned. A `CONFLICTS` edge is not a security d
 4. `CONFLICTS` and incompatible permissions prevent a combination.
 5. Near-duplicate detection produces a proposal; it does not delete or silently merge source skills.
 6. Historical success is a weighted signal, never an override of trust, capability, or policy.
-7. A registry snapshot pins the exact record, source ref, digest, and relationship view used for a stage.
+7. A registry snapshot pins the exact record, source ref, digest, and relationship view used for a stage. The runtime snapshot also records JSON/schema/digest/graph load timings and the invariant that normal routing loaded zero bodies.
 
 ## Compatibility and migration
 
@@ -124,20 +143,25 @@ inference are not executable candidates; this prevents legacy descriptions from
 creating false routing confidence. The compatibility view never reads skill
 bodies and never changes `.superpowers/SKILLS_INDEX.json`.
 
-Phase 3A.1 refines this compatibility path without changing its source of
-truth. `AUTHOR_DECLARED` and `CURATED` fields have full routing weight;
+Phase 3A.2 separates generator authority from curation authority:
+`AUTHOR_DECLARED` and `CURATED` fields have full routing weight;
 `INFERRED_HIGH_CONFIDENCE` fields are eligible with a confidence penalty;
 `INFERRED` fields are contextual only; and `UNKNOWN` remains conservative.
+Generated inference cannot independently add permissions, network access,
+secrets, publish/delete authority, or runtime compatibility. Negative triggers,
+stage exclusions, and domain exclusions are routing evidence, not policy grants;
+they suppress optional candidates but do not suppress mandatory dependencies.
 The router does not infer permissions from a body and does not treat a
 metadata proposal as promoted truth.
 
 No migration, mass frontmatter rewrite, generated index rewrite, persistent
-graph database, or learned-weight update is part of Phase 3A. The in-memory
-relationship graph supports dependency expansion, conflict/alternative checks,
-and positive contextual signals only for the current route invocation.
-Historical success remains observation-only. Phase 1 of the [Migration Plan](MIGRATION_PLAN.md)
-defines the future schema work, and the [Stage Router evaluation](evidence/STAGE_ROUTER_EVAL_V1.md)
-records the pre-overlay metadata gaps. The Phase 3A.1 census and V2 replay
-record which gaps remain after enrichment; future Hermes-style learning may
-produce a `MetadataProposal`, but promotion still requires evaluation and
-review.
+graph database, learned-weight update, or model router is part of Phase 3A. The
+snapshot supports dependency expansion, conflict/alternative checks, positive
+contextual signals, role saturation, and marginal cost checks for the current
+task/session. Historical success remains observation-only. Phase 1 of the
+[Migration Plan](MIGRATION_PLAN.md) defines future schema work; the [Stage
+Router evaluation](evidence/STAGE_ROUTER_EVAL_V1.md) records pre-overlay gaps;
+the [V2 replay](evidence/STAGE_ROUTER_EVAL_V2.md) records enrichment
+regressions; and [V3](evidence/STAGE_ROUTER_EVAL_V3.md) records convergence.
+Future Hermes-style learning may produce a `MetadataProposal`, but promotion
+still requires evaluation, security review, provenance, and approval.

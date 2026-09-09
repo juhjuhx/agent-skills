@@ -1,6 +1,6 @@
 # Agent Skills Matrix v3
 
-> Status: **proposed architecture; Phase 1 contracts, the Phase 2.6 provenance-hardened Codex vertical slice, and the Phase 3A deterministic Stage Router MVP implemented**. The router is metadata-first and stage-local; it does not install runtime configuration, choose models, or implement the other native adapters.
+> Status: **proposed architecture; Phase 1 contracts, the Phase 2.6 provenance-hardened Codex vertical slice, and the Phase 3A.2 deterministic Stage Router quality pass implemented**. The router is metadata-first and stage-local; it does not install runtime configuration, choose models, or implement the other native adapters.
 
 ## Why v3
 
@@ -128,26 +128,28 @@ execution has already been wired.
 - [ZCode](agents/ZCODE.md)
 - [DeepSeek Harness](agents/DEEPSEEK_HARNESS.md)
 
-### Phase 3A Stage Router MVP
+### Phase 3A Stage Router and quality convergence
 
-The first machine-executable routing boundary is now implemented in
+The first machine-executable routing boundary is implemented in
 [`STAGE_ROUTER.md`](STAGE_ROUTER.md):
 
 ```text
-TaskSpec + Stage + SkillMetadataV3 catalog
+TaskSpec + Stage + generated/curated metadata snapshot
   -> hard filters -> transparent score -> role complement
   -> StageRoute (SKILLS_SELECTED | NO_SKILL_NEEDED)
 ```
 
 The implementation inspects the current 214-record registry as metadata and
-loads zero `SKILL.md` bodies while ranking. A read-only compatibility view and
-small auditable routing hints make the sparse legacy registry usable for the
-MVP; they do not migrate or rewrite the production registry. The router does
-not select a model, run a general planner, or load unrelated skills. It emits
-route evidence for ten real workload fixtures and its output is consumed by
-the existing Codex adapter in an end-to-end test. See the
-[`Stage Router evaluation`](evidence/STAGE_ROUTER_EVAL_V1.md) for measured
-results and known metadata-driven failures.
+loads zero `SKILL.md` bodies while ranking. Phase 3A.2 separates generated
+inference from small curated field patches, compiles an immutable
+`RoutingCatalogSnapshot`, adds semantic negative signals and role saturation,
+and keeps optional context cost visible. It does not migrate or rewrite the
+production registry. The router does not select a model, run a general
+planner, or load unrelated skills. It emits route evidence for ten unchanged
+workload fixtures and its output remains consumable by the existing Codex
+adapter in an end-to-end test. See the [`V1 baseline`](evidence/STAGE_ROUTER_EVAL_V1.md),
+[`V2 enriched replay`](evidence/STAGE_ROUTER_EVAL_V2.md), and
+[`V3 quality replay`](evidence/STAGE_ROUTER_EVAL_V3.md).
 
 ### Phase 3A.1 Catalog Intelligence
 
@@ -166,12 +168,14 @@ downstream, selected-only resolver concern.
 
 The current overlay census is recorded in
 [`CATALOG_ROUTING_METADATA_CENSUS.md`](evidence/CATALOG_ROUTING_METADATA_CENSUS.md)
-and the exact unchanged ten-fixture replay is in
-[`STAGE_ROUTER_EVAL_V2.md`](evidence/STAGE_ROUTER_EVAL_V2.md). The first pass
-has 65 `ROUTING_READY`, 131 `PARTIAL`, 16 `AMBIGUOUS`, and 2 `DEPRECATED`
-records; these are measured quality classifications, not a claim that all
-metadata is author-declared. Phase 3A.1 does not migrate the production
-registry, silently promote inferred metadata, or implement a model router.
+and the exact unchanged ten-fixture quality replay is in
+[`STAGE_ROUTER_EVAL_V3.md`](evidence/STAGE_ROUTER_EVAL_V3.md). The compiled
+snapshot has 65 `ROUTING_READY`, 131 `PARTIAL`, 16 `AMBIGUOUS`, and 2
+`DEPRECATED` records; these are measured quality classifications, not a claim
+that all metadata is author-declared. The curation and registry-gap decisions
+are recorded in [`ROUTING_METADATA_CURATION.md`](evidence/ROUTING_METADATA_CURATION.md).
+Phase 3A.2 does not migrate the production registry, silently promote inferred
+metadata, implement a model router, or add another runtime adapter.
 
 ## Non-goals for this proposal
 
