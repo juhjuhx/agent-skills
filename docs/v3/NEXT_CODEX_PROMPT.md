@@ -1,199 +1,103 @@
-# Next Codex Prompt — Phase 3C Bounded Live Benchmark Lanes
+# Next Codex Prompt — Phase 3C.1 targeted live evidence collection
 
-Copy this prompt into the next Codex session. It is the next bounded task
-after Phase 3B. Do not execute it during Phase 3B.
-
-## Mission
+## Current state
 
 Repository: `juhjuhx/agent-skills`
 
-Run a small, safe, evidence-producing benchmark of runtime/model execution
-configurations using the Phase 3B contracts. The current verdict is
-`INSUFFICIENT_LIVE_EVIDENCE`; the purpose of Phase 3C is to collect bounded
-`REAL_EXECUTION` evidence, not to activate adaptive routing.
+The current branch contains the bounded Phase 3C harness and the first live
+records. Read these files before acting:
 
-Do not redesign v3. Do not modify Stage Router weights. Do not implement
-per-call routing, a learned router, bandits, model preferences, or the other
-native adapters. Do not install runtimes, models, MCP servers, dependencies,
-or credentials.
+- `tools/v3/live_benchmark.py`
+- `schemas/v3/live-execution-record.schema.json`
+- `fixtures/v3/model-routing/evidence-v2.json`
+- `fixtures/v3/model-routing/runs/phase3c/`
+- `docs/v3/evidence/MODEL_RUNTIME_EVAL_V2.md`
+- `docs/v3/evidence/PHASE3C_LIVE_BENCHMARK_DOGFOOD_ROUTE.md`
 
-## Start and source truth
+Current verdict: `INSUFFICIENT_LIVE_EVIDENCE`.
 
-Verify without resetting local work:
+Observed evidence is one `REAL_EXECUTION` Codex H01 success at `n=1`, plus a
+Claude H03 bounded timeout recorded as `UNAVAILABLE`. No model or reasoning
+effect is established. Do not call Codex versus Claude a model comparison.
 
-```sh
-git status --short
-git branch --show-current
-git rev-parse HEAD
-git fetch origin
-```
+## Mission
 
-Read the current contracts and implementations:
+Collect only the missing, safe repetitions and task classes needed to improve
+the evidence floor. Do not build a router or change routing policy.
 
-- `schemas/v3/runtime-candidate.schema.json`
-- `schemas/v3/model-candidate.schema.json`
-- `schemas/v3/execution-configuration.schema.json`
-- `schemas/v3/evaluation-run.schema.json`
-- `schemas/v3/evaluation-result.schema.json`
-- `schemas/v3/runtime-handoff.schema.json`
-- `tools/v3/runtime_model_evaluation.py`
-- `tools/v3/stage_router.py`
-- `tools/v3/codex_adapter.py`
-- `fixtures/v3/model-routing/`
-- `docs/v3/evidence/MODEL_RUNTIME_EVAL_V1.md`
-- `docs/v3/evidence/RUNTIME_CAPABILITY_MATRIX.md`
+Do not modify Stage Router weights, the holdout acceptance criteria, the
+canonical skill catalog, or runtime adapters. Do not install software,
+credentials, models, MCP servers, or dependencies. Do not run a benchmark in a
+user project; use isolated temporary fixtures only.
 
-Machine-readable registry data wins over prose. Keep the canonical skill
-library, installer, Stage Router, and `.superpowers/ROUTING_POLICY.yaml`
-unchanged.
+## Dogfood and controls
 
-## Dogfood and routing
+Use resident `using-superpowers`, the existing Stage Router, and selected skill
+bodies only. Emit a StageRoute for every active development stage. Keep
+`NO_SKILL_NEEDED` routes intact and do not let runtime/model choice alter skill
+selection.
 
-Use `using-superpowers` as resident task/session authority. For each active
-stage, invoke the existing Stage Router and emit a StageRoute with
-`SKILLS_SELECTED` or `NO_SKILL_NEEDED`. Load only selected skill bodies after
-route selection. Do not reload the resident `using-superpowers` body at every
-stage and do not use model choice to alter skill ranking.
-
-## Fresh provenance before live work
-
-For every runtime/model actually exercised, record:
-
-- observed installed version and executable probe;
-- latest stable release/tag and resolved immutable source commit when
-  available;
-- exact official source/release reference used for the native contract;
-- current upstream source/documentation snapshot and snapshot date;
-- native support: `NATIVE`, `EMULATED`, `HOST_MANAGED`, or `UNSUPPORTED`;
-- availability: `INSTALLED`, `RELEASE_SUPPORTED`, `UPSTREAM_ONLY`, or
-  `UNKNOWN`;
-- model selection granularity actually supported by that runtime.
-
-Do not treat current-main documentation as installed-release proof. Do not
-encode provider-specific IDs or URLs in universal routing code.
-
-## Safe benchmark lanes
-
-Use isolated temporary worktrees or fixture repositories. A lane may run only
-when the executable is installed, its existing credentials/configuration are
-already available, the task is safe, and cost is bounded. Never print or
-serialize credentials. If a runtime/model is not available, record a missing
-lane; do not substitute a mock and call it live evidence.
-
-Start with a small, representative subset of the holdout set, for example:
-
-- H01 bugfix;
-- H02 multi-file feature;
-- H03 API design;
-- H06 security task;
-- H07 deep source research;
-- H09 release verification;
-- H12 tool/MCP integration.
-
-Keep A–J as development/regression data. Do not tune routing weights on the
-holdout tasks. Record repetition `n` for every workload/configuration cell;
-do not claim broad superiority from `n=1`.
-
-## Runtime/model boundary
-
-Evaluate runtime/harness compatibility at task/session scope. Within an
-eligible runtime, evaluate a model at task, stage, or subagent scope only when
-the runtime candidate advertises that granularity. If the runtime pins one
-model, record `TASK_PINNED`; do not simulate stage switching. Per-inference
-call routing remains design-only.
-
-Changing runtimes is an explicit `RuntimeHandoff` containing source and
-destination, reason, portable artifacts, working-tree state, permission
-envelope, lost capabilities, and handoff cost. Do not make automatic handoff.
-
-Effective authority remains:
+For every cell preserve the existing control variables:
 
 ```text
-TaskSpec ∩ policy ∩ AgentAdapterManifest ∩ live runtime restrictions
+TaskSpec digest, fixture digest, START_SHA, StageRoute digest,
+selected skill IDs/digests, permission envelope, runtime/version,
+model/effort, tools, MCP state, instruction digests
 ```
 
-ModelCandidate, skill metadata, MCP declarations, plugins, and generated
-configuration cannot widen it.
+Use `run_headless_command` with an explicit argv, `shell=False`, isolated cwd,
+short timeout, and no environment serialization. Build a
+`LiveExecutionRecord`; persist only digests, metrics, artifacts, and concise
+evidence. Never persist prompts, raw stdout/stderr, tool payloads, session IDs,
+credentials, auth headers, or skill bodies.
 
-## Evidence records
+## Targeted cells
 
-For each run create an `EvaluationRun` and `EvaluationResult` with:
+Run only these holdout workloads, without adding runtime/model labels:
 
-- evidence class and execution mode;
-- runtime/model/configuration refs;
-- selected skills and StageRoute refs;
-- stage outcomes and one terminal task outcome;
-- separate quality, efficiency, reliability, security, and portability axes;
-- context/tokens, tool calls, latency, wall time, cost, reroutes, retries,
-  files changed, tests, verification, and user correction;
-- immutable input/artifact digests and source provenance.
+1. Codex H01: two additional repetitions if the measured account budget and
+   observed input-token volume are explicitly acceptable. The existing first
+   success is `n=1`; the cell must remain exploratory until repetitions are
+   complete.
+2. Codex H03: one read-only API design execution using the same route/control
+   recording. This adds a second task class, not a model comparison.
+3. Codex H09: one read-only release-verification execution using a temporary
+   fixture and explicit artifact checks. This adds a third task class only if
+   the acceptance evidence is independently verified.
+4. Claude H03: do not retry blindly. First determine why the verified `claude
+   -p` invocation timed out despite tools being disabled, using help/config
+   facts only. Retry at most once with a bounded budget and timeout if that
+   diagnosis establishes a safe contract; otherwise retain `LIVE_LANE_BLOCKED`.
+5. OpenCode and Hermes: do not activate until their installed-version
+   permission boundary is demonstrably safe for the chosen task. Hermes
+   `--oneshot` currently reports approval bypass and must not be used for
+   write-capable work.
 
-Only `REAL_EXECUTION` may support quality/ranking conclusions.
-`HOST_MANAGED_FIXTURE` supports compatibility only. `MOCK` supports unit
-behavior only. Keep unknown measurements as `null` or an explicit
-missing-evidence record.
+Do not run H06 security or H07 network/source research until the lane can
+record permission and source provenance without unresolved integrity gaps.
 
-## Baselines and comparison
+## Comparison rules
 
-Run every live lane against the existing evaluation-only baselines where
-eligible:
+- `n=1` is `EXPLORATORY_ONLY`; never derive a preference from it.
+- Codex versus Claude is `CONFIGURATION_EFFECT` evidence only, and only when
+  both actually complete comparable work.
+- Emit `MODEL_EFFECT` only for same runtime, task, route, skills, tools,
+  permissions, and effort with model as the only changed variable. If model ID
+  is not exposed, the result is `INCONCLUSIVE`.
+- Keep reasoning-effort changes separate from model changes.
+- Run only actually available evaluation baselines. Unknown cost stays
+  `UNKNOWN`; it is not zero.
+- Only `REAL_EXECUTION` records may enter quality/reliability/Pareto analysis.
 
-- `BASELINE_STRONGEST`
-- `BASELINE_CHEAPEST`
-- `BASELINE_DEFAULT`
-- `BASELINE_HEURISTIC`
+## Acceptance gate
 
-Do not assume a baseline is good; measure it. Compare quality, cost, latency,
-reliability, security, and portability separately. Produce Pareto frontiers
-without a universal scalar score. A future recommendation must identify the
-data and repetition supporting it, and remains a proposal until policy review.
+Update `MODEL_RUNTIME_EVAL_V2.md` and append-only machine records. Report
+success count, n, latency variance, tool/context metrics, cost status,
+terminal/stage evidence, confounders, security, and blocked lanes. The next
+state can become `ROUTING_EVIDENCE_READY` only if there are at least two
+completed configurations, three materially distinct task classes, repetition
+beyond n=1, no measurement-integrity blocker, and a meaningful live baseline
+comparison. Otherwise keep `INSUFFICIENT_LIVE_EVIDENCE` and list the exact
+remaining cell.
 
-## Tests and safety gates
-
-Keep all current tests green. Add tests for live-run record shape, artifact
-digests, task/stage model scope, terminal result capture, missing evidence,
-runtime handoff, and no credential serialization. Verify that:
-
-- a `NO_SKILL_NEEDED` route does no model-routing work;
-- unsupported runtime switching is `TASK_PINNED` or explicitly unavailable;
-- mock/fixture results never enter quality ranking;
-- permissions never widen during configuration or handoff;
-- no live run reads unrelated skill bodies;
-- history remains append-only and proposal-only.
-
-Run:
-
-```sh
-PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover -s tests -p 'test_*.py' -v
-git diff --check
-```
-
-Run the Alibaba OpenCodeReview auth/network precheck once. If native auth is
-still `401`, record `OCR_NATIVE_DIFF = BLOCKED_BY_AUTH`; do not relabel a
-delegate review as native OCR.
-
-## Output
-
-Create concise append-only evidence, for example:
-
-- `docs/v3/evidence/MODEL_RUNTIME_EVAL_V2.md`
-- `fixtures/v3/model-routing/runs/` or the repository's established evidence
-  location
-
-Report live lane count and `n`, missing lanes, terminal outcomes, stage
-outcomes, quality/efficiency/reliability/security/portability evidence,
-baseline comparisons, Pareto results, and provenance. Do not hide failures or
-turn absent data into a preference.
-
-## Decision at the end
-
-Choose exactly one next state from evidence:
-
-- `INSUFFICIENT_LIVE_EVIDENCE` — collect more safe repetitions or lanes;
-- `ROUTING_EVIDENCE_READY` — a conservative Model Router MVP may be designed,
-  still without adaptive policy activation;
-- `RUNTIME_CAPABILITY_GAPS` — implement only the adapter/capability boundary
-  required by a demonstrated live gap.
-
-Generate a follow-up prompt from the observed state. Do not execute the
-follow-up phase or merge any PR.
+Do not implement Phase 4 or adaptive/per-call model routing.
