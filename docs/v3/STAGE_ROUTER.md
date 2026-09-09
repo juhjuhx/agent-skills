@@ -74,7 +74,32 @@ required_tools: [browser]
 `TaskSpec` supplies task classification, domains, capabilities, permissions,
 budgets, artifact requirements, and acceptance context. The catalog is a
 `SkillMetadataV3` list or a read-only compatibility projection of the current
-`.superpowers/SKILLS_INDEX.json`.
+`.superpowers/SKILLS_INDEX.json`. When present, the router's default catalog
+loader consumes the read-only
+[`registry/v3/skill-routing-metadata.json`](../../registry/v3/skill-routing-metadata.json)
+overlay on top of that projection.
+
+### Routing metadata provenance
+
+The overlay is generated offline by
+[`tools/v3/metadata_enrichment.py`](../../tools/v3/metadata_enrichment.py).
+It reads canonical bodies only as maintenance-time input and stores no raw
+body text. Every derived field carries one of these provenance levels:
+
+| Provenance | Router treatment |
+|---|---|
+| `AUTHOR_DECLARED` / `CURATED` | full routing weight and eligible for field enforcement |
+| `INFERRED_HIGH_CONFIDENCE` | eligible with a modest confidence penalty |
+| `INFERRED` | contextual score only; never a permission grant or hard semantic assertion |
+| `UNKNOWN` | conservative absence; cannot satisfy a hard semantic requirement |
+
+The overlay records the canonical body digest, generator version, review
+status, confidence, and read-only body policy. A stale body digest is a
+maintenance validation failure. `trust` and canonical source identity are
+still inherited from the current registry compatibility projection; the
+overlay deliberately does not invent agent compatibility or permissions.
+Unknown permissions remain unknown/conservative. `QUARANTINE` and `BLOCKED`
+records cannot become executable through a metadata score.
 
 ## Hard filters before ranking
 
@@ -97,10 +122,13 @@ as safe merely because its description contains a matching keyword.
 
 The current 214-record registry predates v3 routing fields. The compatibility
 view therefore distinguishes explicit fields, auditable `ROUTING_HINTS`, and
-untrusted inferred fields. A legacy record whose roles, stages, and domains
-are only broad inference is filtered with `legacy metadata lacks curated
-routing fields`, rather than being allowed to win on an over-broad keyword
-match. This is an MVP compatibility boundary, not a registry migration.
+untrusted inferred fields. With the Phase 3A.1 overlay, curated and
+high-confidence inferred routing fields are available to the MVP while their
+provenance remains visible in route evidence. A legacy record whose roles,
+stages, and domains are only broad inference is filtered with
+`legacy metadata lacks curated routing fields`, rather than being allowed to
+win on an over-broad keyword match. This is an MVP compatibility boundary, not
+a registry migration.
 
 ## Role-slot selection
 
@@ -189,6 +217,12 @@ selected canonical files, verifies their source digest/trust, and preserves
 provenance. `NO_SKILL_NEEDED` loads zero additional skills. This keeps one
 canonical skill source and leaves native projection to the adapter.
 
+Phase 3A.1 measures the distinction explicitly: offline enrichment inspected
+all 214 bodies to create the overlay, while normal Stage Router invocations
+inspected 214 metadata records and loaded zero bodies. The selected body byte
+estimate is route evidence for downstream execution; it is not a claim that
+the router loaded those bodies.
+
 ## Current limits and evidence
 
 The MVP does not yet provide a general stage planner, model/provider routing,
@@ -197,3 +231,7 @@ ZCode/DeepSeek adapters. The v2 policy and production registry remain
 unchanged. The ten-workload evaluation, historical comparisons, known
 over-routing/under-routing cases, and metadata gaps are recorded in
 [`STAGE_ROUTER_EVAL_V1.md`](evidence/STAGE_ROUTER_EVAL_V1.md).
+The enriched replay and its known regressions are recorded in
+[`STAGE_ROUTER_EVAL_V2.md`](evidence/STAGE_ROUTER_EVAL_V2.md); the complete
+214-record census is in
+[`CATALOG_ROUTING_METADATA_CENSUS.md`](evidence/CATALOG_ROUTING_METADATA_CENSUS.md).

@@ -149,6 +149,30 @@ the existing Codex adapter in an end-to-end test. See the
 [`Stage Router evaluation`](evidence/STAGE_ROUTER_EVAL_V1.md) for measured
 results and known metadata-driven failures.
 
+### Phase 3A.1 Catalog Intelligence
+
+The routing bottleneck was sparse legacy metadata, so Phase 3A.1 adds a
+bounded, offline overlay at
+[`registry/v3/skill-routing-metadata.json`](../../registry/v3/skill-routing-metadata.json).
+The overlay is keyed by the 214 IDs in
+`.superpowers/SKILLS_INDEX.json`; it is not a second skill library and does not
+copy procedure bodies. The canonical `SKILL.md` remains the procedure source.
+
+[`metadata_enrichment.py`](../../tools/v3/metadata_enrichment.py) reads bodies
+as data only during maintenance-time enrichment, records each source digest,
+and emits provenance for derived routing fields. Normal catalog loading reads
+the overlay and registry metadata only. Selected skill bodies remain a
+downstream, selected-only resolver concern.
+
+The current overlay census is recorded in
+[`CATALOG_ROUTING_METADATA_CENSUS.md`](evidence/CATALOG_ROUTING_METADATA_CENSUS.md)
+and the exact unchanged ten-fixture replay is in
+[`STAGE_ROUTER_EVAL_V2.md`](evidence/STAGE_ROUTER_EVAL_V2.md). The first pass
+has 65 `ROUTING_READY`, 131 `PARTIAL`, 16 `AMBIGUOUS`, and 2 `DEPRECATED`
+records; these are measured quality classifications, not a claim that all
+metadata is author-declared. Phase 3A.1 does not migrate the production
+registry, silently promote inferred metadata, or implement a model router.
+
 ## Non-goals for this proposal
 
 This pass does not move or fork skills, rewrite `install.sh`, change `.superpowers/ROUTING_POLICY.yaml`, implement a general stage planner or model router, add a database or cloud service, install MCP servers, auto-import third-party skills, or implement non-Codex adapters. Those are follow-up phases and remain explicitly unimplemented.

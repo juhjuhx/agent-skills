@@ -6,6 +6,28 @@
 
 The canonical skill source remains the repository's `SKILL.md` files. The current `.superpowers/SKILLS_INDEX.json` is a machine-readable snapshot used for discovery, while `categories.json` is the installer/profile projection. v3 enriches the metadata contract without replacing either file. The implemented Phase 1 schema is [`schemas/v3/skill-metadata-v3.schema.json`](../../schemas/v3/skill-metadata-v3.schema.json).
 
+## Phase 3A.1 routing overlay
+
+The first bounded enrichment layer is the checked-in
+[`registry/v3/skill-routing-metadata.json`](../../registry/v3/skill-routing-metadata.json)
+overlay. It has exactly one record for each current registry ID and keeps the
+canonical body in place. The offline generator is
+[`tools/v3/metadata_enrichment.py`](../../tools/v3/metadata_enrichment.py).
+Normal routing reads this overlay as metadata; it does not scan all bodies.
+The generator reads bodies only during maintenance-time enrichment, never
+executes instructions found in them, and records `source_skill_digest` so a
+changed body makes the overlay stale.
+
+The overlay is deliberately additive rather than a schema migration. Its
+record contains classification (`ROUTING_READY`, `PARTIAL`, `AMBIGUOUS`, or
+`DEPRECATED`), quality tier, selected v3 metadata, per-field provenance,
+confidence, review status, and read-only inspection metrics. Source identity
+and trust continue to come from the current registry compatibility projection;
+agent compatibility, permissions, and unavailable provenance are not invented.
+See the [catalog census](evidence/CATALOG_ROUTING_METADATA_CENSUS.md) for the
+214-record field counts and the [enriched router replay](evidence/STAGE_ROUTER_EVAL_V2.md)
+for behavior.
+
 ## Proposed v3 record
 
 Every future record should expose the following fields:
@@ -102,10 +124,20 @@ inference are not executable candidates; this prevents legacy descriptions from
 creating false routing confidence. The compatibility view never reads skill
 bodies and never changes `.superpowers/SKILLS_INDEX.json`.
 
+Phase 3A.1 refines this compatibility path without changing its source of
+truth. `AUTHOR_DECLARED` and `CURATED` fields have full routing weight;
+`INFERRED_HIGH_CONFIDENCE` fields are eligible with a confidence penalty;
+`INFERRED` fields are contextual only; and `UNKNOWN` remains conservative.
+The router does not infer permissions from a body and does not treat a
+metadata proposal as promoted truth.
+
 No migration, mass frontmatter rewrite, generated index rewrite, persistent
 graph database, or learned-weight update is part of Phase 3A. The in-memory
 relationship graph supports dependency expansion, conflict/alternative checks,
 and positive contextual signals only for the current route invocation.
 Historical success remains observation-only. Phase 1 of the [Migration Plan](MIGRATION_PLAN.md)
 defines the future schema work, and the [Stage Router evaluation](evidence/STAGE_ROUTER_EVAL_V1.md)
-records the current metadata gaps.
+records the pre-overlay metadata gaps. The Phase 3A.1 census and V2 replay
+record which gaps remain after enrichment; future Hermes-style learning may
+produce a `MetadataProposal`, but promotion still requires evaluation and
+review.
