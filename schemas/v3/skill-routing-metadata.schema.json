@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/skill-routing-metadata.schema.json",
+  "title": "Agent Skills Matrix v3 Routing Metadata Overlay",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "overlay_version",
+    "registry",
+    "generator",
+    "skills",
+    "overlay_digest"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "overlay_version": {"$ref": "common.schema.json#/$defs/shortString"},
+    "registry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "source", "source_ref", "source_commit", "skill_count"],
+      "properties": {
+        "path": {"$ref": "common.schema.json#/$defs/relativePath"},
+        "source": {"type": "string", "format": "uri"},
+        "source_ref": {"$ref": "common.schema.json#/$defs/recordId"},
+        "source_commit": {"$ref": "common.schema.json#/$defs/recordId"},
+        "skill_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "generator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "entrypoint", "body_policy"],
+      "properties": {
+        "version": {"$ref": "common.schema.json#/$defs/shortString"},
+        "entrypoint": {"$ref": "common.schema.json#/$defs/relativePath"},
+        "body_policy": {
+          "type": "string",
+          "enum": ["READ_ONLY_NO_EXECUTION"]
+        }
+      }
+    },
+    "census": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "skills": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/overlayRecord"}
+    },
+    "overlay_digest": {"$ref": "common.schema.json#/$defs/digest"}
+  },
+  "$defs": {
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "confidence"],
+      "properties": {
+        "source": {
+          "type": "string",
+          "enum": [
+            "AUTHOR_DECLARED",
+            "CURATED",
+            "INFERRED_HIGH_CONFIDENCE",
+            "INFERRED",
+            "UNKNOWN"
+          ]
+        },
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "evidence": {"$ref": "common.schema.json#/$defs/shortString"}
+      }
+    },
+    "relationshipProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "confidence"],
+      "properties": {
+        "source": {
+          "type": "string",
+          "enum": [
+            "AUTHOR_DECLARED",
+            "CURATED",
+            "INFERRED_HIGH_CONFIDENCE",
+            "INFERRED",
+            "UNKNOWN"
+          ]
+        },
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "evidence": {"$ref": "common.schema.json#/$defs/shortString"}
+      }
+    },
+    "overlayRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "skill_id",
+        "source_skill_digest",
+        "classification",
+        "tier",
+        "metadata",
+        "provenance",
+        "review_status",
+        "confidence",
+        "body_policy",
+        "body_bytes_inspected"
+      ],
+      "properties": {
+        "skill_id": {"$ref": "common.schema.json#/$defs/recordId"},
+        "source_skill_digest": {"$ref": "common.schema.json#/$defs/digest"},
+        "classification": {
+          "type": "string",
+          "enum": [
+            "ROUTING_READY",
+            "PARTIAL",
+            "LEGACY_MINIMAL",
+            "AMBIGUOUS",
+            "DEPRECATED"
+          ]
+        },
+        "tier": {
+          "type": "string",
+          "enum": [
+            "TIER_1_CORE",
+            "TIER_2_DOMAIN",
+            "TIER_3_SPECIALIZED",
+            "TIER_4_DEPRECATED"
+          ]
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["default", "fields", "relationships"],
+          "properties": {
+            "default": {
+              "type": "string",
+              "enum": [
+                "AUTHOR_DECLARED",
+                "CURATED",
+                "INFERRED_HIGH_CONFIDENCE",
+                "INFERRED",
+                "UNKNOWN"
+              ]
+            },
+            "fields": {
+              "type": "object",
+              "additionalProperties": {"$ref": "#/$defs/provenance"}
+            },
+            "relationships": {
+              "type": "object",
+              "additionalProperties": {"$ref": "#/$defs/relationshipProvenance"}
+            }
+          }
+        },
+        "review_status": {
+          "type": "string",
+          "enum": ["GENERATED", "CURATED", "REVIEWED", "BLOCKED"]
+        },
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "last_verified": {
+          "anyOf": [
+            {"$ref": "common.schema.json#/$defs/dateTime"},
+            {"type": "null"}
+          ]
+        },
+        "body_policy": {
+          "type": "string",
+          "enum": ["READ_ONLY"]
+        },
+        "body_bytes_inspected": {"type": "integer", "minimum": 0},
+        "notes": {"$ref": "common.schema.json#/$defs/shortString"}
+      }
+    }
+  }
+}
