@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/skill-routing-generated.schema.json",
+  "title": "Agent Skills Matrix v3 Generated Routing Inference",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "generated_version", "registry", "generator", "skills", "overlay_digest"],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "generated_version": {"$ref": "common.schema.json#/$defs/shortString"},
+    "registry": {"$ref": "skill-routing-metadata.schema.json#/$defs/registryIdentity"},
+    "generator": {"$ref": "skill-routing-metadata.schema.json#/$defs/generator"},
+    "census": {"type": "object", "additionalProperties": true},
+    "skills": {
+      "type": "object",
+      "additionalProperties": {"$ref": "skill-routing-metadata.schema.json#/$defs/generatedRecord"}
+    },
+    "overlay_digest": {"$ref": "common.schema.json#/$defs/digest"}
+  }
+}

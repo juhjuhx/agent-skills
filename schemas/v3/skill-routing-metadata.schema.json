@@ -9,37 +9,16 @@
     "overlay_version",
     "registry",
     "generator",
+    "compiled_from",
     "skills",
     "overlay_digest"
   ],
   "properties": {
     "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
     "overlay_version": {"$ref": "common.schema.json#/$defs/shortString"},
-    "registry": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["path", "source", "source_ref", "source_commit", "skill_count"],
-      "properties": {
-        "path": {"$ref": "common.schema.json#/$defs/relativePath"},
-        "source": {"type": "string", "format": "uri"},
-        "source_ref": {"$ref": "common.schema.json#/$defs/recordId"},
-        "source_commit": {"$ref": "common.schema.json#/$defs/recordId"},
-        "skill_count": {"type": "integer", "minimum": 0}
-      }
-    },
-    "generator": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["version", "entrypoint", "body_policy"],
-      "properties": {
-        "version": {"$ref": "common.schema.json#/$defs/shortString"},
-        "entrypoint": {"$ref": "common.schema.json#/$defs/relativePath"},
-        "body_policy": {
-          "type": "string",
-          "enum": ["READ_ONLY_NO_EXECUTION"]
-        }
-      }
-    },
+    "registry": {"$ref": "#/$defs/registryIdentity"},
+    "generator": {"$ref": "#/$defs/generator"},
+    "compiled_from": {"$ref": "#/$defs/compiledFrom"},
     "census": {
       "type": "object",
       "additionalProperties": true
@@ -172,6 +151,44 @@
         },
         "body_bytes_inspected": {"type": "integer", "minimum": 0},
         "notes": {"$ref": "common.schema.json#/$defs/shortString"}
+      }
+    },
+    "generatedRecord": {
+      "allOf": [{"$ref": "#/$defs/overlayRecord"}]
+    },
+    "registryIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "source", "source_ref", "source_commit", "skill_count"],
+      "properties": {
+        "path": {"$ref": "common.schema.json#/$defs/relativePath"},
+        "source": {"type": "string", "format": "uri"},
+        "source_ref": {"$ref": "common.schema.json#/$defs/recordId"},
+        "source_commit": {"$ref": "common.schema.json#/$defs/recordId"},
+        "skill_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "generator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "entrypoint", "body_policy"],
+      "properties": {
+        "version": {"$ref": "common.schema.json#/$defs/shortString"},
+        "entrypoint": {"$ref": "common.schema.json#/$defs/relativePath"},
+        "body_policy": {
+          "type": "string",
+          "enum": ["READ_ONLY_NO_EXECUTION"]
+        }
+      }
+    },
+    "compiledFrom": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generated_overlay_digest", "curated_overlay_digest", "compiler_version"],
+      "properties": {
+        "generated_overlay_digest": {"$ref": "common.schema.json#/$defs/digest"},
+        "curated_overlay_digest": {"$ref": "common.schema.json#/$defs/digest"},
+        "compiler_version": {"$ref": "common.schema.json#/$defs/shortString"}
       }
     }
   }

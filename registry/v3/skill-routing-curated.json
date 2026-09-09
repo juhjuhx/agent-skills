@@ -1,0 +1,3886 @@
+{
+  "schema_version": "3.0",
+  "curated_version": "v3-routing-curated-1",
+  "registry": {
+    "path": ".superpowers/SKILLS_INDEX.json",
+    "source": "https://github.com/juhjuhx/agent-skills.git",
+    "source_ref": "main",
+    "source_commit": "db3b67d5b051c4223da9146b2b836a9ed45e9bac",
+    "skill_count": 214
+  },
+  "curator": {
+    "version": "0.1.0",
+    "policy": "SMALL_FIELD_PATCHES_ONLY",
+    "body_policy": "READ_ONLY_NO_EXECUTION"
+  },
+  "skills": {
+    "algorithmic-art": {
+      "skill_id": "algorithmic-art",
+      "source_skill_digest": "sha256:ae33152e8850a9bb5442dcef96d05225864b3658021fb5ba43d7b48302c22fb0",
+      "tier": "TIER_2_DOMAIN",
+      "fields": {
+        "stages": {
+          "value": [
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS",
+            "DOMAIN"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "visual-design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "baoyu-imagine": {
+      "skill_id": "baoyu-imagine",
+      "source_skill_digest": "sha256:b526a7b4d89fd9d9a2f5dafd52dbcdeb654ea305b11043ab03c74001a8e97da7",
+      "tier": "TIER_2_DOMAIN",
+      "fields": {},
+      "relationships": [
+        {
+          "type": "SUPERSEDES",
+          "target": "baoyu-image-gen",
+          "reason": "canonical body explicitly marks image-gen deprecated",
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "canonical body explicitly marks image-gen deprecated"
+        }
+      ],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "baoyu-slide-deck": {
+      "skill_id": "baoyu-slide-deck",
+      "source_skill_digest": "sha256:36aef4e30a46878f4274654dbd19885163c0ca9c0fd512180c029b1612292b40",
+      "tier": "TIER_2_DOMAIN",
+      "fields": {
+        "stages": {
+          "value": [
+            "design",
+            "implement"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS",
+            "DOMAIN"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design",
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "visual-design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "presentation",
+            "visual design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "baoyu-url-to-markdown": {
+      "skill_id": "baoyu-url-to-markdown",
+      "source_skill_digest": "sha256:40913749b0e95165b02771bdf17bb8ed9fa0a72787d3e09571341ab7148359d0",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "research"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "TOOL"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "research"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "research",
+            "documentation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "sources",
+            "citations"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "baseline-ui": {
+      "skill_id": "baseline-ui",
+      "source_skill_digest": "sha256:397142af2c39036ca4ca060abaec65c061a3f0cd619180f2dc4ba1ea4c4bfa0b",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "implement",
+            "review",
+            "verify"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "source-reviewed primary role assignment for routing diversity",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review",
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "frontend"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "UI verification",
+            "accessibility review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "negative_triggers": {
+          "value": [
+            "repository audit",
+            "release gate",
+            "security change"
+          ],
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "reviewed semantic exclusion signals; not an authority grant",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "brainstorming": {
+      "skill_id": "brainstorming",
+      "source_skill_digest": "sha256:a5f0aabeb53dcf8b0845c16f255b9cd72e75ed2ce7c176b0a03bbbd23808a18f",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "understand",
+            "design",
+            "plan"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "product",
+            "documentation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "requirements",
+            "design alternatives"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "brooks-audit": {
+      "skill_id": "brooks-audit",
+      "source_skill_digest": "sha256:f85ab0f60c0f8537f03d737adf5cb4d60c7353a04dbb370a6f99eb1315171e1b",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "understand",
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "DOMAIN",
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "architecture",
+            "repository"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "brooks-debt": {
+      "skill_id": "brooks-debt",
+      "source_skill_digest": "sha256:869845b9615edda600f42431b83af45a49188d70aeed527c7909f7472b857ace",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "review",
+            "harden"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "quality-and-safety",
+            "repository"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "review findings",
+            "audit report"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "negative_triggers": {
+          "value": [
+            "visual design",
+            "frontend feature",
+            "source research"
+          ],
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "reviewed semantic exclusion signals; not an authority grant",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "brooks-health": {
+      "skill_id": "brooks-health",
+      "source_skill_digest": "sha256:ea4dfc20596fcf2160bf269790b80f681d5d16535d11007022e2ca3d99566c7c",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "understand",
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "repository",
+            "quality-and-safety"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "brooks-review": {
+      "skill_id": "brooks-review",
+      "source_skill_digest": "sha256:21c1ef33d40361ae98e150033978e4c5c1c3f66d498de92a6f088daf839591ec",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "design",
+            "review",
+            "harden",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review",
+            "implementation",
+            "design",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "architecture",
+            "quality-and-safety",
+            "repository"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "review findings",
+            "security review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "brooks-sweep": {
+      "skill_id": "brooks-sweep",
+      "source_skill_digest": "sha256:ce6b63e8979c47834c0c07d7425c7093cf1081729b8499c2940f8632d9bf6368",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "review",
+            "harden"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "quality-and-safety",
+            "repository"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "review findings"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "brooks-test": {
+      "skill_id": "brooks-test",
+      "source_skill_digest": "sha256:e529e10daf14626805049bddf3d209b5727f89942a7de2023065bb2453e15961",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "review",
+            "verify",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "testing",
+            "quality-and-safety"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "tests",
+            "test review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "test quality",
+            "tests",
+            "test suite",
+            "release gate"
+          ],
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "canonical procedure reviews existing test-suite quality for release evidence",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "negative_triggers": {
+          "value": [
+            "visual design",
+            "source research",
+            "new product specification"
+          ],
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "reviewed semantic exclusion signals; not an authority grant",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [
+        {
+          "type": "REVIEW_WITH",
+          "target": "verification-before-completion",
+          "reason": "test-quality review supplies an independent evidence lane for completion verification",
+          "provenance": "CURATED",
+          "confidence": 0.9,
+          "evidence": "canonical procedure scope and release-gate evidence requirements"
+        }
+      ],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "release": {
+      "skill_id": "release",
+      "source_skill_digest": "sha256:107296b29db4680efc4cc6c5bbb1cc5a9c6add3487a13a8a454fb36d69729e39",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "release"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "release decision",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "industrial-brutalist-ui": {
+      "skill_id": "industrial-brutalist-ui",
+      "source_skill_digest": "sha256:2e8b153529ff80b0e34718197e2832910da06e3610fab096db1af59bfaa3bd3a",
+      "tier": "TIER_2_DOMAIN",
+      "fields": {
+        "stages": {
+          "value": [
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "DOMAIN"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "visual-design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "code-review-excellence": {
+      "skill_id": "code-review-excellence",
+      "source_skill_digest": "sha256:0a17fe3afac4b34d823e582aee0bfebb6430246fa78d06704b1aa94eef6e4b35",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "design",
+            "implement",
+            "review",
+            "harden",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review",
+            "implementation",
+            "design",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "software-engineering",
+            "quality-and-safety"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "review findings",
+            "security review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "negative_triggers": {
+          "value": [
+            "visual design",
+            "new product specification"
+          ],
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "reviewed semantic exclusion signals; not an authority grant",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [
+        {
+          "type": "VERIFY_WITH",
+          "target": "verification-before-completion",
+          "reason": "review findings need completion evidence",
+          "provenance": "CURATED",
+          "confidence": 0.9,
+          "evidence": "review findings need completion evidence"
+        }
+      ],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "codebase-inspection": {
+      "skill_id": "codebase-inspection",
+      "source_skill_digest": "sha256:87ddc0578d9bcbc80addb34ca045e4263689873ce02b1b73e3d57275ec6315c6",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "understand",
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "repository"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "source findings",
+            "audit report"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "debugging-code": {
+      "skill_id": "debugging-code",
+      "source_skill_digest": "sha256:472982c651294291ad1539ac6ef9c5acdab152bf1f7b8ccb7953b9727653573e",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "understand",
+            "implement"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS",
+            "TOOL"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "bugfix"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "software-engineering",
+            "testing"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "ckm:design": {
+      "skill_id": "ckm:design",
+      "source_skill_digest": "sha256:bc16581150506ca864b6b215c4b673dc88cfc4e99067c9498b0af018d7030f4a",
+      "tier": "TIER_2_DOMAIN",
+      "fields": {
+        "stages": {
+          "value": [
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "DOMAIN"
+          ],
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "source-reviewed primary role assignment for routing diversity",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "visual-design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "diagnose": {
+      "skill_id": "diagnose",
+      "source_skill_digest": "sha256:c5278a0d3493d37d6fb42a24229da8cf448c50bf020f36334909b6fa97d5cad6",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "understand",
+            "implement",
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS",
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "bugfix"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "software-engineering",
+            "testing"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "root cause",
+            "patch"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "executing-plans": {
+      "skill_id": "executing-plans",
+      "source_skill_digest": "sha256:ae12b8581157d44c6c1544995dd90111ae5e7669022bd75e8f715fb95f373b8b",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "plan",
+            "implement"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "software-engineering",
+            "documentation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "finishing-a-development-branch": {
+      "skill_id": "finishing-a-development-branch",
+      "source_skill_digest": "sha256:5c8d4b59aedb14c94e2f5d787a3265e858e8f53d4ceffe7ff1c15878a52b0e91",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "release",
+            "repository"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "release decision",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "fixing-accessibility": {
+      "skill_id": "fixing-accessibility",
+      "source_skill_digest": "sha256:e287c49df08ea27b9d67479ea57f9a70d01a0b4e3ea97df603f84974dbdd7154",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "implement",
+            "review",
+            "harden",
+            "verify"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW",
+            "VERIFY"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review",
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "frontend"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "UI verification",
+            "accessibility review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "fixing-motion-performance": {
+      "skill_id": "fixing-motion-performance",
+      "source_skill_digest": "sha256:d63f69acdc29c494b0072dde3660861e15a5e813944b5b5452e51e588769defe",
+      "tier": "TIER_2_DOMAIN",
+      "fields": {
+        "stages": {
+          "value": [
+            "review",
+            "harden"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review",
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "frontend",
+            "performance"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "negative_triggers": {
+          "value": [
+            "visual design",
+            "source research",
+            "release gate"
+          ],
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "reviewed semantic exclusion signals; not an authority grant",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "frontend-design": {
+      "skill_id": "frontend-design",
+      "source_skill_digest": "sha256:0b4e91f3a0a352af14cfde2549bee63e54ef00ea43fa3abe21192e4c5762f34e",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "design",
+            "implement"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS",
+            "DOMAIN"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design",
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "frontend"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "frontend patch",
+            "UI design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "negative_triggers": {
+          "value": [
+            "repository audit",
+            "release gate",
+            "security change"
+          ],
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "reviewed semantic exclusion signals; not an authority grant",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "grill-me": {
+      "skill_id": "grill-me",
+      "source_skill_digest": "sha256:74147eb6010a65957efef2b9e0f0b3ff935c1def7fc117697151b1d0f3610556",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "understand",
+            "design",
+            "plan"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "product"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "requirements",
+            "decision record"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "grill-with-docs": {
+      "skill_id": "grill-with-docs",
+      "source_skill_digest": "sha256:3e35025119ba03efe7983dfdec3c8b96918142e3978512f3c2bf66d428310c7e",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "understand",
+            "design",
+            "plan"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design",
+            "documentation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "product",
+            "documentation",
+            "architecture"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "decision record",
+            "ADR",
+            "CONTEXT.md"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "handoff": {
+      "skill_id": "handoff",
+      "source_skill_digest": "sha256:77abcc4152081c7201242d220839ca865aca6c0a4c5b7e08f80c89c3a17d91a3",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "release",
+            "documentation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "image-to-code": {
+      "skill_id": "image-to-code",
+      "source_skill_digest": "sha256:0fcc80113f1e047b265ac4658f7372a2c26c95d12ac4bd301c811c66d011a179",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "implement"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "DOMAIN"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "frontend",
+            "visual-design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "frontend patch",
+            "UI implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "negative_triggers": {
+          "value": [
+            "repository audit",
+            "release gate",
+            "security change"
+          ],
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "reviewed semantic exclusion signals; not an authority grant",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "improve-codebase-architecture": {
+      "skill_id": "improve-codebase-architecture",
+      "source_skill_digest": "sha256:ac2befcd188bf45bc82ab3463abb626c153fc25c382eb2f33dbcdd9964211776",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "understand",
+            "design",
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "DOMAIN",
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design",
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "architecture",
+            "api-architecture",
+            "repository"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "knowledge-consolidation": {
+      "skill_id": "knowledge-consolidation",
+      "source_skill_digest": "sha256:8afac54d99ad429178baead8b5827d6d7dcf48369d19b7c53113c641d036be99",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "research",
+            "learn"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "research"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "research",
+            "documentation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "research brief",
+            "knowledge summary"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "logic-diff": {
+      "skill_id": "logic-diff",
+      "source_skill_digest": "sha256:b8094708c5a4cbf8172f504aa14799cf8b4bac4d2adfcf985b9b1e2234ff12e5",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "software-engineering",
+            "testing"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "logic-fix-all": {
+      "skill_id": "logic-fix-all",
+      "source_skill_digest": "sha256:1b2f4f5ffaeed66afcdefbb251d42df31800344bcd28666fe1da8cb3d32cdc40",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "review",
+            "harden"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "quality-and-safety",
+            "repository"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "audit report",
+            "verification"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "logic-health": {
+      "skill_id": "logic-health",
+      "source_skill_digest": "sha256:f9de78a503cd04c2a6ed0dcfee87bac941310f8c633375af1adf6372d9b3805c",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "quality-and-safety",
+            "repository"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "review findings"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "logic-locate": {
+      "skill_id": "logic-locate",
+      "source_skill_digest": "sha256:dcad44f05e996c46647b000cad4484d7860b36de1ad676f71f40c3a397a3293f",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "understand",
+            "implement"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "bugfix"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "software-engineering",
+            "testing"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "logic-review": {
+      "skill_id": "logic-review",
+      "source_skill_digest": "sha256:7950fc3cebbd52521f160aa350da6105d0d635a12151984079df6a90823b5090",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "review",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "software-engineering",
+            "testing"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "review findings",
+            "audit report",
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "negative_triggers": {
+          "value": [
+            "visual design",
+            "source research"
+          ],
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "reviewed semantic exclusion signals; not an authority grant",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "minimalist-ui": {
+      "skill_id": "minimalist-ui",
+      "source_skill_digest": "sha256:e1650d0a03bfc6c852abf8cc72a1b2dd173e47fdb198725e5150267548e00777",
+      "tier": "TIER_2_DOMAIN",
+      "fields": {
+        "stages": {
+          "value": [
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "DOMAIN"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "visual-design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "official-code-review": {
+      "skill_id": "official-code-review",
+      "source_skill_digest": "sha256:2b0837c5ec0b2e75f8ba4565bdafd76fa916b0dc146608c5733af7ba5802012c",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "design",
+            "implement",
+            "review",
+            "harden",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review",
+            "implementation",
+            "design",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "software-engineering",
+            "quality-and-safety"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "review findings"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "full-output-enforcement": {
+      "skill_id": "full-output-enforcement",
+      "source_skill_digest": "sha256:b0a0320b5ebc064357bc3c659d47401a2b5b748e0da228536720103972714678",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "verify",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "VERIFY"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "quality-and-safety"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "plan": {
+      "skill_id": "plan",
+      "source_skill_digest": "sha256:399038641c1905f44c57c8eabf87206ef972f967028daf3458c9d17f61e64fd8",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "plan"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design",
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "documentation",
+            "product",
+            "architecture"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "plan",
+            "specification"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "pr-review-toolkit": {
+      "skill_id": "pr-review-toolkit",
+      "source_skill_digest": "sha256:d0114de7aaf7b3be055ea2f5b799861add46716385f02cd4f9b8c6e2bd91bfc4",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "review",
+            "harden"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "quality-and-safety",
+            "repository"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "review findings",
+            "security review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "llm-gate": {
+      "skill_id": "llm-gate",
+      "source_skill_digest": "sha256:4b7da8e85e2041f87812049fb15228efe7defe342b0463f1330542a176d668e6",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "review",
+            "harden"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "quality-and-safety"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "mcp-audit": {
+      "skill_id": "mcp-audit",
+      "source_skill_digest": "sha256:a7a8973d7bc50258e642ba09226c8129da945f7dc890117e57fe9411146f8932",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "research",
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "TOOL",
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "research",
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "mcp"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "MCP audit",
+            "tool-schema evidence"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "negative_triggers": {
+          "value": [
+            "README typo",
+            "ordinary bug",
+            "without MCP"
+          ],
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "reviewed semantic exclusion signals; not an authority grant",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [
+        {
+          "type": "COMPLEMENTS",
+          "target": "context-engineering",
+          "reason": "MCP schema cost is a context concern",
+          "provenance": "CURATED",
+          "confidence": 0.9,
+          "evidence": "MCP schema cost is a context concern"
+        }
+      ],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "module-map": {
+      "skill_id": "module-map",
+      "source_skill_digest": "sha256:12b79ba718e4e85e21ca862808f5fe61647b59c59675fa78e45c272ecb34c4df",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "understand",
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS",
+            "DOMAIN"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "repository",
+            "architecture"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "source findings",
+            "architecture map"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "parallel-worktrees": {
+      "skill_id": "parallel-worktrees",
+      "source_skill_digest": "sha256:afdb7eb1542dcd416e61b17ea2bcc1055c60e8bb1bd78de73d8a686c5eba614a",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "implement"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "TOOL"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "repository"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "permission-tuner": {
+      "skill_id": "permission-tuner",
+      "source_skill_digest": "sha256:0178a72b6eac740e85fd02aea6a7bf7ae476f9b838f7b349265a6ef4a0b04d99",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "review",
+            "harden"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review",
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "security"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "permission boundary"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "negative_triggers": {
+          "value": [
+            "visual design",
+            "source research"
+          ],
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "reviewed semantic exclusion signals; not an authority grant",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "plan-interrogate": {
+      "skill_id": "plan-interrogate",
+      "source_skill_digest": "sha256:b8b5cd8fc8088b2e0d5e909ddb2f7af5f6c923b174870e76b8a42c95d3f829e7",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "design",
+            "plan"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "architecture",
+            "product"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "safe-mode": {
+      "skill_id": "safe-mode",
+      "source_skill_digest": "sha256:f7f0919804bc8dd3bec46afc31eb7bf03a61fea906ea644a87c704ced1ff999e",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "harden"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS",
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "implementation",
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "security"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "security patch",
+            "permission boundary"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "negative_triggers": {
+          "value": [
+            "visual design",
+            "source research"
+          ],
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "reviewed semantic exclusion signals; not an authority grant",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "thoroughness-scoring": {
+      "skill_id": "thoroughness-scoring",
+      "source_skill_digest": "sha256:18af2ff5c1e1ee69acff404da48f9fd15624df0fac30bd540d290ebfb793f4a7",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "review",
+            "verify"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "quality-and-safety"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "review findings"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "wiki-builder": {
+      "skill_id": "wiki-builder",
+      "source_skill_digest": "sha256:c8783dc35ceb2eab0d2c9cdda7c6c323ae6ff6668f1aef8dcc2f249822bfdc80",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "research",
+            "learn"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS",
+            "DOMAIN"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "research",
+            "documentation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "research",
+            "documentation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "research brief",
+            "sources"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "wiki-research-loop": {
+      "skill_id": "wiki-research-loop",
+      "source_skill_digest": "sha256:def45edaa670a5f4bd91edbf584246b7d61130c68d5a4182f0a4fe7bc75d36cb",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "research",
+            "learn"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "research"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "research"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "research brief",
+            "citations",
+            "sources"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [
+        {
+          "type": "VERIFY_WITH",
+          "target": "verification-before-completion",
+          "reason": "research output needs source/evidence verification",
+          "provenance": "CURATED",
+          "confidence": 0.9,
+          "evidence": "research output needs source/evidence verification"
+        }
+      ],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "receiving-code-review": {
+      "skill_id": "receiving-code-review",
+      "source_skill_digest": "sha256:c9382e92b8f32363566068ecfed19d3b2651eaf40d3942b24840f839dedfc406",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "quality-and-safety",
+            "repository"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "release-skills": {
+      "skill_id": "release-skills",
+      "source_skill_digest": "sha256:f320492bbc9ced7d00d07c55c4adf5b20e34214a42bf037b68ccaa4a6c62e377",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "release"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "release decision",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "requesting-code-review": {
+      "skill_id": "requesting-code-review",
+      "source_skill_digest": "sha256:5a3a44a3667800e2dc836829c6b92fada51e6dc58ac144ec05fe59f47d6bcd84",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "quality-and-safety",
+            "repository"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "ckm:slides": {
+      "skill_id": "ckm:slides",
+      "source_skill_digest": "sha256:9e5b513302e300d980491bdae6853ae3785dff4085c378e3c06851b30a9612e9",
+      "tier": "TIER_2_DOMAIN",
+      "fields": {
+        "stages": {
+          "value": [
+            "design",
+            "implement"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "source-reviewed primary role assignment for routing diversity",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design",
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "visual-design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "subagent-driven-development": {
+      "skill_id": "subagent-driven-development",
+      "source_skill_digest": "sha256:cc08188ea17eb813423fa76f009f39e7fd36118c5d835a388be5eefd20742dcc",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "plan",
+            "implement"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "orchestration",
+            "software-engineering"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "systematic-debugging": {
+      "skill_id": "systematic-debugging",
+      "source_skill_digest": "sha256:85fe505cc2dfeeca5e5ebefd5dfc61132d9d4e1338684b7610d0ea83de7bf39a",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "understand",
+            "implement",
+            "verify"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "bugfix"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "software-engineering",
+            "testing"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "design-taste-frontend": {
+      "skill_id": "design-taste-frontend",
+      "source_skill_digest": "sha256:900803be2d413d4411a7be2e39e987079f12adb8e4862a08307c34c785792d57",
+      "tier": "TIER_2_DOMAIN",
+      "fields": {
+        "stages": {
+          "value": [
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS",
+            "DOMAIN"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "frontend",
+            "visual-design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "visual design",
+            "UI design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [
+        {
+          "type": "SUPERSEDES",
+          "target": "design-taste-frontend-v1",
+          "reason": "versioned successor is the current design procedure",
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "versioned successor is the current design procedure"
+        }
+      ],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "tdd": {
+      "skill_id": "tdd",
+      "source_skill_digest": "sha256:8ae3fb3ce33a69cc829586ac52d9f2035d5d08f922507775fcb7eeeeb6132fab",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "plan",
+            "implement",
+            "verify"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "bugfix",
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "software-engineering",
+            "testing"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "tests",
+            "test plan"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [
+        {
+          "type": "ALTERNATIVE_TO",
+          "target": "test-driven-development",
+          "reason": "two current TDD procedure variants",
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "two current TDD procedure variants"
+        }
+      ],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "test-driven-development": {
+      "skill_id": "test-driven-development",
+      "source_skill_digest": "sha256:7dee67b4af6bdccc7a914ca34533184d64592d0f5b23aeae631538168db14994",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "plan",
+            "implement",
+            "verify"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "bugfix",
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "software-engineering",
+            "testing"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "tests",
+            "test plan"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [
+        {
+          "type": "ALTERNATIVE_TO",
+          "target": "tdd",
+          "reason": "two current TDD procedure variants",
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "two current TDD procedure variants"
+        },
+        {
+          "type": "VERIFY_WITH",
+          "target": "verification-before-completion",
+          "reason": "TDD output requires explicit verification",
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "TDD output requires explicit verification"
+        }
+      ],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "to-prd": {
+      "skill_id": "to-prd",
+      "source_skill_digest": "sha256:b60e3805e361e4eabc6f3df48d305299e0fde64cb24b6e95443c01de907a2e7d",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "plan"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "DOMAIN",
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "product",
+            "documentation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "PRD",
+            "specification"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "ckm:ui-styling": {
+      "skill_id": "ckm:ui-styling",
+      "source_skill_digest": "sha256:12b07e5b883c72f01e6f103a353f00fba8b512e71ccc29af33ddf1f6aae311ae",
+      "tier": "TIER_2_DOMAIN",
+      "fields": {
+        "stages": {
+          "value": [
+            "design",
+            "implement"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "DOMAIN",
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design",
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "frontend"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "frontend patch",
+            "UI design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "understand": {
+      "skill_id": "understand",
+      "source_skill_digest": "sha256:e82730b349a1a6a51dab7f3e9b8e19a47da3d46682c122999d3392a905c3a28a",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "understand",
+            "research"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review",
+            "research"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "repository",
+            "architecture"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "source findings",
+            "architecture map"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "using-superpowers": {
+      "skill_id": "using-superpowers",
+      "source_skill_digest": "sha256:1adce90aedd8b1362381f8bf8a7346966612cbde3591f74ab7e55e539fa1209a",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "understand",
+            "research",
+            "design",
+            "plan",
+            "implement",
+            "review",
+            "verify",
+            "harden",
+            "handoff",
+            "learn"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "GATE"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "orchestration"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "verification-before-completion": {
+      "skill_id": "verification-before-completion",
+      "source_skill_digest": "sha256:ea52d15aabaf72bc6b558efe2c126f161b53961090ddcd712000273bfe8c7b6c",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "research",
+            "design",
+            "implement",
+            "review",
+            "verify",
+            "harden",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "VERIFY"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "bugfix",
+            "implementation",
+            "design",
+            "research",
+            "review",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "software-engineering",
+            "testing"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "verification",
+            "browser verification",
+            "evidence"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [
+        {
+          "type": "VERIFY_WITH",
+          "target": "test-driven-development",
+          "reason": "verification consumes implementation/test evidence",
+          "provenance": "CURATED",
+          "confidence": 0.9,
+          "evidence": "verification consumes implementation/test evidence"
+        }
+      ],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "visual-atelier": {
+      "skill_id": "visual-atelier",
+      "source_skill_digest": "sha256:d9ffe1f0cf933b960d63105ccd5201edd2f37d87b59bdb0596948260b4f34a12",
+      "tier": "TIER_2_DOMAIN",
+      "fields": {
+        "stages": {
+          "value": [
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS",
+            "DOMAIN"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "visual-design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "writing-plans": {
+      "skill_id": "writing-plans",
+      "source_skill_digest": "sha256:ff07e2f04c08f316b2f9823000ac8f95d5584a65229d00a1a6911ff3af6ed11c",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "plan",
+            "implement"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "implementation",
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "software-engineering",
+            "documentation",
+            "architecture"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "plan",
+            "implementation plan"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    }
+  },
+  "overlay_digest": "sha256:c9f1177abbec0a565f7e9d3d2e56efeba6b408ae3108e148a97501979a2b37dc"
+}

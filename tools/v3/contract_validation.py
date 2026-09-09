@@ -29,6 +29,8 @@ SCHEMA_FILES = {
     "CompiledExecutionBundle": "compiled-execution-bundle.schema.json",
     "CodexNativeProjection": "codex-native-projection.schema.json",
     "SkillRoutingMetadata": "skill-routing-metadata.schema.json",
+    "SkillRoutingGenerated": "skill-routing-generated.schema.json",
+    "SkillRoutingCurated": "skill-routing-curated.schema.json",
 }
 
 KNOWN_CAPABILITIES = frozenset(
@@ -264,6 +266,8 @@ def _validate_capabilities(
         candidates = instance.get("granted_capabilities", [])
     elif contract == "CompiledExecutionBundle":
         candidates = instance.get("effective_capabilities", [])
+    elif contract in {"SkillRoutingGenerated", "SkillRoutingCurated", "SkillRoutingMetadata"}:
+        candidates = []
     else:
         candidates = []
 

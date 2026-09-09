@@ -1,6 +1,6 @@
 {
   "schema_version": "3.0",
-  "overlay_version": "v3-routing-metadata-1",
+  "overlay_version": "v3-routing-metadata-2",
   "registry": {
     "path": ".superpowers/SKILLS_INDEX.json",
     "source": "https://github.com/juhjuhx/agent-skills.git",
@@ -13,53 +13,13 @@
     "entrypoint": "tools/v3/metadata_enrichment.py",
     "body_policy": "READ_ONLY_NO_EXECUTION"
   },
+  "compiled_from": {
+    "generated_overlay_digest": "sha256:c47e2b526b104be10604c27563eb19b763410f89dde01626643260a059a1859b",
+    "curated_overlay_digest": "sha256:c9f1177abbec0a565f7e9d3d2e56efeba6b408ae3108e148a97501979a2b37dc",
+    "compiler_version": "0.1.0"
+  },
   "census": {
     "record_count": 214,
-    "body_files_inspected": 214,
-    "body_bytes_inspected": 2155285,
-    "current_registry_field_presence": {
-      "roles": 0,
-      "stages": 0,
-      "task_modes": 0,
-      "domains": 0,
-      "triggers": 58,
-      "inputs": 0,
-      "outputs": 0,
-      "required_capabilities": 0,
-      "tools": 0,
-      "permissions": 0,
-      "context_cost": 0,
-      "runtime_cost": 0,
-      "relationships": 0,
-      "agent_compatibility": 0,
-      "trust": 214,
-      "source": 214
-    },
-    "v3_field_presence_before_overlay": {
-      "roles": 0,
-      "stages": 0,
-      "task_modes": 0,
-      "domains": 0,
-      "triggers": 58,
-      "inputs": 0,
-      "outputs": 0,
-      "required_capabilities": 0,
-      "tools": 0,
-      "permissions": 0,
-      "context_cost": 0,
-      "runtime_cost": 0,
-      "relationships": 0,
-      "agent_compatibility": 0,
-      "trust": 214,
-      "source": 214
-    },
-    "body_frontmatter_equivalent_signal_presence": {
-      "allowed_tools": 5,
-      "license": 39,
-      "prerequisites": 11,
-      "tools": 15,
-      "version": 64
-    },
     "overlay_field_presence": {
       "agent_compatibility": 0,
       "context_cost": 214,
@@ -69,7 +29,7 @@
       "inputs": 13,
       "outputs": 208,
       "permissions": 0,
-      "relationships": 8,
+      "relationships": 9,
       "required_capabilities": 6,
       "risk": 214,
       "roles": 214,
@@ -77,9 +37,9 @@
       "source": 0,
       "source.license": 39,
       "stages": 198,
-      "task_modes": 190,
+      "task_modes": 189,
       "tools": 15,
-      "triggers": 61,
+      "triggers": 62,
       "trust": 0,
       "version": 64
     },
@@ -95,7 +55,8 @@
         "INFERRED": 214
       },
       "extensions.routing": {
-        "INFERRED": 214
+        "CURATED": 11,
+        "INFERRED": 203
       },
       "inputs": {
         "INFERRED": 13
@@ -105,7 +66,7 @@
         "INFERRED": 166
       },
       "relationships": {
-        "CURATED": 8
+        "CURATED": 9
       },
       "required_capabilities": {
         "INFERRED_HIGH_CONFIDENCE": 6
@@ -129,13 +90,14 @@
       },
       "task_modes": {
         "CURATED": 64,
-        "INFERRED_HIGH_CONFIDENCE": 126
+        "INFERRED_HIGH_CONFIDENCE": 125
       },
       "tools": {
         "AUTHOR_DECLARED": 15
       },
       "triggers": {
-        "AUTHOR_DECLARED": 61
+        "AUTHOR_DECLARED": 61,
+        "CURATED": 1
       },
       "version": {
         "AUTHOR_DECLARED": 64
@@ -155,9 +117,9 @@
     },
     "provenance_counts": {
       "AUTHOR_DECLARED": 179,
-      "CURATED": 309,
-      "INFERRED": 1035,
-      "INFERRED_HIGH_CONFIDENCE": 777
+      "CURATED": 322,
+      "INFERRED": 1024,
+      "INFERRED_HIGH_CONFIDENCE": 776
     },
     "capability_resolution": {
       "source-driven-development": {
@@ -202,7 +164,52 @@
       }
     },
     "routing_ready_count": 65,
-    "tier_1_routing_ready_count": 55
+    "tier_1_routing_ready_count": 55,
+    "body_files_inspected": 214,
+    "body_bytes_inspected": 2155285,
+    "current_registry_field_presence": {
+      "roles": 0,
+      "stages": 0,
+      "task_modes": 0,
+      "domains": 0,
+      "triggers": 58,
+      "inputs": 0,
+      "outputs": 0,
+      "required_capabilities": 0,
+      "tools": 0,
+      "permissions": 0,
+      "context_cost": 0,
+      "runtime_cost": 0,
+      "relationships": 0,
+      "agent_compatibility": 0,
+      "trust": 214,
+      "source": 214
+    },
+    "v3_field_presence_before_overlay": {
+      "roles": 0,
+      "stages": 0,
+      "task_modes": 0,
+      "domains": 0,
+      "triggers": 58,
+      "inputs": 0,
+      "outputs": 0,
+      "required_capabilities": 0,
+      "tools": 0,
+      "permissions": 0,
+      "context_cost": 0,
+      "runtime_cost": 0,
+      "relationships": 0,
+      "agent_compatibility": 0,
+      "trust": 214,
+      "source": 214
+    },
+    "body_frontmatter_equivalent_signal_presence": {
+      "allowed_tools": 5,
+      "license": 39,
+      "prerequisites": 11,
+      "tools": 15,
+      "version": 64
+    }
   },
   "skills": {
     "Agent Development": {
@@ -1691,10 +1698,7 @@
           "design"
         ],
         "domains": [
-          "visual-design",
-          "software-engineering",
-          "documentation",
-          "release"
+          "visual-design"
         ],
         "outputs": [
           "evidence",
@@ -1739,7 +1743,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -1752,22 +1757,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -1811,7 +1816,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 19669
+      "body_bytes_inspected": 19669,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "auto-setup": {
       "skill_id": "auto-setup",
@@ -3521,8 +3527,8 @@
           },
           "relationships": {
             "source": "CURATED",
-            "confidence": 0.95,
-            "evidence": "sparse high-confidence overlap/complement mapping"
+            "confidence": 1.0,
+            "evidence": "sparse reviewed relationship mapping"
           }
         },
         "relationships": {
@@ -3533,8 +3539,8 @@
           }
         }
       },
-      "review_status": "GENERATED",
-      "confidence": 0.8,
+      "review_status": "CURATED",
+      "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
       "body_bytes_inspected": 14163,
@@ -4215,19 +4221,11 @@
           "implementation"
         ],
         "domains": [
-          "visual-design",
-          "frontend"
+          "visual-design"
         ],
         "outputs": [
           "presentation",
-          "visual design",
-          "review findings",
-          "source findings",
-          "research brief",
-          "plan",
-          "specification",
-          "design artifact",
-          "frontend artifact"
+          "visual design"
         ],
         "version": "1.57.0",
         "context_cost": {
@@ -4262,7 +4260,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -4275,27 +4274,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "version": {
             "source": "AUTHOR_DECLARED",
@@ -4334,7 +4333,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 20911
+      "body_bytes_inspected": 20911,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "baoyu-translate": {
       "skill_id": "baoyu-translate",
@@ -4499,17 +4499,11 @@
         ],
         "domains": [
           "research",
-          "documentation",
-          "frontend",
-          "release"
+          "documentation"
         ],
         "outputs": [
           "sources",
-          "citations",
-          "source findings",
-          "specification",
-          "design artifact",
-          "frontend artifact"
+          "citations"
         ],
         "version": "1.61.0",
         "context_cost": {
@@ -4546,7 +4540,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -4554,27 +4549,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "version": {
             "source": "AUTHOR_DECLARED",
@@ -4613,7 +4608,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 8520
+      "body_bytes_inspected": 8520,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "baoyu-wechat-summary": {
       "skill_id": "baoyu-wechat-summary",
@@ -5015,8 +5011,7 @@
           "UI基線檢查、animation duration、typography scale、layout anti-pattern、design consistency、Tailwind CSS review。"
         ],
         "roles": [
-          "REVIEW",
-          "VERIFY"
+          "REVIEW"
         ],
         "stages": [
           "implement",
@@ -5028,16 +5023,11 @@
           "implementation"
         ],
         "domains": [
-          "frontend",
-          "quality-and-safety"
+          "frontend"
         ],
         "outputs": [
           "UI verification",
-          "accessibility review",
-          "review findings",
-          "specification",
-          "design artifact",
-          "frontend artifact"
+          "accessibility review"
         ],
         "context_cost": {
           "metadata_tokens": 62,
@@ -5068,9 +5058,15 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "negative_triggers": [
+              "repository audit",
+              "release gate",
+              "security change"
+            ]
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -5082,28 +5078,28 @@
           },
           "roles": {
             "source": "CURATED",
-            "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "confidence": 0.95,
+            "evidence": "source-reviewed primary role assignment for routing diversity"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -5126,9 +5122,9 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 0.95,
+            "evidence": "reviewed semantic exclusion signals; not an authority grant"
           }
         },
         "relationships": {}
@@ -5137,7 +5133,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 3503
+      "body_bytes_inspected": 3503,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "batch-orchestration": {
       "skill_id": "batch-orchestration",
@@ -5422,18 +5419,11 @@
         ],
         "domains": [
           "product",
-          "documentation",
-          "software-engineering",
-          "frontend"
+          "documentation"
         ],
         "outputs": [
           "requirements",
-          "design alternatives",
-          "review findings",
-          "plan",
-          "specification",
-          "design artifact",
-          "frontend artifact"
+          "design alternatives"
         ],
         "context_cost": {
           "metadata_tokens": 55,
@@ -5467,7 +5457,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -5480,27 +5471,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -5534,7 +5525,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 10650
+      "body_bytes_inspected": 10650,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "brand-guidelines": {
       "skill_id": "brand-guidelines",
@@ -5829,10 +5821,7 @@
         ],
         "domains": [
           "architecture",
-          "repository",
-          "software-engineering",
-          "quality-and-safety",
-          "integrations"
+          "repository"
         ],
         "outputs": [
           "review findings",
@@ -5871,7 +5860,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -5879,22 +5869,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -5933,7 +5923,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 2269
+      "body_bytes_inspected": 2269,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "brooks-debt": {
       "skill_id": "brooks-debt",
@@ -5953,22 +5944,11 @@
         ],
         "domains": [
           "quality-and-safety",
-          "repository",
-          "orchestration",
-          "context-engineering",
-          "software-engineering",
-          "frontend",
-          "integrations",
-          "api-architecture",
-          "mcp"
+          "repository"
         ],
         "outputs": [
           "review findings",
-          "audit report",
-          "source findings",
-          "specification",
-          "design artifact",
-          "frontend artifact"
+          "audit report"
         ],
         "context_cost": {
           "metadata_tokens": 186,
@@ -6001,9 +5981,15 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "negative_triggers": [
+              "visual design",
+              "frontend feature",
+              "source research"
+            ]
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -6011,27 +5997,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -6054,9 +6040,9 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 0.95,
+            "evidence": "reviewed semantic exclusion signals; not an authority grant"
           }
         },
         "relationships": {}
@@ -6065,7 +6051,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 1745
+      "body_bytes_inspected": 1745,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "brooks-harness": {
       "skill_id": "brooks-harness",
@@ -6230,15 +6217,7 @@
         ],
         "domains": [
           "repository",
-          "quality-and-safety",
-          "orchestration",
-          "software-engineering",
-          "integrations",
-          "api-architecture",
-          "architecture",
-          "testing",
-          "release",
-          "mcp"
+          "quality-and-safety"
         ],
         "outputs": [
           "review findings",
@@ -6278,7 +6257,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -6286,22 +6266,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -6340,7 +6320,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 1860
+      "body_bytes_inspected": 1860,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "brooks-review": {
       "skill_id": "brooks-review",
@@ -6366,18 +6347,11 @@
         "domains": [
           "architecture",
           "quality-and-safety",
-          "repository",
-          "software-engineering",
-          "frontend",
-          "research"
+          "repository"
         ],
         "outputs": [
           "review findings",
-          "security review",
-          "source findings",
-          "specification",
-          "design artifact",
-          "frontend artifact"
+          "security review"
         ],
         "context_cost": {
           "metadata_tokens": 216,
@@ -6413,7 +6387,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -6421,27 +6396,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -6475,7 +6450,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 1799
+      "body_bytes_inspected": 1799,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "brooks-sweep": {
       "skill_id": "brooks-sweep",
@@ -6495,18 +6471,10 @@
         ],
         "domains": [
           "quality-and-safety",
-          "repository",
-          "software-engineering",
-          "api-architecture",
-          "architecture",
-          "testing",
-          "mcp"
+          "repository"
         ],
         "outputs": [
-          "review findings",
-          "audit report",
-          "source findings",
-          "specification"
+          "review findings"
         ],
         "context_cost": {
           "metadata_tokens": 223,
@@ -6540,7 +6508,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -6548,27 +6517,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -6602,7 +6571,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 2335
+      "body_bytes_inspected": 2335,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "brooks-test": {
       "skill_id": "brooks-test",
@@ -6624,21 +6594,11 @@
         ],
         "domains": [
           "testing",
-          "quality-and-safety",
-          "orchestration",
-          "software-engineering",
-          "frontend",
-          "integrations",
-          "product"
+          "quality-and-safety"
         ],
         "outputs": [
           "tests",
-          "test review",
-          "review findings",
-          "source findings",
-          "specification",
-          "design artifact",
-          "frontend artifact"
+          "test review"
         ],
         "context_cost": {
           "metadata_tokens": 229,
@@ -6671,9 +6631,27 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "negative_triggers": [
+              "visual design",
+              "source research",
+              "new product specification"
+            ]
           }
-        }
+        },
+        "triggers": [
+          "test quality",
+          "tests",
+          "test suite",
+          "release gate"
+        ],
+        "relationships": [
+          {
+            "type": "REVIEW_WITH",
+            "target": "verification-before-completion",
+            "reason": "test-quality review supplies an independent evidence lane for completion verification"
+          }
+        ]
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -6681,27 +6659,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -6724,18 +6702,35 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 0.95,
+            "evidence": "reviewed semantic exclusion signals; not an authority grant"
+          },
+          "triggers": {
+            "source": "CURATED",
+            "confidence": 0.95,
+            "evidence": "canonical procedure reviews existing test-suite quality for release evidence"
+          },
+          "relationships": {
+            "source": "CURATED",
+            "confidence": 0.9,
+            "evidence": "sparse reviewed relationship mapping"
           }
         },
-        "relationships": {}
+        "relationships": {
+          "REVIEW_WITH:verification-before-completion": {
+            "source": "CURATED",
+            "confidence": 0.9,
+            "evidence": "canonical procedure scope and release-gate evidence requirements"
+          }
+        }
       },
       "review_status": "CURATED",
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 1838
+      "body_bytes_inspected": 1838,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "bug-capture": {
       "skill_id": "bug-capture",
@@ -7409,7 +7404,6 @@
           "設計、design、logo設計、banner、簡報、品牌識別、design system、icon design、social media images。"
         ],
         "roles": [
-          "PROCESS",
           "DOMAIN"
         ],
         "stages": [
@@ -7419,9 +7413,7 @@
           "design"
         ],
         "domains": [
-          "visual-design",
-          "context-engineering",
-          "frontend"
+          "visual-design"
         ],
         "outputs": [
           "review findings",
@@ -7469,7 +7461,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -7481,23 +7474,23 @@
           },
           "roles": {
             "source": "CURATED",
-            "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "confidence": 0.95,
+            "evidence": "source-reviewed primary role assignment for routing diversity"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -7546,7 +7539,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 11608
+      "body_bytes_inspected": 11608,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "ckm:design-system": {
       "skill_id": "ckm:design-system",
@@ -7709,8 +7703,7 @@
           "做簡報、HTML slides、data-driven presentation、strategic slides、Chart.js、做投影片。"
         ],
         "roles": [
-          "PROCESS",
-          "DOMAIN"
+          "PROCESS"
         ],
         "stages": [
           "design",
@@ -7721,9 +7714,7 @@
           "implementation"
         ],
         "domains": [
-          "visual-design",
-          "context-engineering",
-          "frontend"
+          "visual-design"
         ],
         "outputs": [
           "design artifact",
@@ -7765,7 +7756,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -7777,23 +7769,23 @@
           },
           "roles": {
             "source": "CURATED",
-            "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "confidence": 0.95,
+            "evidence": "source-reviewed primary role assignment for routing diversity"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -7837,7 +7829,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 1245
+      "body_bytes_inspected": 1245,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "ckm:ui-styling": {
       "skill_id": "ckm:ui-styling",
@@ -7858,18 +7851,11 @@
           "implementation"
         ],
         "domains": [
-          "frontend",
-          "documentation",
-          "visual-design",
-          "api-architecture",
-          "release"
+          "frontend"
         ],
         "outputs": [
           "frontend patch",
-          "UI design",
-          "source findings",
-          "design artifact",
-          "frontend artifact"
+          "UI design"
         ],
         "inputs": [
           "task request",
@@ -7913,7 +7899,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -7921,27 +7908,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "inputs": {
             "source": "INFERRED",
@@ -7985,7 +7972,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 10049
+      "body_bytes_inspected": 10049,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "claude-design": {
       "skill_id": "claude-design",
@@ -8273,16 +8261,11 @@
         ],
         "domains": [
           "software-engineering",
-          "quality-and-safety",
-          "frontend"
+          "quality-and-safety"
         ],
         "outputs": [
           "review findings",
-          "security review",
-          "audit report",
-          "source findings",
-          "specification",
-          "design artifact"
+          "security review"
         ],
         "tools": [
           "Read",
@@ -8321,7 +8304,11 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "negative_triggers": [
+              "visual design",
+              "new product specification"
+            ]
           }
         },
         "relationships": [
@@ -8343,27 +8330,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "tools": {
             "source": "AUTHOR_DECLARED",
@@ -8391,14 +8378,14 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 0.95,
+            "evidence": "reviewed semantic exclusion signals; not an authority grant"
           },
           "relationships": {
             "source": "CURATED",
-            "confidence": 0.95,
-            "evidence": "sparse high-confidence overlap/complement mapping"
+            "confidence": 0.9,
+            "evidence": "sparse reviewed relationship mapping"
           }
         },
         "relationships": {
@@ -8413,7 +8400,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 8843
+      "body_bytes_inspected": 8843,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "codebase-inspection": {
       "skill_id": "codebase-inspection",
@@ -8432,13 +8420,11 @@
           "review"
         ],
         "domains": [
-          "repository",
-          "software-engineering"
+          "repository"
         ],
         "outputs": [
           "source findings",
-          "audit report",
-          "specification"
+          "audit report"
         ],
         "tools": [
           "pygount"
@@ -8477,7 +8463,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -8485,27 +8472,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "tools": {
             "source": "AUTHOR_DECLARED",
@@ -8554,7 +8541,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 3628
+      "body_bytes_inspected": 3628,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "comfyui": {
       "skill_id": "comfyui",
@@ -9368,7 +9356,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -9381,22 +9370,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -9440,7 +9429,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 11412
+      "body_bytes_inspected": 11412,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "design-md": {
       "skill_id": "design-md",
@@ -9605,15 +9595,7 @@
         ],
         "outputs": [
           "visual design",
-          "UI design",
-          "verification",
-          "review findings",
-          "audit report",
-          "source findings",
-          "plan",
-          "specification",
-          "design artifact",
-          "frontend artifact"
+          "UI design"
         ],
         "context_cost": {
           "metadata_tokens": 56,
@@ -9665,27 +9647,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -9715,7 +9697,7 @@
           "relationships": {
             "source": "CURATED",
             "confidence": 0.95,
-            "evidence": "sparse high-confidence overlap/complement mapping"
+            "evidence": "sparse reviewed relationship mapping"
           }
         },
         "relationships": {
@@ -9730,7 +9712,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 87216
+      "body_bytes_inspected": 87216,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "design-taste-frontend-v1": {
       "skill_id": "design-taste-frontend-v1",
@@ -9990,14 +9973,11 @@
         ],
         "domains": [
           "software-engineering",
-          "testing",
-          "quality-and-safety"
+          "testing"
         ],
         "outputs": [
           "root cause",
-          "patch",
-          "plan",
-          "specification"
+          "patch"
         ],
         "context_cost": {
           "metadata_tokens": 50,
@@ -10030,7 +10010,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -10043,27 +10024,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -10097,7 +10078,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 7063
+      "body_bytes_inspected": 7063,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "dispatching-parallel-agents": {
       "skill_id": "dispatching-parallel-agents",
@@ -10239,8 +10221,7 @@
         ],
         "domains": [
           "software-engineering",
-          "documentation",
-          "quality-and-safety"
+          "documentation"
         ],
         "outputs": [
           "verification",
@@ -10280,7 +10261,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -10293,22 +10275,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -10347,7 +10329,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 2561
+      "body_bytes_inspected": 2561,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "feature-dev": {
       "skill_id": "feature-dev",
@@ -10702,18 +10685,11 @@
         ],
         "domains": [
           "release",
-          "repository",
-          "software-engineering",
-          "frontend",
-          "testing"
+          "repository"
         ],
         "outputs": [
           "release decision",
-          "handoff",
-          "verification",
-          "plan",
-          "design artifact",
-          "frontend artifact"
+          "handoff"
         ],
         "context_cost": {
           "metadata_tokens": 64,
@@ -10747,7 +10723,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -10755,27 +10732,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -10809,7 +10786,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 7061
+      "body_bytes_inspected": 7061,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "fixing-accessibility": {
       "skill_id": "fixing-accessibility",
@@ -10835,15 +10813,11 @@
           "implementation"
         ],
         "domains": [
-          "frontend",
-          "quality-and-safety"
+          "frontend"
         ],
         "outputs": [
           "UI verification",
-          "accessibility review",
-          "review findings",
-          "audit report",
-          "specification"
+          "accessibility review"
         ],
         "context_cost": {
           "metadata_tokens": 58,
@@ -10876,7 +10850,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -10889,27 +10864,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -10943,7 +10918,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 4711
+      "body_bytes_inspected": 4711,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "fixing-metadata": {
       "skill_id": "fixing-metadata",
@@ -11107,8 +11083,7 @@
         ],
         "domains": [
           "frontend",
-          "performance",
-          "quality-and-safety"
+          "performance"
         ],
         "outputs": [
           "review findings",
@@ -11143,9 +11118,15 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "negative_triggers": [
+              "visual design",
+              "source research",
+              "release gate"
+            ]
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -11158,22 +11139,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -11201,9 +11182,9 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 0.95,
+            "evidence": "reviewed semantic exclusion signals; not an authority grant"
           }
         },
         "relationships": {}
@@ -11212,7 +11193,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 5565
+      "body_bytes_inspected": 5565,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "frontend-design": {
       "skill_id": "frontend-design",
@@ -11236,16 +11218,11 @@
           "implementation"
         ],
         "domains": [
-          "frontend",
-          "api-architecture",
-          "research",
-          "product"
+          "frontend"
         ],
         "outputs": [
           "frontend patch",
-          "UI design",
-          "design artifact",
-          "frontend artifact"
+          "UI design"
         ],
         "source": {
           "license": "LICENSE.txt 中的完整條款"
@@ -11281,9 +11258,15 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "negative_triggers": [
+              "repository audit",
+              "release gate",
+              "security change"
+            ]
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -11296,27 +11279,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "source.license": {
             "source": "AUTHOR_DECLARED",
@@ -11344,9 +11327,9 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 0.95,
+            "evidence": "reviewed semantic exclusion signals; not an authority grant"
           }
         },
         "relationships": {}
@@ -11355,7 +11338,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 3916
+      "body_bytes_inspected": 3916,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "full-output-enforcement": {
       "skill_id": "full-output-enforcement",
@@ -11378,8 +11362,7 @@
           "handoff"
         ],
         "domains": [
-          "quality-and-safety",
-          "software-engineering"
+          "quality-and-safety"
         ],
         "context_cost": {
           "metadata_tokens": 58,
@@ -11412,7 +11395,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -11425,22 +11409,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -11474,7 +11458,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 2610
+      "body_bytes_inspected": 2610,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "gif-search": {
       "skill_id": "gif-search",
@@ -11992,18 +11977,11 @@
           "design"
         ],
         "domains": [
-          "product",
-          "software-engineering",
-          "frontend",
-          "testing"
+          "product"
         ],
         "outputs": [
           "requirements",
-          "decision record",
-          "plan",
-          "specification",
-          "design artifact",
-          "frontend artifact"
+          "decision record"
         ],
         "context_cost": {
           "metadata_tokens": 66,
@@ -12035,7 +12013,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -12043,27 +12022,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -12097,7 +12076,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 635
+      "body_bytes_inspected": 635,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "grill-with-docs": {
       "skill_id": "grill-with-docs",
@@ -12120,20 +12100,12 @@
         "domains": [
           "product",
           "documentation",
-          "architecture",
-          "context-engineering",
-          "software-engineering",
-          "testing",
-          "release"
+          "architecture"
         ],
         "outputs": [
           "decision record",
           "ADR",
-          "CONTEXT.md",
-          "source findings",
-          "plan",
-          "specification",
-          "design artifact"
+          "CONTEXT.md"
         ],
         "context_cost": {
           "metadata_tokens": 79,
@@ -12167,7 +12139,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -12175,27 +12148,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -12229,7 +12202,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 3639
+      "body_bytes_inspected": 3639,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "handoff": {
       "skill_id": "handoff",
@@ -12248,13 +12222,10 @@
         ],
         "domains": [
           "release",
-          "documentation",
-          "orchestration",
-          "context-engineering"
+          "documentation"
         ],
         "outputs": [
-          "handoff",
-          "plan"
+          "handoff"
         ],
         "inputs": [
           "task request",
@@ -12291,7 +12262,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -12299,27 +12271,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "inputs": {
             "source": "INFERRED",
@@ -12358,7 +12330,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 719
+      "body_bytes_inspected": 719,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "hermes-agent": {
       "skill_id": "hermes-agent",
@@ -13259,18 +13232,11 @@
         ],
         "domains": [
           "frontend",
-          "visual-design",
-          "software-engineering",
-          "research"
+          "visual-design"
         ],
         "outputs": [
           "frontend patch",
-          "UI implementation",
-          "review findings",
-          "source findings",
-          "specification",
-          "design artifact",
-          "frontend artifact"
+          "UI implementation"
         ],
         "context_cost": {
           "metadata_tokens": 53,
@@ -13303,9 +13269,15 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "negative_triggers": [
+              "repository audit",
+              "release gate",
+              "security change"
+            ]
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -13318,27 +13290,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -13361,9 +13333,9 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 0.95,
+            "evidence": "reviewed semantic exclusion signals; not an authority grant"
           }
         },
         "relationships": {}
@@ -13372,7 +13344,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 36100
+      "body_bytes_inspected": 36100,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "imagegen-frontend-mobile": {
       "skill_id": "imagegen-frontend-mobile",
@@ -13659,9 +13632,7 @@
         "domains": [
           "architecture",
           "api-architecture",
-          "repository",
-          "software-engineering",
-          "testing"
+          "repository"
         ],
         "outputs": [
           "review findings",
@@ -13699,7 +13670,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -13712,22 +13684,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -13766,7 +13738,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 5058
+      "body_bytes_inspected": 5058,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "industrial-brutalist-ui": {
       "skill_id": "industrial-brutalist-ui",
@@ -13787,9 +13760,7 @@
           "design"
         ],
         "domains": [
-          "visual-design",
-          "frontend",
-          "api-architecture"
+          "visual-design"
         ],
         "outputs": [
           "specification",
@@ -13826,7 +13797,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -13839,22 +13811,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -13893,7 +13865,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 8405
+      "body_bytes_inspected": 8405,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "insights": {
       "skill_id": "insights",
@@ -14287,20 +14260,11 @@
         ],
         "domains": [
           "research",
-          "documentation",
-          "context-engineering",
-          "frontend",
-          "release"
+          "documentation"
         ],
         "outputs": [
           "research brief",
-          "knowledge summary",
-          "verification",
-          "source findings",
-          "plan",
-          "specification",
-          "design artifact",
-          "frontend artifact"
+          "knowledge summary"
         ],
         "context_cost": {
           "metadata_tokens": 98,
@@ -14338,7 +14302,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -14351,27 +14316,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -14405,7 +14370,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 6285
+      "body_bytes_inspected": 6285,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "learn-rule": {
       "skill_id": "learn-rule",
@@ -14816,9 +14782,7 @@
           "review"
         ],
         "domains": [
-          "quality-and-safety",
-          "software-engineering",
-          "testing"
+          "quality-and-safety"
         ],
         "outputs": [
           "verification",
@@ -14856,7 +14820,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -14864,22 +14829,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -14918,7 +14883,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 3030
+      "body_bytes_inspected": 3030,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "llm-wiki": {
       "skill_id": "llm-wiki",
@@ -15091,10 +15057,7 @@
         ],
         "domains": [
           "software-engineering",
-          "testing",
-          "quality-and-safety",
-          "frontend",
-          "repository"
+          "testing"
         ],
         "outputs": [
           "review findings",
@@ -15137,7 +15100,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -15145,22 +15109,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -15199,7 +15163,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 3469
+      "body_bytes_inspected": 3469,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "logic-explain": {
       "skill_id": "logic-explain",
@@ -15355,17 +15320,11 @@
         ],
         "domains": [
           "quality-and-safety",
-          "repository",
-          "context-engineering",
-          "software-engineering"
+          "repository"
         ],
         "outputs": [
           "audit report",
-          "verification",
-          "review findings",
-          "source findings",
-          "plan",
-          "specification"
+          "verification"
         ],
         "context_cost": {
           "metadata_tokens": 253,
@@ -15399,7 +15358,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -15407,27 +15367,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -15461,7 +15421,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 5071
+      "body_bytes_inspected": 5071,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "logic-health": {
       "skill_id": "logic-health",
@@ -15480,18 +15441,10 @@
         ],
         "domains": [
           "quality-and-safety",
-          "repository",
-          "software-engineering",
-          "architecture",
-          "security",
-          "testing",
-          "release"
+          "repository"
         ],
         "outputs": [
-          "review findings",
-          "audit report",
-          "plan",
-          "specification"
+          "review findings"
         ],
         "context_cost": {
           "metadata_tokens": 224,
@@ -15525,7 +15478,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -15533,27 +15487,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -15587,7 +15541,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 4069
+      "body_bytes_inspected": 4069,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "logic-locate": {
       "skill_id": "logic-locate",
@@ -15607,10 +15562,7 @@
         ],
         "domains": [
           "software-engineering",
-          "testing",
-          "quality-and-safety",
-          "frontend",
-          "repository"
+          "testing"
         ],
         "outputs": [
           "evidence",
@@ -15654,7 +15606,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -15662,22 +15615,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -15716,7 +15669,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 3698
+      "body_bytes_inspected": 3698,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "logic-review": {
       "skill_id": "logic-review",
@@ -15740,16 +15694,12 @@
         ],
         "domains": [
           "software-engineering",
-          "testing",
-          "quality-and-safety"
+          "testing"
         ],
         "outputs": [
           "review findings",
           "audit report",
-          "review",
-          "verification",
-          "specification",
-          "design artifact"
+          "review"
         ],
         "context_cost": {
           "metadata_tokens": 60,
@@ -15781,9 +15731,14 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "negative_triggers": [
+              "visual design",
+              "source research"
+            ]
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -15796,27 +15751,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -15839,9 +15794,9 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 0.95,
+            "evidence": "reviewed semantic exclusion signals; not an authority grant"
           }
         },
         "relationships": {}
@@ -15850,7 +15805,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 13322
+      "body_bytes_inspected": 13322,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "macos-cleanup": {
       "skill_id": "macos-cleanup",
@@ -16369,18 +16325,11 @@
           "review"
         ],
         "domains": [
-          "mcp",
-          "context-engineering",
-          "software-engineering",
-          "quality-and-safety",
-          "security"
+          "mcp"
         ],
         "outputs": [
           "MCP audit",
-          "tool-schema evidence",
-          "review findings",
-          "audit report",
-          "specification"
+          "tool-schema evidence"
         ],
         "required_capabilities": [
           "needs_MCP"
@@ -16413,7 +16362,12 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "negative_triggers": [
+              "README typo",
+              "ordinary bug",
+              "without MCP"
+            ]
           }
         },
         "relationships": [
@@ -16430,27 +16384,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "required_capabilities": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -16478,14 +16432,14 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 0.95,
+            "evidence": "reviewed semantic exclusion signals; not an authority grant"
           },
           "relationships": {
             "source": "CURATED",
-            "confidence": 0.95,
-            "evidence": "sparse high-confidence overlap/complement mapping"
+            "confidence": 0.9,
+            "evidence": "sparse reviewed relationship mapping"
           }
         },
         "relationships": {
@@ -16500,7 +16454,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 2498
+      "body_bytes_inspected": 2498,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "messaging-gateway": {
       "skill_id": "messaging-gateway",
@@ -16658,9 +16613,7 @@
           "design"
         ],
         "domains": [
-          "visual-design",
-          "frontend",
-          "api-architecture"
+          "visual-design"
         ],
         "outputs": [
           "source findings",
@@ -16699,7 +16652,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -16712,22 +16666,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -16766,7 +16720,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 7995
+      "body_bytes_inspected": 7995,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "module-map": {
       "skill_id": "module-map",
@@ -16787,15 +16742,11 @@
         ],
         "domains": [
           "repository",
-          "architecture",
-          "software-engineering",
-          "frontend"
+          "architecture"
         ],
         "outputs": [
           "source findings",
-          "architecture map",
-          "design artifact",
-          "frontend artifact"
+          "architecture map"
         ],
         "context_cost": {
           "metadata_tokens": 71,
@@ -16828,7 +16779,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -16836,27 +16788,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -16890,7 +16842,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 1959
+      "body_bytes_inspected": 1959,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "multi-agent-handoff": {
       "skill_id": "multi-agent-handoff",
@@ -17849,14 +17802,10 @@
         ],
         "domains": [
           "software-engineering",
-          "quality-and-safety",
-          "research"
+          "quality-and-safety"
         ],
         "outputs": [
-          "review findings",
-          "audit report",
-          "plan",
-          "specification"
+          "review findings"
         ],
         "tools": [
           "Bash(gh issue view:*), Bash(gh search:*), Bash(gh issue list:*), Bash(gh pr comment:*), Bash(gh pr diff:*), Bash(gh pr view:*), Bash(gh pr list:*), mcp__github_inline_comment__create_inline_comment"
@@ -17893,7 +17842,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -17901,27 +17851,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "tools": {
             "source": "AUTHOR_DECLARED",
@@ -17960,7 +17910,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 7297
+      "body_bytes_inspected": 7297,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "openhue": {
       "skill_id": "openhue",
@@ -18344,10 +18295,7 @@
           "implementation"
         ],
         "domains": [
-          "repository",
-          "context-engineering",
-          "software-engineering",
-          "testing"
+          "repository"
         ],
         "outputs": [
           "review findings",
@@ -18384,7 +18332,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -18397,22 +18346,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -18451,7 +18400,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 2564
+      "body_bytes_inspected": 2564,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "permission-tuner": {
       "skill_id": "permission-tuner",
@@ -18471,11 +18421,7 @@
           "implementation"
         ],
         "domains": [
-          "security",
-          "general"
-        ],
-        "outputs": [
-          "permission boundary"
+          "security"
         ],
         "context_cost": {
           "metadata_tokens": 54,
@@ -18505,9 +18451,17 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "negative_triggers": [
+              "visual design",
+              "source research"
+            ]
           }
-        }
+        },
+        "outputs": [
+          "permission boundary"
+        ],
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -18515,27 +18469,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
-          },
-          "outputs": {
-            "source": "CURATED",
-            "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -18558,9 +18507,14 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 0.95,
+            "evidence": "reviewed semantic exclusion signals; not an authority grant"
+          },
+          "outputs": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "reviewed compatibility routing seed"
           }
         },
         "relationships": {}
@@ -18569,7 +18523,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 3112
+      "body_bytes_inspected": 3112,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "plan": {
       "skill_id": "plan",
@@ -18590,16 +18545,11 @@
         "domains": [
           "documentation",
           "product",
-          "architecture",
-          "software-engineering",
-          "release"
+          "architecture"
         ],
         "outputs": [
           "plan",
-          "specification",
-          "verification",
-          "review findings",
-          "design artifact"
+          "specification"
         ],
         "version": "2.0.0",
         "source": {
@@ -18639,7 +18589,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -18647,27 +18598,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "source.license": {
             "source": "AUTHOR_DECLARED",
@@ -18711,7 +18662,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 8974
+      "body_bytes_inspected": 8974,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "plan-interrogate": {
       "skill_id": "plan-interrogate",
@@ -18731,10 +18683,7 @@
         ],
         "domains": [
           "architecture",
-          "product",
-          "software-engineering",
-          "frontend",
-          "testing"
+          "product"
         ],
         "outputs": [
           "source findings",
@@ -18774,7 +18723,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -18782,22 +18732,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -18836,7 +18786,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 2152
+      "body_bytes_inspected": 2152,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "polymarket": {
       "skill_id": "polymarket",
@@ -19252,18 +19203,11 @@
         ],
         "domains": [
           "quality-and-safety",
-          "repository",
-          "orchestration",
-          "software-engineering",
-          "frontend",
-          "testing"
+          "repository"
         ],
         "outputs": [
           "review findings",
-          "security review",
-          "specification",
-          "design artifact",
-          "frontend artifact"
+          "security review"
         ],
         "context_cost": {
           "metadata_tokens": 48,
@@ -19297,7 +19241,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -19305,27 +19250,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -19359,7 +19304,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 752
+      "body_bytes_inspected": 752,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "pretext": {
       "skill_id": "pretext",
@@ -19787,10 +19733,7 @@
         ],
         "domains": [
           "quality-and-safety",
-          "repository",
-          "software-engineering",
-          "frontend",
-          "testing"
+          "repository"
         ],
         "outputs": [
           "verification",
@@ -19833,7 +19776,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -19841,22 +19785,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -19895,7 +19839,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 6314
+      "body_bytes_inspected": 6314,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "redesign-existing-projects": {
       "skill_id": "redesign-existing-projects",
@@ -20056,15 +20001,11 @@
           "handoff"
         ],
         "domains": [
-          "release",
-          "integrations",
-          "documentation",
-          "repository"
+          "release"
         ],
         "outputs": [
           "release decision",
-          "handoff",
-          "source findings"
+          "handoff"
         ],
         "context_cost": {
           "metadata_tokens": 144,
@@ -20101,7 +20042,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -20109,27 +20051,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -20163,7 +20105,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 2274
+      "body_bytes_inspected": 2274,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "release-skills": {
       "skill_id": "release-skills",
@@ -20181,17 +20124,11 @@
           "handoff"
         ],
         "domains": [
-          "release",
-          "orchestration",
-          "integrations",
-          "repository"
+          "release"
         ],
         "outputs": [
           "release decision",
-          "handoff",
-          "review findings",
-          "source findings",
-          "specification"
+          "handoff"
         ],
         "context_cost": {
           "metadata_tokens": 98,
@@ -20223,7 +20160,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -20231,27 +20169,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -20285,7 +20223,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 20165
+      "body_bytes_inspected": 20165,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "replay-learnings": {
       "skill_id": "replay-learnings",
@@ -20421,10 +20360,7 @@
         ],
         "domains": [
           "quality-and-safety",
-          "repository",
-          "software-engineering",
-          "frontend",
-          "product"
+          "repository"
         ],
         "outputs": [
           "verification",
@@ -20467,7 +20403,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -20475,22 +20412,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -20529,7 +20466,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 2808
+      "body_bytes_inspected": 2808,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "runaway-guard": {
       "skill_id": "runaway-guard",
@@ -20684,20 +20622,12 @@
         "stages": [
           "harden"
         ],
-        "task_modes": [
-          "implementation",
-          "review"
-        ],
         "domains": [
-          "security",
-          "general"
+          "security"
         ],
         "outputs": [
           "security patch",
-          "permission boundary",
-          "review findings",
-          "plan",
-          "specification"
+          "permission boundary"
         ],
         "context_cost": {
           "metadata_tokens": 18,
@@ -20726,9 +20656,18 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "negative_triggers": [
+              "visual design",
+              "source research"
+            ]
           }
-        }
+        },
+        "task_modes": [
+          "implementation",
+          "review"
+        ],
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -20736,27 +20675,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
-          },
-          "task_modes": {
-            "source": "CURATED",
-            "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -20779,9 +20713,14 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 0.95,
+            "evidence": "reviewed semantic exclusion signals; not an authority grant"
+          },
+          "task_modes": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "reviewed compatibility routing seed"
           }
         },
         "relationships": {}
@@ -20790,7 +20729,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 6132
+      "body_bytes_inspected": 6132,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "session-handoff": {
       "skill_id": "session-handoff",
@@ -22128,8 +22068,7 @@
         ],
         "domains": [
           "orchestration",
-          "software-engineering",
-          "quality-and-safety"
+          "software-engineering"
         ],
         "outputs": [
           "review findings",
@@ -22169,7 +22108,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -22182,22 +22122,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -22236,7 +22176,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 12686
+      "body_bytes_inspected": 12686,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "survey-generator": {
       "skill_id": "survey-generator",
@@ -22445,7 +22386,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -22458,22 +22400,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -22512,7 +22454,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 10013
+      "body_bytes_inspected": 10013,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "tdd": {
       "skill_id": "tdd",
@@ -22541,10 +22484,7 @@
         ],
         "outputs": [
           "tests",
-          "test plan",
-          "plan",
-          "specification",
-          "design artifact"
+          "test plan"
         ],
         "context_cost": {
           "metadata_tokens": 46,
@@ -22596,27 +22536,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -22646,7 +22586,7 @@
           "relationships": {
             "source": "CURATED",
             "confidence": 0.95,
-            "evidence": "sparse high-confidence overlap/complement mapping"
+            "evidence": "sparse reviewed relationship mapping"
           }
         },
         "relationships": {
@@ -22661,7 +22601,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 4398
+      "body_bytes_inspected": 4398,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "teams-meeting-pipeline": {
       "skill_id": "teams-meeting-pipeline",
@@ -22820,9 +22761,7 @@
         ],
         "outputs": [
           "tests",
-          "test plan",
-          "verification",
-          "design artifact"
+          "test plan"
         ],
         "context_cost": {
           "metadata_tokens": 32,
@@ -22876,27 +22815,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -22926,7 +22865,7 @@
           "relationships": {
             "source": "CURATED",
             "confidence": 0.95,
-            "evidence": "sparse high-confidence overlap/complement mapping"
+            "evidence": "sparse reviewed relationship mapping"
           }
         },
         "relationships": {
@@ -22946,7 +22885,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 9867
+      "body_bytes_inspected": 9867,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "thoroughness-scoring": {
       "skill_id": "thoroughness-scoring",
@@ -22965,15 +22905,10 @@
           "review"
         ],
         "domains": [
-          "quality-and-safety",
-          "context-engineering",
-          "frontend"
+          "quality-and-safety"
         ],
         "outputs": [
-          "review findings",
-          "audit report",
-          "design artifact",
-          "frontend artifact"
+          "review findings"
         ],
         "context_cost": {
           "metadata_tokens": 69,
@@ -23005,7 +22940,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -23013,27 +22949,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -23067,7 +23003,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 5169
+      "body_bytes_inspected": 5169,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "threejs-animation": {
       "skill_id": "threejs-animation",
@@ -24397,9 +24334,7 @@
         ],
         "domains": [
           "product",
-          "documentation",
-          "context-engineering",
-          "release"
+          "documentation"
         ],
         "outputs": [
           "PRD",
@@ -24438,7 +24373,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -24446,27 +24382,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -24500,7 +24436,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 3113
+      "body_bytes_inspected": 3113,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "token-efficiency": {
       "skill_id": "token-efficiency",
@@ -25054,19 +24991,11 @@
         ],
         "domains": [
           "repository",
-          "architecture",
-          "context-engineering",
-          "software-engineering",
-          "release"
+          "architecture"
         ],
         "outputs": [
           "source findings",
-          "architecture map",
-          "verification",
-          "evidence",
-          "review findings",
-          "specification",
-          "frontend artifact"
+          "architecture map"
         ],
         "inputs": [
           "task request",
@@ -25104,7 +25033,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -25112,27 +25042,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "inputs": {
             "source": "INFERRED",
@@ -25171,7 +25101,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 47635
+      "body_bytes_inspected": 47635,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "understand-chat": {
       "skill_id": "understand-chat",
@@ -26223,12 +26154,8 @@
           "handoff",
           "learn"
         ],
-        "task_modes": [
-          "review"
-        ],
         "domains": [
-          "orchestration",
-          "general"
+          "orchestration"
         ],
         "outputs": [
           "review findings",
@@ -26266,7 +26193,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -26279,22 +26207,17 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
-          },
-          "task_modes": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity signals"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -26330,10 +26253,11 @@
         "relationships": {}
       },
       "review_status": "CURATED",
-      "confidence": 0.95,
+      "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 7439
+      "body_bytes_inspected": 7439,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "verification-before-completion": {
       "skill_id": "verification-before-completion",
@@ -26363,16 +26287,12 @@
         ],
         "domains": [
           "software-engineering",
-          "testing",
-          "frontend"
+          "testing"
         ],
         "outputs": [
           "verification",
           "browser verification",
-          "evidence",
-          "plan",
-          "design artifact",
-          "frontend artifact"
+          "evidence"
         ],
         "context_cost": {
           "metadata_tokens": 70,
@@ -26420,27 +26340,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -26469,8 +26389,8 @@
           },
           "relationships": {
             "source": "CURATED",
-            "confidence": 0.95,
-            "evidence": "sparse high-confidence overlap/complement mapping"
+            "confidence": 0.9,
+            "evidence": "sparse reviewed relationship mapping"
           }
         },
         "relationships": {
@@ -26485,7 +26405,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 4201
+      "body_bytes_inspected": 4201,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "visual-atelier": {
       "skill_id": "visual-atelier",
@@ -26507,8 +26428,7 @@
           "design"
         ],
         "domains": [
-          "visual-design",
-          "frontend"
+          "visual-design"
         ],
         "outputs": [
           "review findings",
@@ -26545,7 +26465,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -26558,22 +26479,22 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "INFERRED",
@@ -26612,7 +26533,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 21178
+      "body_bytes_inspected": 21178,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "web-video-presentation": {
       "skill_id": "web-video-presentation",
@@ -26774,22 +26696,11 @@
         ],
         "domains": [
           "research",
-          "documentation",
-          "orchestration",
-          "context-engineering",
-          "software-engineering",
-          "frontend",
-          "release",
-          "repository",
-          "product"
+          "documentation"
         ],
         "outputs": [
           "research brief",
-          "sources",
-          "source findings",
-          "specification",
-          "design artifact",
-          "frontend artifact"
+          "sources"
         ],
         "context_cost": {
           "metadata_tokens": 110,
@@ -26827,7 +26738,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -26835,27 +26747,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -26889,7 +26801,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 4042
+      "body_bytes_inspected": 4042,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "wiki-query": {
       "skill_id": "wiki-query",
@@ -27026,21 +26939,12 @@
           "research"
         ],
         "domains": [
-          "research",
-          "orchestration",
-          "context-engineering",
-          "frontend",
-          "integrations",
-          "repository"
+          "research"
         ],
         "outputs": [
           "research brief",
           "citations",
-          "sources",
-          "verification",
-          "source findings",
-          "design artifact",
-          "frontend artifact"
+          "sources"
         ],
         "context_cost": {
           "metadata_tokens": 127,
@@ -27090,27 +26994,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -27139,8 +27043,8 @@
           },
           "relationships": {
             "source": "CURATED",
-            "confidence": 0.95,
-            "evidence": "sparse high-confidence overlap/complement mapping"
+            "confidence": 0.9,
+            "evidence": "sparse reviewed relationship mapping"
           }
         },
         "relationships": {
@@ -27155,7 +27059,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 5425
+      "body_bytes_inspected": 5425,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "wiki-viewer": {
       "skill_id": "wiki-viewer",
@@ -27580,10 +27485,7 @@
         ],
         "outputs": [
           "plan",
-          "implementation plan",
-          "review findings",
-          "specification",
-          "design artifact"
+          "implementation plan"
         ],
         "context_cost": {
           "metadata_tokens": 55,
@@ -27616,7 +27518,8 @@
             "body_inspected_for_enrichment": true,
             "permission_inference": "UNKNOWN_CONSERVATIVE"
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -27629,27 +27532,27 @@
           "roles": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "stages": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "task_modes": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "domains": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited compatibility seed"
+            "evidence": "reviewed compatibility routing seed"
           },
           "outputs": {
             "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "audited output mapping"
+            "evidence": "reviewed compatibility routing seed"
           },
           "context_cost": {
             "source": "INFERRED_HIGH_CONFIDENCE",
@@ -27683,7 +27586,8 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z",
       "body_policy": "READ_ONLY",
-      "body_bytes_inspected": 6227
+      "body_bytes_inspected": 6227,
+      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     },
     "writing-skills": {
       "skill_id": "writing-skills",
@@ -28194,5 +28098,5 @@
       "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     }
   },
-  "overlay_digest": "sha256:13896c8ded17a16129f2092b2e83d1bbe6465055867f3f948897e78d42a5dcc5"
+  "overlay_digest": "sha256:482720a45d8b74f5e9cda4eddc283993611510ba31403d991c4f297605f66f4b"
 }
