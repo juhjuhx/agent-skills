@@ -266,6 +266,7 @@ class SchemaDocumentTests(unittest.TestCase):
             "StageRoute",
             "CompiledExecutionBundle",
             "CodexNativeProjection",
+            "SkillRoutingMetadata",
         )
 
         for name in schema_names:

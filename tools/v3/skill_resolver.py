@@ -7,8 +7,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterable
 
-from tools.v3.compatibility import import_skill_index_entry, load_current_registry
+from tools.v3.compatibility import load_current_registry
 from tools.v3.contract_validation import validate_instance
+from tools.v3.metadata_enrichment import load_enriched_catalog
 
 
 TRUSTED_FOR_LOADING = frozenset({"CORE_TRUSTED", "CURATED"})
@@ -98,9 +99,9 @@ class SkillResolver:
             registry = load_current_registry(self.registry_path)
             registry_records_seen = len(registry["skills"])
             by_id = {
-                entry.get("id"): import_skill_index_entry(entry, registry)
-                for entry in registry["skills"]
-                if isinstance(entry, dict) and isinstance(entry.get("id"), str)
+                record.get("skill_id"): record
+                for record in load_enriched_catalog(self.registry_path)
+                if isinstance(record, dict) and isinstance(record.get("skill_id"), str)
             }
         else:
             by_id = {

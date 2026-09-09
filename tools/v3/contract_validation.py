@@ -28,6 +28,7 @@ SCHEMA_FILES = {
     "StageRoute": "stage-route.schema.json",
     "CompiledExecutionBundle": "compiled-execution-bundle.schema.json",
     "CodexNativeProjection": "codex-native-projection.schema.json",
+    "SkillRoutingMetadata": "skill-routing-metadata.schema.json",
 }
 
 KNOWN_CAPABILITIES = frozenset(
