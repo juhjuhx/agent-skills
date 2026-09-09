@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/live-execution-record.schema.json",
+  "title": "Agent Skills Matrix v3 LiveExecutionRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_id",
+    "run_id",
+    "fixture_id",
+    "fixture_set",
+    "evidence_class",
+    "status",
+    "runtime_id",
+    "observed_version",
+    "model_id",
+    "reasoning_effort",
+    "controls",
+    "repetition",
+    "terminal_outcome",
+    "stage_outcomes",
+    "quality",
+    "efficiency",
+    "reliability",
+    "security",
+    "portability",
+    "output_evidence",
+    "provenance",
+    "history_mode",
+    "sensitive_data_serialized"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "record_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "run_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "fixture_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "fixture_set": {"type": "string", "enum": ["HOLDOUT"]},
+    "evidence_class": {"$ref": "common.schema.json#/$defs/evidenceClass"},
+    "status": {"type": "string", "enum": ["COMPLETED", "FAILED", "LIVE_LANE_BLOCKED"]},
+    "runtime_id": {"$ref": "common.schema.json#/$defs/runtimeId"},
+    "observed_version": {"type": ["string", "null"], "maxLength": 2000},
+    "model_id": {"type": ["string", "null"], "maxLength": 2000},
+    "reasoning_effort": {"type": ["string", "null"], "maxLength": 80},
+    "effect_class": {
+      "type": ["string", "null"],
+      "enum": ["CONFIGURATION_EFFECT", "MODEL_EFFECT", "REASONING_EFFORT_EFFECT", "INCONCLUSIVE", null]
+    },
+    "controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task_spec_digest",
+        "fixture_digest",
+        "start_sha",
+        "stage_route_digest",
+        "selected_skill_ids",
+        "selected_skill_digests",
+        "permission_envelope_digest",
+        "tool_availability",
+        "mcp_availability",
+        "project_instruction_digest",
+        "system_instruction_digest"
+      ],
+      "properties": {
+        "task_spec_digest": {"$ref": "common.schema.json#/$defs/digest"},
+        "fixture_digest": {"$ref": "common.schema.json#/$defs/digest"},
+        "start_sha": {"type": ["string", "null"], "maxLength": 200},
+        "stage_route_digest": {"$ref": "common.schema.json#/$defs/digest"},
+        "selected_skill_ids": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/recordId"}, "uniqueItems": true},
+        "selected_skill_digests": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/digest"}, "uniqueItems": true},
+        "permission_envelope_digest": {"$ref": "common.schema.json#/$defs/digest"},
+        "tool_availability": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/shortString"}, "uniqueItems": true},
+        "mcp_availability": {"type": "string", "enum": ["AVAILABLE", "UNAVAILABLE", "NOT_USED", "UNKNOWN"]},
+        "project_instruction_digest": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
+        "system_instruction_digest": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "repetition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["n", "classification"],
+      "properties": {
+        "n": {"type": "integer", "minimum": 1},
+        "target": {"type": "integer", "minimum": 1},
+        "classification": {"type": "string", "enum": ["TARGETED", "EXPLORATORY_ONLY"]}
+      }
+    },
+    "terminal_outcome": {"type": "string", "enum": ["VERIFIED_SUCCESS", "PARTIAL", "FAILED", "BLOCKED"]},
+    "stage_outcomes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["stage", "outcome"],
+        "properties": {
+          "stage": {"$ref": "common.schema.json#/$defs/stage"},
+          "outcome": {"type": "string", "enum": ["PASS", "PARTIAL", "FAIL", "BLOCKED"]},
+          "evidence_refs": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/recordId"}, "uniqueItems": true},
+          "notes": {"$ref": "common.schema.json#/$defs/shortString"}
+        }
+      },
+      "minItems": 1
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["acceptance_criteria_coverage", "tests_pass", "artifact_correctness", "source_accuracy", "review_finding_precision", "user_correction"],
+      "properties": {
+        "acceptance_criteria_coverage": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "tests_pass": {"type": ["boolean", "null"]},
+        "artifact_correctness": {"type": ["boolean", "null"]},
+        "source_accuracy": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "review_finding_precision": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "user_correction": {"type": ["boolean", "null"]}
+      }
+    },
+    "efficiency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["latency_ms", "wall_time_ms", "model_calls", "tool_calls", "context_tokens", "input_tokens", "output_tokens", "cost_units", "cost_status"],
+      "properties": {
+        "latency_ms": {"type": ["number", "null"], "minimum": 0},
+        "wall_time_ms": {"type": ["number", "null"], "minimum": 0},
+        "model_calls": {"type": ["integer", "null"], "minimum": 0},
+        "tool_calls": {"type": ["integer", "null"], "minimum": 0},
+        "context_tokens": {"type": ["integer", "null"], "minimum": 0},
+        "input_tokens": {"type": ["integer", "null"], "minimum": 0},
+        "output_tokens": {"type": ["integer", "null"], "minimum": 0},
+        "cost_units": {"type": ["number", "null"], "minimum": 0},
+        "cost_status": {"type": "string", "enum": ["MEASURED", "UNKNOWN", "NOT_APPLICABLE"]}
+      }
+    },
+    "reliability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["success_count", "reroutes", "retries", "failed_tool_calls", "invalid_edits", "recovery_events", "failure_reasons"],
+      "properties": {
+        "success_count": {"type": "integer", "minimum": 0},
+        "reroutes": {"type": "integer", "minimum": 0},
+        "retries": {"type": "integer", "minimum": 0},
+        "failed_tool_calls": {"type": "integer", "minimum": 0},
+        "invalid_edits": {"type": "integer", "minimum": 0},
+        "recovery_events": {"type": "integer", "minimum": 0},
+        "failure_reasons": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/shortString"}, "uniqueItems": true}
+      }
+    },
+    "security": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["permission_violation", "sandbox_mismatch", "unsafe_proposal", "secret_exposure", "unexpected_network_usage"],
+      "properties": {
+        "permission_violation": {"type": ["boolean", "null"]},
+        "sandbox_mismatch": {"type": ["boolean", "null"]},
+        "unsafe_proposal": {"type": ["boolean", "null"]},
+        "secret_exposure": {"type": ["boolean", "null"]},
+        "unexpected_network_usage": {"type": ["boolean", "null"]}
+      }
+    },
+    "portability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["portable_artifacts", "runtime_specific_artifacts", "lost_capabilities", "instruction_leakage"],
+      "properties": {
+        "portable_artifacts": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/recordId"}, "uniqueItems": true},
+        "runtime_specific_artifacts": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/recordId"}, "uniqueItems": true},
+        "lost_capabilities": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/capability"}, "uniqueItems": true},
+        "instruction_leakage": {"type": "boolean"}
+      }
+    },
+    "output_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "stdout_digest", "stdout_bytes", "stderr_digest", "stderr_bytes", "raw_output_serialized", "sanitized"],
+      "properties": {
+        "format": {"type": "string", "enum": ["text", "json", "jsonl", "unknown"]},
+        "stdout_digest": {"$ref": "common.schema.json#/$defs/digest"},
+        "stdout_bytes": {"type": "integer", "minimum": 0},
+        "stderr_digest": {"$ref": "common.schema.json#/$defs/digest"},
+        "stderr_bytes": {"type": "integer", "minimum": 0},
+        "raw_output_serialized": {"type": "boolean", "const": false},
+        "sanitized": {"type": "boolean", "const": true}
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "start_sha": {"type": ["string", "null"], "maxLength": 200},
+        "end_sha": {"type": ["string", "null"], "maxLength": 200},
+        "changed_files": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/relativePath"}, "uniqueItems": true},
+        "diff_digest": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
+        "test_commands": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/shortString"}, "uniqueItems": true},
+        "tests_passed": {"type": ["boolean", "null"]}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime_source", "invocation_contract", "documentation_snapshot", "verification_method", "observed_at"],
+      "properties": {
+        "runtime_source": {"$ref": "common.schema.json#/$defs/shortString"},
+        "invocation_contract": {"$ref": "common.schema.json#/$defs/shortString"},
+        "documentation_snapshot": {"type": ["string", "null"], "maxLength": 2000},
+        "source_refs": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/shortString"}, "uniqueItems": true},
+        "verification_method": {"$ref": "common.schema.json#/$defs/shortString"},
+        "observed_at": {"$ref": "common.schema.json#/$defs/shortString"}
+      }
+    },
+    "confounders": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/shortString"}, "uniqueItems": true},
+    "baseline_refs": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/recordId"}, "uniqueItems": true},
+    "notes": {"$ref": "common.schema.json#/$defs/shortString"},
+    "history_mode": {"type": "string", "const": "APPEND_ONLY"},
+    "sensitive_data_serialized": {"type": "boolean", "const": false}
+  }
+}
