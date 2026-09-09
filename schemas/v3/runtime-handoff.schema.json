@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/runtime-handoff.schema.json",
+  "title": "Agent Skills Matrix v3 RuntimeHandoff",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "handoff_id",
+    "task_id",
+    "source_runtime_ref",
+    "destination_runtime_ref",
+    "reason",
+    "handoff_mode",
+    "portable_artifact_refs",
+    "working_tree_state",
+    "permission_envelope",
+    "lost_capabilities",
+    "handoff_cost",
+    "evidence_provenance"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "handoff_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "task_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "source_runtime_ref": {"$ref": "common.schema.json#/$defs/recordId"},
+    "destination_runtime_ref": {"$ref": "common.schema.json#/$defs/recordId"},
+    "reason": {"$ref": "common.schema.json#/$defs/shortString"},
+    "handoff_mode": {"type": "string", "const": "EXPLICIT"},
+    "portable_artifact_refs": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/recordId"}, "minItems": 1, "uniqueItems": true},
+    "working_tree_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit", "dirty"],
+      "properties": {
+        "commit": {"$ref": "common.schema.json#/$defs/shortString"},
+        "dirty": {"type": "boolean"},
+        "changed_paths": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/relativePath"}, "uniqueItems": true}
+      }
+    },
+    "permission_envelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "filesystem", "network", "external_write", "secrets", "publish", "delete"],
+      "properties": {
+        "level": {"$ref": "common.schema.json#/$defs/permissionLevel"},
+        "filesystem": {"type": "string", "enum": ["none", "read", "workspace-read", "workspace-write", "external-write", "destructive"]},
+        "network": {"type": "string", "enum": ["none", "limited", "standard"]},
+        "external_write": {"type": "boolean"},
+        "secrets": {"type": "boolean"},
+        "publish": {"type": "boolean"},
+        "delete": {"type": "boolean"}
+      }
+    },
+    "lost_capabilities": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/capability"}, "uniqueItems": true},
+    "handoff_cost": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class"],
+      "properties": {
+        "class": {"type": "string", "enum": ["none", "low", "medium", "high", "unknown"]},
+        "latency_ms": {"type": ["number", "null"], "minimum": 0},
+        "context_tokens": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "evidence_provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_class", "source", "method"],
+      "properties": {
+        "evidence_class": {"$ref": "common.schema.json#/$defs/evidenceClass"},
+        "source": {"$ref": "common.schema.json#/$defs/shortString"},
+        "method": {"$ref": "common.schema.json#/$defs/shortString"},
+        "reference": {"$ref": "common.schema.json#/$defs/shortString"}
+      }
+    }
+  }
+}

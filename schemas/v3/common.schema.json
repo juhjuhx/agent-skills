@@ -89,6 +89,14 @@
       "type": "string",
       "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
     },
+    "evidenceClass": {
+      "type": "string",
+      "enum": ["REAL_EXECUTION", "HOST_MANAGED_FIXTURE", "MOCK", "UNAVAILABLE"]
+    },
+    "supportLevel": {
+      "type": "string",
+      "enum": ["NATIVE", "EMULATED", "HOST_MANAGED", "UNSUPPORTED"]
+    },
     "capability": {
       "type": "string",
       "minLength": 1,
