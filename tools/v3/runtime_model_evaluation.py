@@ -610,6 +610,58 @@ def model_routing_work_required(stage_route: dict[str, Any]) -> dict[str, Any]:
     return {"required": True, "reason": "selected skill route may be evaluated within an eligible runtime"}
 
 
+def live_evidence_gate(
+    *,
+    completed_configuration_ids: Iterable[str],
+    completed_task_classes: Iterable[str],
+    repeated_cell_n: int,
+    measurement_integrity_blockers: Iterable[str],
+    meaningful_comparison: bool,
+    secondary_runtime_blocked: bool = False,
+) -> dict[str, Any]:
+    """Apply the bounded live-evidence decision gate without routing policy."""
+
+    configuration_ids = sorted({str(item) for item in completed_configuration_ids if item})
+    task_classes = sorted({str(item) for item in completed_task_classes if item})
+    blockers = sorted({str(item) for item in measurement_integrity_blockers if item})
+    missing: list[str] = []
+    if blockers:
+        missing.append("measurement-integrity blocker")
+    if len(configuration_ids) < 2:
+        missing.append("second completed execution configuration")
+    if len(task_classes) < 3:
+        missing.append("three materially distinct task classes")
+    if repeated_cell_n <= 1:
+        missing.append("repeated evidence beyond n=1")
+    if not meaningful_comparison:
+        missing.append("meaningful live comparison or eligible baseline")
+
+    adequate_primary_evidence = (
+        not blockers and len(task_classes) >= 3 and repeated_cell_n > 1
+    )
+    if blockers:
+        verdict = "INSUFFICIENT_LIVE_EVIDENCE"
+        reason = "measurement integrity remains unresolved"
+    elif len(configuration_ids) >= 2 and not missing:
+        verdict = "ROUTING_EVIDENCE_READY"
+        reason = "minimum live-evidence gate requirements are present"
+    elif secondary_runtime_blocked and adequate_primary_evidence:
+        verdict = "RUNTIME_CAPABILITY_GAPS"
+        reason = "secondary live configurations are blocked by an unverified runtime boundary"
+    else:
+        verdict = "INSUFFICIENT_LIVE_EVIDENCE"
+        reason = "minimum live-evidence gate requirements are not present"
+    return {
+        "verdict": verdict,
+        "reason": reason,
+        "completed_configuration_count": len(configuration_ids),
+        "task_class_count": len(task_classes),
+        "repeated_cell_n": repeated_cell_n,
+        "measurement_integrity_blockers": blockers,
+        "missing_requirements": sorted(set(missing)),
+    }
+
+
 def routing_policy_proposal(result_ids: Iterable[str], rationale: str) -> dict[str, Any]:
     """Create proposal data only; never write routing policy."""
 

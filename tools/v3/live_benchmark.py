@@ -31,6 +31,12 @@ EFFECT_CLASSES = frozenset(
     }
 )
 REPETITION_CLASSES = frozenset({"TARGETED", "EXPLORATORY_ONLY"})
+METRIC_AGGREGATIONS = frozenset(
+    {"CUMULATIVE_TOTAL", "PER_CALL_LAST", "SUMMED_CALLS", "UNKNOWN", "PER_RUN"}
+)
+METRIC_SOURCES = frozenset({"OBSERVED", "DERIVED", "UNKNOWN"})
+METRIC_CONFIDENCE = frozenset({"HIGH", "MEDIUM", "LOW", "UNKNOWN"})
+METRIC_STATUSES = frozenset({"VERIFIED", "INFERRED", "UNKNOWN", "NOT_OBSERVED"})
 _CONTROL_FIELDS = (
     "task_spec_digest",
     "fixture_digest",
@@ -238,6 +244,107 @@ def output_evidence(stdout: str, stderr: str, *, format_hint: str | None = None)
     }
 
 
+def _metric_provenance(
+    metric_name: str,
+    value: int | float | None,
+    unit: str,
+    *,
+    source_field: str | None = None,
+    aggregation: str = "UNKNOWN",
+    source: str = "UNKNOWN",
+    confidence: str = "UNKNOWN",
+    status: str = "UNKNOWN",
+    runtime_id: str | None = None,
+    runtime_version: str | None = None,
+) -> dict[str, Any]:
+    """Build one small, serializable metric interpretation record."""
+
+    if aggregation not in METRIC_AGGREGATIONS:
+        raise ValueError(f"unsupported metric aggregation: {aggregation}")
+    if source not in METRIC_SOURCES:
+        raise ValueError(f"unsupported metric source: {source}")
+    if confidence not in METRIC_CONFIDENCE:
+        raise ValueError(f"unsupported metric confidence: {confidence}")
+    if status not in METRIC_STATUSES:
+        raise ValueError(f"unsupported metric status: {status}")
+    return {
+        "metric_name": metric_name,
+        "value": value,
+        "unit": unit,
+        "source_field": source_field,
+        "aggregation": aggregation,
+        "source": source,
+        "confidence": confidence,
+        "status": status,
+        "runtime": runtime_id,
+        "runtime_version": runtime_version,
+    }
+
+
+_METRIC_UNITS = {
+    "latency_ms": "ms",
+    "wall_time_ms": "ms",
+    "model_calls": "calls",
+    "tool_calls": "calls",
+    "context_tokens": "tokens",
+    "input_tokens": "tokens",
+    "output_tokens": "tokens",
+    "tokens_total": "tokens",
+    "cost_units": "currency",
+}
+
+
+def _empty_metric_provenance(
+    runtime_id: str | None = None, runtime_version: str | None = None
+) -> dict[str, dict[str, Any]]:
+    return {
+        name: _metric_provenance(
+            name,
+            None,
+            unit,
+            runtime_id=runtime_id,
+            runtime_version=runtime_version,
+            status="UNKNOWN",
+        )
+        for name, unit in _METRIC_UNITS.items()
+    }
+
+
+def _walk_json_with_paths(
+    value: Any, *, path: tuple[str, ...] = (), depth: int = 0
+) -> Iterable[tuple[dict[str, Any], tuple[str, ...]]]:
+    if depth > 5:
+        return
+    if isinstance(value, dict):
+        yield value, path
+        for key, child in value.items():
+            yield from _walk_json_with_paths(
+                child, path=path + (str(key),), depth=depth + 1
+            )
+    elif isinstance(value, list):
+        for index, child in enumerate(value[:200]):
+            yield from _walk_json_with_paths(
+                child, path=path + (str(index),), depth=depth + 1
+            )
+
+
+def _metric_path(path: tuple[str, ...], key: str) -> str:
+    parts = [part for part in path if not part.isdigit()]
+    parts.append(key)
+    return ".".join(parts)
+
+
+def _codex_release_usage_is_verified(
+    runtime_id: str | None, runtime_version: str | None
+) -> bool:
+    """Return true only for the locally pinned Codex release contract."""
+
+    return runtime_id == "codex" and runtime_version in {
+        "codex-cli 0.153.4",
+        "0.153.4",
+    }
+
+
 def _walk_json(value: Any, *, depth: int = 0) -> Iterable[dict[str, Any]]:
     if depth > 5:
         return
@@ -250,52 +357,223 @@ def _walk_json(value: Any, *, depth: int = 0) -> Iterable[dict[str, Any]]:
             yield from _walk_json(child, depth=depth + 1)
 
 
-def extract_runtime_metrics(stdout: str, *, format_hint: str | None = None) -> dict[str, Any]:
-    """Extract non-sensitive usage facts from common JSON/JSONL result shapes."""
+def extract_runtime_metrics(
+    stdout: str,
+    *,
+    format_hint: str | None = None,
+    runtime_id: str | None = None,
+    runtime_version: str | None = None,
+) -> dict[str, Any]:
+    """Extract usage values together with conservative semantic provenance.
 
+    A numeric field is not a total merely because it was observed last. The
+    exact Codex 0.153.4 ``turn.completed`` contract is the only contract
+    interpreted as a cumulative total here; all other shapes remain UNKNOWN.
+    """
+
+    metrics = _empty_metric_provenance(runtime_id, runtime_version)
     fmt = detect_output_format(stdout, hint=format_hint)
     if fmt not in {"json", "jsonl"}:
-        return {"model_id": None, "input_tokens": None, "output_tokens": None, "tool_calls": None, "cost_units": None}
-    values: list[Any] = []
+        return {"model_id": None, **metrics}
     try:
-        if fmt == "json":
-            values = [json.loads(stdout)]
-        else:
-            values = [json.loads(line) for line in stdout.splitlines() if line.strip()]
+        values = (
+            [json.loads(stdout)]
+            if fmt == "json"
+            else [json.loads(line) for line in stdout.splitlines() if line.strip()]
+        )
     except json.JSONDecodeError:
-        return {"model_id": None, "input_tokens": None, "output_tokens": None, "tool_calls": None, "cost_units": None}
+        return {"model_id": None, **metrics}
 
     models: set[str] = set()
-    numbers: dict[str, list[int | float]] = {}
-    tool_calls = 0
-    for mapping in _walk_json(values):
+    numbers: dict[str, list[tuple[int | float, str]]] = {}
+    explicit_model_calls: list[tuple[int | float, str]] = []
+    explicit_tool_calls: list[tuple[int | float, str]] = []
+    explicit_costs: list[tuple[int | float, str]] = []
+    event_tool_count = 0
+    verified_codex_usage: dict[str, tuple[int | float, str]] | None = None
+    usage_aliases = {
+        "input_tokens": {"input_tokens", "prompt_tokens", "input_token_count"},
+        "output_tokens": {"output_tokens", "completion_tokens", "output_token_count"},
+        "tokens_total": {"total_tokens", "tokens_total"},
+    }
+
+    for mapping, path in _walk_json_with_paths(values):
+        event_type = mapping.get("type")
+        if isinstance(event_type, str) and "tool" in event_type.lower():
+            event_tool_count += 1
+        if event_type == "turn.completed" and isinstance(mapping.get("usage"), dict):
+            usage = mapping["usage"]
+            candidate_usage: dict[str, tuple[int | float, str]] = {}
+            for metric_name, aliases in usage_aliases.items():
+                for key, value in usage.items():
+                    if (
+                        str(key).lower() in aliases
+                        and isinstance(value, (int, float))
+                        and not isinstance(value, bool)
+                    ):
+                        candidate_usage[metric_name] = (
+                            value,
+                            f"turn.completed.usage.{key}",
+                        )
+                        break
+            if candidate_usage:
+                if _codex_release_usage_is_verified(runtime_id, runtime_version):
+                    verified_codex_usage = candidate_usage
+                elif verified_codex_usage is None:
+                    # Retain the last observed generic usage shape, but do not
+                    # assign an aggregation semantics without a contract.
+                    for metric_name, item in candidate_usage.items():
+                        numbers.setdefault(metric_name, []).append(item)
+
         for key, value in mapping.items():
             normalized = str(key).lower()
             if normalized in {"model", "model_id", "modelid"} and isinstance(value, str) and len(value) <= 200:
                 models.add(value)
-            if normalized in {"input_tokens", "prompt_tokens", "input_token_count", "output_tokens", "completion_tokens", "output_token_count", "total_tokens", "tokens_total", "total_cost_usd", "cost_usd"} and isinstance(value, (int, float)) and not isinstance(value, bool):
-                numbers.setdefault(normalized, []).append(value)
-            if normalized in {"tool_call", "tool_calls", "tool_use", "tool_uses"}:
-                if isinstance(value, int) and not isinstance(value, bool):
-                    tool_calls = max(tool_calls, value)
-                elif isinstance(value, list):
-                    tool_calls = max(tool_calls, len(value))
-            if normalized == "type" and isinstance(value, str) and "tool" in value.lower():
-                tool_calls += 1
+            if isinstance(value, (int, float)) and not isinstance(value, bool):
+                for metric_name, aliases in usage_aliases.items():
+                    if normalized in aliases:
+                        numbers.setdefault(metric_name, []).append(
+                            (value, _metric_path(path, str(key)))
+                        )
+                if normalized in {"model_calls", "model_call_count", "api_calls"}:
+                    explicit_model_calls.append(
+                        (value, _metric_path(path, str(key)))
+                    )
+                if normalized in {"tool_calls", "tool_call_count", "tool_uses"}:
+                    explicit_tool_calls.append(
+                        (value, _metric_path(path, str(key)))
+                    )
+                if normalized in {"total_cost_usd", "cost_usd"}:
+                    explicit_costs.append((value, _metric_path(path, str(key))))
+            elif normalized in {"tool_call", "tool_calls", "tool_use", "tool_uses"} and isinstance(value, list):
+                explicit_tool_calls.append(
+                    (len(value), _metric_path(path, str(key)))
+                )
 
-    def last_number(*keys: str) -> int | float | None:
-        for key in keys:
-            if numbers.get(key):
-                return numbers[key][-1]
-        return None
+    def apply_observed(
+        metric_name: str,
+        observation: tuple[int | float, str] | None,
+        *,
+        status: str = "UNKNOWN",
+        aggregation: str = "UNKNOWN",
+        confidence: str = "UNKNOWN",
+    ) -> None:
+        if observation is None:
+            return
+        value, source_field = observation
+        metrics[metric_name] = _metric_provenance(
+            metric_name,
+            value,
+            _METRIC_UNITS[metric_name],
+            source_field=source_field,
+            aggregation=aggregation,
+            source="OBSERVED",
+            confidence=confidence,
+            status=status,
+            runtime_id=runtime_id,
+            runtime_version=runtime_version,
+        )
 
+    if verified_codex_usage:
+        for metric_name, observation in verified_codex_usage.items():
+            apply_observed(
+                metric_name,
+                observation,
+                status="VERIFIED",
+                aggregation="CUMULATIVE_TOTAL",
+                confidence="HIGH",
+            )
+    else:
+        for metric_name in ("input_tokens", "output_tokens", "tokens_total"):
+            apply_observed(
+                metric_name,
+                numbers.get(metric_name, [])[-1] if numbers.get(metric_name) else None,
+            )
+
+    apply_observed(
+        "model_calls",
+        explicit_model_calls[-1] if explicit_model_calls else None,
+    )
+    tool_observation = explicit_tool_calls[-1] if explicit_tool_calls else None
+    if tool_observation is None and event_tool_count:
+        tool_observation = (event_tool_count, "event.type")
+    apply_observed("tool_calls", tool_observation)
+    apply_observed("cost_units", explicit_costs[-1] if explicit_costs else None)
+
+    return {"model_id": sorted(models)[0] if len(models) == 1 else None, **metrics}
+
+
+def classify_smoke_probe(observation: ProcessObservation) -> dict[str, Any]:
+    """Classify a bounded compatibility probe without retaining diagnostics."""
+
+    if not isinstance(observation, ProcessObservation):
+        raise TypeError("observation must be a ProcessObservation")
+    if observation.timed_out:
+        failure_class = "TIMEOUT"
+        cause = "UNKNOWN"
+    elif not observation.launched:
+        failure_class = "STARTUP"
+        cause = "UNKNOWN"
+    elif observation.returncode == 0:
+        return {
+            "status": "COMPATIBLE",
+            "evidence_class": "REAL_EXECUTION",
+            "failure_class": None,
+            "cause": None,
+            "quality_evidence_eligible": False,
+            "diagnostic_digest": digest_bytes(observation.stderr),
+            "diagnostic_bytes": len(observation.stderr.encode("utf-8")),
+        }
+    else:
+        lowered = observation.stderr.lower()
+        if any(marker in lowered for marker in ("401", "unauthorized", "authentication", "oauth")):
+            failure_class = "AUTH"
+        elif any(marker in lowered for marker in ("model not found", "model unavailable", "no such model")):
+            failure_class = "MODEL_AVAILABILITY"
+        elif any(marker in lowered for marker in ("budget", "quota", "credit")):
+            failure_class = "BUDGET"
+        elif any(marker in lowered for marker in ("unknown option", "unrecognized option", "invalid option")):
+            failure_class = "CLI_CONTRACT"
+        elif any(marker in lowered for marker in ("permission", "approval", "interactive")):
+            failure_class = "CONFIG"
+        else:
+            failure_class = "UNKNOWN"
+        cause = "UNKNOWN"
     return {
-        "model_id": sorted(models)[0] if len(models) == 1 else None,
-        "input_tokens": last_number("input_tokens", "prompt_tokens", "input_token_count"),
-        "output_tokens": last_number("output_tokens", "completion_tokens", "output_token_count"),
-        "tokens_total": last_number("total_tokens", "tokens_total"),
-        "tool_calls": tool_calls or None,
-        "cost_units": last_number("total_cost_usd", "cost_usd"),
+        "status": "LIVE_LANE_BLOCKED",
+        "evidence_class": "UNAVAILABLE",
+        "failure_class": failure_class,
+        "cause": cause,
+        "quality_evidence_eligible": False,
+        "diagnostic_digest": digest_bytes(observation.stderr),
+        "diagnostic_bytes": len(observation.stderr.encode("utf-8")),
+    }
+
+
+def assess_read_only_lane(observed_controls: dict[str, Any]) -> dict[str, Any]:
+    """Require explicit least-privilege evidence before a read-only lane."""
+
+    if not isinstance(observed_controls, dict):
+        raise TypeError("observed_controls must be an object")
+    required = (
+        "read_only",
+        "deny_shell",
+        "deny_write",
+        "deny_network",
+        "deny_secrets",
+        "isolated_workspace",
+    )
+    missing = [name for name in required if observed_controls.get(name) is not True]
+    if missing:
+        return {
+            "status": "LIVE_LANE_BLOCKED",
+            "reason": "least-privilege controls are not all verified",
+            "missing_controls": missing,
+        }
+    return {
+        "status": "ELIGIBLE",
+        "reason": "read-only lane has explicit deny controls and an isolated workspace",
+        "verified_controls": list(required),
     }
 
 
@@ -433,17 +711,74 @@ def build_live_execution_record(
     else:
         evidence_class = "REAL_EXECUTION"
         status = "COMPLETED" if observation.returncode == 0 else "FAILED"
-    metrics = extract_runtime_metrics(observation.stdout, format_hint=format_hint)
+    metrics = extract_runtime_metrics(
+        observation.stdout,
+        format_hint=format_hint,
+        runtime_id=runtime_id,
+        runtime_version=observed_version,
+    )
+
+    def metric_value(name: str) -> int | float | None:
+        value = metrics.get(name)
+        return value.get("value") if isinstance(value, dict) else None
+
+    metric_provenance = _empty_metric_provenance(runtime_id, observed_version)
+    metric_provenance["latency_ms"] = _metric_provenance(
+        "latency_ms",
+        observation.duration_ms if observation.launched else None,
+        "ms",
+        source_field="host.perf_counter" if observation.launched else None,
+        aggregation="PER_RUN",
+        source="OBSERVED" if observation.launched else "UNKNOWN",
+        confidence="HIGH" if observation.launched else "UNKNOWN",
+        status="VERIFIED" if observation.launched else "NOT_OBSERVED",
+        runtime_id=runtime_id,
+        runtime_version=observed_version,
+    )
+    metric_provenance["wall_time_ms"] = _metric_provenance(
+        "wall_time_ms",
+        observation.duration_ms if observation.launched else None,
+        "ms",
+        source_field="host.perf_counter" if observation.launched else None,
+        aggregation="PER_RUN",
+        source="OBSERVED" if observation.launched else "UNKNOWN",
+        confidence="HIGH" if observation.launched else "UNKNOWN",
+        status="VERIFIED" if observation.launched else "NOT_OBSERVED",
+        runtime_id=runtime_id,
+        runtime_version=observed_version,
+    )
+    for name in (
+        "model_calls",
+        "tool_calls",
+        "context_tokens",
+        "input_tokens",
+        "output_tokens",
+        "tokens_total",
+        "cost_units",
+    ):
+        metric = metrics.get(name)
+        if isinstance(metric, dict):
+            metric_provenance[name] = metric
+    all_metric_statuses = {item["status"] for item in metric_provenance.values()}
+    measurement_status = (
+        "UNKNOWN"
+        if not observation.launched or observation.blocked
+        else "VERIFIED"
+        if all_metric_statuses == {"VERIFIED"}
+        else "PARTIAL"
+    )
     public_efficiency = {
         "latency_ms": observation.duration_ms if observation.launched else None,
         "wall_time_ms": observation.duration_ms if observation.launched else None,
-        "model_calls": 1 if observation.launched else None,
-        "tool_calls": metrics.get("tool_calls"),
+        "model_calls": metric_value("model_calls"),
+        "tool_calls": metric_value("tool_calls"),
         "context_tokens": None,
-        "input_tokens": metrics.get("input_tokens"),
-        "output_tokens": metrics.get("output_tokens"),
-        "cost_units": metrics.get("cost_units"),
-        "cost_status": "MEASURED" if metrics.get("cost_units") is not None else "UNKNOWN",
+        "input_tokens": metric_value("input_tokens"),
+        "output_tokens": metric_value("output_tokens"),
+        "cost_units": metric_value("cost_units"),
+        "cost_status": "MEASURED" if metric_value("cost_units") is not None else "UNKNOWN",
+        "measurement_status": measurement_status,
+        "metric_provenance": [metric_provenance[name] for name in _METRIC_UNITS],
     }
     if efficiency:
         public_efficiency.update(efficiency)

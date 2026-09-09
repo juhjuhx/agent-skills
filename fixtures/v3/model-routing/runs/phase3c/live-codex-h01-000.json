@@ -1,0 +1,80 @@
+{
+  "schema_version": "3.0",
+  "record_id": "record:phase3c1:H01:codex:000",
+  "run_id": "run:phase3c1:H01:codex:000",
+  "fixture_id": "H01-bugfix",
+  "fixture_set": "HOLDOUT",
+  "evidence_class": "UNAVAILABLE",
+  "status": "LIVE_LANE_BLOCKED",
+  "runtime_id": "codex",
+  "observed_version": "codex-cli 0.153.4",
+  "model_id": null,
+  "reasoning_effort": null,
+  "effect_class": "INCONCLUSIVE",
+  "controls": {
+    "task_spec_digest": "sha256:40baaf95f138689d6774e0c872e6444c401ddb9fac9c24d5ab13b437fe697028",
+    "fixture_digest": "sha256:766a2d5515fd7a9138c9d5bbae662e04feaba65ed45329f6f0b3542dd17fe096",
+    "start_sha": "49f043c25f616161077aacb27ba3cd95c299c201",
+    "stage_route_digest": "sha256:eaf3c17ce91f4b39a8df3de77c1cdc261343c084437c3e723c494e17d440e882",
+    "selected_skill_ids": ["using-superpowers", "tdd", "verification-before-completion"],
+    "selected_skill_digests": [
+      "sha256:1adce90aedd8b1362381f8bf8a7346966612cbde3591f74ab7e55e539fa1209a",
+      "sha256:8ae3fb3ce33a69cc829586ac52d9f2035d5d08f922507775fcb7eeeeb6132fab",
+      "sha256:ea52d15aabaf72bc6b558efe2c126f161b53961090ddcd712000273bfe8c7b6c"
+    ],
+    "permission_envelope_digest": "sha256:a09a39d930ed2dcf4fcd330b38566fe1cd1bf64701e343fc9688ace5e1729866",
+    "tool_availability": ["codex exec", "workspace filesystem", "local unittest"],
+    "mcp_availability": "NOT_USED",
+    "project_instruction_digest": "sha256:087ea689d728157d926b912f2e1f60989f788c3e2cf58f79e84e2834556744f8",
+    "system_instruction_digest": null
+  },
+  "repetition": {"n": 1, "target": 3, "classification": "EXPLORATORY_ONLY"},
+  "terminal_outcome": "BLOCKED",
+  "stage_outcomes": [
+    {"stage": "understand", "outcome": "BLOCKED", "notes": "Default sandbox invocation produced no usable Codex result."},
+    {"stage": "implement", "outcome": "BLOCKED", "notes": "No quality conclusion was taken from the failed launch."},
+    {"stage": "verify", "outcome": "BLOCKED", "notes": "Only an empty stdout and a sanitized diagnostic digest were available."}
+  ],
+  "quality": {
+    "acceptance_criteria_coverage": null,
+    "tests_pass": null,
+    "artifact_correctness": null,
+    "source_accuracy": null,
+    "review_finding_precision": null,
+    "user_correction": null
+  },
+  "efficiency": {
+    "latency_ms": 63.5,
+    "wall_time_ms": 63.5,
+    "model_calls": null,
+    "tool_calls": null,
+    "context_tokens": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "cost_units": null,
+    "cost_status": "UNKNOWN",
+    "measurement_status": "UNKNOWN",
+    "metric_provenance": [
+      {"metric_name": "latency_ms", "value": 63.5, "unit": "ms", "source_field": "host.perf_counter", "aggregation": "PER_RUN", "source": "OBSERVED", "confidence": "HIGH", "status": "VERIFIED", "runtime": "codex", "runtime_version": "codex-cli 0.153.4"},
+      {"metric_name": "wall_time_ms", "value": 63.5, "unit": "ms", "source_field": "host.perf_counter", "aggregation": "PER_RUN", "source": "OBSERVED", "confidence": "HIGH", "status": "VERIFIED", "runtime": "codex", "runtime_version": "codex-cli 0.153.4"},
+      {"metric_name": "model_calls", "value": null, "unit": "calls", "source_field": null, "aggregation": "UNKNOWN", "source": "UNKNOWN", "confidence": "UNKNOWN", "status": "UNKNOWN", "runtime": "codex", "runtime_version": "codex-cli 0.153.4"},
+      {"metric_name": "tool_calls", "value": null, "unit": "calls", "source_field": null, "aggregation": "UNKNOWN", "source": "UNKNOWN", "confidence": "UNKNOWN", "status": "UNKNOWN", "runtime": "codex", "runtime_version": "codex-cli 0.153.4"},
+      {"metric_name": "context_tokens", "value": null, "unit": "tokens", "source_field": null, "aggregation": "UNKNOWN", "source": "UNKNOWN", "confidence": "UNKNOWN", "status": "UNKNOWN", "runtime": "codex", "runtime_version": "codex-cli 0.153.4"},
+      {"metric_name": "input_tokens", "value": null, "unit": "tokens", "source_field": null, "aggregation": "UNKNOWN", "source": "UNKNOWN", "confidence": "UNKNOWN", "status": "UNKNOWN", "runtime": "codex", "runtime_version": "codex-cli 0.153.4"},
+      {"metric_name": "output_tokens", "value": null, "unit": "tokens", "source_field": null, "aggregation": "UNKNOWN", "source": "UNKNOWN", "confidence": "UNKNOWN", "status": "UNKNOWN", "runtime": "codex", "runtime_version": "codex-cli 0.153.4"},
+      {"metric_name": "tokens_total", "value": null, "unit": "tokens", "source_field": null, "aggregation": "UNKNOWN", "source": "UNKNOWN", "confidence": "UNKNOWN", "status": "UNKNOWN", "runtime": "codex", "runtime_version": "codex-cli 0.153.4"},
+      {"metric_name": "cost_units", "value": null, "unit": "currency", "source_field": null, "aggregation": "UNKNOWN", "source": "UNKNOWN", "confidence": "UNKNOWN", "status": "UNKNOWN", "runtime": "codex", "runtime_version": "codex-cli 0.153.4"}
+    ]
+  },
+  "reliability": {"success_count": 0, "reroutes": 0, "retries": 0, "failed_tool_calls": 0, "invalid_edits": 0, "recovery_events": 0, "failure_reasons": ["headless execution failed before a usable Codex result"]},
+  "security": {"permission_violation": false, "sandbox_mismatch": null, "unsafe_proposal": false, "secret_exposure": false, "unexpected_network_usage": false},
+  "portability": {"portable_artifacts": [], "runtime_specific_artifacts": [], "lost_capabilities": [], "instruction_leakage": false},
+  "output_evidence": {"format": "jsonl", "stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "stdout_bytes": 0, "stderr_digest": "sha256:2d8b902fb51c4fb0108c58a40b037f3ed52641f00cdae67901d7cbda9b4b8473", "stderr_bytes": 199, "raw_output_serialized": false, "sanitized": true},
+  "artifacts": {"start_sha": "49f043c25f616161077aacb27ba3cd95c299c201", "end_sha": "49f043c25f616161077aacb27ba3cd95c299c201", "changed_files": [], "diff_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "test_commands": ["PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover -s . -p 'test_*.py'"], "tests_passed": false},
+  "provenance": {"runtime_source": "local codex --version: codex-cli 0.153.4", "invocation_contract": "codex exec --ephemeral --sandbox workspace-write --color never --json --cd <isolated-fixture> -", "documentation_snapshot": "https://developers.openai.com/codex/", "source_refs": ["https://github.com/openai/codex/releases/tag/rust-v0.153.4"], "verification_method": "local version/help probe; default-sandbox bounded attempt; no raw diagnostics persisted", "observed_at": "2026-09-09T15:00:04+00:00"},
+  "confounders": ["default sandbox prevented a usable external runtime result; this attempt is not part of the controlled successful n=3 cell", "fixture source was reconstructed because the historical temporary repository was not retained", "n=1 is exploratory only"],
+  "baseline_refs": [],
+  "notes": "Recorded failed preliminary H01 attempt; excluded from quality and preference conclusions.",
+  "history_mode": "APPEND_ONLY",
+  "sensitive_data_serialized": false
+}

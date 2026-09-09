@@ -52,7 +52,19 @@
     "input_tokens": null,
     "output_tokens": null,
     "cost_units": null,
-    "cost_status": "UNKNOWN"
+    "cost_status": "UNKNOWN",
+    "measurement_status": "UNKNOWN",
+    "metric_provenance": [
+      {"metric_name": "latency_ms", "value": 60036.1, "unit": "ms", "source_field": "host.perf_counter", "aggregation": "PER_RUN", "source": "OBSERVED", "confidence": "HIGH", "status": "VERIFIED", "runtime": "claude-code", "runtime_version": "2.1.235 (Claude Code)"},
+      {"metric_name": "wall_time_ms", "value": 60036.1, "unit": "ms", "source_field": "host.perf_counter", "aggregation": "PER_RUN", "source": "OBSERVED", "confidence": "HIGH", "status": "VERIFIED", "runtime": "claude-code", "runtime_version": "2.1.235 (Claude Code)"},
+      {"metric_name": "model_calls", "value": null, "unit": "calls", "source_field": null, "aggregation": "UNKNOWN", "source": "UNKNOWN", "confidence": "UNKNOWN", "status": "UNKNOWN", "runtime": "claude-code", "runtime_version": "2.1.235 (Claude Code)"},
+      {"metric_name": "tool_calls", "value": null, "unit": "calls", "source_field": null, "aggregation": "UNKNOWN", "source": "UNKNOWN", "confidence": "UNKNOWN", "status": "UNKNOWN", "runtime": "claude-code", "runtime_version": "2.1.235 (Claude Code)"},
+      {"metric_name": "context_tokens", "value": null, "unit": "tokens", "source_field": null, "aggregation": "UNKNOWN", "source": "UNKNOWN", "confidence": "UNKNOWN", "status": "UNKNOWN", "runtime": "claude-code", "runtime_version": "2.1.235 (Claude Code)"},
+      {"metric_name": "input_tokens", "value": null, "unit": "tokens", "source_field": null, "aggregation": "UNKNOWN", "source": "UNKNOWN", "confidence": "UNKNOWN", "status": "UNKNOWN", "runtime": "claude-code", "runtime_version": "2.1.235 (Claude Code)"},
+      {"metric_name": "output_tokens", "value": null, "unit": "tokens", "source_field": null, "aggregation": "UNKNOWN", "source": "UNKNOWN", "confidence": "UNKNOWN", "status": "UNKNOWN", "runtime": "claude-code", "runtime_version": "2.1.235 (Claude Code)"},
+      {"metric_name": "tokens_total", "value": null, "unit": "tokens", "source_field": null, "aggregation": "UNKNOWN", "source": "UNKNOWN", "confidence": "UNKNOWN", "status": "UNKNOWN", "runtime": "claude-code", "runtime_version": "2.1.235 (Claude Code)"},
+      {"metric_name": "cost_units", "value": null, "unit": "currency", "source_field": null, "aggregation": "UNKNOWN", "source": "UNKNOWN", "confidence": "UNKNOWN", "status": "UNKNOWN", "runtime": "claude-code", "runtime_version": "2.1.235 (Claude Code)"}
+    ]
   },
   "reliability": {
     "success_count": 0,
