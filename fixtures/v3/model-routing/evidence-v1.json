@@ -1,0 +1,25 @@
+{
+  "schema_version": "3.0",
+  "evidence_id": "evidence:model-runtime-v1",
+  "phase": "3B",
+  "verdict": "INSUFFICIENT_LIVE_EVIDENCE",
+  "runtime_candidates": "fixtures/v3/model-routing/runtime-candidates.json",
+  "model_candidates": "fixtures/v3/model-routing/model-candidates.json",
+  "development_fixtures": "fixtures/v3/model-routing/development/index.json",
+  "holdout_fixtures": "fixtures/v3/model-routing/holdout/index.json",
+  "baselines": [
+    "BASELINE_STRONGEST",
+    "BASELINE_CHEAPEST",
+    "BASELINE_DEFAULT",
+    "BASELINE_HEURISTIC"
+  ],
+  "evidence_classes": {
+    "REAL_EXECUTION": {"quality_eligible": true, "ranking_eligible": true},
+    "HOST_MANAGED_FIXTURE": {"quality_eligible": false, "ranking_eligible": false},
+    "MOCK": {"quality_eligible": false, "ranking_eligible": false}
+  },
+  "live_quality_runs": {"n": 0, "status": "NOT_RUN"},
+  "local_runtime_version_probes": {"n": 4, "status": "COMPATIBILITY_ONLY"},
+  "adaptive_policy": {"implemented": false, "policy_writes": []},
+  "history": {"mode": "APPEND_ONLY", "promotion": "PROPOSAL_ONLY"}
+}
