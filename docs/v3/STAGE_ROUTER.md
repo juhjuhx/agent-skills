@@ -1,153 +1,199 @@
-# Stage-Local Skill Router
+# v3 Stage Router
 
-> Status: **design contract**. This is not an implementation of the current router.
+> Status: **Phase 3A MVP implemented**. This document describes the small,
+> deterministic, metadata-first selector in `tools/v3/`. It does not implement
+> a general stage planner, model router, persistence layer, or additional
+> native adapters.
 
-## Inputs and outputs
+## Boundary
 
-The router accepts a `TaskSpec`, the current stage, the canonical registry snapshot, adapter capabilities, model profiles, policy grants, and the remaining budget. It returns a stage route plus explicit reasons.
-
-```yaml
-StageRoute:
-  schema_version: "3.0"
-  route_id: <route-id>
-  task_id: <task-id>
-  stage: implement
-  status: SKILLS_SELECTED
-  selected_skills:
-    - skill_id: using-superpowers
-      role: GATE
-      reason: orchestration authority
-    - skill_id: incremental-implementation
-      role: PROCESS
-      reason: smallest authorized slice
-  role_assignments:
-    - skill_id: using-superpowers
-      role: GATE
-    - skill_id: incremental-implementation
-      role: PROCESS
-  adapter: codex
-  model_profile: <profile-ref>
-  granted_capabilities: [editing, structured_output]
-  budget_envelope:
-    permission_level: workspace-write
-  alternatives: []
-  evidence_required: [diff, tests, verification]
-  registry_epoch: <registry-epoch>
-```
-
-The router never needs private model reasoning. It needs the TaskSpec, metadata, capabilities, policy, and observable stage artifacts.
-
-The Phase 1 [`StageRoute` schema](../../schemas/v3/stage-route.schema.json) uses `selected_skills`, `role_assignments`, `registry_epoch`, and an explicit route `status`. The YAML above is a conceptual example; no router implementation is introduced here.
-
-## Role slots
-
-Every stage may use the following slots:
-
-| Slot | Purpose | Typical cardinality |
-|---|---|---:|
-| `GATE` | Policy and orchestration entry point | 0–1 |
-| `PROCESS` | Procedure for how to do the stage | 0–2 |
-| `DOMAIN` | Subject-matter method or discipline | 0–3 |
-| `TOOL` | Tool/MCP/CLI capability | 0–3 |
-| `REVIEW` | Quality, risk, architecture, security, or adversarial review | 0–2 |
-| `VERIFY` | Completion evidence and acceptance checks | 0–2 |
-
-The slots are a diversity constraint, not a quota. Five skills that all perform the same review role are worse than two skills covering distinct risks. The router should prefer complementary roles, reuse a skill when it remains the best fit, and leave a slot empty when it is irrelevant.
-
-### Implementation example
+The MVP turns one task, one stage, and one metadata catalog into one validated
+`StageRoute`:
 
 ```text
-GATE
-  using-superpowers
-
-PROCESS
-  test-driven-development
-  incremental-implementation
-
-DOMAIN
-  tauri-development
-  rust-engineering
-
-REVIEW
-  code-review-and-quality
-
-VERIFY
-  verification-before-completion
+TaskSpec + Stage + SkillMetadataV3 catalog
+    -> compatibility view
+    -> hard filters
+    -> transparent scoring
+    -> role-balanced selection
+    -> StageRoute
 ```
 
-The two domain IDs are illustrative adapter/registry candidates; their appearance here does not claim that this baseline registry already contains them.
-
-## Routing sequence
-
-1. Load registry metadata and pin the current epoch for the stage.
-2. Apply hard filters: stage, task mode, domain, required inputs/outputs, trust, permissions, tools, budget, and adapter compatibility.
-3. Group surviving candidates by role slot.
-4. Select the smallest sufficient complementary set.
-5. Negotiate TaskSpec capabilities with the adapter.
-6. Select a compatible model profile separately from the runtime.
-7. Reserve stage budget and context budget.
-8. Load selected `SKILL.md` files on demand; load references or scripts only when their contract requires them.
-9. Execute and collect artifacts.
-10. Run the stage evidence gate.
-11. Advance, reroute, degrade, or block with an explicit reason.
-
-## Capability negotiation
-
-Task requirements are capability declarations, for example:
-
-```yaml
-needs_editing: true
-needs_browser: false
-needs_subagents: true
-needs_sandbox: true
-needs_MCP: false
-needs_structured_output: true
-needs_long_context: false
-needs_multimodal: false
-permission_level: workspace-write
-budget: balanced
-```
-
-An adapter advertises capabilities such as editing, browser, subagents, sandbox, MCP, structured output, multimodal input, long context, permissions, parallelism, and native learning. The router intersects requirements with advertised capabilities. It does not choose because a runtime or model has a particular name.
-
-## Reroute triggers
-
-Reroute only when one of these observable events occurs:
-
-- a stage boundary is reached;
-- a required capability is unavailable or withdrawn;
-- a selected skill is unhealthy, quarantined, or blocked;
-- an evidence gate fails and identifies a missing role or capability;
-- a user changes a material constraint;
-- budget or context limits require a declared degradation;
-- a review lane finds a new risk that changes the next stage.
-
-Rerouting must preserve prior artifacts and must not erase a failed route. A route decision records the old route, new route, trigger, and evidence.
-
-## Context and cost discipline
-
-- Metadata and role selection precede full instruction loading.
-- Only selected skills enter the stage context.
-- Tool schemas are lazy and domain-scoped; MCP context cost is part of the budget.
-- Large logs become artifacts with summaries and digests, not repeated prompt text.
-- Fixed adapter instructions should stay stable for cache reuse; dynamic TaskSpec and stage artifacts follow them.
-- A budget failure may reduce optional skills or context, but never relax permissions or acceptance criteria.
-
-## Reference pseudocode
+The router consumes a stage. It does not decide the whole task plan, choose a
+model, invoke tools, load `SKILL.md` bodies, or silently call another router.
+The existing Codex adapter remains the first route consumer:
 
 ```text
-route(TaskSpec task, Stage stage, Registry registry, Adapter adapter):
-  candidates = registry.skills
-    .filter(metadata_matches(task, stage))
-    .filter(permission_and_trust_fit(task))
-    .filter(capability_requirements_fit(task, adapter))
-    .filter(cost_fits(task.budget))
-
-  grouped = group_by_role(candidates)
-  selected = minimum_sufficient_complement(grouped, task.acceptance_criteria)
-  negotiated = adapter.negotiate(task.capabilities, selected)
-  model = choose_model_profile(task, negotiated)
-  return StageRoute(stage, selected, adapter.id, model, negotiated, reasons)
+StageRoute -> SkillResolver -> CompiledExecutionBundle -> CodexNativeProjection
 ```
 
-The placeholder functions are contracts for future tests, not runtime code. A model/provider name must not appear in the universal branch conditions.
+Implementation boundaries are intentionally small:
+
+- [`stage_router.py`](../../tools/v3/stage_router.py) owns one-stage filtering,
+  selection, and route evidence.
+- [`skill_scoring.py`](../../tools/v3/skill_scoring.py) owns deterministic
+  text/metadata scoring and escalation signals.
+- [`skill_graph.py`](../../tools/v3/skill_graph.py) owns in-memory relationship
+  lookups and dependency expansion.
+- [`CodexAdapter`](../../tools/v3/codex_adapter.py) consumes a validated route;
+  it does not choose skills.
+
+## Route contract
+
+Every active stage produces exactly one explicit result:
+
+- `SKILLS_SELECTED` with selected skill references and role assignments; or
+- `NO_SKILL_NEEDED` with a non-empty `no_skill_reason` and no selected skills.
+
+The optional `routing_evidence` object records candidate, filter, selection,
+role, cost, trust, relationship, and Deep Understanding metrics. It contains
+metadata references and concise reason codes, never hidden chain-of-thought or
+raw skill bodies.
+
+`using-superpowers` is different from an ordinary candidate. It is the
+task/session-level orchestration authority and is represented as a resident
+`GATE` reference when a substantive route exists. Its full instruction file is
+not reloaded at every stage.
+
+## Inputs
+
+The stage object may provide:
+
+```yaml
+id: understand | research | design | plan | implement | review | verify | harden | handoff | learn
+objective: observable stage outcome
+task_type: implementation | bugfix | research | design | review | documentation | handoff | other
+domains: [software-engineering]
+required_outputs: [patch]
+evidence_required: [tests]
+required_roles: [PROCESS, VERIFY]
+required_capabilities: [needs_editing]
+required_tools: [browser]
+```
+
+`TaskSpec` supplies task classification, domains, capabilities, permissions,
+budgets, artifact requirements, and acceptance context. The catalog is a
+`SkillMetadataV3` list or a read-only compatibility projection of the current
+`.superpowers/SKILLS_INDEX.json`.
+
+## Hard filters before ranking
+
+Candidates are rejected before scoring when the supplied metadata establishes:
+
+1. disallowed trust or deprecated status;
+2. Deep Understanding is requested while its escalation gate is off;
+3. incompatible stage, task mode, or domain;
+4. unavailable required capability or tool;
+5. a skill permission declaration beyond the TaskSpec permission envelope;
+6. runtime incompatibility;
+7. impossible context/tool budget;
+8. no executable role slot;
+9. a superseded record, missing `REQUIRES` dependency, or invalid dependency
+   cycle.
+
+Unknown required capabilities fail closed. A quarantined or blocked record
+cannot become executable through scoring. The router never treats a candidate
+as safe merely because its description contains a matching keyword.
+
+The current 214-record registry predates v3 routing fields. The compatibility
+view therefore distinguishes explicit fields, auditable `ROUTING_HINTS`, and
+untrusted inferred fields. A legacy record whose roles, stages, and domains
+are only broad inference is filtered with `legacy metadata lacks curated
+routing fields`, rather than being allowed to win on an over-broad keyword
+match. This is an MVP compatibility boundary, not a registry migration.
+
+## Role-slot selection
+
+The selector covers required role slots first:
+
+`GATE`, `PROCESS`, `DOMAIN`, `TOOL`, `REVIEW`, `VERIFY`.
+
+It then adds an optional candidate only when it is a strong fit and either:
+
+- covers an explicitly required role not yet covered;
+- supplies a required artifact/evidence output; or
+- has a declared positive graph relationship to an already selected skill.
+
+There is no fixed primary/optional quota and no minimum skill quota. A tiny
+correction may produce no skill; a complex stage may use several roles. A
+second skill in the same role is retained only when a dependency or explicit
+artifact/relationship signal makes it useful. Role diversity is preferred to
+the top N semantic scores.
+
+## Transparent baseline score
+
+For each eligible role assignment, the score records these components:
+
+```text
+task_relevance
+stage_relevance
+domain_match
+role_need
+trigger_match
+required_output_match
+relationship_bonus
+capability_fit
+trust
+context_cost_penalty
+historical_evidence = 0
+```
+
+The score is deterministic and tie-broken by role order and skill ID. Historical
+success is observation-only in this phase; it cannot alter production weights
+or policy. Score components and selected/rejected reason codes are persisted in
+`routing_evidence` for review.
+
+## Graph behavior
+
+The in-memory graph supports the v3 relationship vocabulary:
+
+- `REQUIRES`: add an eligible transitive dependency;
+- `CONFLICTS`: never co-select;
+- `SUPERSEDES`: prefer the available successor;
+- `ALTERNATIVE_TO`: normally choose one;
+- `RECOMMENDS`, `COMPLEMENTS`, `REVIEW_WITH`, `VERIFY_WITH`: positive contextual
+  signals without a quota.
+
+The graph is rebuilt from the supplied records for each route and has no
+database or background state. Positive relationship cycles are allowed; only
+dependency traversal detects a `REQUIRES` cycle.
+
+## Deep Understanding gate
+
+Deep Understanding is an escalation policy, not a normal high-score candidate:
+
+| Signals | Gate |
+|---|---|
+| simple/low-risk/low-ambiguity | `OFF` |
+| standard with ordinary uncertainty | usually `OFF` |
+| complex, high ambiguity, high/critical risk, architecture-changing, unfamiliar, or contradictory evidence | `ELIGIBLE` |
+
+If the supplied catalog has no `deep-understanding` record, the route records
+`UNAVAILABLE` and continues with the conservative metadata route. The installed
+local workflow and the repository's 214-record registry are separate evidence
+sources; an installed workflow is not silently invented into the registry.
+
+## No-skill behavior
+
+The router can return `NO_SKILL_NEEDED` for a simple, low-risk, low-ambiguity
+correction when the stage has no required role or evidence obligation. This is
+an intentional result, not a failed route. It prevents unrelated architecture,
+security, performance, MCP, or Deep Understanding skills from being loaded just
+to satisfy an example count.
+
+## Lazy loading and Codex consumption
+
+Ranking inspects metadata only. It reports `body_files_loaded: 0` and does not
+read any `SKILL.md`. After selection, the downstream resolver loads only the
+selected canonical files, verifies their source digest/trust, and preserves
+provenance. `NO_SKILL_NEEDED` loads zero additional skills. This keeps one
+canonical skill source and leaves native projection to the adapter.
+
+## Current limits and evidence
+
+The MVP does not yet provide a general stage planner, model/provider routing,
+reroute executor, historical-weight learning, or Claude/OpenCode/Hermes/MiMo/
+ZCode/DeepSeek adapters. The v2 policy and production registry remain
+unchanged. The ten-workload evaluation, historical comparisons, known
+over-routing/under-routing cases, and metadata gaps are recorded in
+[`STAGE_ROUTER_EVAL_V1.md`](evidence/STAGE_ROUTER_EVAL_V1.md).

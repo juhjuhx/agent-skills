@@ -1,6 +1,6 @@
 # Agent Skills Matrix v3
 
-> Status: **proposed architecture; Phase 1 contracts and the Phase 2.6 provenance-hardened Codex vertical slice implemented**. The slice compiles a portable execution bundle and an installed-runtime-bound Codex projection; it does not implement the general stage router or install runtime configuration.
+> Status: **proposed architecture; Phase 1 contracts, the Phase 2.6 provenance-hardened Codex vertical slice, and the Phase 3A deterministic Stage Router MVP implemented**. The router is metadata-first and stage-local; it does not install runtime configuration, choose models, or implement the other native adapters.
 
 ## Why v3
 
@@ -128,6 +128,27 @@ execution has already been wired.
 - [ZCode](agents/ZCODE.md)
 - [DeepSeek Harness](agents/DEEPSEEK_HARNESS.md)
 
+### Phase 3A Stage Router MVP
+
+The first machine-executable routing boundary is now implemented in
+[`STAGE_ROUTER.md`](STAGE_ROUTER.md):
+
+```text
+TaskSpec + Stage + SkillMetadataV3 catalog
+  -> hard filters -> transparent score -> role complement
+  -> StageRoute (SKILLS_SELECTED | NO_SKILL_NEEDED)
+```
+
+The implementation inspects the current 214-record registry as metadata and
+loads zero `SKILL.md` bodies while ranking. A read-only compatibility view and
+small auditable routing hints make the sparse legacy registry usable for the
+MVP; they do not migrate or rewrite the production registry. The router does
+not select a model, run a general planner, or load unrelated skills. It emits
+route evidence for ten real workload fixtures and its output is consumed by
+the existing Codex adapter in an end-to-end test. See the
+[`Stage Router evaluation`](evidence/STAGE_ROUTER_EVAL_V1.md) for measured
+results and known metadata-driven failures.
+
 ## Non-goals for this proposal
 
-This pass does not move or fork skills, rewrite `install.sh`, change `.superpowers/ROUTING_POLICY.yaml`, implement a runtime router, add a database or cloud service, install MCP servers, auto-import third-party skills, or add model names to universal policy. Those are follow-up phases and remain explicitly unimplemented.
+This pass does not move or fork skills, rewrite `install.sh`, change `.superpowers/ROUTING_POLICY.yaml`, implement a general stage planner or model router, add a database or cloud service, install MCP servers, auto-import third-party skills, or implement non-Codex adapters. Those are follow-up phases and remain explicitly unimplemented.

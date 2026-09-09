@@ -1,205 +1,252 @@
-# Next Codex Prompt — Phase 3 Cross-Runtime Adapter Expansion
+# Next Codex Prompt — Phase 3B Model / Agent Routing Evaluation
 
-Copy the prompt below into the next Codex session. It is a planning and
-implementation prompt for Phase 3 only. Do not execute it during Phase 2.6.
+Copy this prompt into the next Codex session. It defines the next bounded
+evaluation task. Do not execute Phase 3B during Phase 3A.
 
 ---
 
 ## Mission
 
-Repository: juhjuhx/agent-skills
+Repository: `juhjuhx/agent-skills`
 
-Implement Agent Skills Matrix v3 — Phase 3: Cross-Runtime Adapter Expansion
-from the hardened Phase 2.6 Codex adapter branch (or its merged base). Extend the portable contracts
-to native projections for Claude Code, DeepSeek Harness, OpenCode, MiMo Code,
-ZCode, and Hermes.
+Implement **Agent Skills Matrix v3 — Phase 3B: Model / Agent Routing
+Evaluation** from the verified Phase 3A Stage Router MVP. Do not redesign v3,
+clone the Codex adapter, or implement the six remaining native adapters in
+this phase.
 
-Do not redesign v3. Keep one canonical skill library and keep agent runtime
-identity separate from model/provider identity. Do not copy the Codex adapter
-six times. Every runtime requires fresh official-source research and a
-runtime-specific projection that emits only verified native surfaces.
+The question is:
+
+```text
+For the same TaskSpec and stage route, what evidence supports a choice of
+agent runtime + model profile for this stage?
+```
+
+Choices must emerge from measured fixtures. Never hard-code rules such as
+`Claude for architecture`, `Codex for implementation`, `if agent == codex`, or
+`if model == glm`.
 
 ## Start and source truth
 
 Verify without resetting local work:
 
-    git status --short
-    git branch --show-current
-    git rev-parse HEAD
-    git fetch origin
+```sh
+git status --short
+git branch --show-current
+git rev-parse HEAD
+git fetch origin
+```
 
-Start from the current hardened Phase 2 adapter branch and its stacked Phase 1
-parent. Inspect the actual registry before selecting any skill ID:
+Start from the current Phase 3A branch or its merged base. Read the actual
+repository registry before selecting any skill ID:
 
-- .superpowers/SKILLS_INDEX.json
-- categories.json
-- .superpowers/ROUTING_POLICY.yaml
-- AGENTS.md
+- `.superpowers/SKILLS_INDEX.json`
+- `categories.json`
+- `.superpowers/ROUTING_POLICY.yaml`
+- `AGENTS.md`
+- `schemas/v3/`
+- `tools/v3/stage_router.py`
+- `tools/v3/codex_adapter.py`
+- `tools/v3/execution_bundle.py`
+- `tools/v3/skill_resolver.py`
+- `fixtures/v3/router/routing-eval-v1.json`
+- `docs/v3/evidence/STAGE_ROUTER_EVAL_V1.md`
 
-Machine-readable registry data wins over prose. Do not migrate or rewrite the
-production registry, installer, or general Stage Router.
+Machine-readable registry data wins over stale prose. Keep the production
+registry, installer, and v2 policy unchanged.
 
-## Required contract boundary
+## Preserve the Phase 3A boundary
 
-Read the canonical v3 documents and the implemented Phase 1/2 contracts,
-including:
+The current route flow is:
 
-- schemas/v3/
-- tools/v3/contract_validation.py
-- tools/v3/execution_bundle.py
-- tools/v3/skill_resolver.py
-- tools/v3/permission_intersection.py
-- tools/v3/evidence_gate.py
-- tools/v3/reasoning_artifacts.py
-- tools/v3/codex_adapter.py
-- tools/v3/codex_native_contract.py
-- fixtures/v3/
-- tests/v3/
-- docs/v3/CODEX_OFFICIAL_CAPABILITY_MAPPING.md
-- docs/v3/evidence/PHASE2_CODEX_DOGFOOD_ROUTE.md
+```text
+TaskSpec + Stage + SkillMetadataV3 catalog
+  -> StageRouter
+  -> StageRoute
+  -> agent adapter
+  -> execution/evidence artifacts
+```
 
-The Codex slice establishes the two-layer boundary:
+Phase 3B may use `ModelProfile` and `AgentAdapterManifest` as capability and
+measurement records, but it must not move model choice into the skill router.
+The Stage Router still selects skills; this phase evaluates the next boundary:
 
-    canonical metadata + validated StageRoute
-            -> CompiledExecutionBundle (portable)
-            -> runtime-specific NativeProjection
-            -> native surfaces + explicit artifacts/evidence
+```text
+validated StageRoute + runtime capability envelope + ModelProfile
+  -> candidate execution configurations
+  -> comparable evidence
+```
 
-The portable bundle must remain free of runtime-specific branch logic. The
-Codex adapter consumes routes; it does not choose skills or call a general
-router. Preserve selected-only skill loading, provenance/digest checks,
-quarantine blocking, explicit evidence gates, the resident
-using-superpowers authority, and the serializable boundary that excludes raw
-SKILL.md bodies.
+`using-superpowers` remains the task/session orchestration authority and is not
+a repeatedly loaded candidate skill. All active dogfood stages must emit a
+valid `StageRoute` with `SKILLS_SELECTED` or `NO_SKILL_NEEDED`.
 
-Effective permission remains the least-privilege intersection of TaskSpec,
-policy, adapter manifest, route budget, and live runtime restrictions. Models,
-skills, MCP, plugins, and generated projections cannot grant OS authority.
+## Dogfood and stage-local routing
 
-## Dogfood requirement
+Use the actual installed `using-superpowers` workflow as resident authority.
+Create only relevant stages, for example `UNDERSTAND`, `RESEARCH`, `DESIGN`,
+`PLAN`, `IMPLEMENT`, `REVIEW`, `VERIFY`, `HARDEN`, and `HANDOFF`. Re-run the
+Phase 3A Stage Router independently at each active stage. Load only selected
+`SKILL.md` bodies downstream; do not load the whole catalog. Record the run in
+a concise `docs/v3/evidence/PHASE3B_MODEL_AGENT_DOGFOOD_ROUTE.md` artifact
+without hidden chain-of-thought.
 
-Use using-superpowers as task/session authority. Run active stages such as
-UNDERSTAND, RESEARCH, DESIGN, PLAN, IMPLEMENT, REVIEW, VERIFY, HARDEN, and
-HANDOFF. Re-run stage-local routing independently for every active stage and
-emit a StageRoute with either SKILLS_SELECTED or an explicit NO_SKILL_NEEDED
-reason. Load only selected installed SKILL.md files and record the run under a
-concise docs/v3/evidence/PHASE3_CROSS_RUNTIME_DOGFOOD_ROUTE.md; never record
-hidden chain-of-thought. using-superpowers is resident task/session authority
-and does not require full instruction reload at every stage.
+## Research and provenance lanes
 
-## Research all six before implementation
+Before comparing runtimes or model profiles, perform fresh source-driven
+research. For every runtime under test record, when available:
 
-First research all six runtimes and record official URLs, source revision/date,
-verified fields, and support level (NATIVE, EMULATED, HOST_MANAGED, or
-UNSUPPORTED) in a canonical mapping document. Prefer current first-party
-documentation and source. Do not put documentation URLs or provider-specific
-IDs into universal routing logic.
-
-Every runtime research lane must also record versioned provenance separately
-from support:
-
-- observed installed runtime version, when available;
-- latest stable release/tag and its resolved immutable commit;
-- exact official release/source ref used for the native contract;
-- current upstream source snapshot used for comparison, if any;
+- observed installed version;
+- latest stable release/tag and resolved immutable commit;
+- official source/release ref used for the contract;
+- current upstream source snapshot;
 - documentation snapshot date/ref;
-- native support level and availability (`INSTALLED`, `RELEASE_SUPPORTED`,
-  `UPSTREAM_ONLY`, or `UNKNOWN`).
+- native support (`NATIVE`, `EMULATED`, `HOST_MANAGED`, `UNSUPPORTED`);
+- availability (`INSTALLED`, `RELEASE_SUPPORTED`, `UPSTREAM_ONLY`, `UNKNOWN`).
 
-Do not implement an adapter from unversioned “current docs” alone. A source
-preview may inform a comparison, but it cannot prove installed-runtime
-conformance. If an installed version cannot be mapped to a verified release,
-keep the target explicitly unverified or use a deliberately selected
-compatibility mode; never silently fall back to upstream main.
+Keep support and availability separate. Do not claim installed conformance from
+unversioned current documentation. Do not put provider-specific model IDs or
+documentation URLs into universal routing logic.
 
-Verify separately:
+Research the runtime layer separately from the model layer:
 
-- Claude Code: CLAUDE.md, Skills, Hooks, Subagents, Permissions, Plugins,
-  commands, MCP, lazy loading, and model/reasoning controls. Keep persistent
-  context, reusable procedures, deterministic hooks, isolated subagents,
-  capability boundaries, and packaged plugins separate.
-- DeepSeek Harness: plugin architecture, ordered system-prompt assembly,
-  runtime context, prompt variables, tool schemas, agent-scoped overrides,
-  tool ordering, context/token cost, and KV-cache stability. Treat it as a
-  full harness, not merely a DeepSeek model client; do not copy its
-  implementation.
-- OpenCode: AGENTS.md, native skill tool, agents/subagents, model-per-agent
-  configuration, permissions, commands, and MCP. Account for MCP context cost
-  and keep OpenCode model IDs inside its projection/fixture.
-- MiMo Code: Agent Skills, on-demand loading, primary agents, subagents,
-  permissions, MCP, commands, and Compose. Compare Compose with v3 stage
-  routing; do not replace using-superpowers with Compose.
-- ZCode: AGENTS.md, skills, commands, subagents, plugins, MCP, per-subagent
-  model, thinking effort, and tool permissions. Treat ZCode as the runtime and
-  GLM as a model profile; use its plugin bundle shape only as a native packaging
-  target when first-party evidence supports it.
-- Hermes: persistent learned skills, /learn-style distillation, MCP,
-  cross-agent import, and long-running coordination. Preserve the governed
-  learning path OBSERVE -> DISTILL -> CANDIDATE -> DUPLICATE CHECK ->
-  PROVENANCE -> EVAL -> REVIEW -> PROMOTION; never auto-promote unknown
-  external content.
+- runtimes: Codex, Claude Code, OpenCode, Hermes, MiMo Code, ZCode, DeepSeek
+  Harness;
+- model/provider profiles: OpenAI-compatible, Anthropic-compatible, DeepSeek,
+  GLM, MiMo, plus future profiles.
 
-## Diversity-driven implementation waves
+If only the Codex adapter is executable in the current repository, use native
+Codex execution plus explicit host-managed/mock projections for other runtimes.
+Do not pretend a fixture is a production adapter.
 
-Do not implement all six in one undifferentiated batch. After researching all
-six, use the evidence to confirm or change this default order:
+## Evaluation matrix
 
-1. Wave 1 — Claude Code + DeepSeek Harness. Claude exercises a conventional
-   native coding-agent separation; DeepSeek Harness exercises a substantially
-   different plugin and prompt-assembly architecture. Together they test
-   whether the universal contract is genuinely portable.
-2. Wave 2 — OpenCode + MiMo Code + ZCode. Implement only after Wave 1 exposes
-   and resolves contract gaps; preserve each runtime's model, permissions, MCP,
-   commands, and context distinctions.
-3. Wave 3 — Hermes learning integration. Integrate its learning strengths last
-   unless fresh source research demonstrates a safer ordering.
+Build a matrix of real task fixtures × active stages × compatible agent/model
+configurations. Reuse the ten Phase 3A workloads and add representative
+multi-stage workloads only when needed:
 
-Changing the order requires an explicit decision record tied to research
-evidence. The strategy is diversity-driven, not clone Codex six times.
+- coding and bugfix;
+- API/architecture design;
+- frontend/browser-visible work;
+- source research;
+- security-sensitive change;
+- repository audit;
+- release/handoff.
 
-## Adapter implementation and tests
+For each cell capture:
 
-Each adapter should consume a validated StageRoute and the existing
-CompiledExecutionBundle, then produce the smallest useful native projection.
-It must not implement the general router, a universal subagent scheduler, a
-database, or a plugin framework. Keep helpers/data models thin.
+```text
+task_id
+stage
+agent_runtime
+model_profile
+selected_skills
+adapter_capabilities
+permission envelope
+context bytes/tokens
+tool schemas and tool calls
+duration/latency class
+reroutes
+files changed
+tests
+verification evidence
+user correction
+completion result
+security findings
+```
 
-For each runtime, test:
+Use independent evidence classes. A model's self-report is not equivalent to
+test evidence, runtime evidence, or a native security scan.
 
-- valid manifest and native projection;
-- runtime/model separation and no universal if agent equals or if model equals
-  routing branch;
-- deterministic projection for identical inputs;
-- selected-only lazy loading and zero loading for NO_SKILL_NEEDED;
-- digest/provenance preservation and invalidation;
-- trust, quarantine, missing-skill, and capability mismatch blocking;
-- permission intersection and no widening by models, skills, MCP, plugins, or
-  generated output;
-- MCP/tool-schema cost and lazy activation;
-- observable reasoning artifacts without hidden-CoT fields;
-- evidence pass/failure and explicit reroute/degradation artifacts;
-- unsupported native concepts classified rather than invented;
-- no unrelated skill body in generated projections;
-- cross-agent projections of the same portable bundle without forking skills.
+## Comparison metrics
 
-Use actual installed skills in independent architecture/code, simplification,
-security, and verification lanes. Run the Alibaba OpenCodeReview precheck once.
-If native authentication returns 401, record OCR_NATIVE_DIFF =
-BLOCKED_BY_AUTH; do not fake a pass or relabel delegate review as native OCR.
+Report separate, interpretable measures rather than one synthetic quality
+number:
+
+- route compatibility and capability coverage;
+- task completion and acceptance-criteria coverage;
+- evidence quality and verification pass rate;
+- near-miss activation and over/under-routing;
+- context/token and tool-schema cost;
+- tool-call count and latency/duration;
+- reroute count and recovery quality;
+- user corrections and regression rate;
+- security/provenance failures;
+- cross-agent artifact portability.
+
+Unknown or missing measurements stay explicit. Historical observations may
+generate a proposal, but they must not silently rewrite routing policy or
+model-selection policy.
+
+## Capability negotiation and permissions
+
+Use `TaskSpec.required_capabilities` and the adapter manifest to negotiate
+capabilities. Model profiles describe inference capabilities and limits only;
+they never grant filesystem, network, MCP, sandbox, publishing, or deletion
+authority. The effective permission remains the least-privilege intersection
+of TaskSpec, policy, adapter, route, and live runtime restrictions.
+
+Test that:
+
+- an unknown runtime/model capability fails closed or is marked unavailable;
+- a model profile cannot widen OS permissions;
+- a skill, MCP declaration, plugin, or generated output cannot widen them;
+- incompatible runtime/model combinations are not executable;
+- host-managed or unsupported surfaces are not emitted as fake native fields.
+
+## Tests
+
+Keep all Phase 1, Codex, and Phase 3A tests green. Add focused tests for:
+
+- deterministic candidate matrices and repeated measurements;
+- agent/model identifier separation;
+- same TaskSpec producing comparable but runtime-specific projections;
+- no provider hard-coding in universal routing decisions;
+- capability and permission negotiation;
+- near-miss fixture triggering;
+- cross-agent artifact/evidence comparison;
+- context/tool cost accounting;
+- regression detection and proposal-only history;
+- security and provenance failures;
+- `NO_SKILL_NEEDED` remaining free of model selection side effects.
+
+No external runtime side effect is required unless a verified installed runtime
+is available. Do not install MCP servers or new dependencies merely to create a
+matrix cell.
+
+## Reviews and anti-bloat
+
+Use independent installed skills for architecture/code review, simplification,
+security/hardening, doubt-driven evaluation, and verification. Do not hand one
+reviewer's conclusion to the next reviewer before independent analysis.
+
+Run the Alibaba OpenCodeReview precheck once. If native authentication returns
+401, record `OCR_NATIVE_DIFF = BLOCKED_BY_AUTH`; do not relabel delegate review
+as native OCR.
+
+Keep implementation to data, measurement, validators, and small comparison
+helpers. Do not add a database, event bus, worker pool, provider registry,
+general scheduler, cloud orchestrator, or new adapter framework without a
+demonstrated boundary requirement.
 
 ## Non-goals
 
-Do not move or fork existing skills. Do not rewrite install.sh or
-.superpowers/ROUTING_POLICY.yaml. Do not install MCP servers, auto-import
-external skills, add cloud orchestration, implement Phase 4 eval-driven
-routing, or merge the PR. Do not execute Phase 3 until this prompt is the
-active task.
+Do not implement Phase 3 cross-runtime adapters, rewrite `install.sh` or
+`.superpowers/ROUTING_POLICY.yaml`, migrate the production registry, install
+MCP servers, auto-import external skills, expose hidden chain-of-thought, or
+silently change policy from evaluation history. Do not execute a later phase in
+this task.
 
 ## Deliverables
 
-Keep commits small and semantic. Update canonical docs/v3/ only where the
-implementation makes a contract precise. Produce source mapping, capability
-fixtures, native projections, focused tests, dogfood evidence,
-security/provenance review, context-cost evidence, and a Draft stacked PR.
+Keep commits small and semantic. Produce:
 
-At the end, generate a self-contained Phase 4 prompt only after verification.
+- source/provenance notes for every researched runtime/model lane;
+- comparison fixtures and machine-readable measurements;
+- focused validation and compatibility tests;
+- concise dogfood and evaluation evidence under `docs/v3/evidence/`;
+- canonical documentation updates only where the measured contract becomes
+  more precise;
+- a Draft stacked PR with explicit limitations and failed/blocked lanes.
+
+The result must make a measured recommendation—or explicitly conclude that the
+evidence is insufficient—without hard-coded runtime/model preferences.
