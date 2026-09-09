@@ -178,6 +178,87 @@ class StageRouterContractTests(unittest.TestCase):
         self.assertTrue(any(item["skill_id"] == "unsafe" for item in rejected))
         self.assertIn("trust", " ".join(route["route_reasons"]).lower())
 
+    def test_uncurated_legacy_metadata_is_not_executable_by_keyword_alone(self):
+        record = metadata(
+            "legacy-broad",
+            description="architecture review plugin and hook implementation",
+        )
+        route = route_stage(
+            task(
+                goal="Understand the repository architecture", domains=["architecture"]
+            ),
+            stage(
+                "understand",
+                objective="Understand the repository architecture",
+                domains=["architecture"],
+            ),
+            [record],
+        )
+
+        self.assertEqual(route["status"], "NO_SKILL_NEEDED")
+        rejected = route["routing_evidence"]["rejected_candidates"]
+        reasons = " ".join(item["reasons"][0] for item in rejected)
+        self.assertIn("curated routing fields", reasons)
+
+    def test_permission_declaration_cannot_exceed_task_envelope(self):
+        route = route_stage(
+            task(
+                permissions={
+                    "level": "workspace-write",
+                    "filesystem": "workspace-write",
+                    "external_write": False,
+                    "secrets": False,
+                    "publish": False,
+                    "delete": False,
+                }
+            ),
+            stage("implement"),
+            [
+                metadata(
+                    "too-broad",
+                    roles=["PROCESS"],
+                    stages=["implement"],
+                    description="implement change",
+                    permissions={"filesystem": "external-write"},
+                )
+            ],
+        )
+
+        self.assertEqual(route["status"], "NO_SKILL_NEEDED")
+        rejected = route["routing_evidence"]["rejected_candidates"]
+        self.assertIn("exceeds TaskSpec filesystem", " ".join(rejected[0]["reasons"]))
+
+    def test_positive_relationship_is_observable_without_loading_bodies(self):
+        route = route_stage(
+            task(goal="Implement and verify a change", artifact_requirements=["tests"]),
+            stage(
+                "implement",
+                evidence_required=["tests"],
+                required_roles=["PROCESS", "VERIFY"],
+            ),
+            [
+                metadata(
+                    "process",
+                    roles=["PROCESS"],
+                    stages=["implement"],
+                    description="implement change",
+                    relationships=[{"type": "COMPLEMENTS", "target": "verify"}],
+                ),
+                metadata(
+                    "verify",
+                    roles=["VERIFY"],
+                    stages=["implement"],
+                    description="verify tests",
+                ),
+            ],
+        )
+
+        self.assertEqual(route["status"], "SKILLS_SELECTED")
+        self.assertIn(
+            "COMPLEMENTS", " ".join(route["routing_evidence"]["relationship_effects"])
+        )
+        self.assertEqual(route["routing_evidence"]["body_files_loaded"], 0)
+
     def test_conflicting_skills_are_not_co_selected(self):
         catalog = [
             metadata(

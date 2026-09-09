@@ -312,10 +312,13 @@ def _hard_filter(
         reasons.append(f"trust level {record.get('trust')} is not allowed")
     if _legacy_status(record):
         reasons.append("skill is deprecated")
-    if all(
-        field_is_inferred(record, field) and not field_is_hinted(record, field)
-        for field in ("roles", "stages", "domains")
-    ):
+    routing_fields = ("roles", "stages", "domains")
+    has_curated_routing_field = any(
+        bool(record.get(field))
+        and (not field_is_inferred(record, field) or field_is_hinted(record, field))
+        for field in routing_fields
+    )
+    if not has_curated_routing_field:
         reasons.append("legacy metadata lacks curated routing fields")
     if skill_id == "deep-understanding" or (
         record.get("extensions", {}).get("routing", {}) or {}
