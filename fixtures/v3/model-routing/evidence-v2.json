@@ -1,0 +1,47 @@
+{
+  "schema_version": "3.0",
+  "evidence_id": "evidence:model-runtime-eval-v2",
+  "phase": "3C",
+  "fixture_set": "HOLDOUT",
+  "live_run_records": [
+    "fixtures/v3/model-routing/runs/phase3c/live-codex-h01-001.json",
+    "fixtures/v3/model-routing/runs/phase3c/live-claude-h03-001.json"
+  ],
+  "real_execution": {
+    "completed_records": 1,
+    "blocked_records": 1,
+    "quality_eligible_records": 1,
+    "repetitions_beyond_one": false
+  },
+  "runtime_lanes": {
+    "codex": {"availability": "INSTALLED", "live_status": "REAL_EXECUTION", "records": 1},
+    "claude-code": {"availability": "INSTALLED", "live_status": "LIVE_LANE_BLOCKED", "records": 1},
+    "opencode": {"availability": "INSTALLED", "live_status": "LIVE_LANE_BLOCKED", "records": 0},
+    "hermes": {"availability": "INSTALLED", "live_status": "LIVE_LANE_BLOCKED", "records": 0},
+    "mimo-code": {"availability": "UNKNOWN", "live_status": "NOT_RUN", "records": 0},
+    "zcode": {"availability": "UNKNOWN", "live_status": "NOT_RUN", "records": 0},
+    "deepseek-harness": {"availability": "UNKNOWN", "live_status": "NOT_RUN", "records": 0}
+  },
+  "effects": {
+    "configuration_effects": [],
+    "model_effects": [],
+    "reasoning_effort_effects": [],
+    "inconclusive_comparisons": ["only one completed live configuration; no controlled comparison"]
+  },
+  "baselines": {
+    "evaluated": [],
+    "reason": "Only evaluation-only candidate baselines exist; no eligible live baseline cell was run."
+  },
+  "pareto": {
+    "frontier": [],
+    "reason": "A single exploratory result cannot establish a measured frontier."
+  },
+  "holdout_policy": {
+    "weights_changed": false,
+    "acceptance_criteria_changed": false,
+    "runtime_or_model_labels_added": false
+  },
+  "verdict": "INSUFFICIENT_LIVE_EVIDENCE",
+  "history": {"mode": "APPEND_ONLY", "policy_rewritten": false},
+  "sensitive_data_serialized": false
+}

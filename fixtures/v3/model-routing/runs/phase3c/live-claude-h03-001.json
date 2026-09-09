@@ -1,0 +1,113 @@
+{
+  "schema_version": "3.0",
+  "record_id": "record:phase3c:H03:claude-code:001",
+  "run_id": "run:phase3c:H03:claude-code:001",
+  "fixture_id": "H03-api-design",
+  "fixture_set": "HOLDOUT",
+  "evidence_class": "UNAVAILABLE",
+  "status": "LIVE_LANE_BLOCKED",
+  "runtime_id": "claude-code",
+  "observed_version": "2.1.235 (Claude Code)",
+  "model_id": null,
+  "reasoning_effort": null,
+  "effect_class": "INCONCLUSIVE",
+  "controls": {
+    "task_spec_digest": "sha256:3ec8be9d722416ed97387348e78c75ed8e1c6af1346dd3e668a3916e9648411a",
+    "fixture_digest": "sha256:0087b06ad40ea7553fbffda4f26ec01035bea570b5a5c877b5cd6c7f25bb5535",
+    "start_sha": "df07b884aaf37391e46740dfd57184dae5271a44",
+    "stage_route_digest": "sha256:bf6cd5abd77e009be2abf1afc76c1947ee622d95a41a9141bcffdab3c6f53bb8",
+    "selected_skill_ids": ["using-superpowers", "ckm:design-system", "improve-codebase-architecture", "brooks-review", "verification-before-completion"],
+    "selected_skill_digests": [
+      "sha256:1adce90aedd8b1362381f8bf8a7346966612cbde3591f74ab7e55e539fa1209a",
+      "sha256:1a57e6779b22bfd6cbddbf926d8a9281a57ad72baa393acecb7b031346ec3aa6",
+      "sha256:ac2befcd188bf45bc82ab3463abb626c153fc25c382eb2f33dbcdd9964211776",
+      "sha256:21c1ef33d40361ae98e150033978e4c5c1c3f66d498de92a6f088daf839591ec",
+      "sha256:ea52d15aabaf72bc6b558efe2c126f161b53961090ddcd712000273bfe8c7b6c"
+    ],
+    "permission_envelope_digest": "sha256:a09a39d930ed2dcf4fcd330b38566fe1cd1bf64701e343fc9688ace5e1729866",
+    "tool_availability": ["claude -p", "tools disabled", "plan permission"],
+    "mcp_availability": "NOT_USED",
+    "project_instruction_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "system_instruction_digest": null
+  },
+  "repetition": {"n": 1, "target": 2, "classification": "EXPLORATORY_ONLY"},
+  "terminal_outcome": "BLOCKED",
+  "stage_outcomes": [
+    {"stage": "design", "outcome": "BLOCKED", "evidence_refs": ["record:phase3c:H03:claude-code:001"], "notes": "The 60-second noninteractive probe timed out before a response."}
+  ],
+  "quality": {
+    "acceptance_criteria_coverage": null,
+    "tests_pass": null,
+    "artifact_correctness": null,
+    "source_accuracy": null,
+    "review_finding_precision": null,
+    "user_correction": null
+  },
+  "efficiency": {
+    "latency_ms": 60036.1,
+    "wall_time_ms": 60036.1,
+    "model_calls": null,
+    "tool_calls": null,
+    "context_tokens": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "cost_units": null,
+    "cost_status": "UNKNOWN"
+  },
+  "reliability": {
+    "success_count": 0,
+    "reroutes": 0,
+    "retries": 0,
+    "failed_tool_calls": 0,
+    "invalid_edits": 0,
+    "recovery_events": 0,
+    "failure_reasons": ["headless timeout before result"]
+  },
+  "security": {
+    "permission_violation": false,
+    "sandbox_mismatch": false,
+    "unsafe_proposal": false,
+    "secret_exposure": false,
+    "unexpected_network_usage": null
+  },
+  "portability": {
+    "portable_artifacts": ["TaskSpec", "StageRoute"],
+    "runtime_specific_artifacts": [],
+    "lost_capabilities": [],
+    "instruction_leakage": false
+  },
+  "output_evidence": {
+    "format": "unknown",
+    "stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_bytes": 0,
+    "stderr_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_bytes": 0,
+    "raw_output_serialized": false,
+    "sanitized": true
+  },
+  "artifacts": {
+    "start_sha": "df07b884aaf37391e46740dfd57184dae5271a44",
+    "end_sha": "df07b884aaf37391e46740dfd57184dae5271a44",
+    "changed_files": [],
+    "diff_digest": null,
+    "test_commands": [],
+    "tests_passed": null
+  },
+  "provenance": {
+    "runtime_source": "local claude --version: 2.1.235 (Claude Code)",
+    "invocation_contract": "claude -p --no-session-persistence --output-format json --tools= --permission-mode plan --max-budget-usd 0.10",
+    "documentation_snapshot": "https://docs.anthropic.com/en/docs/claude-code/cli-usage",
+    "source_refs": ["https://docs.anthropic.com/en/docs/claude-code/cli-usage"],
+    "verification_method": "claude --version; claude --help; bounded 60-second isolated H03 read-only probe",
+    "observed_at": "2026-09-09T13:52:00+00:00"
+  },
+  "confounders": [
+    "headless process timed out before a response",
+    "model identifier and actual provider cost were not exposed",
+    "n=1 is exploratory only"
+  ],
+  "baseline_refs": [],
+  "notes": "No quality claim. The lane is blocked because the bounded noninteractive invocation did not produce a result.",
+  "history_mode": "APPEND_ONLY",
+  "sensitive_data_serialized": false
+}

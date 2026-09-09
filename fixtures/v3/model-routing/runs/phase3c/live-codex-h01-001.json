@@ -1,0 +1,114 @@
+{
+  "schema_version": "3.0",
+  "record_id": "record:phase3c:H01:codex:001",
+  "run_id": "run:phase3c:H01:codex:001",
+  "fixture_id": "H01-bugfix",
+  "fixture_set": "HOLDOUT",
+  "evidence_class": "REAL_EXECUTION",
+  "status": "COMPLETED",
+  "runtime_id": "codex",
+  "observed_version": "codex-cli 0.153.4",
+  "model_id": null,
+  "reasoning_effort": null,
+  "effect_class": "INCONCLUSIVE",
+  "controls": {
+    "task_spec_digest": "sha256:40baaf95f138689d6774e0c872e6444c401ddb9fac9c24d5ab13b437fe697028",
+    "fixture_digest": "sha256:80bfef6e7ea92cb64985925111974b8e76631a21b79a0678d50ac62a7df8b5d4",
+    "start_sha": "bf194e48f6b0face3ef5695e31600bf8c2d4f770",
+    "stage_route_digest": "sha256:eaf3c17ce91f4b39a8df3de77c1cdc261343c084437c3e723c494e17d440e882",
+    "selected_skill_ids": ["using-superpowers", "tdd", "verification-before-completion"],
+    "selected_skill_digests": [
+      "sha256:1adce90aedd8b1362381f8bf8a7346966612cbde3591f74ab7e55e539fa1209a",
+      "sha256:8ae3fb3ce33a69cc829586ac52d9f2035d5d08f922507775fcb7eeeeb6132fab",
+      "sha256:ea52d15aabaf72bc6b558efe2c126f161b53961090ddcd712000273bfe8c7b6c"
+    ],
+    "permission_envelope_digest": "sha256:a09a39d930ed2dcf4fcd330b38566fe1cd1bf64701e343fc9688ace5e1729866",
+    "tool_availability": ["codex exec", "workspace filesystem", "local unittest"],
+    "mcp_availability": "NOT_USED",
+    "project_instruction_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "system_instruction_digest": null
+  },
+  "repetition": {"n": 1, "target": 3, "classification": "EXPLORATORY_ONLY"},
+  "terminal_outcome": "VERIFIED_SUCCESS",
+  "stage_outcomes": [
+    {"stage": "understand", "outcome": "PASS", "evidence_refs": ["record:phase3c:H01:codex:001"], "notes": "Holdout and route digests fixed before execution."},
+    {"stage": "implement", "outcome": "PASS", "evidence_refs": ["record:phase3c:H01:codex:001"], "notes": "Only parser.py changed in the isolated fixture."},
+    {"stage": "verify", "outcome": "PASS", "evidence_refs": ["record:phase3c:H01:codex:001"], "notes": "2/2 unittest cases passed after the run."}
+  ],
+  "quality": {
+    "acceptance_criteria_coverage": 1.0,
+    "tests_pass": true,
+    "artifact_correctness": true,
+    "source_accuracy": null,
+    "review_finding_precision": null,
+    "user_correction": false
+  },
+  "efficiency": {
+    "latency_ms": 42831.7,
+    "wall_time_ms": 42831.7,
+    "model_calls": 1,
+    "tool_calls": null,
+    "context_tokens": null,
+    "input_tokens": 145919,
+    "output_tokens": 1725,
+    "cost_units": null,
+    "cost_status": "UNKNOWN"
+  },
+  "reliability": {
+    "success_count": 1,
+    "reroutes": 0,
+    "retries": 0,
+    "failed_tool_calls": 0,
+    "invalid_edits": 0,
+    "recovery_events": 0,
+    "failure_reasons": []
+  },
+  "security": {
+    "permission_violation": false,
+    "sandbox_mismatch": false,
+    "unsafe_proposal": false,
+    "secret_exposure": false,
+    "unexpected_network_usage": null
+  },
+  "portability": {
+    "portable_artifacts": ["TaskSpec", "StageRoute", "Evidence", "Verification"],
+    "runtime_specific_artifacts": ["codex-jsonl-events"],
+    "lost_capabilities": [],
+    "instruction_leakage": false
+  },
+  "output_evidence": {
+    "format": "jsonl",
+    "stdout_digest": "sha256:7fe571623c0608460677d7b3b8e8360d2baf02b1b120bd46790d2dd01ee511b8",
+    "stdout_bytes": 6134,
+    "stderr_digest": "sha256:4ae8122d9cf326da3445d4ee409e5f42a878cec8489646d9af3c95869d35a186",
+    "stderr_bytes": 340,
+    "raw_output_serialized": false,
+    "sanitized": true
+  },
+  "artifacts": {
+    "start_sha": "bf194e48f6b0face3ef5695e31600bf8c2d4f770",
+    "end_sha": "bf194e48f6b0face3ef5695e31600bf8c2d4f770",
+    "changed_files": ["parser.py"],
+    "diff_digest": "sha256:796c131f00c8699eb02b5b3e14f407ee88aafad648766a5995ab327525ccbccf",
+    "test_commands": ["PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover -s . -p 'test_*.py'"],
+    "tests_passed": true
+  },
+  "provenance": {
+    "runtime_source": "local codex --version: codex-cli 0.153.4",
+    "invocation_contract": "codex exec --ephemeral --sandbox workspace-write --color never --json --cd <isolated-fixture> -",
+    "documentation_snapshot": "https://developers.openai.com/codex/",
+    "source_refs": ["https://github.com/openai/codex/releases/tag/rust-v0.153.4"],
+    "verification_method": "codex --version; codex exec --help; bounded isolated H01 execution; independent unittest verification",
+    "observed_at": "2026-09-09T13:49:25+00:00"
+  },
+  "confounders": [
+    "model identifier was not exposed by the captured Codex JSONL events",
+    "actual provider cost was not exposed",
+    "native runtime skill injection was not independently measurable; selected skill digests were recorded and body loading remained host-controlled",
+    "n=1 is exploratory only"
+  ],
+  "baseline_refs": [],
+  "notes": "REAL_EXECUTION evidence for one isolated Codex configuration; not a model preference or cross-runtime comparison.",
+  "history_mode": "APPEND_ONLY",
+  "sensitive_data_serialized": false
+}

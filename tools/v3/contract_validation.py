@@ -37,6 +37,7 @@ SCHEMA_FILES = {
     "EvaluationRun": "evaluation-run.schema.json",
     "EvaluationResult": "evaluation-result.schema.json",
     "RuntimeHandoff": "runtime-handoff.schema.json",
+    "LiveExecutionRecord": "live-execution-record.schema.json",
 }
 
 KNOWN_CAPABILITIES = frozenset(
