@@ -16,6 +16,7 @@ from tools.v3.runtime_model_evaluation import (
     build_runtime_handoff,
     make_evaluation_result,
     make_evaluation_run,
+    live_evidence_gate,
     model_routing_work_required,
     pareto_frontier,
     routing_policy_proposal,
@@ -583,6 +584,44 @@ class RuntimeModelEvaluationContractTests(unittest.TestCase):
         result = validate_instance("ModelProfile", profile)
 
         self.assertFalse(result.valid)
+
+    def test_second_configuration_gate_does_not_count_repetitions_as_configurations(self):
+        result = live_evidence_gate(
+            completed_configuration_ids=["configuration:codex:0"],
+            completed_task_classes=["bugfix", "design", "handoff"],
+            repeated_cell_n=3,
+            measurement_integrity_blockers=[],
+            meaningful_comparison=False,
+        )
+
+        self.assertEqual(result["verdict"], "INSUFFICIENT_LIVE_EVIDENCE")
+        self.assertEqual(result["completed_configuration_count"], 1)
+        self.assertTrue(any("second" in item for item in result["missing_requirements"]))
+
+    def test_runtime_capability_gap_is_explicit_after_codex_evidence_is_adequate(self):
+        result = live_evidence_gate(
+            completed_configuration_ids=["configuration:codex:0"],
+            completed_task_classes=["bugfix", "design", "handoff"],
+            repeated_cell_n=3,
+            measurement_integrity_blockers=[],
+            meaningful_comparison=False,
+            secondary_runtime_blocked=True,
+        )
+
+        self.assertEqual(result["verdict"], "RUNTIME_CAPABILITY_GAPS")
+        self.assertIn("secondary", result["reason"])
+
+    def test_measurement_integrity_blocker_prevents_runtime_gap_shortcut(self):
+        result = live_evidence_gate(
+            completed_configuration_ids=["configuration:codex:0"],
+            completed_task_classes=["bugfix", "design", "handoff"],
+            repeated_cell_n=3,
+            measurement_integrity_blockers=["token semantics unknown"],
+            meaningful_comparison=False,
+            secondary_runtime_blocked=True,
+        )
+
+        self.assertEqual(result["verdict"], "INSUFFICIENT_LIVE_EVIDENCE")
 
 
 if __name__ == "__main__":
