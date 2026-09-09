@@ -9,6 +9,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import time
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Iterable
@@ -16,6 +17,7 @@ from typing import Any, Iterable
 from tools.v3.compatibility import import_skill_index_entry
 from tools.v3.contract_validation import KNOWN_CAPABILITIES, validate_instance
 from tools.v3.metadata_enrichment import load_enriched_catalog
+from tools.v3.routing_catalog import RoutingCatalogSnapshot
 from tools.v3.skill_graph import SkillGraph
 from tools.v3.skill_scoring import (
     ROLES,
@@ -26,6 +28,7 @@ from tools.v3.skill_scoring import (
     field_is_enforced,
     field_is_routable,
     is_trivial_task,
+    negative_trigger_matches,
     required_roles_for,
     score_candidate,
 )
@@ -86,6 +89,14 @@ def load_current_catalog(path: str | Path) -> list[dict[str, Any]]:
     """Return the current registry with its optional v3 routing overlay."""
 
     return load_enriched_catalog(path)
+
+
+def load_current_catalog_snapshot(
+    path: str | Path, *, overlay_path: str | Path | None = None
+) -> RoutingCatalogSnapshot:
+    """Load the current registry once for reuse across stage routes."""
+
+    return RoutingCatalogSnapshot.from_registry(path, overlay_path=overlay_path)
 
 
 def _canonical(value: Any) -> str:
@@ -457,6 +468,97 @@ def _relevance_score(score: CandidateScore) -> float:
     )
 
 
+def _review_independence_required(
+    task_spec: dict[str, Any], stage: dict[str, Any]
+) -> bool:
+    """Detect an explicit need for more than one independent review lane."""
+
+    if stage.get("independent_review_required") is True:
+        return True
+    evidence = {
+        str(item).lower()
+        for item in list(stage.get("evidence_required", []))
+        + list(stage.get("required_outputs", []))
+    }
+    if any("independent" in item or "adversarial" in item for item in evidence):
+        return True
+    lanes = sum(
+        any(term in item for term in ("review", "security", "tests", "performance", "source", "runtime"))
+        for item in evidence
+    )
+    return (
+        task_spec.get("complexity") == "COMPLEX"
+        and task_spec.get("risk") in {"HIGH", "CRITICAL"}
+        and stage.get("id") in {"review", "verify", "harden", "handoff"}
+        and lanes >= 3
+    )
+
+
+def _role_saturation_limit(
+    role: str, task_spec: dict[str, Any], stage: dict[str, Any]
+) -> int:
+    evidence = {
+        str(item).lower()
+        for item in list(stage.get("evidence_required", []))
+        + list(stage.get("required_outputs", []))
+        + list(task_spec.get("artifact_requirements", []))
+    }
+    if role == "PROCESS" and any(
+        term in item for item in evidence for term in ("test", "spec", "plan", "decision")
+    ):
+        return 2
+    if role != "REVIEW":
+        return 1
+    explicit = stage.get("independent_review_count")
+    if isinstance(explicit, int) and explicit >= 1:
+        return min(explicit, 3)
+    return 2 if _review_independence_required(task_spec, stage) else 1
+
+
+def _review_signal_requested(
+    required_roles: list[str], stage: dict[str, Any]
+) -> bool:
+    """Allow a review complement only when this stage asks for review evidence."""
+
+    if "REVIEW" in required_roles:
+        return True
+    evidence = {
+        str(item).lower()
+        for item in list(stage.get("evidence_required", []))
+        + list(stage.get("required_outputs", []))
+    }
+    return any(
+        term in item
+        for item in evidence
+        for term in ("review", "audit", "security", "quality", "performance")
+    )
+
+
+def _marginal_context_allowed(
+    score: CandidateScore,
+    *,
+    required: bool,
+) -> tuple[bool, str | None]:
+    """Reject optional high-cost additions whose evidence value is too small."""
+
+    if required:
+        return True, None
+    context_bytes = score.cost.get("instruction_tokens", 0) * 4
+    tool_cost = score.cost.get("tool_calls", 0)
+    if context_bytes <= 8192 and tool_cost <= 2:
+        return True, None
+    benefit = max(0.0, _relevance_score(score))
+    benefit += max(0.0, score.components.get("relationship_bonus", 0.0))
+    benefit += max(0.0, score.components.get("required_output_match", 0.0))
+    pressure = context_bytes / 2048.0 + tool_cost * 1.5
+    if pressure > max(8.0, benefit * 1.25):
+        return False, (
+            f"marginal context cost {context_bytes} bytes/tool cost {tool_cost} "
+            f"exceeds evidence value {benefit:g}"
+        )
+    return True, None
+
+
 class StageRouter:
     """Route one stage using only the supplied metadata view."""
 
@@ -483,13 +585,16 @@ class StageRouter:
         self,
         task_spec: dict[str, Any],
         stage: str | dict[str, Any],
-        catalog: Iterable[dict[str, Any]] | dict[str, Any],
+        catalog: Iterable[dict[str, Any]] | dict[str, Any] | RoutingCatalogSnapshot,
         *,
         adapter_capabilities: dict[str, Any] | None = None,
         trust_policy: Any = None,
         context_budget: dict[str, Any] | None = None,
         tool_budget: int | None = None,
+        measure: bool = False,
     ) -> dict[str, Any]:
+        route_started = time.perf_counter() if measure else 0.0
+        timing_ms: dict[str, float] = {}
         normalized_stage = _normalise_stage(stage)
         _validate_task_spec(task_spec)
         required_capabilities = _known_capabilities(
@@ -535,7 +640,12 @@ class StageRouter:
             if tool_budget is not None
             else None
         )
-        if isinstance(catalog, dict):
+        snapshot = catalog if isinstance(catalog, RoutingCatalogSnapshot) else None
+        if snapshot is not None:
+            records = list(snapshot.records)
+            timing_ms["metadata_derivation_ms"] = 0.0
+            timing_ms["schema_validation_ms"] = 0.0
+        elif isinstance(catalog, dict):
             raw_records = catalog.get("skills")
             if not isinstance(raw_records, list):
                 raise RoutingError(
@@ -549,33 +659,54 @@ class StageRouter:
             ]
         else:
             records = list(catalog)
-        effective_records: list[dict[str, Any]] = []
+        effective_records: list[dict[str, Any]] = list(records) if snapshot is not None else []
         invalid_records: list[dict[str, Any]] = []
-        for record in records:
-            if not isinstance(record, dict):
-                invalid_records.append(
-                    {
-                        "skill_id": str(record),
-                        "reasons": ["metadata record is not an object"],
-                    }
-                )
-                continue
-            candidate = derive_routing_metadata(record)
-            validation = validate_instance("SkillMetadataV3", candidate)
-            if not validation.valid:
-                invalid_records.append(
-                    {
-                        "skill_id": str(candidate.get("skill_id", "invalid")),
-                        "reasons": [
-                            "invalid metadata: " + "; ".join(validation.errors)
-                        ],
-                    }
-                )
-                continue
-            effective_records.append(candidate)
+        if snapshot is None:
+            metadata_elapsed = 0.0
+            schema_elapsed = 0.0
+            for record in records:
+                if not isinstance(record, dict):
+                    invalid_records.append(
+                        {
+                            "skill_id": str(record),
+                            "reasons": ["metadata record is not an object"],
+                        }
+                    )
+                    continue
+                metadata_step = time.perf_counter() if measure else 0.0
+                candidate = derive_routing_metadata(record)
+                if measure:
+                    metadata_elapsed += (time.perf_counter() - metadata_step) * 1000
+                schema_step = time.perf_counter() if measure else 0.0
+                validation = validate_instance("SkillMetadataV3", candidate)
+                if measure:
+                    schema_elapsed += (time.perf_counter() - schema_step) * 1000
+                if not validation.valid:
+                    invalid_records.append(
+                        {
+                            "skill_id": str(candidate.get("skill_id", "invalid")),
+                            "reasons": [
+                                "invalid metadata: " + "; ".join(validation.errors)
+                            ],
+                        }
+                    )
+                    continue
+                effective_records.append(candidate)
+            if measure:
+                timing_ms["metadata_derivation_ms"] = round(metadata_elapsed, 3)
+                timing_ms["schema_validation_ms"] = round(schema_elapsed, 3)
 
-        epoch = _route_epoch(effective_records, self.registry_epoch)
-        graph = SkillGraph(effective_records)
+        epoch = self.registry_epoch or (
+            snapshot.registry_epoch if snapshot is not None else _route_epoch(effective_records, None)
+        )
+        graph_started = time.perf_counter() if measure else 0.0
+        graph = snapshot.graph if snapshot is not None else SkillGraph(effective_records)
+        if measure:
+            timing_ms["graph_construction_ms"] = (
+                0.0
+                if snapshot is not None
+                else round((time.perf_counter() - graph_started) * 1000, 3)
+            )
         gate = deep_understanding_gate(task_spec, normalized_stage)
         deep_ids = {
             record["skill_id"]
@@ -600,7 +731,9 @@ class StageRouter:
                 "INVALID_ROLE", f"unknown required role(s): {', '.join(unknown_roles)}"
             )
 
+        scoring_started = time.perf_counter() if measure else 0.0
         evaluations: dict[str, CandidateEvaluation] = {}
+        negative_signal_effects: list[str] = []
         available_ids = {record["skill_id"] for record in effective_records}
         for record in effective_records:
             skill_id = record["skill_id"]
@@ -634,6 +767,19 @@ class StageRouter:
                         )
                         if score is not None:
                             scores[role] = score
+                            negative_penalty = score.components.get(
+                                "negative_trigger_penalty", 0.0
+                            )
+                            if negative_penalty:
+                                negative_signal_effects.append(
+                                    f"{skill_id}: negative trigger penalty {negative_penalty:g}"
+                                )
+                                for signal in negative_trigger_matches(
+                                    record, task_spec, normalized_stage
+                                ):
+                                    negative_signal_effects.append(
+                                        f"{skill_id}: negative signal {signal}"
+                                    )
                 if not scores:
                     reasons.append("metadata has no scoreable role for this stage")
             evaluations[skill_id] = CandidateEvaluation(record, scores, tuple(reasons))
@@ -691,7 +837,13 @@ class StageRouter:
             for skill_id, evaluation in evaluations.items()
             if not evaluation.reasons and evaluation.best is not None
         }
+        marginal_cost_effects: list[str] = []
+        role_saturation_effects: list[str] = []
         if is_trivial_task(task_spec, normalized_stage):
+            if measure:
+                timing_ms["candidate_scoring_ms"] = round(
+                    (time.perf_counter() - scoring_started) * 1000, 3
+                )
             route = self._build_route(
                 task_spec,
                 normalized_stage,
@@ -706,6 +858,12 @@ class StageRouter:
                 "trivial low-risk task has no required procedure; no skill is needed",
                 adapter_capabilities=adapter_caps,
                 invalid_records=invalid_records,
+                catalog_snapshot=snapshot,
+                timing_ms=timing_ms if measure else None,
+                route_started=route_started,
+                negative_signal_effects=negative_signal_effects,
+                role_saturation_effects=role_saturation_effects,
+                marginal_cost_effects=marginal_cost_effects,
             )
             validation = validate_instance("StageRoute", route)
             if not validation.valid:
@@ -741,13 +899,26 @@ class StageRouter:
                 return None
             bonus, effects = graph.positive_effects(skill_id, selected)
             relationship_effects.extend(effects)
+            selected_role_count = sum(
+                item.role == base.role for item in selected.values()
+            )
+            saturation_penalty = float(selected_role_count) if selected_role_count else 0.0
             return replace(
                 base,
-                score=round(base.score + bonus, 3),
-                components={**base.components, "relationship_bonus": bonus},
+                score=round(base.score + bonus - saturation_penalty, 3),
+                components={
+                    **base.components,
+                    "relationship_bonus": bonus,
+                    "role_saturation_penalty": -saturation_penalty,
+                },
             )
 
-        def can_add(skill_id: str) -> tuple[bool, list[str]]:
+        def can_add(
+            skill_id: str, *, dependency: bool = False, role: str | None = None
+        ) -> tuple[bool, list[str]]:
+            evaluation = evaluations.get(skill_id)
+            if evaluation is None:
+                return False, ["candidate is not in the eligible catalog"]
             for existing_id in selected:
                 if graph.conflicts(skill_id, existing_id):
                     relationship_effects.append(f"CONFLICTS:{skill_id}<->{existing_id}")
@@ -759,6 +930,24 @@ class StageRouter:
                     return False, [
                         f"ALTERNATIVE_TO {existing_id}; one alternative is sufficient"
                     ]
+            if not dependency:
+                candidate_role = role or (evaluation.best.role if evaluation.best else None)
+                if candidate_role:
+                    selected_count = sum(
+                        item.role == candidate_role for item in selected.values()
+                    )
+                    limit = _role_saturation_limit(
+                        candidate_role, task_spec, normalized_stage
+                    )
+                    if selected_count >= limit:
+                        reason = (
+                            f"role saturation: {candidate_role} already has "
+                            f"{selected_count} selected skill(s); limit {limit}"
+                        )
+                        role_saturation_effects.append(
+                            f"{skill_id}: {reason}"
+                        )
+                        return False, [reason]
             return True, []
 
         def add(
@@ -780,7 +969,9 @@ class StageRouter:
                     )
                 )
                 return False
-            allowed, reasons = can_add(skill_id)
+            allowed, reasons = can_add(
+                skill_id, dependency=dependency, role=role
+            )
             if not allowed:
                 rejected_selection.setdefault(skill_id, []).extend(reasons)
                 return False
@@ -836,6 +1027,9 @@ class StageRouter:
             key=lambda item: (-item.score, ROLE_ORDER.index(item.role), item.skill_id)
         )
         covered_roles = {score.role for score in selected.values()}
+        review_signal_requested = _review_signal_requested(
+            required_roles, normalized_stage
+        )
         for option in all_options:
             if (
                 option.score < OPTIONAL_SCORE
@@ -856,11 +1050,35 @@ class StageRouter:
                 (role_is_new and role_is_required)
                 or has_relation
                 or expands_required_artifact
+                or (
+                    option.role == "REVIEW"
+                    and review_signal_requested
+                    and _role_saturation_limit(
+                        "REVIEW", task_spec, normalized_stage
+                    )
+                    > sum(item.role == "REVIEW" for item in selected.values())
+                )
             ):
+                allowed, cost_reason = _marginal_context_allowed(
+                    option, required=False
+                )
+                if not allowed:
+                    reason = cost_reason or "marginal context cost is not justified"
+                    marginal_cost_effects.append(f"{option.skill_id}: {reason}")
+                    rejected_selection.setdefault(option.skill_id, []).append(
+                        f"context cost gate: {reason}"
+                    )
+                    continue
                 if add(option.skill_id, required=False):
                     covered_roles.add(option.role)
 
         for skill_id in sorted(eligible_ids - set(selected)):
+            if negative_signal_effects and any(
+                item.startswith(f"{skill_id}:") for item in negative_signal_effects
+            ):
+                rejected_selection.setdefault(skill_id, []).append(
+                    "negative routing signal matched; optional activation suppressed"
+                )
             for existing_id in sorted(selected):
                 if graph.conflicts(skill_id, existing_id):
                     relationship_effects.append(f"CONFLICTS:{skill_id}<->{existing_id}")
@@ -888,6 +1106,10 @@ class StageRouter:
                 "resident task/session orchestration authority; referenced as GATE without reloading its full body"
             )
 
+        if measure:
+            timing_ms["candidate_scoring_ms"] = round(
+                (time.perf_counter() - scoring_started) * 1000, 3
+            )
         route = self._build_route(
             task_spec,
             normalized_stage,
@@ -905,6 +1127,12 @@ class StageRouter:
             relationship_effects=relationship_effects,
             rejected_selection=rejected_selection,
             invalid_records=invalid_records,
+            catalog_snapshot=snapshot,
+            timing_ms=timing_ms if measure else None,
+            route_started=route_started,
+            negative_signal_effects=negative_signal_effects,
+            role_saturation_effects=role_saturation_effects,
+            marginal_cost_effects=marginal_cost_effects,
         )
         if deep_status.get("status") == "ELIGIBLE" and "deep-understanding" in selected:
             route["routing_evidence"]["deep_understanding"] = {
@@ -936,11 +1164,25 @@ class StageRouter:
         relationship_effects: list[str] | None = None,
         rejected_selection: dict[str, list[str]] | None = None,
         invalid_records: list[dict[str, Any]] | None = None,
+        catalog_snapshot: RoutingCatalogSnapshot | None = None,
+        timing_ms: dict[str, float] | None = None,
+        route_started: float = 0.0,
+        negative_signal_effects: list[str] | None = None,
+        role_saturation_effects: list[str] | None = None,
+        marginal_cost_effects: list[str] | None = None,
     ) -> dict[str, Any]:
         selected_reasons = selected_reasons or {}
         relationship_effects = relationship_effects or []
         rejected_selection = rejected_selection or {}
         invalid_records = invalid_records or []
+        negative_signal_effects = negative_signal_effects or []
+        role_saturation_effects = role_saturation_effects or []
+        marginal_cost_effects = marginal_cost_effects or []
+        if timing_ms is not None and route_started:
+            timing_ms = dict(timing_ms)
+            timing_ms["total_route_ms"] = round(
+                (time.perf_counter() - route_started) * 1000, 3
+            )
         selected_scores = sorted(
             selected_scores,
             key=lambda item: (ROLE_ORDER.index(item.role), item.skill_id),
@@ -1116,8 +1358,23 @@ class StageRouter:
                 "selected_candidates": selected_candidates,
                 "rejected_candidates": rejected[:32],
                 "deep_understanding": deep_status,
+                "negative_signal_effects": sorted(set(negative_signal_effects)),
+                "role_saturation": {
+                    "review_limit": _role_saturation_limit(
+                        "REVIEW", task_spec, stage
+                    ),
+                    "independent_review_required": _review_independence_required(
+                        task_spec, stage
+                    ),
+                    "same_role_rejections": sorted(set(role_saturation_effects)),
+                },
+                "marginal_cost_effects": sorted(set(marginal_cost_effects)),
             },
         }
+        if catalog_snapshot is not None:
+            route["routing_evidence"]["catalog_snapshot"] = catalog_snapshot.evidence()
+        if timing_ms is not None:
+            route["routing_evidence"]["timings_ms"] = timing_ms
         if status == "NO_SKILL_NEEDED":
             route["no_skill_reason"] = no_skill_reason
         return route
@@ -1135,6 +1392,7 @@ def route_stage(
     trust_policy: Any = None,
     context_budget: dict[str, Any] | None = None,
     tool_budget: int | None = None,
+    measure: bool = False,
 ) -> dict[str, Any]:
     """Convenience function for one deterministic stage route."""
 
@@ -1146,4 +1404,4 @@ def route_stage(
         trust_policy=trust_policy,
         context_budget=context_budget,
         tool_budget=tool_budget,
-    ).route(task_spec, stage, catalog)
+    ).route(task_spec, stage, catalog, measure=measure)
