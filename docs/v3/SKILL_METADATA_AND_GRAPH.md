@@ -1,6 +1,6 @@
 # Skill Metadata and Graph
 
-> Status: **Phase 1 schema implemented; registry migration deferred**. No production registry migration is introduced by this phase.
+> Status: **Phase 1 schema implemented; Phase 3A read-only routing consumer added; registry migration deferred**. No production registry migration is introduced by this phase.
 
 ## Source of truth
 
@@ -94,4 +94,18 @@ Relationships are directed and versioned. A `CONFLICTS` edge is not a security d
 
 ## Compatibility and migration
 
-The current registry may be projected into this schema with inferred fields marked `unmeasured`, `inferred`, or `planned`. No migration, mass frontmatter rewrite, generated index rewrite, or runtime consumer is part of v3 documentation. Phase 1 of the [Migration Plan](MIGRATION_PLAN.md) defines the future schema work.
+The current registry may be projected into this schema with inferred fields
+marked `inferred`, unavailable provenance left absent, and curated compatibility
+hints marked separately. Phase 3A uses that read-only projection as an
+in-memory router view. Records whose roles, stages, and domains are only broad
+inference are not executable candidates; this prevents legacy descriptions from
+creating false routing confidence. The compatibility view never reads skill
+bodies and never changes `.superpowers/SKILLS_INDEX.json`.
+
+No migration, mass frontmatter rewrite, generated index rewrite, persistent
+graph database, or learned-weight update is part of Phase 3A. The in-memory
+relationship graph supports dependency expansion, conflict/alternative checks,
+and positive contextual signals only for the current route invocation.
+Historical success remains observation-only. Phase 1 of the [Migration Plan](MIGRATION_PLAN.md)
+defines the future schema work, and the [Stage Router evaluation](evidence/STAGE_ROUTER_EVAL_V1.md)
+records the current metadata gaps.

@@ -4,11 +4,11 @@
 
 ## Authority
 
-`using-superpowers` is the orchestration authority. It establishes the routing bootstrap, turns a request into a portable `TaskSpec`, owns stage transitions, and requires an evidence gate before completion. A skill may advise the core; it may not redefine the core's permissions, deny list, budget, or completion criteria.
+`using-superpowers` is the orchestration authority. It establishes the routing bootstrap, turns a request into a portable `TaskSpec`, owns stage transitions, and requires an evidence gate before completion. A skill may advise the core; it may not redefine the core's permissions, deny list, budget, or completion criteria. In Phase 3A, the resident authority delegates one validated stage at a time to the deterministic Stage Router; it remains the policy owner.
 
 ### Session-level residency
 
-`using-superpowers` is a task/session-level authority, not an ordinary procedure that must reload its full instruction file at every stage. A stage route may reference it in the `GATE` slot so the authority is observable, while the runtime keeps the authority context resident at the task boundary. Phase 1 records this rule in [`StageRoute`](../../schemas/v3/stage-route.schema.json) fixtures but does not implement loading or routing behavior.
+`using-superpowers` is a task/session-level authority, not an ordinary procedure that must reload its full instruction file at every stage. A stage route may reference it in the `GATE` slot so the authority is observable, while the runtime keeps the authority context resident at the task boundary. The Phase 3A router records this residency explicitly and does not score or reload it as a normal candidate.
 
 The current v2 policy is predominantly task-level: it pins a registry snapshot and selects a bounded set of primary/optional skills once. That is useful baseline behavior, but it cannot adapt cleanly when later stages reveal new domain, review, or verification needs. v3 adds stage-local routing as a design target without changing v2 at runtime.
 
@@ -29,7 +29,7 @@ Task Intake
 
 The router creates a new route record at each stage. A route change is allowed only at a declared stage boundary or after an evidence gate reports that the current stage cannot satisfy its acceptance criteria. Every reroute records its reason, candidates considered, skills selected, capabilities negotiated, and budget impact.
 
-Phase 1 makes the route record machine-readable. Every active stage must emit an explicit `SKILLS_SELECTED` or `NO_SKILL_NEEDED` status; the validator rejects a silent or contradictory route.
+Phase 1 makes the route record machine-readable. Phase 3A makes the stage-local selection step executable: every active stage still emits an explicit `SKILLS_SELECTED` or `NO_SKILL_NEEDED` status, while the validator and router reject a silent or contradictory route.
 
 ## Task classification
 
@@ -73,7 +73,7 @@ Stage-local guidance:
 - Reusing one skill in multiple stages is expected when its role remains relevant.
 - Context loading is lazy: select metadata first, then load only selected `SKILL.md` files and required references.
 
-The goal is the smallest sufficient set that covers the stage's roles, capabilities, permissions, and evidence—not the largest set that can be made to sound related.
+The goal is the smallest sufficient set that covers the stage's roles, capabilities, permissions, and evidence—not the largest set that can be made to sound related. The Phase 3A baseline uses deterministic metadata scoring, hard filters, relationship checks, and role coverage; selected bodies remain a downstream adapter/resolver concern.
 
 ## Portable TaskSpec
 
@@ -131,4 +131,4 @@ The evidence gate may advance, reroute, degrade to a plan/summary, or block. It 
 
 ## Policy ownership and non-goals
 
-This document does not change the current routing YAML, implement stage selection, create a database, install a model/provider, or replace Compose with Superpowers. It defines the contract that future phases must test and implement. Historical v2 material remains available in [the v2 architecture document](../using-superpowers-v2-extensible-architecture.md).
+This document does not change the current routing YAML, implement a general stage planner, create a database, install a model/provider, or replace Compose with Superpowers. Phase 3A implements only a small stage-local selector; model selection, runtime expansion, and historical-weight learning remain future work. Historical v2 material remains available in [the v2 architecture document](../using-superpowers-v2-extensible-architecture.md).

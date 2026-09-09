@@ -1,6 +1,6 @@
 # v3 Architecture and ADRs
 
-> Status: **proposed**. The architecture is a contract for future implementation; the current runtime and registry remain unchanged by this PR.
+> Status: **proposed**. Phase 1 contracts, the provenance-bound Codex execution slice, and the Phase 3A metadata-first Stage Router MVP are implemented; the current production registry and v2 runtime policy remain unchanged.
 
 ## System shape
 
@@ -113,4 +113,4 @@ All eight decisions below are **Proposed** in this documentation pass. A future 
 | Learning | Existing local strengths and ad hoc records | Quarantine, provenance, eval, approval, promotion |
 | Review | Existing skills/tools | Independent evidence lane taxonomy |
 
-Phase 1 implements only the portable contract schemas, validation, fixtures, and compatibility projection. The target routing, adapter, learning, and review behaviors remain unimplemented. See [Phase 1 Machine-Readable Contracts](PHASE1_MACHINE_READABLE_CONTRACTS.md) and [Migration Plan](MIGRATION_PLAN.md).
+Phase 1 implements the portable contract schemas, validation, fixtures, and compatibility projection. Phase 3A adds a deterministic one-stage selector over that compatibility view and proves that a resulting `StageRoute` is consumable by the existing Codex adapter. General stage planning, model/provider routing, reroute execution, learning promotion, and the other native adapters remain unimplemented. See [Stage Router](STAGE_ROUTER.md), [Stage Router evaluation](evidence/STAGE_ROUTER_EVAL_V1.md), [Phase 1 Machine-Readable Contracts](PHASE1_MACHINE_READABLE_CONTRACTS.md), and [Migration Plan](MIGRATION_PLAN.md).
