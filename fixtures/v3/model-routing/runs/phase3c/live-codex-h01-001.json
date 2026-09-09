@@ -46,7 +46,7 @@
   "efficiency": {
     "latency_ms": 42831.7,
     "wall_time_ms": 42831.7,
-    "model_calls": 1,
+    "model_calls": null,
     "tool_calls": null,
     "context_tokens": null,
     "input_tokens": 145919,

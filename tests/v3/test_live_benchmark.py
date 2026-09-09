@@ -173,6 +173,8 @@ class LiveBenchmarkContractTests(unittest.TestCase):
         self.assertEqual(metrics["input_tokens"]["source"], "OBSERVED")
         self.assertEqual(metrics["input_tokens"]["status"], "VERIFIED")
         self.assertEqual(metrics["input_tokens"]["source_field"], "turn.completed.usage.input_tokens")
+        self.assertEqual(metrics["tokens_total"]["aggregation"], "CUMULATIVE_TOTAL")
+        self.assertEqual(metrics["tokens_total"]["status"], "VERIFIED")
 
     def test_codex_usage_without_release_identity_does_not_claim_cumulative_total(self):
         payload = json.dumps(
@@ -184,6 +186,7 @@ class LiveBenchmarkContractTests(unittest.TestCase):
         self.assertEqual(metrics["input_tokens"]["value"], 10)
         self.assertEqual(metrics["input_tokens"]["aggregation"], "UNKNOWN")
         self.assertEqual(metrics["input_tokens"]["status"], "UNKNOWN")
+        self.assertEqual(metrics["tokens_total"]["aggregation"], "UNKNOWN")
 
     def test_unobservable_model_calls_remain_unknown(self):
         live = record(process=ProcessObservation(True, 0, False, 10.0, "plain output", ""))
@@ -317,6 +320,35 @@ class LiveBenchmarkContractTests(unittest.TestCase):
             ROOT / "fixtures/v3/model-routing/runs/phase3c/live-codex-h01-001.json",
         )
         self.assertTrue(record_result.valid)
+
+    def test_historical_codex_usage_is_explicitly_cumulative_and_not_model_call_count(self):
+        historical = json.loads(
+            (
+                ROOT
+                / "fixtures/v3/model-routing/runs/phase3c/live-codex-h01-001.json"
+            ).read_text(encoding="utf-8")
+        )
+        metrics = {
+            item["metric_name"]: item
+            for item in historical["efficiency"]["metric_provenance"]
+        }
+        self.assertEqual(metrics["input_tokens"]["value"], 145919)
+        self.assertEqual(metrics["input_tokens"]["aggregation"], "CUMULATIVE_TOTAL")
+        self.assertEqual(metrics["output_tokens"]["aggregation"], "CUMULATIVE_TOTAL")
+        self.assertIsNone(historical["efficiency"]["model_calls"])
+        self.assertEqual(metrics["model_calls"]["status"], "UNKNOWN")
+
+    def test_blocked_runtime_record_keeps_attempt_evidence_without_quality_claim(self):
+        blocked = json.loads(
+            (
+                ROOT
+                / "fixtures/v3/model-routing/runs/phase3c/live-opencode-h03-001.json"
+            ).read_text(encoding="utf-8")
+        )
+        self.assertEqual(blocked["status"], "LIVE_LANE_BLOCKED")
+        self.assertEqual(blocked["evidence_class"], "UNAVAILABLE")
+        self.assertIsNone(blocked["quality"]["acceptance_criteria_coverage"])
+        self.assertFalse(blocked["output_evidence"]["raw_output_serialized"])
 
 
 if __name__ == "__main__":
