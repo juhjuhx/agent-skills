@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from tools.v3.compatibility import import_current_skill
 from tools.v3.contract_validation import validate_file, validate_instance
@@ -398,6 +400,41 @@ class OpenCodeProjectionTests(OpenCodeAdapterTestCase):
             rendered = json.loads(render_opencode_runtime_config(result.projection, temporary))
         self.assertNotIn("<isolated-fixture>", json.dumps(rendered))
         self.assertEqual(rendered["permission"]["external_directory"], "deny")
+
+    def test_runtime_config_keeps_secret_denials_after_workspace_allow(self):
+        result = self.compile_selected()
+        with tempfile.TemporaryDirectory() as temporary:
+            rendered = json.loads(
+                render_opencode_runtime_config(result.projection, temporary),
+                object_pairs_hook=dict,
+            )
+        read_rules = list(rendered["permission"]["read"])
+        workspace_rule = str(Path(temporary).resolve()) + "/**"
+        self.assertLess(read_rules.index(workspace_rule), read_rules.index("*.env"))
+        self.assertLess(read_rules.index(workspace_rule), read_rules.index("*.env.*"))
+        self.assertEqual(rendered["permission"]["read"]["*.env"], "deny")
+
+    def test_invocation_removes_inherited_opencode_config_selectors(self):
+        result = self.compile_selected()
+        with patch.dict(
+            os.environ,
+            {
+                "OPENCODE_CONFIG": "untrusted-config.json",
+                "OPENCODE_CONFIG_DIR": "untrusted-config-dir",
+                "OPENCODE_DISABLE_PROJECT_CONFIG": "false",
+            },
+            clear=False,
+        ):
+            with tempfile.TemporaryDirectory() as temporary:
+                invocation = build_opencode_invocation(
+                    result.projection,
+                    workspace_root=temporary,
+                    prompt="read one harmless file",
+                )
+        self.assertNotIn("OPENCODE_CONFIG", invocation.environment)
+        self.assertNotIn("OPENCODE_CONFIG_DIR", invocation.environment)
+        self.assertEqual(invocation.environment["OPENCODE_DISABLE_PROJECT_CONFIG"], "true")
+        self.assertIn("OPENCODE_CONFIG_CONTENT", invocation.environment)
 
     def test_adapter_does_not_import_or_rerun_stage_router(self):
         source = (ROOT / "tools/v3/opencode_adapter.py").read_text(encoding="utf-8")

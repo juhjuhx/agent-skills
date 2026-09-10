@@ -266,7 +266,12 @@ def render_opencode_runtime_config(
             validation.reason_code or "INVALID_NATIVE_CONFIG",
             "rendered OpenCode config is invalid: " + "; ".join(validation.errors),
         )
-    return json.dumps(rendered, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    # OpenCode resolves object-pattern permissions in declaration order, with
+    # the last matching rule winning.  Do not sort nested permission keys:
+    # the broad isolated-workspace allow must precede the explicit secret
+    # denials.  Construction order is deterministic, so this remains a
+    # reproducible runtime config without changing its security semantics.
+    return json.dumps(rendered, ensure_ascii=False, separators=(",", ":"))
 
 
 def build_opencode_invocation(
@@ -307,7 +312,13 @@ def build_opencode_invocation(
         str(root),
         prompt,
     )
+    # Do not allow an inherited OpenCode config selector to reintroduce a
+    # user/project config with broader permissions.  Provider credentials may
+    # remain available to the child process, but are never persisted by the
+    # adapter or its evidence records.
     environment = dict(os.environ)
+    for variable in ("OPENCODE_CONFIG", "OPENCODE_CONFIG_DIR", "OPENCODE_DISABLE_PROJECT_CONFIG"):
+        environment.pop(variable, None)
     environment["OPENCODE_CONFIG_CONTENT"] = config_text
     environment["OPENCODE_DISABLE_PROJECT_CONFIG"] = "true"
     public_argv = (
