@@ -14,6 +14,7 @@ from tools.v3.codex_effort_evaluation import (
     model_pin_status,
     readiness_split,
     routing_policy_proposal,
+    stable_route_digest,
 )
 
 
@@ -203,6 +204,24 @@ class CodexEffortEvaluationTests(unittest.TestCase):
         )
         self.assertEqual(result["intra_runtime"], "READY")
         self.assertEqual(result["cross_runtime"], "NOT_READY")
+
+    def test_readiness_stays_not_ready_without_live_observations(self):
+        result = readiness_split(
+            pinned_model=True,
+            effort_levels=("low", "medium"),
+            h01_counts=(0, 0),
+            h03_counts=(0, 0),
+            measurement_integrity=True,
+            controlled_variables=True,
+            cross_runtime_evidence=False,
+        )
+        self.assertEqual(result["intra_runtime"], "NOT_READY")
+
+    def test_route_digest_ignores_runtime_only_timings(self):
+        route = {"route_id": "route:test", "routing_evidence": {"timings_ms": {"total": 1.0}}}
+        changed = copy.deepcopy(route)
+        changed["routing_evidence"]["timings_ms"]["total"] = 999.0
+        self.assertEqual(stable_route_digest(route), stable_route_digest(changed))
 
 
 if __name__ == "__main__":

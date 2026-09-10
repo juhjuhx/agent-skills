@@ -23,6 +23,7 @@ from tools.v3.codex_effort_evaluation import (
     build_interleaved_schedule,
     extract_codex_identity,
     model_pin_status,
+    stable_route_digest,
 )
 from tools.v3.contract_validation import validate_instance
 from tools.v3.live_benchmark import (
@@ -508,8 +509,11 @@ def _run_cell(
         after_fixture_digest = _fixture_digest(fixture_root)
         identity = extract_codex_identity(observation.stdout)
         effective_model = identity["model_id"]
-        model_evidence = "OBSERVED" if effective_model == model_id else "CLI_CONFIRMED"
-        if effective_model is not None and effective_model != model_id:
+        if effective_model == model_id:
+            model_evidence = "OBSERVED"
+        elif observation.returncode == 0:
+            model_evidence = "CLI_CONFIRMED"
+        else:
             model_evidence = "UNKNOWN"
         pin = model_pin_status(model_id, effective_model, model_evidence)
 
@@ -579,7 +583,7 @@ def _run_cell(
             "task_spec_digest": digest_value(workload.task_spec),
             "fixture_digest": fixture_digest,
             "start_sha": start_sha,
-            "stage_route_digest": digest_value(workload.route),
+            "stage_route_digest": stable_route_digest(workload.route),
             "selected_skill_ids": [item["skill_id"] for item in workload.bundle["selected_skills"]],
             "selected_skill_digests": list(workload.selected_skill_digests),
             "permission_envelope_digest": digest_value(workload.permission_envelope),
@@ -616,7 +620,7 @@ def _run_cell(
             quality=independent_quality,
             reliability={
                 "failure_reasons": [] if terminal == "VERIFIED_SUCCESS" else [terminal.lower()],
-                "invalid_edits": 0 if artifact_correctness else 1 if workload.workload_id == "H01" else 0,
+                "invalid_edits": 0 if not changed_files else 1 if workload.workload_id == "H01" else 0,
             },
             security={
                 "permission_violation": False,
@@ -680,7 +684,7 @@ def run_bounded_experiment(
         "compiled_workloads": {
             workload_id: {
                 "task_spec_digest": digest_value(workload.task_spec),
-                "stage_route_digest": digest_value(workload.route),
+                "stage_route_digest": stable_route_digest(workload.route),
                 "bundle_digest": workload.bundle["bundle_digest"],
                 "selected_skill_ids": [item["skill_id"] for item in workload.bundle["selected_skills"]],
                 "selected_skill_digests": list(workload.selected_skill_digests),
@@ -700,8 +704,17 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the bounded Phase 3F Codex effort benchmark")
     parser.add_argument("--model", required=True, help="already-authorized explicit Codex model id")
     parser.add_argument("--timeout", type=float, default=300.0)
+    parser.add_argument("--output", help="optional temporary path for sanitized JSON evidence")
     parser.add_argument("--live", action="store_true", help="required acknowledgement before live execution")
     args = parser.parse_args()
     if not args.live:
         parser.error("pass --live explicitly to execute real benchmark invocations")
-    print(json.dumps(run_bounded_experiment(model_id=args.model, timeout_s=args.timeout), ensure_ascii=False, sort_keys=True))
+    payload = json.dumps(
+        run_bounded_experiment(model_id=args.model, timeout_s=args.timeout),
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    if args.output:
+        Path(args.output).write_text(payload + "\n", encoding="utf-8")
+    else:
+        print(payload)

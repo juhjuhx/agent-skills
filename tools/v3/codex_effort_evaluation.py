@@ -9,9 +9,12 @@ network, persistence, or policy-mutation behavior.
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import statistics
 from typing import Any, Iterable, Sequence
+
+from tools.v3.execution_bundle import canonical_json
 
 
 SUPPORTED_EFFORTS = frozenset({"none", "low", "medium", "high", "max"})
@@ -40,6 +43,16 @@ EFFECT_CLASSES = frozenset(
 PIN_EVIDENCE_STATUSES = frozenset(
     {"OBSERVED", "CLI_CONFIRMED", "PIN_ACCEPTED", "UNKNOWN"}
 )
+
+
+def stable_route_digest(route: dict[str, Any]) -> str:
+    """Digest route intent while excluding runtime-only timing observations."""
+
+    normalized = copy.deepcopy(route)
+    routing_evidence = normalized.get("routing_evidence")
+    if isinstance(routing_evidence, dict):
+        routing_evidence.pop("timings_ms", None)
+    return "sha256:" + hashlib.sha256(canonical_json(normalized).encode("utf-8")).hexdigest()
 
 
 def build_interleaved_schedule(
@@ -416,7 +429,9 @@ def readiness_split(
         "controlled_variables": bool(controlled_variables),
     }
     passed = sum(intra_requirements.values())
-    if all(intra_requirements.values()):
+    if not any(h01_counts) and not any(h03_counts):
+        intra = "NOT_READY"
+    elif all(intra_requirements.values()):
         intra = "READY"
     elif passed:
         intra = "PARTIAL"
