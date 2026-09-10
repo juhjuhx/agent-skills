@@ -37,6 +37,24 @@ METRIC_AGGREGATIONS = frozenset(
 METRIC_SOURCES = frozenset({"OBSERVED", "DERIVED", "UNKNOWN"})
 METRIC_CONFIDENCE = frozenset({"HIGH", "MEDIUM", "LOW", "UNKNOWN"})
 METRIC_STATUSES = frozenset({"VERIFIED", "INFERRED", "UNKNOWN", "NOT_OBSERVED"})
+OPENCODE_DIAGNOSTIC_CAUSES = frozenset(
+    {
+        "MODEL_DEPRECATED",
+        "MODEL_NOT_FOUND",
+        "DEFAULT_MODEL_RESOLUTION",
+        "PROVIDER_NOT_CONFIGURED",
+        "PROVIDER_UNAVAILABLE",
+        "PROVIDER_INIT",
+        "AGENT_RESOLUTION",
+        "CONFIG_ISOLATION_CONFLICT",
+        "OUTPUT_CONTRACT",
+        "PERMISSION_ASK",
+        "RUNTIME_UNKNOWN",
+    }
+)
+OPENCODE_DIAGNOSTIC_EVIDENCE = frozenset(
+    {"DIRECT_PROBE", "RUNTIME_OUTPUT", "UNKNOWN"}
+)
 _CONTROL_FIELDS = (
     "task_spec_digest",
     "fixture_digest",
@@ -550,6 +568,203 @@ def classify_smoke_probe(observation: ProcessObservation) -> dict[str, Any]:
     }
 
 
+_OPENCODE_PROVIDER_STATUSES = frozenset(
+    {"CONFIGURED", "NOT_CONFIGURED", "UNAVAILABLE", "INIT_FAILED", "UNKNOWN"}
+)
+_OPENCODE_MODEL_STATUSES = frozenset({"AVAILABLE", "DEPRECATED", "NOT_FOUND", "UNKNOWN"})
+_OPENCODE_AGENT_STATUSES = frozenset({"AVAILABLE", "FAILED", "UNKNOWN"})
+_OPENCODE_CONFIG_STATUSES = frozenset({"OK", "CONFLICT", "UNKNOWN"})
+_OPENCODE_OUTPUT_STATUSES = frozenset({"USABLE", "INVALID", "UNKNOWN"})
+_OPENCODE_PERMISSION_STATUSES = frozenset({"SAFE", "ASK", "UNKNOWN"})
+_OPENCODE_CONFIG_SOURCES = frozenset(
+    {"GLOBAL_CONFIG", "INLINE_CONFIG", "DEFAULT_SELECTION", "UNKNOWN"}
+)
+_OPENCODE_ERROR_TYPES = frozenset(
+    {
+        "UnknownError",
+        "ProviderNotFoundError",
+        "ProviderModelNotFoundError",
+        "ModelNotFoundError",
+        "ModelDeprecatedError",
+        "AgentResolutionError",
+        "PermissionError",
+        "ConfigError",
+        "OutputError",
+    }
+)
+
+
+def _diagnostic_status(value: Any, allowed: frozenset[str]) -> str:
+    return value if isinstance(value, str) and value in allowed else "UNKNOWN"
+
+
+def _safe_diagnostic_identifier(value: Any, *, max_length: int = 200) -> str | None:
+    """Keep only short, non-secret identifiers from runtime diagnostics."""
+
+    if not isinstance(value, str) or not value or len(value) > max_length:
+        return None
+    if any(ord(char) < 32 for char in value):
+        return None
+    sanitized = sanitize_text(value)
+    return value if sanitized == value else None
+
+
+def _structured_opencode_error_type(observation: ProcessObservation) -> str | None:
+    """Extract an allowlisted error name without retaining runtime details."""
+
+    candidates: list[Any] = []
+    for line in observation.stdout.splitlines():
+        if not line.strip():
+            continue
+        try:
+            value = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(value, dict):
+            continue
+        error = value.get("error")
+        if isinstance(error, dict):
+            candidates.append(error.get("name"))
+            candidates.append(error.get("type"))
+        candidates.append(value.get("error_type"))
+    return next(
+        (candidate for candidate in candidates if candidate in _OPENCODE_ERROR_TYPES),
+        None,
+    )
+
+
+def sanitize_opencode_diagnostic(value: dict[str, Any]) -> dict[str, Any]:
+    """Serialize only allowlisted OpenCode diagnostic facts, never raw details."""
+
+    if not isinstance(value, dict):
+        raise TypeError("OpenCode diagnostic must be an object")
+    cause = value.get("cause")
+    if cause not in OPENCODE_DIAGNOSTIC_CAUSES:
+        cause = "RUNTIME_UNKNOWN"
+    evidence_status = value.get("evidence_status")
+    if evidence_status not in OPENCODE_DIAGNOSTIC_EVIDENCE:
+        evidence_status = "UNKNOWN"
+    error_type = value.get("error_type")
+    if error_type not in _OPENCODE_ERROR_TYPES:
+        error_type = None
+    config_source = value.get("config_source")
+    if config_source not in _OPENCODE_CONFIG_SOURCES:
+        config_source = "UNKNOWN"
+    return {
+        "cause": cause,
+        "evidence_status": evidence_status,
+        "error_type": error_type,
+        "provider_id": _safe_diagnostic_identifier(value.get("provider_id")),
+        "model_id": _safe_diagnostic_identifier(value.get("model_id")),
+        "agent_id": _safe_diagnostic_identifier(value.get("agent_id"), max_length=80),
+        "config_source": config_source,
+        "reference_code": _safe_diagnostic_identifier(
+            value.get("reference_code"), max_length=160
+        ),
+        "raw_details_serialized": False,
+    }
+
+
+def classify_opencode_failure(
+    observation: ProcessObservation,
+    *,
+    provider_status: str = "UNKNOWN",
+    model_status: str = "UNKNOWN",
+    agent_status: str = "UNKNOWN",
+    config_status: str = "UNKNOWN",
+    output_status: str = "UNKNOWN",
+    permission_status: str = "UNKNOWN",
+    provider_id: str | None = None,
+    model_id: str | None = None,
+    agent_id: str | None = None,
+    config_source: str = "UNKNOWN",
+    reference_code: str | None = None,
+) -> dict[str, Any]:
+    """Classify an OpenCode failure only from explicit safe evidence.
+
+    A generic ``UnknownError`` is deliberately insufficient to infer a
+    provider, model, agent, or lifecycle cause.  Separate probes may supply a
+    status such as ``NOT_CONFIGURED``; those statuses are the evidence that
+    permits a more specific classification.
+    """
+
+    if not isinstance(observation, ProcessObservation):
+        raise TypeError("observation must be a ProcessObservation")
+    provider_status = _diagnostic_status(provider_status, _OPENCODE_PROVIDER_STATUSES)
+    model_status = _diagnostic_status(model_status, _OPENCODE_MODEL_STATUSES)
+    agent_status = _diagnostic_status(agent_status, _OPENCODE_AGENT_STATUSES)
+    config_status = _diagnostic_status(config_status, _OPENCODE_CONFIG_STATUSES)
+    output_status = _diagnostic_status(output_status, _OPENCODE_OUTPUT_STATUSES)
+    permission_status = _diagnostic_status(permission_status, _OPENCODE_PERMISSION_STATUSES)
+    config_source = _diagnostic_status(config_source, _OPENCODE_CONFIG_SOURCES)
+    error_type = _structured_opencode_error_type(observation)
+
+    if observation.launched and not observation.timed_out and observation.returncode == 0:
+        return {
+            "status": "COMPATIBLE",
+            "cause": None,
+            "evidence_status": "UNKNOWN",
+            "error_type": error_type,
+            "provider_id": _safe_diagnostic_identifier(provider_id),
+            "model_id": _safe_diagnostic_identifier(model_id),
+            "agent_id": _safe_diagnostic_identifier(agent_id, max_length=80),
+            "config_source": config_source,
+            "reference_code": _safe_diagnostic_identifier(reference_code, max_length=160),
+            "raw_details_serialized": False,
+        }
+
+    cause: str | None = None
+    evidence_status = "UNKNOWN"
+    if permission_status == "ASK":
+        cause, evidence_status = "PERMISSION_ASK", "DIRECT_PROBE"
+    elif provider_status == "NOT_CONFIGURED":
+        cause, evidence_status = "PROVIDER_NOT_CONFIGURED", "DIRECT_PROBE"
+    elif provider_status == "UNAVAILABLE":
+        cause, evidence_status = "PROVIDER_UNAVAILABLE", "DIRECT_PROBE"
+    elif provider_status == "INIT_FAILED":
+        cause, evidence_status = "PROVIDER_INIT", "DIRECT_PROBE"
+    elif model_status == "DEPRECATED":
+        cause, evidence_status = "MODEL_DEPRECATED", "DIRECT_PROBE"
+    elif model_status == "NOT_FOUND":
+        cause, evidence_status = "MODEL_NOT_FOUND", "DIRECT_PROBE"
+    elif provider_status == "CONFIGURED" and model_status == "AVAILABLE":
+        if agent_status == "FAILED":
+            cause, evidence_status = "AGENT_RESOLUTION", "DIRECT_PROBE"
+        elif config_status == "CONFLICT":
+            cause, evidence_status = "CONFIG_ISOLATION_CONFLICT", "DIRECT_PROBE"
+        elif output_status == "INVALID":
+            cause, evidence_status = "OUTPUT_CONTRACT", "DIRECT_PROBE"
+
+    # A named runtime error can be useful evidence, but free-form messages or
+    # the generic UnknownError never override the explicit-probe requirement.
+    if cause is None and error_type in {
+        "ProviderNotFoundError",
+        "ProviderModelNotFoundError",
+        "ModelNotFoundError",
+        "ModelDeprecatedError",
+    }:
+        cause = {
+            "ProviderNotFoundError": "PROVIDER_NOT_CONFIGURED",
+            "ProviderModelNotFoundError": "MODEL_NOT_FOUND",
+            "ModelNotFoundError": "MODEL_NOT_FOUND",
+            "ModelDeprecatedError": "MODEL_DEPRECATED",
+        }[error_type]
+        evidence_status = "RUNTIME_OUTPUT"
+
+    return {
+        "status": "LIVE_LANE_BLOCKED",
+        "cause": cause or "RUNTIME_UNKNOWN",
+        "evidence_status": evidence_status,
+        "error_type": error_type,
+        "provider_id": _safe_diagnostic_identifier(provider_id),
+        "model_id": _safe_diagnostic_identifier(model_id),
+        "agent_id": _safe_diagnostic_identifier(agent_id, max_length=80),
+        "config_source": config_source,
+        "reference_code": _safe_diagnostic_identifier(reference_code, max_length=160),
+        "raw_details_serialized": False,
+    }
+
+
 def assess_read_only_lane(observed_controls: dict[str, Any]) -> dict[str, Any]:
     """Require explicit least-privilege evidence before a read-only lane."""
 
@@ -594,7 +809,19 @@ class ProcessObservation:
         lowered = self.stderr.lower()
         if self.returncode != 0 and any(
             marker in lowered
-            for marker in ("authentication", "unauthorized", "401", "approval", "permission denied", "interactive")
+            for marker in (
+                "authentication",
+                "unauthorized",
+                "401",
+                "approval",
+                "permission denied",
+                "interactive",
+                "provider not found",
+                "provider not configured",
+                "model not found",
+                "model unavailable",
+                "configured model is deprecated",
+            )
         ):
             return True
         if self.returncode != 0:
@@ -721,6 +948,7 @@ def build_live_execution_record(
     baseline_refs: Iterable[str] = (),
     format_hint: str | None = None,
     notes: str | None = None,
+    diagnostic: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build a validated public record from an in-memory process observation."""
 
@@ -871,6 +1099,8 @@ def build_live_execution_record(
     }
     if notes:
         record["notes"] = sanitize_text(notes)
+    if diagnostic is not None:
+        record["diagnostic"] = sanitize_opencode_diagnostic(diagnostic)
     validation = validate_instance("LiveExecutionRecord", record)
     if not validation.valid:
         raise ValueError("invalid live execution record: " + "; ".join(validation.errors))
