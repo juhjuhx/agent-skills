@@ -189,6 +189,43 @@
         "sanitized": {"type": "boolean", "const": true}
       }
     },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cause", "evidence_status", "raw_details_serialized"],
+      "properties": {
+        "cause": {
+          "type": "string",
+          "enum": [
+            "MODEL_DEPRECATED",
+            "MODEL_NOT_FOUND",
+            "DEFAULT_MODEL_RESOLUTION",
+            "PROVIDER_NOT_CONFIGURED",
+            "PROVIDER_UNAVAILABLE",
+            "PROVIDER_INIT",
+            "AGENT_RESOLUTION",
+            "CONFIG_ISOLATION_CONFLICT",
+            "OUTPUT_CONTRACT",
+            "PERMISSION_ASK",
+            "RUNTIME_UNKNOWN"
+          ]
+        },
+        "evidence_status": {
+          "type": "string",
+          "enum": ["DIRECT_PROBE", "RUNTIME_OUTPUT", "UNKNOWN"]
+        },
+        "error_type": {"type": ["string", "null"], "maxLength": 80},
+        "provider_id": {"type": ["string", "null"], "maxLength": 200},
+        "model_id": {"type": ["string", "null"], "maxLength": 200},
+        "agent_id": {"type": ["string", "null"], "maxLength": 80},
+        "config_source": {
+          "type": ["string", "null"],
+          "enum": ["GLOBAL_CONFIG", "INLINE_CONFIG", "DEFAULT_SELECTION", "UNKNOWN", null]
+        },
+        "reference_code": {"type": ["string", "null"], "maxLength": 160},
+        "raw_details_serialized": {"type": "boolean", "const": false}
+      }
+    },
     "artifacts": {
       "type": "object",
       "additionalProperties": false,
