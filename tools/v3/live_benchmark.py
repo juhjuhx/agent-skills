@@ -825,6 +825,11 @@ class ProcessObservation:
         ):
             return True
         if self.returncode != 0:
+            if not self.stdout.strip():
+                # A non-zero headless process with no usable public output
+                # cannot support a quality verdict. Treat it as an
+                # unavailable lane rather than manufacturing PARTIAL quality.
+                return True
             # Some headless runtimes report a structured error on stdout and
             # leave stderr empty.  That is an unavailable lane, not a useful
             # quality failure, when the output contract explicitly says error.
@@ -832,6 +837,16 @@ class ProcessObservation:
                 parsed = json.loads(self.stdout)
             except json.JSONDecodeError:
                 parsed = None
+                for line in self.stdout.splitlines():
+                    if not line.strip():
+                        continue
+                    try:
+                        candidate = json.loads(line)
+                    except json.JSONDecodeError:
+                        continue
+                    if isinstance(candidate, dict) and candidate.get("type") == "error":
+                        parsed = candidate
+                        break
             if isinstance(parsed, dict) and parsed.get("type") == "error":
                 return True
         return False
