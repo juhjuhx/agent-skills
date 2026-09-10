@@ -1,276 +1,188 @@
 # NEXT CODEX PROMPT
-# PHASE 3C.3 — OPENCODE RUNTIME BLOCKER DIAGNOSTIC
+# PHASE 3D — CLAUDE READ-ONLY EXECUTION BOUNDARY PROPOSAL
 
 Repository:
 juhjuhx/agent-skills
 
-Current implementation branch:
-feat/v3-opencode-readonly-adapter
+Current OpenCode diagnostic branch:
+fix/v3-opencode-runtime-diagnostic
 
 Current decision:
 OPENCODE_RUNTIME_BLOCKED
 
-This is a blocker-specific follow-up. Do not start Phase 4.
-Do not modify Stage Router weights.
-Do not implement Claude, Hermes, MiMo, ZCode, or DeepSeek adapters.
-Do not broaden permissions, use --auto, install tools, install models,
-change credentials, or run the unchanged H03 workload before the contract
-smoke passes.
+Do not start Phase 4. Do not modify Stage Router weights. Do not implement
+adaptive routing. Do not keep creating OpenCode diagnostic subphases. Do not
+install runtimes, models, MCP servers, plugins, dependencies, credentials, or
+new accounts. Do not broaden permissions or use bypass/auto approval.
+
+This is a proposal only. Do not execute it in the current Phase 3C.3 run.
 
 ============================================================
 0. MISSION
 ============================================================
 
-Diagnose only the installed OpenCode 1.18.25 bounded smoke failure:
+Establish whether the already-installed Claude Code runtime can provide the
+next trustworthy live execution configuration under a bounded read-only
+boundary. The goal is a safe contract smoke and, only after it passes, one
+unchanged H03 API/interface-design cell.
 
-structured JSON error
-type = error
-name = UnknownError
-no actionable cause
-exit = 1
-no stderr
-workspace unchanged
+OpenCode remains a valid static adapter with explicit status:
 
-The Phase 3C.2 projection and no-ASK static contract already pass. Determine
-whether the remaining blocker is a provider/model availability issue, an
-installed-runtime lifecycle/config issue, an output-contract issue, or
-UNKNOWN. Do not infer a cause from a generic error.
+OPENCODE_RUNTIME_BLOCKED
+cause = PROVIDER_NOT_CONFIGURED
 
-Success means a trustworthy contract smoke can complete under the existing
-read-only boundary. It does not yet establish OpenCode H03 quality or model
-superiority.
+Do not treat Codex/OpenCode/Claude comparisons as MODEL_EFFECT. A completed
+Claude cell would be a CONFIGURATION_EFFECT candidate because runtime,
+provider/model, tool implementation, and system behavior may all differ.
 
 ============================================================
-1. PRESERVE THE HARDENED BOUNDARY
+1. FRESH SOURCE TRUTH FIRST
 ============================================================
 
-Use the existing:
+Verify before edits or execution:
+
+- git status --short
+- git branch --show-current
+- git rev-parse HEAD
+- installed `claude --version`
+- installed `claude --help` and the exact print/headless help surface
+- official release/source/documentation for the observed version
+
+Installed behavior and versioned first-party source win over current-main
+documentation. Record runtime version, release/tag/commit where available,
+documentation snapshot, headless invocation, output format, tool/permission
+controls, and model/effort selection granularity. Never serialize credentials.
+
+============================================================
+2. PRESERVE THE UNIVERSAL FLOW
+============================================================
+
+Consume the existing contracts without redesigning them:
 
 TaskSpec
-StageRoute
-CompiledExecutionBundle
-OpenCodeAdapter
-OpenCodeNativeProjection
-LiveExecutionRecord
+  -> existing Stage Router
+  -> StageRoute
+  -> selected skill references/bodies only
+  -> CompiledExecutionBundle
+  -> Claude-native projection
+  -> bounded execution evidence
 
-Do not add a RuntimeManager, ProviderRegistry, ExecutionService, scheduler,
-database, or generic diagnostic framework.
-
-Keep:
-
-- explicit no-ASK permission entries;
-- isolated fixture read/list/glob/grep only;
-- edit/write, bash, task, external directory, web, secrets, plugin, and MCP
-  denied;
-- no --auto and no extra CLI arguments;
-- shell=False;
-- stdin=DEVNULL;
-- finite timeout;
-- OPENCODE_CONFIG_CONTENT;
-- OPENCODE_DISABLE_PROJECT_CONFIG=true;
-- inherited OpenCode config selectors removed;
-- no global OpenCode configuration mutation;
-- raw prompt/output/stderr/credentials/session data out of evidence.
+Claude adapter-specific fields belong only in a Claude projection. Do not put
+Claude CLI/config syntax in StageRoute or the universal router. Do not change
+Stage Router weights or select models in the skill router.
 
 ============================================================
-2. FRESH SOURCE AND RUNTIME TRUTH
+3. CLAUDE READ-ONLY CONTRACT
 ============================================================
 
-Read the current Phase 3C.2 files and evidence:
+Research the installed version and first-party source for the actual
+separation of:
 
-tools/v3/opencode_adapter.py
-tools/v3/opencode_native_contract.py
-schemas/v3/opencode-native-contract.schema.json
-schemas/v3/opencode-native-projection.schema.json
-tools/v3/live_benchmark.py
-docs/v3/evidence/MODEL_RUNTIME_EVAL_V4.md
-fixtures/v3/model-routing/runs/phase3c/live-opencode-contract-smoke-001.json
+- CLAUDE.md persistent context;
+- Skills and selected procedure delivery;
+- hooks, if available, as deterministic lifecycle controls;
+- subagents, only when the TaskSpec actually requires isolation;
+- permissions/tool restrictions and read-only/plan modes;
+- plugins and MCP, both disabled for the H03 lane;
+- model/reasoning selection, only if already configured and observable.
 
-Verify locally:
+The target H03 authority is:
 
-opencode --version
-opencode --help
-opencode run --help
-opencode agent --help
-opencode mcp --help
+- read/list/glob/grep inside an isolated fixture: ALLOW only when explicitly
+  supported by the installed contract;
+- edit/write, shell/bash, task/subagent, web/network, external paths, secrets,
+  plugins, and MCP: DENY;
+- zero unresolved ASK paths for noninteractive execution;
+- no global config mutation and no project/global capability widening;
+- shell=False, stdin=DEVNULL, isolated cwd, finite timeout.
 
-Use the pinned release:
-
-v1.18.25
-cb7d8b2f5e44876ef98b661dc10590c915af3a9f
-
-Do not silently substitute current upstream behavior.
-
-============================================================
-3. DIAGNOSTIC HYPOTHESES
+If the installed Claude contract cannot prove every reachable permission class
+is ALLOW or DENY, stop with `CLAUDE_CONTRACT_BLOCKED`. Do not use interactive
+approval, broad auto-approval, or a longer timeout as a workaround.
 
 ============================================================
-
-Test hypotheses in this order, using the smallest safe observation:
-
-A. PROVIDER / MODEL
-Can the installed runtime identify or reach an already-configured provider
-without exposing credentials? Record only provider/model identifiers or
-redacted availability status. Never print environment contents or auth
-headers.
-
-B. CONFIG / LIFECYCLE
-Does the exact inline config plus --pure/--dir/--agent contract start
-correctly? Inspect only sanitized local metadata/log structure. Do not persist
-raw logs.
-
-C. OUTPUT
-Does the installed runtime's --format json contract produce a usable
-success shape for a harmless read-only prompt? Do not change to a broader or
-interactive mode merely to get output.
-
-D. PERMISSION
-Revalidate the existing projection. If any class resolves to ASK or a
-managed/global setting can be shown to override the explicit boundary,
-classify OPENCODE_CONTRACT_BLOCKED. Do not compensate with a broad allow.
-
-E. UNKNOWN
-If the runtime returns only a generic UnknownError and no safe evidence
-distinguishes A-D, preserve OPENCODE_RUNTIME_BLOCKED with cause UNKNOWN.
-
-Do not run all hypotheses repeatedly. One additional bounded probe is allowed
-only when it answers a newly identified hypothesis.
-
-============================================================
-4. TWO-STEP EXECUTION GATE
-
-============================================================
-
-STEP A — SMOKE
-
-Use one temporary fixture with one harmless file. Reuse the same no-skill
-StageRoute and hardened projection. Record:
-
-runtime version
-projection digest
-permission proof
-argv summary
-timeout
-process status
-sanitized error class
-workspace before/after digest
-
-Do not persist raw stdout/stderr.
-
-STEP B — H03
-
-Run the existing unchanged H03 only if STEP A completes with:
-
-no unresolved ASK
-exit success
-usable structured output
-independent workspace safety check
-
-If STEP A remains blocked, do not run H03.
-
-============================================================
-5. EVIDENCE CLASSIFICATION
-
-============================================================
-
-Maintain:
-
-RUNTIME_CONTRACT_EVIDENCE
-LIVE_LANE_BLOCKED
-UNAVAILABLE
-UNKNOWN
-
-A successful smoke is compatibility evidence only. H03 is quality evidence
-only after an independent verifier confirms the DecisionRecord and acceptance
-criteria.
-
-Do not label any result MODEL_EFFECT. Codex/OpenCode remains a
-CONFIGURATION_EFFECT comparison at most, and only after a completed OpenCode
-H03 cell.
-
-============================================================
-6. TESTS
-
-============================================================
-
-Keep all existing tests green. Add only focused regressions for any proven
-diagnostic behavior:
-
-- generic structured UnknownError remains sanitized;
-- provider/model cause is not inferred without evidence;
-- no raw local logs or credentials enter records;
-- no-ASK projection remains unchanged;
-- unknown cause remains UNKNOWN;
-- a successful smoke gates H03;
-- blocked smoke prevents H03;
-- unknown cost/model-call/tool-call/token semantics remain null/UNKNOWN.
-
-Run:
-
-PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover -s tests -p 'test_*.py' -v
-git diff --check
-
-============================================================
-7. DOGFOOD AND REVIEW
-
+4. DOGFOOD ROUTING
 ============================================================
 
 Use using-superpowers as resident task/session authority and the existing
-Stage Router. Emit a StageRoute for every active stage. Do not load the full
-catalog. Record any unrelated selection as ROUTING_DEFECT; do not fix router
-weights here.
-
-Use independent lanes for:
-
-- runtime/source diagnosis;
-- permission/security review;
-- serialization/evidence review;
-- simplification;
-- verification.
-
-Run the OCR auth precheck once. If it returns 401, record
-OCR_NATIVE_DIFF = BLOCKED_BY_AUTH and do not retry.
+Stage Router. Every active development stage emits a StageRoute or
+NO_SKILL_NEEDED(reason). Do not reload the whole catalog. Load only selected
+skill bodies after route selection. Record unrelated selections as
+ROUTING_DEFECT without changing routing weights.
 
 ============================================================
-8. OUTPUT
-
+5. TWO-STEP GATE
 ============================================================
 
-Append a concise record under:
+STEP A — contract smoke:
 
-fixtures/v3/model-routing/runs/phase3c/
+- temporary fixture with one harmless file;
+- read one bounded value and return structured output;
+- no writes, shell, network, web, plugins, MCP, or subagents;
+- no raw prompt/stdout/stderr/logs/credentials in evidence;
+- independent workspace digest check;
+- explicit runtime/provider/model identity only when safely observable.
 
-Update, without overwriting prior evidence:
+STEP B — H03:
 
-docs/v3/evidence/MODEL_RUNTIME_EVAL_V5.md
-
-Record:
-
-- exact hypothesis tested;
-- sanitized observation;
-- cause classification;
-- whether a safe smoke completed;
-- whether H03 was gated or run;
-- permission/no-ASK proof;
-- metrics and unknowns;
-- security result;
-- confounders.
+Run the existing unchanged H03 only when the smoke has exit success, usable
+output, no ASK path, unchanged workspace, and an independent verifier can
+check the DecisionRecord/API artifact against the existing acceptance criteria.
+Terminal outcome must be VERIFIED_SUCCESS, PARTIAL, FAILED, or BLOCKED.
 
 ============================================================
-9. STOP DECISION
-
+6. EVIDENCE BOUNDARY
 ============================================================
 
-Choose exactly one:
+Use only these evidence classes:
 
-OPENCODE_RUNTIME_RECOVERED
-  Smoke completes safely; H03 may be proposed as a later bounded cell.
+REAL_EXECUTION
+HOST_MANAGED_FIXTURE
+MOCK
 
-OPENCODE_RUNTIME_BLOCKED
-  Projection is valid but provider/runtime/lifecycle remains unavailable or
-  generically unknown.
+Only REAL_EXECUTION supports live quality/reliability conclusions. Keep
+runtime compatibility probes separate. Record metric semantics explicitly:
+PER_RUN latency; model/tool calls, tokens, and cost are null/UNKNOWN unless
+the installed runtime proves their aggregation. Never infer model_calls=1
+from process launch.
 
-OPENCODE_CONTRACT_BLOCKED
-  Least-privilege native behavior cannot be proven.
+Record task/fixture/route/skill/permission/runtime/model/effort/instruction
+digests, confounders, terminal and stage outcomes, and security evidence.
 
-Do not start Phase 4 in any outcome.
+============================================================
+7. SECURITY GATE
+============================================================
+
+Independently verify:
+
+- no permission widening;
+- no unresolved ASK;
+- no shell=True or inherited interactive stdin;
+- finite timeout and isolated cwd;
+- no global config mutation;
+- no .env/credential/auth/session serialization;
+- no plugin/MCP auto-install or loading;
+- no raw prompt/output/log persistence;
+- a model/provider selector cannot grant OS authority.
+
+If any boundary is UNKNOWN, classify the lane as blocked rather than guessing.
+
+============================================================
+8. OUTPUTS AND STOP RULE
+============================================================
+
+Create only the smallest needed Claude projection, focused tests, one
+sanitized smoke record, and an evidence update. Do not build a runtime
+manager, registry, scheduler, generic adapter framework, or database.
+
+Decision options:
+
+- `CLAUDE_SECOND_CONFIGURATION_ESTABLISHED`: smoke and independently verified
+  H03 both complete;
+- `CLAUDE_RUNTIME_BLOCKED`: projection is valid but provider/headless runtime
+  blocks execution;
+- `CLAUDE_CONTRACT_BLOCKED`: least-privilege/no-ASK boundary cannot be proved.
+
+If Claude is blocked, make a cost/benefit decision about remaining installed
+runtimes. Do not automatically return to OpenCode debugging. Do not start
+Phase 4 or claim model-routing evidence from a blocked lane.
