@@ -1,0 +1,235 @@
+{
+  "artifacts": {
+    "changed_files": [],
+    "end_sha": null,
+    "start_sha": null,
+    "tests_passed": null
+  },
+  "baseline_refs": [],
+  "confounders": [
+    "OpenCode returned a structured UnknownError without an actionable cause",
+    "contract smoke only; no H03 quality claim",
+    "model identity, model-call count, tool-call count, token usage, and cost were not observable",
+    "workspace digest was unchanged but process failure prevents quality evidence"
+  ],
+  "controls": {
+    "fixture_digest": "sha256:c0149b196d88a8b979e6d2d58f67798664b9a94c53c516fc543f3606728087e1",
+    "mcp_availability": "NOT_USED",
+    "permission_envelope_digest": "sha256:16d2c3f154637036f904b5b2e3c00da52cd2872575550a6d88051ebba77c67cd",
+    "project_instruction_digest": null,
+    "selected_skill_digests": [],
+    "selected_skill_ids": [],
+    "stage_route_digest": "sha256:29177e99a117c5a7c59d5909d33a8a844943cb78b2279d44a84cbf722ff399bb",
+    "start_sha": null,
+    "system_instruction_digest": null,
+    "task_spec_digest": "sha256:54cf1a1fa82250b5501201525ae154f887326da8f9728ee9c585c7eda9777e53",
+    "tool_availability": [
+      "opencode run",
+      "--pure",
+      "--format json",
+      "--agent plan",
+      "read-only isolated fixture"
+    ]
+  },
+  "effect_class": "INCONCLUSIVE",
+  "efficiency": {
+    "context_tokens": null,
+    "cost_status": "UNKNOWN",
+    "cost_units": null,
+    "input_tokens": null,
+    "latency_ms": 1607.6118329074234,
+    "measurement_status": "UNKNOWN",
+    "metric_provenance": [
+      {
+        "aggregation": "PER_RUN",
+        "confidence": "HIGH",
+        "metric_name": "latency_ms",
+        "runtime": "opencode",
+        "runtime_version": "1.18.25",
+        "source": "OBSERVED",
+        "source_field": "host.perf_counter",
+        "status": "VERIFIED",
+        "unit": "ms",
+        "value": 1607.6118329074234
+      },
+      {
+        "aggregation": "PER_RUN",
+        "confidence": "HIGH",
+        "metric_name": "wall_time_ms",
+        "runtime": "opencode",
+        "runtime_version": "1.18.25",
+        "source": "OBSERVED",
+        "source_field": "host.perf_counter",
+        "status": "VERIFIED",
+        "unit": "ms",
+        "value": 1607.6118329074234
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "model_calls",
+        "runtime": "opencode",
+        "runtime_version": "1.18.25",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "calls",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "tool_calls",
+        "runtime": "opencode",
+        "runtime_version": "1.18.25",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "calls",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "context_tokens",
+        "runtime": "opencode",
+        "runtime_version": "1.18.25",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "tokens",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "input_tokens",
+        "runtime": "opencode",
+        "runtime_version": "1.18.25",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "tokens",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "output_tokens",
+        "runtime": "opencode",
+        "runtime_version": "1.18.25",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "tokens",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "tokens_total",
+        "runtime": "opencode",
+        "runtime_version": "1.18.25",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "tokens",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "cost_units",
+        "runtime": "opencode",
+        "runtime_version": "1.18.25",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "currency",
+        "value": null
+      }
+    ],
+    "model_calls": null,
+    "output_tokens": null,
+    "tool_calls": null,
+    "wall_time_ms": 1607.6118329074234
+  },
+  "evidence_class": "UNAVAILABLE",
+  "fixture_id": "H03-opencode-contract-smoke",
+  "fixture_set": "HOLDOUT",
+  "history_mode": "APPEND_ONLY",
+  "model_id": null,
+  "notes": "bundle_digest=sha256:ce1be98d1c5800231c5d975a2710328b42e89be3d4d812a1571f35b4776869ff; projection_digest=sha256:497d3fe132a106e1f4dbb7ed9e6c44ebabd7c95aaf2384ea33f40740adb5919d; workspace_unchanged=true; smoke_output_persisted_as_raw=false",
+  "observed_version": "1.18.25",
+  "output_evidence": {
+    "format": "json",
+    "raw_output_serialized": false,
+    "sanitized": true,
+    "stderr_bytes": 0,
+    "stderr_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_bytes": 218,
+    "stdout_digest": "sha256:0d0af6d1ce794dfbe60e92ebf7576face5197121454b192d2a4ce9cc7c33d96d"
+  },
+  "portability": {
+    "instruction_leakage": false,
+    "lost_capabilities": [],
+    "portable_artifacts": [],
+    "runtime_specific_artifacts": []
+  },
+  "provenance": {
+    "documentation_snapshot": "https://opencode.ai/docs/permissions/",
+    "invocation_contract": "opencode run --pure --format json --agent plan --dir <isolated-fixture> <prompt>",
+    "observed_at": "2026-09-10T03:34:12.352270+00:00",
+    "runtime_source": "local opencode --version: 1.18.25",
+    "source_refs": [
+      "https://opencode.ai/docs/config/",
+      "https://opencode.ai/docs/permissions/",
+      "https://github.com/anomalyco/opencode/releases/tag/v1.18.25"
+    ],
+    "verification_method": "bounded isolated contract smoke; explicit no-ASK projection; workspace digest before/after"
+  },
+  "quality": {
+    "acceptance_criteria_coverage": null,
+    "artifact_correctness": null,
+    "review_finding_precision": null,
+    "source_accuracy": null,
+    "tests_pass": null,
+    "user_correction": null
+  },
+  "reasoning_effort": null,
+  "record_id": "record:phase3c2:smoke:opencode:001",
+  "reliability": {
+    "failed_tool_calls": 0,
+    "failure_reasons": [],
+    "invalid_edits": 0,
+    "recovery_events": 0,
+    "reroutes": 0,
+    "retries": 0,
+    "success_count": 0
+  },
+  "repetition": {
+    "classification": "EXPLORATORY_ONLY",
+    "n": 1,
+    "target": 1
+  },
+  "run_id": "run:phase3c2:smoke:opencode:001",
+  "runtime_id": "opencode",
+  "schema_version": "3.0",
+  "security": {
+    "permission_violation": false,
+    "sandbox_mismatch": false,
+    "secret_exposure": false,
+    "unexpected_network_usage": false,
+    "unsafe_proposal": false
+  },
+  "sensitive_data_serialized": false,
+  "stage_outcomes": [
+    {
+      "notes": "contract smoke failed; H03 gate not opened",
+      "outcome": "BLOCKED",
+      "stage": "design"
+    }
+  ],
+  "status": "LIVE_LANE_BLOCKED",
+  "terminal_outcome": "BLOCKED"
+}
