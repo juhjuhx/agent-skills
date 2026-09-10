@@ -1,0 +1,231 @@
+{
+  "artifacts": {},
+  "baseline_refs": [],
+  "confounders": [
+    "Smoke B and H03 were correctly gated and not run",
+    "auth category remained UNKNOWN from sanitized auth status shape",
+    "compatibility smoke only; not a quality run",
+    "no usable stdout/stderr and no direct cause was observable",
+    "timeout was finite at 25 seconds; no repeated timeout escalation"
+  ],
+  "controls": {
+    "fixture_digest": "sha256:2188b873340da4baaf4b3fdc087a66548470b95b80ea039d3cc77f90b6d0dcfd",
+    "mcp_availability": "NOT_USED",
+    "permission_envelope_digest": "sha256:16d2c3f154637036f904b5b2e3c00da52cd2872575550a6d88051ebba77c67cd",
+    "project_instruction_digest": null,
+    "selected_skill_digests": [],
+    "selected_skill_ids": [],
+    "stage_route_digest": "sha256:e677f64ea29f24c6ba27062f101b0a05a3ccb6779cc85b3b639f4a845e75f497",
+    "start_sha": "6988c778d634630df2cabf236ab14fc6ca74689f",
+    "system_instruction_digest": null,
+    "task_spec_digest": "sha256:757e06fae19a47f8a5f70b0f7a86db017b04324c91a3775a20b3aa7e458186d1",
+    "tool_availability": [
+      "claude -p",
+      "--tools \"\"",
+      "--allowed-tools \"\"",
+      "--permission-mode dontAsk"
+    ]
+  },
+  "effect_class": "INCONCLUSIVE",
+  "efficiency": {
+    "context_tokens": null,
+    "cost_status": "UNKNOWN",
+    "cost_units": null,
+    "input_tokens": null,
+    "latency_ms": 25016.1,
+    "measurement_status": "UNKNOWN",
+    "metric_provenance": [
+      {
+        "aggregation": "PER_RUN",
+        "confidence": "HIGH",
+        "metric_name": "latency_ms",
+        "runtime": "claude-code",
+        "runtime_version": "2.1.235 (Claude Code)",
+        "source": "OBSERVED",
+        "source_field": "host.perf_counter",
+        "status": "VERIFIED",
+        "unit": "ms",
+        "value": 25016.1
+      },
+      {
+        "aggregation": "PER_RUN",
+        "confidence": "HIGH",
+        "metric_name": "wall_time_ms",
+        "runtime": "claude-code",
+        "runtime_version": "2.1.235 (Claude Code)",
+        "source": "OBSERVED",
+        "source_field": "host.perf_counter",
+        "status": "VERIFIED",
+        "unit": "ms",
+        "value": 25016.1
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "model_calls",
+        "runtime": "claude-code",
+        "runtime_version": "2.1.235 (Claude Code)",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "calls",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "tool_calls",
+        "runtime": "claude-code",
+        "runtime_version": "2.1.235 (Claude Code)",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "calls",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "context_tokens",
+        "runtime": "claude-code",
+        "runtime_version": "2.1.235 (Claude Code)",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "tokens",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "input_tokens",
+        "runtime": "claude-code",
+        "runtime_version": "2.1.235 (Claude Code)",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "tokens",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "output_tokens",
+        "runtime": "claude-code",
+        "runtime_version": "2.1.235 (Claude Code)",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "tokens",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "tokens_total",
+        "runtime": "claude-code",
+        "runtime_version": "2.1.235 (Claude Code)",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "tokens",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "cost_units",
+        "runtime": "claude-code",
+        "runtime_version": "2.1.235 (Claude Code)",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "currency",
+        "value": null
+      }
+    ],
+    "model_calls": null,
+    "output_tokens": null,
+    "tool_calls": null,
+    "wall_time_ms": 25016.1
+  },
+  "evidence_class": "UNAVAILABLE",
+  "fixture_id": "H03-claude-smoke-a-v6",
+  "fixture_set": "HOLDOUT",
+  "history_mode": "APPEND_ONLY",
+  "model_id": null,
+  "notes": "Smoke A timed out with no stdout/stderr; retained as runtime compatibility evidence only. Raw prompt/output and credentials were not persisted.",
+  "observed_version": "2.1.235 (Claude Code)",
+  "output_evidence": {
+    "format": "unknown",
+    "raw_output_serialized": false,
+    "sanitized": true,
+    "stderr_bytes": 0,
+    "stderr_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_bytes": 0,
+    "stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "portability": {
+    "instruction_leakage": false,
+    "lost_capabilities": [],
+    "portable_artifacts": [],
+    "runtime_specific_artifacts": []
+  },
+  "provenance": {
+    "documentation_snapshot": "https://code.claude.com/docs/en/cli-usage",
+    "invocation_contract": "claude -p <prompt> --output-format json --permission-mode dontAsk --tools \"\" --allowed-tools \"\" --safe-mode --no-session-persistence --no-chrome --strict-mcp-config --mcp-config {\"mcpServers\":{}} --disable-slash-commands --max-budget-usd 0.25",
+    "observed_at": "2026-09-10",
+    "runtime_source": "local claude --version: 2.1.235 (Claude Code)",
+    "source_refs": [
+      "https://code.claude.com/docs/en/cli-usage",
+      "https://code.claude.com/docs/en/permission-modes",
+      "https://code.claude.com/docs/en/tools-reference",
+      "https://code.claude.com/docs/en/authentication"
+    ],
+    "verification_method": "installed help contract; bounded isolated shell=False smoke; timeout; no raw output persisted"
+  },
+  "quality": {
+    "acceptance_criteria_coverage": null,
+    "artifact_correctness": null,
+    "review_finding_precision": null,
+    "source_accuracy": null,
+    "tests_pass": null,
+    "user_correction": null
+  },
+  "reasoning_effort": null,
+  "record_id": "record:phase3d:smoke-a:claude:001",
+  "reliability": {
+    "failed_tool_calls": 0,
+    "failure_reasons": [],
+    "invalid_edits": 0,
+    "recovery_events": 0,
+    "reroutes": 0,
+    "retries": 0,
+    "success_count": 0
+  },
+  "repetition": {
+    "classification": "EXPLORATORY_ONLY",
+    "n": 1,
+    "target": 1
+  },
+  "run_id": "run:phase3d:smoke-a:claude:001",
+  "runtime_id": "claude-code",
+  "schema_version": "3.0",
+  "security": {
+    "permission_violation": false,
+    "sandbox_mismatch": false,
+    "secret_exposure": false,
+    "unexpected_network_usage": false,
+    "unsafe_proposal": false
+  },
+  "sensitive_data_serialized": false,
+  "stage_outcomes": [
+    {
+      "notes": "No-tool runtime smoke timed out before usable output; no quality claim.",
+      "outcome": "BLOCKED",
+      "stage": "verify"
+    }
+  ],
+  "status": "LIVE_LANE_BLOCKED",
+  "terminal_outcome": "BLOCKED"
+}

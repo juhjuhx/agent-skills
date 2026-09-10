@@ -1,188 +1,197 @@
 # NEXT CODEX PROMPT
-# PHASE 3D — CLAUDE READ-ONLY EXECUTION BOUNDARY PROPOSAL
+# PHASE 3E — HERMES READ-ONLY RUNTIME CANDIDATE RESEARCH
 
 Repository:
 juhjuhx/agent-skills
 
-Current OpenCode diagnostic branch:
-fix/v3-opencode-runtime-diagnostic
+Current proposal base:
+feat/v3-claude-readonly-adapter
 
 Current decision:
-OPENCODE_RUNTIME_BLOCKED
+CLAUDE_RUNTIME_BLOCKED
 
-Do not start Phase 4. Do not modify Stage Router weights. Do not implement
-adaptive routing. Do not keep creating OpenCode diagnostic subphases. Do not
-install runtimes, models, MCP servers, plugins, dependencies, credentials, or
-new accounts. Do not broaden permissions or use bypass/auto approval.
-
-This is a proposal only. Do not execute it in the current Phase 3C.3 run.
+This is a proposal only. Do not execute it as part of Phase 3D.
 
 ============================================================
 0. MISSION
 ============================================================
 
-Establish whether the already-installed Claude Code runtime can provide the
-next trustworthy live execution configuration under a bounded read-only
-boundary. The goal is a safe contract smoke and, only after it passes, one
-unchanged H03 API/interface-design cell.
+Evaluate exactly one remaining runtime candidate: the already installed
+Hermes runtime, if its executable and safe headless contract can be verified.
 
-OpenCode remains a valid static adapter with explicit status:
+The objective is a bounded read-only compatibility boundary, not a complete
+Hermes adapter and not a model-quality comparison. Do not return to OpenCode
+debugging, do not start Phase 4, do not modify Stage Router weights, and do
+not implement adaptive routing.
 
-OPENCODE_RUNTIME_BLOCKED
-cause = PROVIDER_NOT_CONFIGURED
-
-Do not treat Codex/OpenCode/Claude comparisons as MODEL_EFFECT. A completed
-Claude cell would be a CONFIGURATION_EFFECT candidate because runtime,
-provider/model, tool implementation, and system behavior may all differ.
+Do not install Hermes, models, providers, MCP servers, plugins, dependencies,
+credentials, or accounts. Do not modify global configuration.
 
 ============================================================
-1. FRESH SOURCE TRUTH FIRST
+1. FRESH SOURCE TRUTH
 ============================================================
 
-Verify before edits or execution:
+Before edits or execution, verify:
 
-- git status --short
-- git branch --show-current
-- git rev-parse HEAD
-- installed `claude --version`
-- installed `claude --help` and the exact print/headless help surface
-- official release/source/documentation for the observed version
+- repository status, branch, and HEAD;
+- whether a Hermes executable is actually present;
+- installed Hermes version and exact local help;
+- official Hermes release/source/documentation for that version;
+- authentication category without reading credential contents;
+- the exact noninteractive invocation and output contract.
 
-Installed behavior and versioned first-party source win over current-main
-documentation. Record runtime version, release/tag/commit where available,
-documentation snapshot, headless invocation, output format, tool/permission
-controls, and model/effort selection granularity. Never serialize credentials.
+Do not guess an executable name or reuse current-main syntax. Installed
+behavior wins over unversioned documentation. Record runtime version, release
+or source revision where available, documentation snapshot, invocation
+contract, model-selection granularity, permission controls, and availability.
 
 ============================================================
 2. PRESERVE THE UNIVERSAL FLOW
 ============================================================
 
-Consume the existing contracts without redesigning them:
+Use the existing contracts:
 
 TaskSpec
   -> existing Stage Router
   -> StageRoute
   -> selected skill references/bodies only
   -> CompiledExecutionBundle
-  -> Claude-native projection
+  -> Hermes-native projection only if required by evidence
   -> bounded execution evidence
 
-Claude adapter-specific fields belong only in a Claude projection. Do not put
-Claude CLI/config syntax in StageRoute or the universal router. Do not change
-Stage Router weights or select models in the skill router.
+Do not put Hermes CLI/config fields in TaskSpec, StageRoute, or the universal
+router. Do not choose models in the Stage Router. A runtime switch remains an
+explicit handoff, not an invisible stage mutation.
 
 ============================================================
-3. CLAUDE READ-ONLY CONTRACT
-============================================================
-
-Research the installed version and first-party source for the actual
-separation of:
-
-- CLAUDE.md persistent context;
-- Skills and selected procedure delivery;
-- hooks, if available, as deterministic lifecycle controls;
-- subagents, only when the TaskSpec actually requires isolation;
-- permissions/tool restrictions and read-only/plan modes;
-- plugins and MCP, both disabled for the H03 lane;
-- model/reasoning selection, only if already configured and observable.
-
-The target H03 authority is:
-
-- read/list/glob/grep inside an isolated fixture: ALLOW only when explicitly
-  supported by the installed contract;
-- edit/write, shell/bash, task/subagent, web/network, external paths, secrets,
-  plugins, and MCP: DENY;
-- zero unresolved ASK paths for noninteractive execution;
-- no global config mutation and no project/global capability widening;
-- shell=False, stdin=DEVNULL, isolated cwd, finite timeout.
-
-If the installed Claude contract cannot prove every reachable permission class
-is ALLOW or DENY, stop with `CLAUDE_CONTRACT_BLOCKED`. Do not use interactive
-approval, broad auto-approval, or a longer timeout as a workaround.
-
-============================================================
-4. DOGFOOD ROUTING
+3. DOGFOOD ROUTING
 ============================================================
 
 Use using-superpowers as resident task/session authority and the existing
-Stage Router. Every active development stage emits a StageRoute or
-NO_SKILL_NEEDED(reason). Do not reload the whole catalog. Load only selected
-skill bodies after route selection. Record unrelated selections as
-ROUTING_DEFECT without changing routing weights.
+Stage Router unchanged. Every active development stage must emit a valid
+StageRoute or `NO_SKILL_NEEDED(reason)`. Load only selected SKILL.md bodies
+after selection. Do not load the full catalog. Record unrelated selections
+as routing defects without changing weights.
 
 ============================================================
-5. TWO-STEP GATE
+4. HERMES SAFETY GATE
 ============================================================
 
-STEP A — contract smoke:
+Freshly establish whether the installed Hermes contract can represent all
+reachable actions as explicit ALLOW or DENY in a noninteractive run.
 
-- temporary fixture with one harmless file;
-- read one bounded value and return structured output;
-- no writes, shell, network, web, plugins, MCP, or subagents;
-- no raw prompt/stdout/stderr/logs/credentials in evidence;
-- independent workspace digest check;
-- explicit runtime/provider/model identity only when safely observable.
+For the candidate read-only lane, target:
 
-STEP B — H03:
+- read/list/glob/grep inside an isolated fixture: ALLOW only if proven;
+- write/edit, shell, subagents, web/network, external paths, secrets,
+  plugins, and MCP: DENY;
+- no unresolved approval prompt or interactive input;
+- shell=False, stdin=DEVNULL, isolated cwd, finite timeout;
+- no credential, raw prompt, raw output, or session serialization.
 
-Run the existing unchanged H03 only when the smoke has exit success, usable
-output, no ASK path, unchanged workspace, and an independent verifier can
-check the DecisionRecord/API artifact against the existing acceptance criteria.
-Terminal outcome must be VERIFIED_SUCCESS, PARTIAL, FAILED, or BLOCKED.
+If Hermes `--oneshot` or its equivalent bypasses approval controls, do not use
+it for a write-capable benchmark. If the native contract cannot prove the
+read-only boundary, stop with `HERMES_CONTRACT_BLOCKED` or
+`HERMES_RUNTIME_BLOCKED` and do not weaken permissions.
 
 ============================================================
-6. EVIDENCE BOUNDARY
+5. TWO-LEVEL PROBE
 ============================================================
 
-Use only these evidence classes:
+Run only after the installed contract is understood:
+
+SMOKE A — no-tool runtime/auth/output:
+
+- exact bounded deterministic prompt;
+- tools disabled where the installed contract supports this;
+- no MCP/plugins/custom memory unless their absence is proven;
+- usable structured output;
+- finite timeout and sanitized evidence.
+
+SMOKE B — read-only fixture:
+
+- one harmless file in a temporary isolated workspace;
+- only proven read primitives;
+- no write, shell, network, browser, MCP, plugins, or subagents;
+- workspace digest unchanged;
+- independent verification of the returned value.
+
+Only if both smokes pass may one unchanged H03 API/interface-design cell be
+attempted. H03 is REAL_EXECUTION quality evidence only when an independent
+verifier confirms the DecisionRecord/artifact and acceptance criteria.
+
+============================================================
+6. SELECTED SKILLS AND LEARNING
+============================================================
+
+Canonical skill bodies remain in this repository. Resolve selected IDs by
+source/ref/digest and load only those needed for execution. Do not duplicate
+the 214-skill catalog into Hermes memory or native directories.
+
+Hermes learned skills are not trusted core truth. Do not import or promote
+external learned skills. Any observation may produce a proposal only; it
+cannot modify routing policy, permissions, or canonical metadata silently.
+
+============================================================
+7. PERMISSIONS AND DATA BOUNDARY
+============================================================
+
+Effective authority is:
+
+TaskSpec ∩ policy ∩ AgentAdapterManifest ∩ live Hermes restrictions
+
+Model/provider profiles, skill metadata, MCP declarations, and plugins cannot
+grant filesystem or network authority. Unknown permissions fail closed.
+
+Persist only sanitized IDs, digests, byte counts, versioned provenance,
+structured metrics, terminal outcomes, and artifact references. Never persist
+credentials, auth headers, environment contents, raw prompts, stdout/stderr,
+skill bodies, or session state.
+
+============================================================
+8. EVIDENCE AND DECISION
+============================================================
+
+Use strict evidence classes:
 
 REAL_EXECUTION
 HOST_MANAGED_FIXTURE
 MOCK
 
-Only REAL_EXECUTION supports live quality/reliability conclusions. Keep
-runtime compatibility probes separate. Record metric semantics explicitly:
-PER_RUN latency; model/tool calls, tokens, and cost are null/UNKNOWN unless
-the installed runtime proves their aggregation. Never infer model_calls=1
-from process launch.
+Only REAL_EXECUTION may support runtime quality, reliability, latency, or
+terminal-quality conclusions. Record unknown model calls, tokens, and cost
+as null/UNKNOWN rather than inferring them from process launch.
 
-Record task/fixture/route/skill/permission/runtime/model/effort/instruction
-digests, confounders, terminal and stage outcomes, and security evidence.
+Create:
 
-============================================================
-7. SECURITY GATE
-============================================================
+- `docs/v3/evidence/MODEL_RUNTIME_EVAL_V7.md`;
+- `docs/v3/evidence/PHASE3E_HERMES_DOGFOOD_ROUTE.md`;
+- append-only sanitized records in the established live-runs directory.
 
-Independently verify:
+Choose exactly one:
 
-- no permission widening;
-- no unresolved ASK;
-- no shell=True or inherited interactive stdin;
-- finite timeout and isolated cwd;
-- no global config mutation;
-- no .env/credential/auth/session serialization;
-- no plugin/MCP auto-install or loading;
-- no raw prompt/output/log persistence;
-- a model/provider selector cannot grant OS authority.
+- `HERMES_SECOND_CANDIDATE_ESTABLISHED`: both smokes and independently
+  verified H03 complete;
+- `HERMES_RUNTIME_BLOCKED`: static boundary is valid but runtime/provider/
+  headless execution blocks;
+- `HERMES_CONTRACT_BLOCKED`: least-privilege/no-ASK boundary cannot be proven.
 
-If any boundary is UNKNOWN, classify the lane as blocked rather than guessing.
+Do not call a Hermes result MODEL_EFFECT. At most, a completed Codex/Hermes
+pair is a CONFIGURATION_EFFECT candidate.
 
 ============================================================
-8. OUTPUTS AND STOP RULE
+9. TESTS AND REVIEW
 ============================================================
 
-Create only the smallest needed Claude projection, focused tests, one
-sanitized smoke record, and an evidence update. Do not build a runtime
-manager, registry, scheduler, generic adapter framework, or database.
+Keep all existing tests green. Add only focused tests for installed-version
+binding, zero-ASK behavior, selected-only loading, permission intersection,
+credential sanitization, blocked-lane evidence, and Smoke A/B gating.
 
-Decision options:
+Use independent runtime-contract, security, simplification, and verification
+review lanes. Run the OCR auth precheck once; if it is still HTTP 401, record
+`OCR_NATIVE_DIFF = BLOCKED_BY_AUTH` without retrying.
 
-- `CLAUDE_SECOND_CONFIGURATION_ESTABLISHED`: smoke and independently verified
-  H03 both complete;
-- `CLAUDE_RUNTIME_BLOCKED`: projection is valid but provider/headless runtime
-  blocks execution;
-- `CLAUDE_CONTRACT_BLOCKED`: least-privilege/no-ASK boundary cannot be proved.
-
-If Claude is blocked, make a cost/benefit decision about remaining installed
-runtimes. Do not automatically return to OpenCode debugging. Do not start
-Phase 4 or claim model-routing evidence from a blocked lane.
+If Hermes is blocked, stop this candidate investigation and report the exact
+blocker and whether further Hermes work is lower value than a future,
+explicitly approved runtime boundary. Do not automatically start another
+adapter.
