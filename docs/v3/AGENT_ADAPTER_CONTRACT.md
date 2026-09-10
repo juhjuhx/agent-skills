@@ -1,6 +1,6 @@
 # Agent Adapter Contract
 
-> Status: **runtime-neutral contract; Phase 1 manifests and the Phase 2.6 provenance-hardened Codex vertical slice are implemented**. Other native adapters remain guides only.
+> Status: **runtime-neutral contract; Phase 1 manifests, the Phase 2.6 provenance-hardened Codex vertical slice, and the Phase 3C.2 narrow OpenCode read-only boundary are implemented**. Other native adapters remain guides only.
 
 ## Purpose
 
@@ -64,6 +64,31 @@ adapter never substitutes a broader sandbox mode. Full loaded `SKILL.md` bodies 
 not part of serialized adapter results or evidence by default. Serializable
 skill records retain only references, provenance, role, load state, and byte
 metrics.
+
+## Phase 3C.2 OpenCode boundary
+
+The OpenCode slice consumes the same portable bundle and selected skill
+references but emits a separate `OpenCodeNativeProjection`. It is pinned to
+the installed OpenCode `1.18.25` release contract and supports only a
+benchmark-safe read-only execution surface. Its config has explicit
+deny-by-default permission classes, isolated read/list/glob/grep rules,
+secret-pattern denials, no plugins/MCP, `--pure`, JSON output, noninteractive
+stdin, and a finite timeout. `--auto`, extra arguments, unknown permissions,
+and portable write authority are rejected rather than broadened.
+
+The adapter removes inherited OpenCode config selectors before supplying
+inline `OPENCODE_CONFIG_CONTENT`; nested permission rule order is preserved
+because OpenCode resolves the last matching rule. The native `skill` surface is
+available, while canonical body delivery remains host-managed and selected
+only. The public result/evidence boundary carries references and digests, not
+raw prompts, output, credentials, or `SKILL.md` contents.
+
+The contract smoke reached the native process but returned an unclassified
+structured `UnknownError`, so the lane is recorded as
+`OPENCODE_RUNTIME_BLOCKED` and H03 quality evidence was not claimed. This is a
+runtime/provider outcome, not permission or model-quality evidence. See the
+[OpenCode guide](agents/OPENCODE.md) and
+[Phase 3C.2 evidence](evidence/MODEL_RUNTIME_EVAL_V4.md).
 
 ## Proposed interface
 
