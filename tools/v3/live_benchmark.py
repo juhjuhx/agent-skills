@@ -832,6 +832,16 @@ class ProcessObservation:
                 parsed = json.loads(self.stdout)
             except json.JSONDecodeError:
                 parsed = None
+                for line in self.stdout.splitlines():
+                    if not line.strip():
+                        continue
+                    try:
+                        candidate = json.loads(line)
+                    except json.JSONDecodeError:
+                        continue
+                    if isinstance(candidate, dict) and candidate.get("type") == "error":
+                        parsed = candidate
+                        break
             if isinstance(parsed, dict) and parsed.get("type") == "error":
                 return True
         return False
