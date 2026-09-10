@@ -40,6 +40,8 @@ SCHEMA_FILES = {
     "LiveExecutionRecord": "live-execution-record.schema.json",
     "OpenCodeNativeContract": "opencode-native-contract.schema.json",
     "OpenCodeNativeProjection": "opencode-native-projection.schema.json",
+    "ClaudeNativeContract": "claude-native-contract.schema.json",
+    "ClaudeNativeProjection": "claude-native-projection.schema.json",
 }
 
 KNOWN_CAPABILITIES = frozenset(

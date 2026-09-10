@@ -852,8 +852,16 @@ def run_headless_command(
     only the minimum non-secret overrides required by a runtime boundary.
     """
 
-    if not command or any(not isinstance(item, str) or not item for item in command):
-        raise ValueError("command must be a non-empty sequence of non-empty strings")
+    # An empty argument is a valid argv value (for example Claude's
+    # documented ``--tools ""`` means no tools).  The executable itself must
+    # still be non-empty; empty option values are preserved verbatim.
+    if (
+        not command
+        or not isinstance(command[0], str)
+        or not command[0]
+        or any(not isinstance(item, str) for item in command)
+    ):
+        raise ValueError("command must start with a non-empty executable and contain strings")
     working_root = Path(cwd).resolve()
     if not working_root.is_dir():
         raise ValueError(f"benchmark cwd does not exist: {working_root}")
