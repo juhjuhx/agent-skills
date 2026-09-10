@@ -825,6 +825,11 @@ class ProcessObservation:
         ):
             return True
         if self.returncode != 0:
+            if not self.stdout.strip():
+                # A non-zero headless process with no usable public output
+                # cannot support a quality verdict. Treat it as an
+                # unavailable lane rather than manufacturing PARTIAL quality.
+                return True
             # Some headless runtimes report a structured error on stdout and
             # leave stderr empty.  That is an unavailable lane, not a useful
             # quality failure, when the output contract explicitly says error.

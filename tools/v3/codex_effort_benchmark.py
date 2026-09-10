@@ -610,7 +610,7 @@ def _run_cell(
             stage_outcomes=stage_outcomes,
             provenance={
                 "runtime_source": f"local codex --version: {observed_version}",
-                "invocation_contract": "codex exec --ephemeral --ignore-user-config --ignore-rules --model PINNED --config model_reasoning_effort=LEVEL --ask-for-approval never --sandbox MODE --json",
+                "invocation_contract": "codex exec --ephemeral --ignore-user-config --ignore-rules --model PINNED --config model_reasoning_effort=LEVEL --config approval_policy=never --sandbox MODE --json",
                 "documentation_snapshot": CODEX_DOCS,
                 "source_refs": [CODEX_SOURCE, f"https://github.com/openai/codex/releases/tag/{CODEX_RELEASE_TAG}"],
                 "verification_method": "installed help; explicit model pin; one compiled route/bundle; isolated fixture; independent acceptance check; no raw output persisted",

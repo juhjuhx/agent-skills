@@ -267,6 +267,10 @@ class LiveBenchmarkContractTests(unittest.TestCase):
         self.assertEqual(live["terminal_outcome"], "BLOCKED")
         self.assertIsNone(live["quality"]["artifact_correctness"])
 
+    def test_nonzero_headless_process_without_output_is_unavailable(self):
+        observation = ProcessObservation(True, 1, False, 10.0, "", "runtime failed")
+        self.assertTrue(observation.blocked)
+
     def test_open_code_read_only_lane_requires_every_least_privilege_control(self):
         blocked = assess_read_only_lane({"read_only": True, "deny_shell": True})
         eligible = assess_read_only_lane(

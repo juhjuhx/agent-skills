@@ -100,9 +100,10 @@ def build_codex_exec_command(
 ) -> list[str]:
     """Build one safe, explicit Codex 0.153.4 invocation.
 
-    The command intentionally uses the verified no-prompt approval policy,
-    ephemeral sessions, ignored user/rules configuration, and an explicit
-    model/effort.  It does not include any dangerous bypass option.
+    The command intentionally uses the verified headless ``approval_policy``
+    config override, ephemeral sessions, ignored user/rules configuration,
+    and an explicit model/effort. It does not invent an approval CLI flag or
+    include any dangerous bypass option.
     """
 
     if not isinstance(model_id, str) or not model_id.strip():
@@ -123,8 +124,8 @@ def build_codex_exec_command(
         model_id,
         "--config",
         f'model_reasoning_effort="{reasoning_effort}"',
-        "--ask-for-approval",
-        "never",
+        "--config",
+        'approval_policy="never"',
         "--sandbox",
         sandbox_mode,
         "--color",
