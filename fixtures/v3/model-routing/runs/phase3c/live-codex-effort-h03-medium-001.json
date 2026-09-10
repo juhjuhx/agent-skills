@@ -1,0 +1,250 @@
+{
+  "artifacts": {
+    "changed_files": [],
+    "diff_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "end_sha": "bcadbb378960a073882ac7947e05c6fea893d7fa",
+    "start_sha": "bcadbb378960a073882ac7947e05c6fea893d7fa",
+    "test_commands": [],
+    "tests_passed": null
+  },
+  "baseline_refs": [],
+  "confounders": [
+    "current StageRouter route selected no dedicated design PROCESS skill; route was held constant",
+    "effective model was not emitted by JSONL; command-level pin was accepted",
+    "no usable stdout or completed runtime event; no quality conclusion",
+    "provider reachability failure was corroborated by codex doctor but the run cause remains RUNTIME_UNKNOWN"
+  ],
+  "controls": {
+    "fixture_digest": "sha256:7b4691ecb62d26f2fbdf1528bba6a0c3f544a9f08c9dc3724c9e92800e106143",
+    "mcp_availability": "NOT_USED",
+    "permission_envelope_digest": "sha256:16d2c3f154637036f904b5b2e3c00da52cd2872575550a6d88051ebba77c67cd",
+    "project_instruction_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "selected_skill_digests": [
+      "sha256:1adce90aedd8b1362381f8bf8a7346966612cbde3591f74ab7e55e539fa1209a",
+      "sha256:ea52d15aabaf72bc6b558efe2c126f161b53961090ddcd712000273bfe8c7b6c"
+    ],
+    "selected_skill_ids": [
+      "using-superpowers",
+      "verification-before-completion"
+    ],
+    "stage_route_digest": "sha256:3d44cb0557ae103394af2395ce328e16e1dfc28d814f255a2b8509b23203f383",
+    "start_sha": "bcadbb378960a073882ac7947e05c6fea893d7fa",
+    "system_instruction_digest": "sha256:4730a33476589d7f14db2443ed66cd87f94f40bd2c3918072d05e082b09d9d59",
+    "task_spec_digest": "sha256:13c5eadd13efb81bf9bf3666a8d0cd24a301e5c0a93470607b7b67086c7ba8bd",
+    "tool_availability": [
+      "codex exec",
+      "workspace read-only"
+    ]
+  },
+  "effect_class": "INCONCLUSIVE",
+  "efficiency": {
+    "context_tokens": null,
+    "cost_status": "UNKNOWN",
+    "cost_units": null,
+    "input_tokens": null,
+    "latency_ms": 32.15608303435147,
+    "measurement_status": "UNKNOWN",
+    "metric_provenance": [
+      {
+        "aggregation": "PER_RUN",
+        "confidence": "HIGH",
+        "metric_name": "latency_ms",
+        "runtime": "codex",
+        "runtime_version": "codex-cli 0.153.4",
+        "source": "OBSERVED",
+        "source_field": "host.perf_counter",
+        "status": "VERIFIED",
+        "unit": "ms",
+        "value": 32.15608303435147
+      },
+      {
+        "aggregation": "PER_RUN",
+        "confidence": "HIGH",
+        "metric_name": "wall_time_ms",
+        "runtime": "codex",
+        "runtime_version": "codex-cli 0.153.4",
+        "source": "OBSERVED",
+        "source_field": "host.perf_counter",
+        "status": "VERIFIED",
+        "unit": "ms",
+        "value": 32.15608303435147
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "model_calls",
+        "runtime": "codex",
+        "runtime_version": "codex-cli 0.153.4",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "calls",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "tool_calls",
+        "runtime": "codex",
+        "runtime_version": "codex-cli 0.153.4",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "calls",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "context_tokens",
+        "runtime": "codex",
+        "runtime_version": "codex-cli 0.153.4",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "tokens",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "input_tokens",
+        "runtime": "codex",
+        "runtime_version": "codex-cli 0.153.4",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "tokens",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "output_tokens",
+        "runtime": "codex",
+        "runtime_version": "codex-cli 0.153.4",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "tokens",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "tokens_total",
+        "runtime": "codex",
+        "runtime_version": "codex-cli 0.153.4",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "tokens",
+        "value": null
+      },
+      {
+        "aggregation": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "metric_name": "cost_units",
+        "runtime": "codex",
+        "runtime_version": "codex-cli 0.153.4",
+        "source": "UNKNOWN",
+        "source_field": null,
+        "status": "UNKNOWN",
+        "unit": "currency",
+        "value": null
+      }
+    ],
+    "model_calls": null,
+    "output_tokens": null,
+    "tool_calls": null,
+    "wall_time_ms": 32.15608303435147
+  },
+  "evidence_class": "UNAVAILABLE",
+  "fixture_id": "H03-codex-effort-medium",
+  "fixture_set": "HOLDOUT",
+  "history_mode": "APPEND_ONLY",
+  "model_id": "gpt-5.6-luna",
+  "notes": "model_pin=UNVERIFIED; model_evidence=UNKNOWN; bundle_digest=sha256:2f484016b4b047096dcc1b7f42eb9a51abb92f4688c001d79222bb67fa71d04e",
+  "observed_version": "codex-cli 0.153.4",
+  "output_evidence": {
+    "format": "jsonl",
+    "raw_output_serialized": false,
+    "sanitized": true,
+    "stderr_bytes": 199,
+    "stderr_digest": "sha256:2d8b902fb51c4fb0108c58a40b037f3ed52641f00cdae67901d7cbda9b4b8473",
+    "stdout_bytes": 0,
+    "stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "portability": {
+    "instruction_leakage": false,
+    "lost_capabilities": [],
+    "portable_artifacts": [],
+    "runtime_specific_artifacts": []
+  },
+  "provenance": {
+    "documentation_snapshot": "https://developers.openai.com/codex/cli/reference",
+    "invocation_contract": "codex exec --ephemeral --ignore-user-config --ignore-rules --model PINNED --config model_reasoning_effort=LEVEL --config approval_policy=never --sandbox MODE --json",
+    "observed_at": "2026-09-10T00:00:00+08:00",
+    "runtime_source": "local codex --version: codex-cli 0.153.4",
+    "source_refs": [
+      "https://raw.githubusercontent.com/openai/codex/3d2ee51ca2d5db578f328aa75e20aa22c0197c9a/codex-rs/exec/src/lib.rs",
+      "https://github.com/openai/codex/releases/tag/rust-v0.153.4"
+    ],
+    "verification_method": "installed help; explicit model pin; one compiled route/bundle; isolated fixture; independent acceptance check; no raw output persisted"
+  },
+  "quality": {
+    "acceptance_criteria_coverage": null,
+    "artifact_correctness": null,
+    "review_finding_precision": null,
+    "source_accuracy": null,
+    "tests_pass": null,
+    "user_correction": null
+  },
+  "reasoning_effort": "medium",
+  "record_id": "record:phase3f:h03:medium:001",
+  "reliability": {
+    "failed_tool_calls": 0,
+    "failure_reasons": [
+      "headless process exited without usable output"
+    ],
+    "invalid_edits": 0,
+    "recovery_events": 0,
+    "reroutes": 0,
+    "retries": 0,
+    "success_count": 0
+  },
+  "repetition": {
+    "classification": "EXPLORATORY_ONLY",
+    "n": 1,
+    "target": 1
+  },
+  "run_id": "run:phase3f:h03:medium:001",
+  "runtime_id": "codex",
+  "schema_version": "3.0",
+  "security": {
+    "permission_violation": false,
+    "sandbox_mismatch": false,
+    "secret_exposure": false,
+    "unexpected_network_usage": false,
+    "unsafe_proposal": false
+  },
+  "sensitive_data_serialized": false,
+  "stage_outcomes": [
+    {
+      "evidence_refs": [
+        "RUNTIME_EVIDENCE"
+      ],
+      "outcome": "BLOCKED",
+      "stage": "design"
+    },
+    {
+      "evidence_refs": [
+        "RUNTIME_EVIDENCE"
+      ],
+      "outcome": "BLOCKED",
+      "stage": "verify"
+    }
+  ],
+  "status": "LIVE_LANE_BLOCKED",
+  "terminal_outcome": "BLOCKED"
+}
