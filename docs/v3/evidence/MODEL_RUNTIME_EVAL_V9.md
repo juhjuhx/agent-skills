@@ -9,7 +9,8 @@ records 保留不變；本文件不把 provider 問題轉寫成 LOW/MEDIUM 品�
 decision: CODEX_LIVE_TRANSPORT_BLOCKED
 inherited_experiment_status: CODEX_CONTROLLED_EXPERIMENT_BLOCKED
 blocker: PROVIDER_UNREACHABLE
-blocker_class: environmental_or_transient_provider_reachability
+blocker_class: provider_reachability
+transient_status: UNKNOWN
 smoke_0: NOT_RUN
 benchmark_cells: NOT_RUN
 ```

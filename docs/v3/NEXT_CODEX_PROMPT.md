@@ -12,7 +12,7 @@ Observed blocker:
 is unreachable over DNS/HTTP. This is transport evidence, not model or effort
 quality evidence.
 
-本文件只是下一步提案，不要在 Phase 3F 內執行。不要開始 Phase 4，不要修改
+本文件只是下一步提案，不要在 Phase 3G 內執行。不要開始 Phase 4，不要修改
 Stage Router weights，不要做 model-effect experiment，不要追逐新的 runtime，
 也不要安裝或重新 authentication 任何 runtime/model/provider/MCP/dependency。
 
