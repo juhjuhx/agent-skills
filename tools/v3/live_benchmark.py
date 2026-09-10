@@ -592,10 +592,22 @@ class ProcessObservation:
         if not self.launched or self.timed_out:
             return True
         lowered = self.stderr.lower()
-        return self.returncode != 0 and any(
+        if self.returncode != 0 and any(
             marker in lowered
             for marker in ("authentication", "unauthorized", "401", "approval", "permission denied", "interactive")
-        )
+        ):
+            return True
+        if self.returncode != 0:
+            # Some headless runtimes report a structured error on stdout and
+            # leave stderr empty.  That is an unavailable lane, not a useful
+            # quality failure, when the output contract explicitly says error.
+            try:
+                parsed = json.loads(self.stdout)
+            except json.JSONDecodeError:
+                parsed = None
+            if isinstance(parsed, dict) and parsed.get("type") == "error":
+                return True
+        return False
 
 
 def run_headless_command(
