@@ -604,8 +604,14 @@ def run_headless_command(
     cwd: str | Path,
     input_text: str | None = None,
     timeout_s: float = 300,
+    environment: dict[str, str] | None = None,
 ) -> ProcessObservation:
-    """Run one explicit command without a shell or environment serialization."""
+    """Run one explicit command without a shell or environment serialization.
+
+    ``environment`` is execution-local state.  It is intentionally not part
+    of :class:`ProcessObservation` or any evidence record; callers must pass
+    only the minimum non-secret overrides required by a runtime boundary.
+    """
 
     if not command or any(not isinstance(item, str) or not item for item in command):
         raise ValueError("command must be a non-empty sequence of non-empty strings")
@@ -614,6 +620,13 @@ def run_headless_command(
         raise ValueError(f"benchmark cwd does not exist: {working_root}")
     if timeout_s <= 0:
         raise ValueError("timeout_s must be positive")
+    if environment is not None and any(
+        not isinstance(key, str)
+        or not key
+        or not isinstance(value, str)
+        for key, value in environment.items()
+    ):
+        raise ValueError("environment overrides must be a mapping of non-empty strings")
     started = time.perf_counter()
     try:
         run_options: dict[str, Any] = {
@@ -624,6 +637,8 @@ def run_headless_command(
             "shell": False,
             "timeout": timeout_s,
         }
+        if environment is not None:
+            run_options["env"] = {**__import__("os").environ, **environment}
         if input_text is None:
             # A headless lane must never inherit an interactive stdin prompt.
             run_options["stdin"] = subprocess.DEVNULL
