@@ -1,197 +1,235 @@
-# NEXT CODEX PROMPT
-# PHASE 3E — HERMES READ-ONLY RUNTIME CANDIDATE RESEARCH
+# AGENT SKILLS MATRIX v3
+# 下一步提案：CODEX CONTROLLED MODEL / REASONING EXPERIMENT
 
 Repository:
 juhjuhx/agent-skills
 
 Current proposal base:
-feat/v3-claude-readonly-adapter
+feat/v3-hermes-runtime-qualification
 
-Current decision:
-CLAUDE_RUNTIME_BLOCKED
+Current evidence decision:
+HERMES_RUNTIME_BLOCKED
 
-This is a proposal only. Do not execute it as part of Phase 3D.
-
-============================================================
-0. MISSION
-============================================================
-
-Evaluate exactly one remaining runtime candidate: the already installed
-Hermes runtime, if its executable and safe headless contract can be verified.
-
-The objective is a bounded read-only compatibility boundary, not a complete
-Hermes adapter and not a model-quality comparison. Do not return to OpenCode
-debugging, do not start Phase 4, do not modify Stage Router weights, and do
-not implement adaptive routing.
-
-Do not install Hermes, models, providers, MCP servers, plugins, dependencies,
-credentials, or accounts. Do not modify global configuration.
+這是提案，不要在 Phase 3E 執行。不要開始 Phase 4，不要修改 Stage Router
+weights，不要安裝 runtime/model/provider/MCP/plugin/dependency/credential，
+也不要實作新的 runtime adapter。
 
 ============================================================
-1. FRESH SOURCE TRUTH
+0. PURPOSE
 ============================================================
 
-Before edits or execution, verify:
+Hermes 已是目前 second-runtime search 的最後候選，但 provider/auth gate
+未通過，且 `--oneshot` 會 bypass approvals。不要再建立 OpenCode、Claude 或
+其他 runtime adapter。
 
-- repository status, branch, and HEAD;
-- whether a Hermes executable is actually present;
-- installed Hermes version and exact local help;
-- official Hermes release/source/documentation for that version;
-- authentication category without reading credential contents;
-- the exact noninteractive invocation and output contract.
+下一個 bounded task 只研究已驗證的 Codex CLI `0.153.4`，把：
 
-Do not guess an executable name or reuse current-main syntax. Installed
-behavior wins over unversioned documentation. Record runtime version, release
-or source revision where available, documentation snapshot, invocation
-contract, model-selection granularity, permission controls, and availability.
+runtime + task + StageRoute + skills + tools + permissions + context
+
+固定後，分開測量：
+
+1. CONTROLLED MODEL EFFECT（只有 model 改變）；或
+2. CONTROLLED REASONING-EFFORT EFFECT（只有 effort 改變）。
+
+如果無法取得兩個已授權、可識別的 model，不能製造 MODEL_EFFECT；可以只
+評估 reasoning effort，或明確回報 evidence 不足。
 
 ============================================================
-2. PRESERVE THE UNIVERSAL FLOW
+1. PRESERVE CURRENT CONTRACTS
 ============================================================
 
-Use the existing contracts:
+沿用既有：
 
 TaskSpec
-  -> existing Stage Router
-  -> StageRoute
-  -> selected skill references/bodies only
-  -> CompiledExecutionBundle
-  -> Hermes-native projection only if required by evidence
-  -> bounded execution evidence
+StageRoute
+CompiledExecutionBundle
+CodexAdapter
+CodexNativeProjection
+LiveExecutionRecord
+live benchmark metric provenance
 
-Do not put Hermes CLI/config fields in TaskSpec, StageRoute, or the universal
-router. Do not choose models in the Stage Router. A runtime switch remains an
-explicit handoff, not an invisible stage mutation.
-
-============================================================
-3. DOGFOOD ROUTING
-============================================================
-
-Use using-superpowers as resident task/session authority and the existing
-Stage Router unchanged. Every active development stage must emit a valid
-StageRoute or `NO_SKILL_NEEDED(reason)`. Load only selected SKILL.md bodies
-after selection. Do not load the full catalog. Record unrelated selections
-as routing defects without changing weights.
+Stage Router 只選 skills，不選 model。不要把 model preference 寫回
+StageRoute、ROUTING_POLICY.yaml 或 metadata overlay。runtime switch 仍是
+explicit handoff，不是隱式 stage mutation。
 
 ============================================================
-4. HERMES SAFETY GATE
+2. DOGFOOD
 ============================================================
 
-Freshly establish whether the installed Hermes contract can represent all
-reachable actions as explicit ALLOW or DENY in a noninteractive run.
+使用 `using-superpowers` 作為 resident task/session authority，使用既有
+Stage Router，不重載整個 catalog。每一個 active development stage 都必須
+產生 StageRoute 或：
 
-For the candidate read-only lane, target:
+NO_SKILL_NEEDED(reason)
 
-- read/list/glob/grep inside an isolated fixture: ALLOW only if proven;
-- write/edit, shell, subagents, web/network, external paths, secrets,
-  plugins, and MCP: DENY;
-- no unresolved approval prompt or interactive input;
-- shell=False, stdin=DEVNULL, isolated cwd, finite timeout;
-- no credential, raw prompt, raw output, or session serialization.
-
-If Hermes `--oneshot` or its equivalent bypasses approval controls, do not use
-it for a write-capable benchmark. If the native contract cannot prove the
-read-only boundary, stop with `HERMES_CONTRACT_BLOCKED` or
-`HERMES_RUNTIME_BLOCKED` and do not weaken permissions.
+只載入 selected SKILL.md bodies。若出現 brandkit、llm-council、cost-tracker
+等語義不相關或不可載入的 selection，記為 ROUTING_DEFECT，不在本 task 修
+Stage Router。
 
 ============================================================
-5. TWO-LEVEL PROBE
+3. FRESH CODEX SOURCE TRUTH
 ============================================================
 
-Run only after the installed contract is understood:
+先記錄：
 
-SMOKE A — no-tool runtime/auth/output:
+- git status / branch / HEAD / origin fetch;
+- installed `codex --version` and exact `codex exec --help`;
+- installed Codex contract target and provenance;
+- available model selection and reasoning-effort surfaces;
+- current TaskSpec/StageRoute/skill digests.
 
-- exact bounded deterministic prompt;
-- tools disabled where the installed contract supports this;
-- no MCP/plugins/custom memory unless their absence is proven;
-- usable structured output;
-- finite timeout and sanitized evidence.
-
-SMOKE B — read-only fixture:
-
-- one harmless file in a temporary isolated workspace;
-- only proven read primitives;
-- no write, shell, network, browser, MCP, plugins, or subagents;
-- workspace digest unchanged;
-- independent verification of the returned value.
-
-Only if both smokes pass may one unchanged H03 API/interface-design cell be
-attempted. H03 is REAL_EXECUTION quality evidence only when an independent
-verifier confirms the DecisionRecord/artifact and acceptance criteria.
+Installed behavior wins over current-main docs。不要把不存在的 model、flag 或
+usage field 寫進實驗。
 
 ============================================================
-6. SELECTED SKILLS AND LEARNING
+4. CONTROLLED MODEL EFFECT
 ============================================================
 
-Canonical skill bodies remain in this repository. Resolve selected IDs by
-source/ref/digest and load only those needed for execution. Do not duplicate
-the 214-skill catalog into Hermes memory or native directories.
+只有在 Codex installed runtime 支援 model selection，且現有 account 已授權
+至少兩個可辨識 model 時才能跑：
 
-Hermes learned skills are not trusted core truth. Do not import or promote
-external learned skills. Any observation may produce a proposal only; it
-cannot modify routing policy, permissions, or canonical metadata silently.
+same runtime
+same task
+same fixture/repository
+same StageRoute digest
+same selected skill IDs/digests
+same permission envelope
+same tool/MCP availability
+same project/system instruction digest
+same reasoning effort
 
-============================================================
-7. PERMISSIONS AND DATA BOUNDARY
-============================================================
+只改：
 
-Effective authority is:
+MODEL
 
-TaskSpec ∩ policy ∩ AgentAdapterManifest ∩ live Hermes restrictions
+若任何控制變數不能固定，放入 `CONFOUNDERS`，並將結果分類為
+`MODEL_EFFECT = INCONCLUSIVE`，不可改名成 configuration preference。
 
-Model/provider profiles, skill metadata, MCP declarations, and plugins cannot
-grant filesystem or network authority. Unknown permissions fail closed.
-
-Persist only sanitized IDs, digests, byte counts, versioned provenance,
-structured metrics, terminal outcomes, and artifact references. Never persist
-credentials, auth headers, environment contents, raw prompts, stdout/stderr,
-skill bodies, or session state.
+不要自動切換 provider、不要登入、不要購買 credits、不要建立新 credentials。
 
 ============================================================
-8. EVIDENCE AND DECISION
+5. CONTROLLED REASONING-EFFORT EFFECT
 ============================================================
 
-Use strict evidence classes:
+這是與 model effect 分離的實驗。固定 runtime、model、task、route、skills、
+tools、permissions、context，只改 installed Codex 支援的 effort level。
+
+不要同時改 model + effort。分別記錄：
+
+- terminal success;
+- acceptance coverage;
+- latency / wall time;
+- observable model/tool calls;
+- tokens / cost only with verified semantics;
+- retries, reroutes, failures;
+- verification artifacts。
+
+若 effort surface 或 quota 不可安全控制，`EFFORT_EFFECT = INCONCLUSIVE`。
+
+============================================================
+6. INITIAL WORKLOADS
+============================================================
+
+優先使用已存在、未修改的 holdout fixture：
+
+- H03 API/interface design;
+- H09 release verification;
+- 另一個已證明 bounded 且 non-destructive 的 task（若現有資料足夠）。
+
+不要用同一個 Codex configuration 的 repetitions 當作不同 configurations。
+H01/H03/H09 的 acceptance criteria 不得為了實驗改寫。
+
+cheap cell target `n >= 2`；若只能 `n = 1`，標示 `EXPLORATORY_ONLY`，不產生
+preference。開發用 A–J fixture 不可當 unseen model holdout。
+
+============================================================
+7. EXECUTION AND SECURITY
+============================================================
+
+coding/editing 只可在 temporary fixture repo 或 isolated worktree。每次 run
+記錄 START_SHA、END_SHA、changed files、tests、diff digest、workspace digest。
+
+維持既有 Codex permission intersection，不得由 model/profile/skill/MCP
+宣告取得 OS authority。subprocess 必須 shell=False、stdin=DEVNULL、finite
+timeout；不要保存 raw prompt/stdout/stderr、credential、auth header、環境
+內容或 session state。
+
+不使用 broad bypass、interactive approval、未驗證的 model alias 或未授權
+provider。不能證明安全就 `BLOCKED`，不要為了取得結果放寬權限。
+
+============================================================
+8. EVIDENCE CONTRACT
+============================================================
+
+所有結果使用 strict evidence class：
 
 REAL_EXECUTION
 HOST_MANAGED_FIXTURE
 MOCK
 
-Only REAL_EXECUTION may support runtime quality, reliability, latency, or
-terminal-quality conclusions. Record unknown model calls, tokens, and cost
-as null/UNKNOWN rather than inferring them from process launch.
+只有 REAL_EXECUTION 可以支持 live quality/reliability/latency/terminal
+結論。每個 metric 保存 source field、aggregation、unit、status、confidence。
 
-Create:
+不要把 process launch 算成 `model_calls = 1`。unknown token/cost/model-call
+使用 null/UNKNOWN。不要從 public pricing 推算 actual billing cost。
 
-- `docs/v3/evidence/MODEL_RUNTIME_EVAL_V7.md`;
-- `docs/v3/evidence/PHASE3E_HERMES_DOGFOOD_ROUTE.md`;
-- append-only sanitized records in the established live-runs directory.
+每個 task 產生一個 terminal outcome：
 
-Choose exactly one:
+VERIFIED_SUCCESS | PARTIAL | FAILED | BLOCKED
 
-- `HERMES_SECOND_CANDIDATE_ESTABLISHED`: both smokes and independently
-  verified H03 complete;
-- `HERMES_RUNTIME_BLOCKED`: static boundary is valid but runtime/provider/
-  headless execution blocks;
-- `HERMES_CONTRACT_BLOCKED`: least-privilege/no-ASK boundary cannot be proven.
-
-Do not call a Hermes result MODEL_EFFECT. At most, a completed Codex/Hermes
-pair is a CONFIGURATION_EFFECT candidate.
+並保留 stage outcomes 與 independent verification。不要以 model 自評當成功證據。
 
 ============================================================
-9. TESTS AND REVIEW
+9. OUTPUTS
 ============================================================
 
-Keep all existing tests green. Add only focused tests for installed-version
-binding, zero-ASK behavior, selected-only loading, permission intersection,
-credential sanitization, blocked-lane evidence, and Smoke A/B gating.
+建立：
 
-Use independent runtime-contract, security, simplification, and verification
-review lanes. Run the OCR auth precheck once; if it is still HTTP 401, record
-`OCR_NATIVE_DIFF = BLOCKED_BY_AUTH` without retrying.
+- `docs/v3/evidence/MODEL_RUNTIME_EVAL_V8.md`
+- `docs/v3/evidence/PHASE3F_CODEX_CONTROLLED_EXPERIMENT_ROUTE.md`
+- append-only sanitized records in `fixtures/v3/model-routing/runs/phase3c/`
 
-If Hermes is blocked, stop this candidate investigation and report the exact
-blocker and whether further Hermes work is lower value than a future,
-explicitly approved runtime boundary. Do not automatically start another
-adapter.
+報告需分開：
+
+- MODEL_EFFECT;
+- REASONING_EFFORT_EFFECT;
+- CONFIGURATION_EFFECT（只用於真正不同 runtime/configuration）；
+- quality / efficiency / reliability / security；
+- variance、confounders、baseline relationship；
+- whether evidence is sufficient for a later conservative router。
+
+不要在這一步啟動 production policy、adaptive learning、bandits、per-call
+model switching 或 agent-as-router。
+
+============================================================
+10. TESTS AND REVIEWS
+============================================================
+
+保留全 repository tests。新增 focused tests：
+
+- model/effort variable isolation;
+- same StageRoute and skill digests;
+- n=1 exploratory classification;
+- unknown metric semantics;
+- credential sanitization;
+- permission preservation;
+- REAL_EXECUTION-only quality inclusion;
+- terminal evidence and append-only records。
+
+用獨立 lanes 做 execution correctness、security、simplification、verification
+review。OCR auth precheck 只做一次；401 時記錄
+`OCR_NATIVE_DIFF = BLOCKED_BY_AUTH`。
+
+============================================================
+11. DECISION
+============================================================
+
+不要預設成功。根據實測結果選一個：
+
+- `CODEX_CONTROLLED_MODEL_EFFECT_EVIDENCE`
+- `CODEX_CONTROLLED_EFFORT_EFFECT_EVIDENCE`
+- `CODEX_CONTROLLED_EXPERIMENT_INCONCLUSIVE`
+- `INSUFFICIENT_LIVE_EVIDENCE`
+
+即使 evidence 成功，也只提出下一階段 Conservative Model Router MVP；不在
+本 task 啟動 production routing。
