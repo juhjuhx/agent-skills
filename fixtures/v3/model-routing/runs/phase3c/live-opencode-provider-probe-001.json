@@ -1,0 +1,153 @@
+{
+  "schema_version": "3.0",
+  "record_id": "record:phase3c3:opencode:provider-probe:001",
+  "run_id": "run:phase3c3:opencode:provider-probe:001",
+  "fixture_id": "H03-opencode-runtime-provider-probe",
+  "fixture_set": "HOLDOUT",
+  "evidence_class": "UNAVAILABLE",
+  "status": "LIVE_LANE_BLOCKED",
+  "runtime_id": "opencode",
+  "observed_version": "1.18.25",
+  "model_id": "anthropic/claude-sonnet-4-5",
+  "reasoning_effort": null,
+  "effect_class": "INCONCLUSIVE",
+  "controls": {
+    "task_spec_digest": "sha256:54cf1a1fa82250b5501201525ae154f887326da8f9728ee9c585c7eda9777e53",
+    "fixture_digest": "sha256:c0149b196d88a8b979e6d2d58f67798664b9a94c53c516fc543f3606728087e1",
+    "start_sha": null,
+    "stage_route_digest": "sha256:29177e99a117c5a7c59d5909d33a8a844943cb78b2279d44a84cbf722ff399bb",
+    "selected_skill_ids": [],
+    "selected_skill_digests": [],
+    "permission_envelope_digest": "sha256:16d2c3f154637036f904b5b2e3c00da52cd2872575550a6d88051ebba77c67cd",
+    "tool_availability": ["opencode models", "provider resolution probe", "--pure"],
+    "mcp_availability": "NOT_USED",
+    "project_instruction_digest": null,
+    "system_instruction_digest": null
+  },
+  "repetition": {"n": 1, "target": 1, "classification": "EXPLORATORY_ONLY"},
+  "terminal_outcome": "BLOCKED",
+  "stage_outcomes": [
+    {"stage": "research", "outcome": "BLOCKED", "notes": "Installed provider probe directly reported provider not found."}
+  ],
+  "quality": {
+    "acceptance_criteria_coverage": null,
+    "tests_pass": null,
+    "artifact_correctness": null,
+    "source_accuracy": null,
+    "review_finding_precision": null,
+    "user_correction": null
+  },
+  "efficiency": {
+    "latency_ms": 3413.173916982487,
+    "wall_time_ms": 3413.173916982487,
+    "model_calls": null,
+    "tool_calls": null,
+    "context_tokens": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "cost_units": null,
+    "cost_status": "UNKNOWN",
+    "measurement_status": "UNKNOWN",
+    "metric_provenance": [
+      {
+        "metric_name": "latency_ms",
+        "value": 3413.173916982487,
+        "unit": "ms",
+        "source_field": "host.perf_counter",
+        "aggregation": "PER_RUN",
+        "source": "OBSERVED",
+        "confidence": "HIGH",
+        "status": "VERIFIED",
+        "runtime": "opencode",
+        "runtime_version": "1.18.25"
+      },
+      {
+        "metric_name": "model_calls",
+        "value": null,
+        "unit": "calls",
+        "source_field": null,
+        "aggregation": "UNKNOWN",
+        "source": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "status": "UNKNOWN",
+        "runtime": "opencode",
+        "runtime_version": "1.18.25"
+      },
+      {
+        "metric_name": "cost_units",
+        "value": null,
+        "unit": "currency",
+        "source_field": null,
+        "aggregation": "UNKNOWN",
+        "source": "UNKNOWN",
+        "confidence": "UNKNOWN",
+        "status": "UNKNOWN",
+        "runtime": "opencode",
+        "runtime_version": "1.18.25"
+      }
+    ]
+  },
+  "reliability": {
+    "success_count": 0,
+    "reroutes": 0,
+    "retries": 0,
+    "failed_tool_calls": 0,
+    "invalid_edits": 0,
+    "recovery_events": 0,
+    "failure_reasons": ["provider was not found by the installed model listing"]
+  },
+  "security": {
+    "permission_violation": false,
+    "sandbox_mismatch": false,
+    "unsafe_proposal": false,
+    "secret_exposure": false,
+    "unexpected_network_usage": false
+  },
+  "portability": {
+    "portable_artifacts": [],
+    "runtime_specific_artifacts": [],
+    "lost_capabilities": [],
+    "instruction_leakage": false
+  },
+  "output_evidence": {
+    "format": "unknown",
+    "stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_bytes": 0,
+    "stderr_digest": "sha256:7b0ff7fc2693eb5a804559ecfcc1f77f87249170258142e08bb8cac2be7075ce",
+    "stderr_bytes": 50,
+    "raw_output_serialized": false,
+    "sanitized": true
+  },
+  "artifacts": {},
+  "provenance": {
+    "runtime_source": "local opencode --version: 1.18.25",
+    "invocation_contract": "opencode models anthropic --pure (provider-resolution probe)",
+    "documentation_snapshot": "https://opencode.ai/docs/config/",
+    "source_refs": [
+      "https://opencode.ai/docs/config/",
+      "https://opencode.ai/docs/permissions/",
+      "https://github.com/anomalyco/opencode/releases/tag/v1.18.25"
+    ],
+    "verification_method": "safe installed-version provider listing; shell=False; stdin=DEVNULL; finite timeout; output persisted as digest only",
+    "observed_at": "2026-09-10T05:05:32Z"
+  },
+  "confounders": [
+    "diagnostic-only provider resolution probe; no model invocation and no quality claim",
+    "configured model identity came from sanitized debug-config output; no alternate model was selected"
+  ],
+  "baseline_refs": [],
+  "notes": "Direct installed-version evidence: provider listing returned Provider not found for anthropic. Generic UnknownError remains unclassified without this separate evidence.",
+  "diagnostic": {
+    "cause": "PROVIDER_NOT_CONFIGURED",
+    "evidence_status": "DIRECT_PROBE",
+    "error_type": null,
+    "provider_id": "anthropic",
+    "model_id": "anthropic/claude-sonnet-4-5",
+    "agent_id": null,
+    "config_source": "GLOBAL_CONFIG",
+    "reference_code": null,
+    "raw_details_serialized": false
+  },
+  "history_mode": "APPEND_ONLY",
+  "sensitive_data_serialized": false
+}
