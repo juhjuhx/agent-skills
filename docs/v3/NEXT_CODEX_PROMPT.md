@@ -1,11 +1,16 @@
 # AGENT SKILLS MATRIX v3
-# 下一步提案：TARGETED CODEX EFFORT EVIDENCE RECOVERY
+# 下一步提案：CODEX PROVIDER TRANSPORT RECOVERY ONLY
 
 Repository:
 juhjuhx/agent-skills
 
-Current phase result:
-CODEX_CONTROLLED_EXPERIMENT_BLOCKED
+Current Phase 3G result:
+CODEX_LIVE_TRANSPORT_BLOCKED
+
+Observed blocker:
+`codex doctor --json --summary` reports the required ChatGPT inference endpoint
+is unreachable over DNS/HTTP. This is transport evidence, not model or effort
+quality evidence.
 
 本文件只是下一步提案，不要在 Phase 3F 內執行。不要開始 Phase 4，不要修改
 Stage Router weights，不要做 model-effect experiment，不要追逐新的 runtime，
@@ -16,11 +21,13 @@ Stage Router weights，不要做 model-effect experiment，不要追逐新的 ru
 ============================================================
 
 Phase 3F 已完成 controlled-effort harness、route/bundle reuse、sanitized
-LiveExecutionRecord 與安全檢查，但第一個 H01 cell 在 model output 前因
-provider transport 不可達而阻塞。這不是 effort 品質結論。
+LiveExecutionRecord 與安全檢查。Phase 3G 在執行任何 benchmark 前重新做
+provider preflight，發現 transport 仍不可達，因此沒有執行 Smoke 0、H01 或 H03。
+這不是 effort 品質結論。
 
-下一次只恢復已授權的 Codex provider transport，然後補跑精確缺少的 cells；
-不要重做 architecture。
+下一次只恢復已授權的 Codex provider transport，然後先跑一次 Smoke 0；只有
+Smoke 0 成功才補跑精確缺少的 cells。不要重做 architecture，也不要建立新的
+runtime diagnostic phase。
 
 ============================================================
 1. FIRST CHECK — PROVIDER RECOVERY ONLY
@@ -35,7 +42,20 @@ provider transport 不可達而阻塞。這不是 effort 品質結論。
 
 不可：購買 credits、改 provider、登入新帳號、加入 credentials、放寬 sandbox、
 使用 interactive approval 或 dangerous bypass。若 provider 仍不可達，停止並
-保留 `CODEX_CONTROLLED_EXPERIMENT_BLOCKED`；不要建立 3F.1 diagnostic rabbit hole。
+保留 `CODEX_LIVE_TRANSPORT_BLOCKED` / `CODEX_CONTROLLED_EXPERIMENT_BLOCKED`；
+不要建立 3G.1 diagnostic rabbit hole。
+
+Smoke 0 contract：
+
+- `codex exec --ephemeral --ignore-user-config --ignore-rules`；
+- explicit authorized model only；
+- `model_reasoning_effort="low"`；
+- `approval_policy="never"` via verified `--config` override；
+- read-only sandbox、`--json`、isolated cwd、`shell=False`、`stdin=DEVNULL`、
+  finite timeout；
+- no repository mutation, MCP, shell or external tool requirement。
+
+若 Smoke 0 失敗，停止，不執行任何 H01/H03；只記錄直接可證明的 cause。
 
 ============================================================
 2. PRESERVE CONTROLS
