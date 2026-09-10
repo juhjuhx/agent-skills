@@ -1,0 +1,131 @@
+{
+  "record_type": "runtime_qualification",
+  "record_version": "3.0",
+  "record_id": "hermes-qualification-001",
+  "evidence_class": "HOST_MANAGED_FIXTURE",
+  "phase": "3E",
+  "recorded_at": "2026-09-10",
+  "repository_head": "2f476371f139b050536c485a2ed13adaa59052ae",
+  "runtime": {
+    "runtime_id": "hermes",
+    "observed_version": "0.20.0",
+    "observed_release_label": "2026.8.3",
+    "release_tag": "v2026.8.3",
+    "release_commit": "3c27eb6234bf91b8ceee9e9071591b31e9b148cb",
+    "installed_source_revision": "48e2dcd7a0118834ca994f1285f047b313879a63",
+    "upstream_source_revision": "9098f6777b93b7881216a9b7d8fb402899f62400",
+    "provenance_relation": "VERSION_LABEL_MATCHES_RELEASE_LABEL_BUT_INSTALLED_SOURCE_DIFFERS",
+    "install_method": "git",
+    "install_path_class": "user_local",
+    "python_version": "3.11.15",
+    "source_status": "INSTALLED_SOURCE_SNAPSHOT_NOT_RELEASE_IDENTICAL",
+    "contract_target": "INSTALLED_SOURCE_SNAPSHOT",
+    "availability": "INSTALLED",
+    "support_status": "UNQUALIFIED"
+  },
+  "probes": [
+    {
+      "probe": "version",
+      "result": "PASS",
+      "observed": "v0.20.0 (2026.8.3), git install, local source revision recorded",
+      "secrets_persisted": false
+    },
+    {
+      "probe": "cli_help",
+      "result": "PASS",
+      "observed_surfaces": [
+        "--oneshot",
+        "--usage-file",
+        "--model",
+        "--provider",
+        "--reasoning",
+        "--toolsets",
+        "--max-turns",
+        "--ignore-user-config",
+        "--ignore-rules",
+        "--safe-mode"
+      ],
+      "secrets_persisted": false
+    },
+    {
+      "probe": "approval_semantics",
+      "result": "BYPASS",
+      "evidence": "installed help and versioned source state that --oneshot sets HERMES_YOLO_MODE=1; source also enables hook acceptance for the call",
+      "benchmark_eligible": false
+    },
+    {
+      "probe": "provider_auth_status",
+      "result": "PROVIDER_BLOCKED",
+      "provider_id": "agnes-ai",
+      "auth_status": "LOGGED_OUT",
+      "auth_category": "API_KEY",
+      "credential_values_read": false,
+      "credential_values_persisted": false
+    },
+    {
+      "probe": "configured_model_metadata",
+      "result": "CONFIGURED_PROVIDER_BLOCKED",
+      "provider_id": "agnes-ai",
+      "model_id": "agnes-2.0-flash",
+      "availability": "UNKNOWN_DUE_TO_PROVIDER_BLOCK",
+      "credential_values_read": false
+    },
+    {
+      "probe": "zero_tool_source_check",
+      "result": "NOT_QUALIFIED",
+      "observed": "context_engine resolves zero tool schemas in the installed source, but the safe authenticated noninteractive path was not proven",
+      "tool_count": 0,
+      "evidence_class": "HOST_MANAGED_FIXTURE"
+    },
+    {
+      "probe": "qualification_smoke_a",
+      "result": "NOT_RUN",
+      "reason": "provider gate failed; canonical --oneshot path is approval-bypass and no safe authenticated alternative was established",
+      "model_invocation": false
+    }
+  ],
+  "qualification": {
+    "decision": "HERMES_RUNTIME_BLOCKED",
+    "provider_status": "PROVIDER_BLOCKED",
+    "model_status": "CONFIGURED_BUT_UNVERIFIED",
+    "noninteractive_contract": "AVAILABLE_BUT_ONESHOT_BYPASSES_APPROVALS",
+    "safe_isolation": "PARTIAL",
+    "learning_persistence": "UNQUALIFIED",
+    "adapter_built": false,
+    "smoke_b_eligible": false,
+    "h03_eligible": false
+  },
+  "security": {
+    "yolo_flag_used": false,
+    "approval_bypass_invocation_used": false,
+    "global_config_mutated": false,
+    "model_invocation_performed": false,
+    "shell_commands_from_skill_content_executed": false,
+    "credentials_serialized": false,
+    "raw_prompt_serialized": false,
+    "raw_output_serialized": false,
+    "session_state_serialized": false,
+    "live_quality_claim": false
+  },
+  "dogfood": {
+    "route_artifact": "docs/v3/evidence/PHASE3E_HERMES_QUALIFICATION_ROUTE.md",
+    "registry_epoch": "registry:db3b67d5b051c4223da9146b2b836a9ed45e9bac",
+    "metadata_records_inspected_per_route": 214,
+    "normal_route_skill_bodies_loaded": 0,
+    "routing_defects": [
+      {
+        "stage": "verify",
+        "skill_id": "cost-tracker",
+        "reason": "selected by metadata but no matching installed/repository SKILL.md was discoverable",
+        "body_loaded": false,
+        "procedure_executed": false
+      }
+    ]
+  },
+  "ocr": {
+    "native_diff": "BLOCKED_BY_AUTH",
+    "precheck_attempts": 1,
+    "raw_error_persisted": false
+  },
+  "next_proposal": "CODEX_CONTROLLED_MODEL_OR_REASONING_EXPERIMENT"
+}
