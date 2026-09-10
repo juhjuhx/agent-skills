@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/opencode-native-contract.schema.json",
+  "title": "Agent Skills Matrix v3 OpenCode Native Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "contract_version",
+    "runtime_id",
+    "observed_runtime_version",
+    "release_tag",
+    "release_commit",
+    "release_date",
+    "contract_target",
+    "contract_source_commit",
+    "docs_snapshot_date",
+    "contract_digest",
+    "verification_method",
+    "support",
+    "availability",
+    "native_contract_revision",
+    "source_files",
+    "scope",
+    "update_process",
+    "permission_actions",
+    "permission_keys",
+    "surfaces",
+    "fields"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "contract_version": {"$ref": "common.schema.json#/$defs/shortString"},
+    "runtime_id": {"type": "string", "const": "opencode"},
+    "observed_runtime_version": {"$ref": "common.schema.json#/$defs/shortString"},
+    "release_tag": {"$ref": "common.schema.json#/$defs/shortString"},
+    "release_commit": {"$ref": "common.schema.json#/$defs/shortString"},
+    "release_date": {"$ref": "common.schema.json#/$defs/shortString"},
+    "contract_target": {"$ref": "#/$defs/contractTarget"},
+    "contract_source_commit": {"$ref": "common.schema.json#/$defs/shortString"},
+    "docs_snapshot_date": {"$ref": "common.schema.json#/$defs/shortString"},
+    "contract_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "verification_method": {"$ref": "common.schema.json#/$defs/shortString"},
+    "support": {"$ref": "common.schema.json#/$defs/supportLevel"},
+    "availability": {"$ref": "#/$defs/availability"},
+    "native_contract_revision": {"$ref": "common.schema.json#/$defs/shortString"},
+    "source_files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "common.schema.json#/$defs/relativePath"},
+      "uniqueItems": true
+    },
+    "scope": {"$ref": "common.schema.json#/$defs/shortString"},
+    "update_process": {"$ref": "common.schema.json#/$defs/shortString"},
+    "permission_actions": {
+      "type": "array",
+      "items": {"type": "string", "enum": ["allow", "ask", "deny"]},
+      "uniqueItems": true
+    },
+    "permission_keys": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/shortString"},
+      "uniqueItems": true
+    },
+    "surfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["permission", "config_content", "run", "agent", "skills", "plugins", "mcp"],
+      "properties": {
+        "permission": {"$ref": "#/$defs/surface"},
+        "config_content": {"$ref": "#/$defs/surface"},
+        "run": {"$ref": "#/$defs/surface"},
+        "agent": {"$ref": "#/$defs/surface"},
+        "skills": {"$ref": "#/$defs/surface"},
+        "plugins": {"$ref": "#/$defs/surface"},
+        "mcp": {"$ref": "#/$defs/surface"}
+      }
+    },
+    "fields": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["type"],
+        "properties": {
+          "type": {"type": "string", "enum": ["string", "object", "array"]},
+          "additional_properties": {"type": "boolean"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "contractTarget": {
+      "type": "string",
+      "enum": ["INSTALLED_RUNTIME", "SOURCE_SNAPSHOT", "DOCUMENTATION_SNAPSHOT"]
+    },
+    "availability": {
+      "type": "string",
+      "enum": ["INSTALLED", "RELEASE_SUPPORTED", "UPSTREAM_ONLY", "UNKNOWN"]
+    },
+    "surface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["support", "availability"],
+      "properties": {
+        "support": {"type": "string", "enum": ["NATIVE_EXACT", "HOST_MANAGED", "UNSUPPORTED"]},
+        "availability": {"$ref": "#/$defs/availability"},
+        "notes": {"$ref": "common.schema.json#/$defs/shortString"}
+      }
+    }
+  }
+}

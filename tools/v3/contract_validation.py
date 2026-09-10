@@ -38,6 +38,8 @@ SCHEMA_FILES = {
     "EvaluationResult": "evaluation-result.schema.json",
     "RuntimeHandoff": "runtime-handoff.schema.json",
     "LiveExecutionRecord": "live-execution-record.schema.json",
+    "OpenCodeNativeContract": "opencode-native-contract.schema.json",
+    "OpenCodeNativeProjection": "opencode-native-projection.schema.json",
 }
 
 KNOWN_CAPABILITIES = frozenset(

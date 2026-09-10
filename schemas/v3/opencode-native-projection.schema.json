@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/opencode-native-projection.schema.json",
+  "title": "Agent Skills Matrix v3 OpenCodeNativeProjection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "projection_version",
+    "runtime_id",
+    "bundle_digest",
+    "support_levels",
+    "instruction_surfaces",
+    "skills",
+    "config",
+    "invocation",
+    "permissions",
+    "mcp",
+    "plugins",
+    "context",
+    "provenance",
+    "no_ask_proof"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "projection_version": {"$ref": "common.schema.json#/$defs/shortString"},
+    "runtime_id": {"type": "string", "const": "opencode"},
+    "bundle_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "support_levels": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["AGENTS.md", "Skills", "skill_body_delivery", "config", "permission", "run", "agent", "plugins", "MCP", "static_context", "dynamic_context", "tool_schema_context", "evidence_gate"],
+      "properties": {
+        "AGENTS.md": {"$ref": "#/$defs/supportLevel"},
+        "Skills": {"$ref": "#/$defs/supportLevel"},
+        "skill_body_delivery": {"$ref": "#/$defs/supportLevel"},
+        "config": {"$ref": "#/$defs/supportLevel"},
+        "permission": {"$ref": "#/$defs/supportLevel"},
+        "run": {"$ref": "#/$defs/supportLevel"},
+        "agent": {"$ref": "#/$defs/supportLevel"},
+        "plugins": {"$ref": "#/$defs/supportLevel"},
+        "MCP": {"$ref": "#/$defs/supportLevel"},
+        "static_context": {"$ref": "#/$defs/supportLevel"},
+        "dynamic_context": {"$ref": "#/$defs/supportLevel"},
+        "tool_schema_context": {"$ref": "#/$defs/supportLevel"},
+        "evidence_gate": {"$ref": "#/$defs/supportLevel"}
+      }
+    },
+    "instruction_surfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["persistent"],
+      "properties": {
+        "persistent": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "scope", "purposes"],
+            "properties": {
+              "path": {"$ref": "common.schema.json#/$defs/relativePath"},
+              "scope": {"type": "string", "enum": ["project", "user", "system"]},
+              "purposes": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/shortString"}, "uniqueItems": true}
+            }
+          }
+        }
+      }
+    },
+    "skills": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["load_mode", "native_surface", "selected", "body_files_loaded"],
+      "properties": {
+        "load_mode": {"type": "string", "const": "selected-only"},
+        "native_surface": {"type": "string", "enum": ["NATIVE", "HOST_MANAGED", "UNSUPPORTED"]},
+        "selected": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["skill_id", "source_ref", "source_path", "digest", "role", "trust", "load_state"],
+            "properties": {
+              "skill_id": {"$ref": "common.schema.json#/$defs/recordId"},
+              "source_ref": {"$ref": "common.schema.json#/$defs/shortString"},
+              "source_path": {"$ref": "common.schema.json#/$defs/relativePath"},
+              "digest": {"$ref": "common.schema.json#/$defs/digest"},
+              "role": {"$ref": "common.schema.json#/$defs/role"},
+              "trust": {"$ref": "common.schema.json#/$defs/trust"},
+              "load_state": {"type": "string", "enum": ["RESIDENT", "LOADED", "NOT_LOADED"]}
+            }
+          }
+        },
+        "body_files_loaded": {"type": "integer", "const": 0}
+      }
+    },
+    "config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["surface", "values"],
+      "properties": {
+        "surface": {"type": "string", "const": "OPENCODE_CONFIG_CONTENT"},
+        "values": {"$ref": "#/$defs/configValues"}
+      }
+    },
+    "invocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command", "format", "agent", "pure", "shell", "stdin", "cwd_mode", "timeout_ms", "auto"],
+      "properties": {
+        "command": {"type": "string", "const": "opencode run"},
+        "format": {"type": "string", "const": "json"},
+        "agent": {"$ref": "common.schema.json#/$defs/shortString"},
+        "pure": {"type": "boolean", "const": true},
+        "shell": {"type": "boolean", "const": false},
+        "stdin": {"type": "string", "const": "DEVNULL"},
+        "cwd_mode": {"type": "string", "const": "ISOLATED_FIXTURE"},
+        "timeout_ms": {"type": "integer", "minimum": 1},
+        "auto": {"type": "boolean", "const": false}
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filesystem", "classification", "native_scope", "reason"],
+      "properties": {
+        "filesystem": {"type": "string", "enum": ["none", "read", "workspace-read"]},
+        "classification": {"type": "string", "enum": ["NATIVE_EXACT", "HOST_MANAGED", "BLOCKED"]},
+        "native_scope": {"type": "string", "enum": ["ISOLATED_FIXTURE", "NONE"]},
+        "reason": {"$ref": "common.schema.json#/$defs/shortString"}
+      }
+    },
+    "mcp": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "refs", "schema_loaded"],
+      "properties": {
+        "status": {"type": "string", "enum": ["DENY"]},
+        "refs": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/recordId"}, "maxItems": 0},
+        "schema_loaded": {"type": "boolean", "const": false}
+      }
+    },
+    "plugins": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "refs"],
+      "properties": {
+        "status": {"type": "string", "enum": ["DENY"]},
+        "refs": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/recordId"}, "maxItems": 0}
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["static_prefix", "dynamic_context", "tool_schema_context", "artifact_refs"],
+      "properties": {
+        "static_prefix": {"$ref": "#/$defs/supportLevel"},
+        "dynamic_context": {"$ref": "#/$defs/supportLevel"},
+        "tool_schema_context": {"$ref": "#/$defs/supportLevel"},
+        "artifact_refs": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/recordId"}, "uniqueItems": true}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bundle_digest", "runtime_id", "observed_runtime_version", "release_tag", "release_commit", "contract_target", "contract_source_commit", "native_contract_revision", "contract_digest", "docs_snapshot_date", "verification_method", "availability", "support", "selected_skill_digests"],
+      "properties": {
+        "bundle_digest": {"$ref": "common.schema.json#/$defs/digest"},
+        "runtime_id": {"$ref": "common.schema.json#/$defs/runtimeId"},
+        "observed_runtime_version": {"$ref": "common.schema.json#/$defs/shortString"},
+        "release_tag": {"$ref": "common.schema.json#/$defs/shortString"},
+        "release_commit": {"$ref": "common.schema.json#/$defs/shortString"},
+        "contract_target": {"$ref": "#/$defs/contractTarget"},
+        "contract_source_commit": {"$ref": "common.schema.json#/$defs/shortString"},
+        "native_contract_revision": {"$ref": "common.schema.json#/$defs/shortString"},
+        "contract_digest": {"$ref": "common.schema.json#/$defs/digest"},
+        "docs_snapshot_date": {"$ref": "common.schema.json#/$defs/shortString"},
+        "verification_method": {"$ref": "common.schema.json#/$defs/shortString"},
+        "availability": {"$ref": "#/$defs/availability"},
+        "support": {"$ref": "common.schema.json#/$defs/supportLevel"},
+        "selected_skill_digests": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/digest"}, "uniqueItems": true}
+      }
+    },
+    "no_ask_proof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["no_ask", "required_actions", "resolved_actions", "method"],
+      "properties": {
+        "no_ask": {"type": "boolean", "const": true},
+        "required_actions": {"type": "array", "minItems": 1, "items": {"$ref": "common.schema.json#/$defs/shortString"}, "uniqueItems": true},
+        "resolved_actions": {"type": "object", "additionalProperties": {"type": "string", "enum": ["ALLOW", "DENY"]}},
+        "method": {"$ref": "common.schema.json#/$defs/shortString"}
+      }
+    }
+  },
+  "$defs": {
+    "supportLevel": {"type": "string", "enum": ["NATIVE", "HOST_MANAGED", "UNSUPPORTED"]},
+    "availability": {"type": "string", "enum": ["INSTALLED", "RELEASE_SUPPORTED", "UPSTREAM_ONLY", "UNKNOWN"]},
+    "contractTarget": {"type": "string", "enum": ["INSTALLED_RUNTIME", "SOURCE_SNAPSHOT", "DOCUMENTATION_SNAPSHOT"]},
+    "permissionRule": {
+      "oneOf": [
+        {"type": "string", "enum": ["allow", "ask", "deny"]},
+        {"type": "object", "additionalProperties": {"type": "string", "enum": ["allow", "ask", "deny"]}}
+      ]
+    },
+    "configValues": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["$schema", "permission", "plugin", "mcp"],
+      "properties": {
+        "$schema": {"type": "string", "format": "uri"},
+        "permission": {"type": "object", "additionalProperties": {"$ref": "#/$defs/permissionRule"}},
+        "plugin": {"type": "array", "maxItems": 0, "items": {"type": "string"}},
+        "mcp": {"type": "object", "maxProperties": 0}
+      }
+    }
+  }
+}

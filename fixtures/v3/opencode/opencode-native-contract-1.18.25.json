@@ -1,0 +1,42 @@
+{
+  "schema_version": "3.0",
+  "contract_version": "1.0",
+  "runtime_id": "opencode",
+  "observed_runtime_version": "1.18.25",
+  "release_tag": "v1.18.25",
+  "release_commit": "cb7d8b2f5e44876ef98b661dc10590c915af3a9f",
+  "release_date": "2026-08-28",
+  "contract_target": "INSTALLED_RUNTIME",
+  "contract_source_commit": "cb7d8b2f5e44876ef98b661dc10590c915af3a9f",
+  "docs_snapshot_date": "2026-09-10",
+  "contract_digest": "sha256:3e4147fcd2a6edb726aec76ed2782343d92df9593cfcf49e8685f21bfc129853",
+  "verification_method": "opencode --version/--help plus official v1.18.25 source and permissions/config documentation",
+  "support": "NATIVE",
+  "availability": "INSTALLED",
+  "native_contract_revision": "opencode-v1-config-permission-run@cb7d8b2f5e44876ef98b661dc10590c915af3a9f",
+  "source_files": [
+    "packages/opencode/src/config/config.ts",
+    "packages/opencode/src/cli/cmd/run.ts"
+  ],
+  "scope": "Narrow contract for the OpenCode v1 permission/config/run surfaces projected by the read-only adapter; not the complete OpenCode configuration schema.",
+  "update_process": "Resolve the installed release tag to an immutable commit during maintenance, review the narrow projected fields against that release source and docs, update the contract and tests together, and never fetch upstream during runtime execution.",
+  "permission_actions": ["allow", "ask", "deny"],
+  "permission_keys": [
+    "*", "read", "edit", "glob", "grep", "list", "bash", "task", "external_directory", "todowrite", "question", "webfetch", "websearch", "repo_clone", "repo_overview", "lsp", "doom_loop", "skill"
+  ],
+  "surfaces": {
+    "permission": {"support": "NATIVE_EXACT", "availability": "INSTALLED", "notes": "v1 permission rules use allow/ask/deny and last-match-wins patterns."},
+    "config_content": {"support": "NATIVE_EXACT", "availability": "INSTALLED", "notes": "OPENCODE_CONFIG_CONTENT is a supported runtime configuration input."},
+    "run": {"support": "NATIVE_EXACT", "availability": "INSTALLED", "notes": "opencode run supports noninteractive execution and JSON output."},
+    "agent": {"support": "NATIVE_EXACT", "availability": "INSTALLED", "notes": "--agent is a verified run option; this slice uses the installed plan agent."},
+    "skills": {"support": "NATIVE_EXACT", "availability": "INSTALLED", "notes": "OpenCode exposes a native skill tool; canonical body delivery remains selected-only and host-managed."},
+    "plugins": {"support": "NATIVE_EXACT", "availability": "INSTALLED", "notes": "--pure disables external plugins for the benchmark lane."},
+    "mcp": {"support": "NATIVE_EXACT", "availability": "INSTALLED", "notes": "MCP is a native surface but is explicitly denied and unloaded for H03."}
+  },
+  "fields": {
+    "$schema": {"type": "string"},
+    "permission": {"type": "object"},
+    "plugin": {"type": "array"},
+    "mcp": {"type": "object"}
+  }
+}

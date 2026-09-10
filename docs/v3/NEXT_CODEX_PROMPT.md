@@ -1,54 +1,92 @@
 # NEXT CODEX PROMPT
-# PHASE 3C.2 — OPENCODE BENCHMARK-SAFE READ-ONLY ADAPTER BOUNDARY
+# PHASE 3C.3 — OPENCODE RUNTIME BLOCKER DIAGNOSTIC
 
 Repository:
 juhjuhx/agent-skills
 
-Current evidence decision:
-RUNTIME_CAPABILITY_GAPS
+Current implementation branch:
+feat/v3-opencode-readonly-adapter
 
-This is a narrowly scoped follow-up to Phase 3C.1. Do not start Phase 4.
-Do not implement model routing, adaptive routing, Stage Router weight changes,
-or any runtime adapter other than the demonstrated OpenCode boundary below.
+Current decision:
+OPENCODE_RUNTIME_BLOCKED
+
+This is a blocker-specific follow-up. Do not start Phase 4.
+Do not modify Stage Router weights.
+Do not implement Claude, Hermes, MiMo, ZCode, or DeepSeek adapters.
+Do not broaden permissions, use --auto, install tools, install models,
+change credentials, or run the unchanged H03 workload before the contract
+smoke passes.
 
 ============================================================
 0. MISSION
 ============================================================
 
-Close only the missing execution boundary identified by the live evidence:
+Diagnose only the installed OpenCode 1.18.25 bounded smoke failure:
 
-validated StageRoute
-    → runtime-neutral execution contract
-    → OpenCode 1.18.25 native read-only projection
-    → bounded headless H03 execution
-    → sanitized execution evidence
+structured JSON error
+type = error
+name = UnknownError
+no actionable cause
+exit = 1
+no stderr
+workspace unchanged
 
-The goal is to determine whether the installed OpenCode runtime can consume a
-portable route under a proved least-privilege configuration. This is not a
-quality claim against Codex or any model. A completed cross-runtime cell would
-be a CONFIGURATION_EFFECT candidate only.
+The Phase 3C.2 projection and no-ASK static contract already pass. Determine
+whether the remaining blocker is a provider/model availability issue, an
+installed-runtime lifecycle/config issue, an output-contract issue, or
+UNKNOWN. Do not infer a cause from a generic error.
+
+Success means a trustworthy contract smoke can complete under the existing
+read-only boundary. It does not yet establish OpenCode H03 quality or model
+superiority.
 
 ============================================================
-1. READ CURRENT SOURCE TRUTH
+1. PRESERVE THE HARDENED BOUNDARY
 ============================================================
 
-Before editing, verify:
+Use the existing:
 
-git status --short
-git branch --show-current
-git rev-parse HEAD
-git fetch origin
+TaskSpec
+StageRoute
+CompiledExecutionBundle
+OpenCodeAdapter
+OpenCodeNativeProjection
+LiveExecutionRecord
 
-Read the current Phase 3C.1 evidence and implementation:
+Do not add a RuntimeManager, ProviderRegistry, ExecutionService, scheduler,
+database, or generic diagnostic framework.
 
+Keep:
+
+- explicit no-ASK permission entries;
+- isolated fixture read/list/glob/grep only;
+- edit/write, bash, task, external directory, web, secrets, plugin, and MCP
+  denied;
+- no --auto and no extra CLI arguments;
+- shell=False;
+- stdin=DEVNULL;
+- finite timeout;
+- OPENCODE_CONFIG_CONTENT;
+- OPENCODE_DISABLE_PROJECT_CONFIG=true;
+- inherited OpenCode config selectors removed;
+- no global OpenCode configuration mutation;
+- raw prompt/output/stderr/credentials/session data out of evidence.
+
+============================================================
+2. FRESH SOURCE AND RUNTIME TRUTH
+============================================================
+
+Read the current Phase 3C.2 files and evidence:
+
+tools/v3/opencode_adapter.py
+tools/v3/opencode_native_contract.py
+schemas/v3/opencode-native-contract.schema.json
+schemas/v3/opencode-native-projection.schema.json
 tools/v3/live_benchmark.py
-tools/v3/runtime_model_evaluation.py
-schemas/v3/live-execution-record.schema.json
-tools/v3/stage_router.py
-docs/v3/evidence/MODEL_RUNTIME_EVAL_V3.md
-fixtures/v3/model-routing/runs/phase3c/
+docs/v3/evidence/MODEL_RUNTIME_EVAL_V4.md
+fixtures/v3/model-routing/runs/phase3c/live-opencode-contract-smoke-001.json
 
-Freshly inspect the installed OpenCode 1.18.25 contract:
+Verify locally:
 
 opencode --version
 opencode --help
@@ -56,157 +94,116 @@ opencode run --help
 opencode agent --help
 opencode mcp --help
 
-Use current first-party OpenCode documentation/source as supporting evidence,
-but installed-version help and behavior win for executable claims. Do not
-encode documentation URLs into runtime logic.
+Use the pinned release:
+
+v1.18.25
+cb7d8b2f5e44876ef98b661dc10590c915af3a9f
+
+Do not silently substitute current upstream behavior.
 
 ============================================================
-2. SCOPE AND SAFETY
-============================================================
-
-Do not install OpenCode, models, plugins, MCP servers, dependencies, or
-credentials. Do not change the canonical skill bodies, registry policy, or
-Stage Router weights. Do not use --auto or another broad permission bypass.
-
-The adapter must consume a validated StageRoute. It must not call the general
-router, choose skills, or widen the TaskSpec permission envelope.
-
-The target workload is read-only H03 API/interface design. Execute only in a
-temporary fixture repository or isolated worktree. Do not touch a user
-project, publish, deploy, or mutate an external repository.
+3. DIAGNOSTIC HYPOTHESES
 
 ============================================================
-3. RESEARCH THE INSTALLED PERMISSION BOUNDARY
-============================================================
 
-Establish an evidence table for the installed release:
+Test hypotheses in this order, using the smallest safe observation:
 
-portable control
-→ exact OpenCode 1.18.25 surface/configuration
-→ support: NATIVE / HOST_MANAGED / UNSUPPORTED
-→ availability: INSTALLED / UNKNOWN
-→ verification evidence
+A. PROVIDER / MODEL
+Can the installed runtime identify or reach an already-configured provider
+without exposing credentials? Record only provider/model identifiers or
+redacted availability status. Never print environment contents or auth
+headers.
 
-The minimum read-only contract must prove, at runtime or through the exact
-installed configuration contract:
+B. CONFIG / LIFECYCLE
+Does the exact inline config plus --pure/--dir/--agent contract start
+correctly? Inspect only sanitized local metadata/log structure. Do not persist
+raw logs.
 
-- deny by default;
-- allow read/list/glob/grep only inside the isolated fixture;
-- deny edit/write;
-- deny bash/shell and task/subagent execution;
-- deny external directories;
-- deny web/network tools;
-- deny .env, credential, and secret paths;
-- no plugin or MCP auto-installation;
-- bounded noninteractive output;
-- explicit timeout and no inherited interactive stdin.
+C. OUTPUT
+Does the installed runtime's --format json contract produce a usable
+success shape for a harmless read-only prompt? Do not change to a broader or
+interactive mode merely to get output.
 
-If the installed contract cannot prove least privilege, record
-LIVE_LANE_BLOCKED and stop without broadening permissions.
+D. PERMISSION
+Revalidate the existing projection. If any class resolves to ASK or a
+managed/global setting can be shown to override the explicit boundary,
+classify OPENCODE_CONTRACT_BLOCKED. Do not compensate with a broad allow.
 
-============================================================
-4. IMPLEMENT ONLY THE SMALLEST BOUNDARY
-============================================================
+E. UNKNOWN
+If the runtime returns only a generic UnknownError and no safe evidence
+distinguishes A-D, preserve OPENCODE_RUNTIME_BLOCKED with cause UNKNOWN.
 
-Prefer small data objects and pure functions. Do not add a manager, registry,
-service, database, plugin framework, scheduler, or model router.
-
-The boundary may include only what is needed for:
-
-- OpenCode runtime provenance and installed-contract evidence;
-- a runtime-neutral execution request/reference;
-- an OpenCode-native permission/config projection;
-- selected-only skill references and digests;
-- bounded headless invocation;
-- LiveExecutionRecord generation and sanitization.
-
-The universal bundle must remain runtime-neutral. OpenCode-specific keys may
-appear only in the OpenCode projection layer and only when verified by the
-installed contract. Unknown native values fail closed.
+Do not run all hypotheses repeatedly. One additional bounded probe is allowed
+only when it answers a newly identified hypothesis.
 
 ============================================================
-5. STAGEROUTE AND SKILL BOUNDARY
-============================================================
-
-The flow must remain:
-
-TaskSpec
-→ existing Stage Router
-→ StageRoute
-→ OpenCode adapter
-
-SKILLS_SELECTED resolves only the selected SkillMetadataV3 records and
-loads a selected body only when execution requires it. NO_SKILL_NEEDED loads
-zero additional skill bodies. No full catalog or unrelated SKILL.md may
-enter the OpenCode projection.
-
-Preserve skill ID, source/ref, digest, role, trust, and load-state provenance.
-Do not serialize raw skill bodies, prompts, stdout/stderr, credentials, auth
-headers, session identifiers, or MCP secrets.
+4. TWO-STEP EXECUTION GATE
 
 ============================================================
-6. PERMISSION INTERSECTION
-============================================================
 
-Effective authority remains:
+STEP A — SMOKE
 
-TaskSpec ∩ policy ∩ AgentAdapterManifest ∩ live runtime restrictions
+Use one temporary fixture with one harmless file. Reuse the same no-skill
+StageRoute and hardened projection. Record:
 
-The OpenCode projection may be narrower than requested and report
-DEGRADED/HOST_MANAGED explicitly. It may never be broader. A skill, MCP
-declaration, model profile, plugin, or generated config cannot grant
-authority.
+runtime version
+projection digest
+permission proof
+argv summary
+timeout
+process status
+sanitized error class
+workspace before/after digest
 
-Add negative tests for:
+Do not persist raw stdout/stderr.
 
-- portable write/edit request cannot become OpenCode allow;
-- external path request cannot become an allowed external directory;
-- unknown permission fails closed;
-- .env and secret patterns remain denied;
-- --auto or equivalent broad bypass is rejected;
-- task/subagent, bash, web, and plugin/MCP loading are denied for H03.
+STEP B — H03
 
-============================================================
-7. EVIDENCE AND METRICS
-============================================================
+Run the existing unchanged H03 only if STEP A completes with:
 
-Record a fresh append-only run under:
+no unresolved ASK
+exit success
+usable structured output
+independent workspace safety check
 
-fixtures/v3/model-routing/runs/phase3c/
-
-Use the existing LiveExecutionRecord contract. Preserve metric semantics:
-
-- process launch is not model_calls = 1;
-- token values remain UNKNOWN unless the installed OpenCode output contract
-  proves their aggregation;
-- actual cost remains UNKNOWN when not exposed;
-- every metric retains source field, aggregation, confidence, and status;
-- raw output remains digest/byte metadata only.
-
-Capture start/end SHA, changed files, diff digest, tests, route/task/skill
-digests, permission envelope, runtime version, model/effort if observable,
-tool/MCP state, and all confounders. A smoke/configuration result is not
-quality evidence unless H03 produces a verifiable DecisionRecord.
+If STEP A remains blocked, do not run H03.
 
 ============================================================
-8. TESTS
+5. EVIDENCE CLASSIFICATION
+
 ============================================================
 
-Keep all existing tests green. Add focused tests for:
+Maintain:
 
-- installed OpenCode provenance and contract revision;
-- deterministic projection for identical inputs;
-- projection contains no unsupported invented fields;
-- deny-by-default read-only projection;
-- permission intersection never widens authority;
-- unknown native/portable permissions fail closed;
-- selected-only skill resolution and zero-body NO_SKILL_NEEDED behavior;
-- raw skill bodies/prompts/stdout/stderr/credentials are not serialized;
-- timeout/noninteractive stdin behavior;
-- blocked lane produces no quality claim;
-- successful H03 result is classified as REAL_EXECUTION only after
-  independent acceptance verification;
-- cross-runtime result remains CONFIGURATION_EFFECT, never MODEL_EFFECT.
+RUNTIME_CONTRACT_EVIDENCE
+LIVE_LANE_BLOCKED
+UNAVAILABLE
+UNKNOWN
+
+A successful smoke is compatibility evidence only. H03 is quality evidence
+only after an independent verifier confirms the DecisionRecord and acceptance
+criteria.
+
+Do not label any result MODEL_EFFECT. Codex/OpenCode remains a
+CONFIGURATION_EFFECT comparison at most, and only after a completed OpenCode
+H03 cell.
+
+============================================================
+6. TESTS
+
+============================================================
+
+Keep all existing tests green. Add only focused regressions for any proven
+diagnostic behavior:
+
+- generic structured UnknownError remains sanitized;
+- provider/model cause is not inferred without evidence;
+- no raw local logs or credentials enter records;
+- no-ASK projection remains unchanged;
+- unknown cause remains UNKNOWN;
+- a successful smoke gates H03;
+- blocked smoke prevents H03;
+- unknown cost/model-call/tool-call/token semantics remain null/UNKNOWN.
 
 Run:
 
@@ -214,54 +211,66 @@ PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover -s tests -p 'test_*.py
 git diff --check
 
 ============================================================
-9. REVIEWS
+7. DOGFOOD AND REVIEW
+
 ============================================================
 
-Use the resident using-superpowers authority and existing Stage Router for
-the implementation work. Emit a StageRoute for each active stage and load
-only selected skill bodies.
+Use using-superpowers as resident task/session authority and the existing
+Stage Router. Emit a StageRoute for every active stage. Do not load the full
+catalog. Record any unrelated selection as ROUTING_DEFECT; do not fix router
+weights here.
 
-Run independent review lanes for:
+Use independent lanes for:
 
-- OpenCode contract/API correctness;
-- permission and secret safety;
-- simplification/anti-bloat;
-- verification and evidence classification.
+- runtime/source diagnosis;
+- permission/security review;
+- serialization/evidence review;
+- simplification;
+- verification.
 
 Run the OCR auth precheck once. If it returns 401, record
-OCR_NATIVE_DIFF = BLOCKED_BY_AUTH; do not retry repeatedly or relabel
-delegate review as native OCR.
+OCR_NATIVE_DIFF = BLOCKED_BY_AUTH and do not retry.
 
 ============================================================
-10. STOP CONDITIONS
-============================================================
-
-Stop and report the exact blocker if:
-
-- OpenCode 1.18.25 cannot express or prove the least-privilege boundary;
-- model/provider identity or permissions cannot be recorded safely;
-- the run requires interactive approval or an unsafe bypass;
-- output cannot be sanitized;
-- the result would need a new universal routing abstraction.
-
-Do not turn a blocked lane into a preference or claim that Phase 4 is ready.
+8. OUTPUT
 
 ============================================================
-11. HANDOFF
+
+Append a concise record under:
+
+fixtures/v3/model-routing/runs/phase3c/
+
+Update, without overwriting prior evidence:
+
+docs/v3/evidence/MODEL_RUNTIME_EVAL_V5.md
+
+Record:
+
+- exact hypothesis tested;
+- sanitized observation;
+- cause classification;
+- whether a safe smoke completed;
+- whether H03 was gated or run;
+- permission/no-ASK proof;
+- metrics and unknowns;
+- security result;
+- confounders.
+
+============================================================
+9. STOP DECISION
+
 ============================================================
 
-Update docs/v3/evidence/MODEL_RUNTIME_EVAL_V4.md without overwriting V3.
-Report:
+Choose exactly one:
 
-- installed OpenCode provenance and exact contract;
-- support/availability mapping;
-- permission projection and negative evidence;
-- StageRoute and selected skill provenance;
-- live result, terminal/stage outcomes, metrics, and confounders;
-- security and serialization review;
-- whether a second completed execution configuration now exists.
+OPENCODE_RUNTIME_RECOVERED
+  Smoke completes safely; H03 may be proposed as a later bounded cell.
 
-If OpenCode completes safely, the next proposal may evaluate a bounded
-configuration comparison. If it remains blocked, propose only the smallest
-missing OpenCode or Claude execution boundary. Do not implement Phase 4,
-adaptive routing, or additional adapters in this task.
+OPENCODE_RUNTIME_BLOCKED
+  Projection is valid but provider/runtime/lifecycle remains unavailable or
+  generically unknown.
+
+OPENCODE_CONTRACT_BLOCKED
+  Least-privilege native behavior cannot be proven.
+
+Do not start Phase 4 in any outcome.
