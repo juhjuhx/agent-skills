@@ -231,7 +231,8 @@ must stop if its approval/auth/tool boundary cannot be proved.
 - security/hardening: zero-ASK and no-widening checks pass statically;
 - simplification: one adapter, one native contract validator, pure projection,
   no manager/registry/service hierarchy;
-- verification: focused Claude tests pass; full repository verification is
-  recorded with the delivery commit;
-- OCR: one auth precheck is recorded in the delivery summary; if it remains
-  unauthenticated, native OCR is `BLOCKED_BY_AUTH`.
+- verification: focused Claude tests pass; full repository suite passed with
+  `249` tests, plus contract/fixture, Markdown-link, diff, and secret scans;
+- OCR: one `ocr llm test` precheck returned HTTP `401 Unauthorized`, so
+  `OCR_NATIVE_DIFF = BLOCKED_BY_AUTH`; no retry was made and no raw
+  diagnostic was persisted.
