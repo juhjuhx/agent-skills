@@ -270,6 +270,8 @@ class SchemaDocumentTests(unittest.TestCase):
             "RuntimeProductStatus",
             "InstallationPlan",
             "GeneratedArtifactManifest",
+            "InstallPackage",
+            "ApplyResult",
         )
 
         for name in schema_names:
