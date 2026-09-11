@@ -40,6 +40,21 @@ EXPECTED_SKILL_COUNT = 214
 
 STATIC_ADAPTER_SUPPORT = frozenset({"NATIVE_IMPLEMENTED", "READ_ONLY_IMPLEMENTED"})
 DESTINATION_CLASS = "PROJECT_LOCAL_GENERATED"
+ARTIFACT_LIFECYCLES = frozenset(
+    {"INSTALL_PERSISTENT", "PROJECT_PERSISTENT", "EXECUTION_EPHEMERAL"}
+)
+PERSISTENT_LIFECYCLES = frozenset({"INSTALL_PERSISTENT", "PROJECT_PERSISTENT"})
+INSTALL_ACTIONS = frozenset(
+    {
+        "CREATE",
+        "UPDATE_MANAGED",
+        "NO_OP",
+        "SKIP_USER_OWNED",
+        "CONFLICT",
+        "WARN",
+        "SKIP_UNSUPPORTED",
+    }
+)
 GLOBAL_RUNTIME_DIRS = (
     Path.home() / ".codex",
     Path.home() / ".claude",
@@ -496,9 +511,12 @@ def _build_package(
         payload: Any,
         source_digest: str,
         *,
+        lifecycle: str,
         selected_only: bool = False,
         body: bool = False,
     ) -> None:
+        if lifecycle not in ARTIFACT_LIFECYCLES:
+            raise ProductizationError(f"unknown artifact lifecycle: {lifecycle}")
         specs.append(
             {
                 "path": path,
@@ -506,6 +524,7 @@ def _build_package(
                 "payload": payload,
                 "content_digest": digest_bytes(payload if isinstance(payload, bytes) else _json_bytes(payload)),
                 "source_digest": source_digest,
+                "lifecycle": lifecycle,
                 "selected_only": selected_only,
                 "body": body,
             }
@@ -523,8 +542,15 @@ def _build_package(
         "RUNTIME_CAPABILITY_REPORT",
         build_runtime_capability_report(single_inventory),
         digest_value(runtime_status),
+        lifecycle="PROJECT_PERSISTENT",
     )
-    add(f"{runtime_id}/runtime-status.json", "RUNTIME_PRODUCT_STATUS", runtime_status, digest_value(runtime_status))
+    add(
+        f"{runtime_id}/runtime-status.json",
+        "RUNTIME_PRODUCT_STATUS",
+        runtime_status,
+        digest_value(runtime_status),
+        lifecycle="PROJECT_PERSISTENT",
+    )
     if manifest is not None:
         manifest_path = _repository_file(repository_root, runtime_status["adapter_manifest_path"], "adapter manifest")
         add(
@@ -532,6 +558,7 @@ def _build_package(
             "ADAPTER_MANIFEST",
             manifest,
             digest_bytes(manifest_path.read_bytes()),
+            lifecycle="INSTALL_PERSISTENT",
         )
     if contract is not None:
         contract_path = _repository_file(repository_root, runtime_status["native_contract_path"], "native runtime contract")
@@ -540,9 +567,16 @@ def _build_package(
             "RUNTIME_CONTRACT",
             contract,
             digest_bytes(contract_path.read_bytes()),
+            lifecycle="INSTALL_PERSISTENT",
         )
     summary = _snapshot_summary(snapshot)
-    add("%s/routing-snapshot.json" % runtime_id, "ROUTING_SNAPSHOT_REFERENCE", summary, summary["snapshot_digest"])
+    add(
+        "%s/routing-snapshot.json" % runtime_id,
+        "ROUTING_SNAPSHOT_REFERENCE",
+        summary,
+        summary["snapshot_digest"],
+        lifecycle="PROJECT_PERSISTENT",
+    )
     selected_payload = {
         "schema_version": SCHEMA_VERSION,
         "load_mode": "selected-only",
@@ -556,17 +590,25 @@ def _build_package(
         "SELECTED_SKILL_REFERENCE",
         selected_payload,
         digest_value(selected_refs),
+        lifecycle="EXECUTION_EPHEMERAL",
         selected_only=True,
     )
     if stage_route is not None:
         route_summary = _route_summary(stage_route)
-        add(f"{runtime_id}/stage-route-reference.json", "STAGE_ROUTE_REFERENCE", route_summary, route_summary["route_digest"])
+        add(
+            f"{runtime_id}/stage-route-reference.json",
+            "STAGE_ROUTE_REFERENCE",
+            route_summary,
+            route_summary["route_digest"],
+            lifecycle="EXECUTION_EPHEMERAL",
+        )
         if bundle is not None:
             add(
                 f"{runtime_id}/compiled-execution-bundle.json",
                 "COMPILED_EXECUTION_BUNDLE_REFERENCE",
                 bundle,
                 bundle["bundle_digest"],
+                lifecycle="EXECUTION_EPHEMERAL",
             )
     add(
         f"{runtime_id}/runtime-projection.json",
@@ -579,6 +621,7 @@ def _build_package(
             body_files_materialized=len(bodies),
         ),
         digest_value(runtime_status),
+        lifecycle="EXECUTION_EPHEMERAL" if stage_route is not None else "PROJECT_PERSISTENT",
         selected_only=bool(selected_refs),
     )
     for item in selected_refs:
@@ -590,6 +633,7 @@ def _build_package(
             "SELECTED_SKILL_BODY",
             bodies[item["skill_id"]].encode("utf-8"),
             item["digest"],
+            lifecycle="EXECUTION_EPHEMERAL",
             selected_only=True,
             body=True,
         )
@@ -600,6 +644,7 @@ def _build_package(
             "kind": item["kind"],
             "content_digest": item["content_digest"],
             "source_digest": item["source_digest"],
+            "lifecycle": item["lifecycle"],
             "selected_only": item["selected_only"],
             "body": item["body"],
         }
@@ -636,6 +681,7 @@ def _build_package(
         "payload": artifact_manifest,
         "content_digest": digest_bytes(_json_bytes(artifact_manifest)),
         "source_digest": summary["snapshot_digest"],
+        "lifecycle": "INSTALL_PERSISTENT",
         "selected_only": False,
         "body": False,
     }
@@ -655,6 +701,7 @@ def _build_package(
         "payload": marker,
         "content_digest": digest_bytes(_json_bytes(marker)),
         "source_digest": summary["snapshot_digest"],
+        "lifecycle": "INSTALL_PERSISTENT",
         "selected_only": False,
         "body": False,
     }
@@ -670,10 +717,12 @@ def _unsupported_plan(
     )
     operation = {
         "operation": "SKIP_UNSUPPORTED_RUNTIME",
+        "action": "SKIP_UNSUPPORTED",
         "source_artifact": None,
         "destination_class": DESTINATION_CLASS,
         "path": None,
         "content_digest": None,
+        "lifecycle": "PROJECT_PERSISTENT",
         "overwrite_policy": "NOT_ALLOWED",
         "reason": reason,
         "support_status": runtime_status["adapter_support"],
@@ -718,30 +767,37 @@ def _operation_for(
     state, existing_digest = _destination_state(destination_states, path)
     if state == "ABSENT":
         operation = "LINK_OR_REFERENCE_CANONICAL_SKILL" if artifact["kind"] == "SELECTED_SKILL_REFERENCE" else "CREATE_GENERATED_FILE"
+        action = "CREATE"
         outcome = "CREATE"
         overwrite = "CREATE_ONLY"
     elif state == "MANAGED":
         if existing_digest == artifact["content_digest"]:
             operation = "NO_OP"
+            action = "NO_OP"
             outcome = "NO_OP"
         else:
             operation = "CREATE_GENERATED_FILE"
+            action = "UPDATE_MANAGED"
             outcome = "UPDATE_MANAGED"
         overwrite = "UPDATE_MANAGED_ONLY"
     elif state == "USER_OWNED":
         operation = "SKIP_USER_OWNED"
+        action = "SKIP_USER_OWNED"
         outcome = "SKIP_USER_OWNED"
         overwrite = "SKIP_USER_OWNED"
     else:
         operation = "CONFLICT"
+        action = "CONFLICT"
         outcome = "CONFLICT"
         overwrite = "NOT_ALLOWED"
     return {
         "operation": operation,
+        "action": action,
         "source_artifact": artifact["kind"],
         "destination_class": DESTINATION_CLASS,
         "path": path,
         "content_digest": artifact["content_digest"],
+        "lifecycle": artifact["lifecycle"],
         "overwrite_policy": overwrite,
         "reason": f"static generated artifact: {artifact['kind']}",
         "support_status": support_status,
@@ -767,6 +823,7 @@ def _plan_from_package(
             "kind": item["kind"],
             "content_digest": item["content_digest"],
             "source_digest": item["source_digest"],
+            "lifecycle": item["lifecycle"],
             "selected_only": item["selected_only"],
             "body": item["body"],
         }
@@ -788,10 +845,12 @@ def _plan_from_package(
         operations.append(
             {
                 "operation": "WARN_LIVE_BLOCKED",
+                "action": "WARN",
                 "source_artifact": None,
                 "destination_class": DESTINATION_CLASS,
                 "path": None,
                 "content_digest": None,
+                "lifecycle": "PROJECT_PERSISTENT",
                 "overwrite_policy": "NOT_APPLICABLE",
                 "reason": warnings[-1],
                 "support_status": runtime_status["live_execution"],

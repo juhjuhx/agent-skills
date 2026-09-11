@@ -37,12 +37,16 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["path", "kind", "content_digest", "source_digest", "selected_only", "body"],
+        "required": ["path", "kind", "content_digest", "source_digest", "lifecycle", "selected_only", "body"],
         "properties": {
           "path": {"$ref": "common.schema.json#/$defs/relativePath"},
           "kind": {"$ref": "common.schema.json#/$defs/shortString"},
           "content_digest": {"$ref": "common.schema.json#/$defs/digest"},
           "source_digest": {"$ref": "common.schema.json#/$defs/digest"},
+          "lifecycle": {
+            "type": "string",
+            "enum": ["INSTALL_PERSISTENT", "PROJECT_PERSISTENT", "EXECUTION_EPHEMERAL"]
+          },
           "selected_only": {"type": "boolean"},
           "body": {"type": "boolean"}
         }
