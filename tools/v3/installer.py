@@ -307,6 +307,13 @@ def _marker_artifact_map(marker: dict[str, Any] | None) -> dict[str, dict[str, A
 def _validate_marker(
     marker: dict[str, Any], *, runtime_id: str, scope: str, target_root: str
 ) -> None:
+    digest_fields = (
+        "package_digest",
+        "plan_digest",
+        "snapshot_digest",
+        "install_target_digest",
+        "source_manifest_digest",
+    )
     if (
         marker.get("generator_id") != INSTALLER_GENERATOR_ID
         or marker.get("managed") is not True
@@ -314,8 +321,26 @@ def _validate_marker(
         raise InstallerError("ownership marker is not owned by Agent Skills Matrix")
     if marker.get("schema_version") != "3.0" or marker.get("runtime_id") != runtime_id:
         raise InstallerError("ownership marker identity is invalid")
-    if marker.get("scope") != scope or marker.get("package_digest") is None:
+    if marker.get("scope") != scope:
         raise InstallerError("ownership marker scope or package binding is invalid")
+    expected_marker = _relative_path(
+        Path(target_root) / MARKER_NAME, label="ownership marker"
+    )
+    if marker.get("marker_path") != expected_marker:
+        raise InstallerError("ownership marker path binding is invalid")
+    for field in digest_fields:
+        if not re.fullmatch(r"sha256:[0-9a-f]{64}", str(marker.get(field))):
+            raise InstallerError(f"ownership marker has an invalid {field}")
+    runtime_contract_digest = marker.get("runtime_contract_digest")
+    if runtime_contract_digest is not None and not re.fullmatch(
+        r"sha256:[0-9a-f]{64}", str(runtime_contract_digest)
+    ):
+        raise InstallerError("ownership marker has an invalid runtime contract digest")
+    if (
+        not isinstance(marker.get("transaction_id"), str)
+        or not marker["transaction_id"]
+    ):
+        raise InstallerError("ownership marker transaction binding is invalid")
     if not isinstance(marker.get("artifacts"), list):
         raise InstallerError("ownership marker has no exact artifact list")
     seen: set[str] = set()
@@ -346,6 +371,67 @@ def _validate_marker(
             )
         if item["origin"] not in {"CREATED_BY_ASM", "UPDATED_ASM_MANAGED", "NO_OP"}:
             raise InstallerError("ownership marker has an invalid artifact origin")
+    backups = marker.get("backups")
+    if not isinstance(backups, list):
+        raise InstallerError("ownership marker has no backup list")
+    backup_paths: set[str] = set()
+    for backup in backups:
+        if not isinstance(backup, dict):
+            raise InstallerError("ownership marker contains a non-object backup")
+        for field in ("path", "previous_digest", "backup_path", "backup_digest"):
+            if field not in backup:
+                raise InstallerError(f"ownership marker backup lacks {field}")
+        path = _relative_path(backup["path"], label="backup artifact")
+        backup_path = _relative_path(backup["backup_path"], label="backup")
+        for candidate, label in ((path, "backup artifact"), (backup_path, "backup")):
+            try:
+                Path(candidate).relative_to(root)
+            except ValueError as exc:
+                raise InstallerError(
+                    f"ownership marker claims a {label} outside its target root"
+                ) from exc
+        if backup_path in backup_paths:
+            raise InstallerError("ownership marker contains duplicate backup paths")
+        backup_paths.add(backup_path)
+        for field in ("previous_digest", "backup_digest"):
+            if not re.fullmatch(r"sha256:[0-9a-f]{64}", str(backup[field])):
+                raise InstallerError(f"ownership marker backup has an invalid {field}")
+    previous_marker = marker.get("previous_marker_backup")
+    if previous_marker is not None:
+        if not isinstance(previous_marker, dict):
+            raise InstallerError("ownership marker previous marker backup is invalid")
+        if set(previous_marker) != {"path", "digest"}:
+            raise InstallerError("ownership marker previous marker backup is invalid")
+        previous_path = _relative_path(
+            previous_marker["path"], label="previous marker backup"
+        )
+        try:
+            Path(previous_path).relative_to(root)
+        except ValueError as exc:
+            raise InstallerError(
+                "ownership marker claims a previous marker backup outside its target root"
+            ) from exc
+        if not re.fullmatch(r"sha256:[0-9a-f]{64}", str(previous_marker["digest"])):
+            raise InstallerError(
+                "ownership marker previous marker backup digest is invalid"
+            )
+    created_directories = marker.get("created_directories")
+    if not isinstance(created_directories, list) or any(
+        not isinstance(path, str) for path in created_directories
+    ):
+        raise InstallerError("ownership marker created directory list is invalid")
+    # The bounded transaction may create the staging parent itself (for
+    # example ``.agent-skills-matrix``) before creating this runtime's target
+    # root.  Permit that one deterministic ancestor, but nothing higher.
+    created_root = root.parent
+    for path in created_directories:
+        safe = _relative_path(path, label="created directory")
+        try:
+            Path(safe).relative_to(created_root)
+        except ValueError as exc:
+            raise InstallerError(
+                "ownership marker claims a directory outside its staging root"
+            ) from exc
 
 
 def _read_marker(

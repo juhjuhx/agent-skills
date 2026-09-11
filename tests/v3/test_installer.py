@@ -325,6 +325,48 @@ class ProjectTransactionTests(InstallerTestCase):
                 apply_install_package(package, distribution, project)
             self.assertEqual(list(Path(outside_dir).iterdir()), [])
 
+    def test_tampered_marker_cannot_rebind_target_or_backup_paths(self):
+        with (
+            tempfile.TemporaryDirectory() as distribution_dir,
+            tempfile.TemporaryDirectory() as project_dir,
+        ):
+            distribution = Path(distribution_dir)
+            project = Path(project_dir)
+            package = self.package(distribution, project)
+            apply_install_package(package, distribution, project)
+            marker_path = project / ".agent-skills-matrix/codex/.asm-installed.json"
+            marker = json.loads(marker_path.read_text(encoding="utf-8"))
+            marker["marker_path"] = ".agent-skills-matrix/other/.asm-installed.json"
+            marker_path.write_text(json.dumps(marker), encoding="utf-8")
+            with self.assertRaisesRegex(InstallerError, "marker path binding"):
+                preview_uninstall(runtime_id="codex", project_root=project)
+
+        with (
+            tempfile.TemporaryDirectory() as first_dir,
+            tempfile.TemporaryDirectory() as second_dir,
+            tempfile.TemporaryDirectory() as project_dir,
+        ):
+            first = Path(first_dir)
+            second = Path(second_dir)
+            project = Path(project_dir)
+            apply_install_package(self.package(first, project), first, project)
+            changed_status = copy.deepcopy(self.statuses["codex"])
+            changed_status["evidence_refs"] = changed_status["evidence_refs"] + [
+                "docs/v3/evidence/SAFE_PROJECT_INSTALLER_V1.md"
+            ]
+            upgraded = self.package(second, project, status=changed_status)
+            applied = apply_install_package(upgraded, second, project)
+            marker_path = project / ".agent-skills-matrix/codex/.asm-installed.json"
+            marker = json.loads(marker_path.read_text(encoding="utf-8"))
+            marker["backups"][0]["backup_path"] = ".outside-backup.bin"
+            marker_path.write_text(json.dumps(marker), encoding="utf-8")
+            with self.assertRaisesRegex(InstallerError, "outside its target root"):
+                preview_revert(
+                    runtime_id="codex",
+                    project_root=project,
+                    transaction_id=applied["transaction_id"],
+                )
+
     def test_fault_injection_rolls_back_known_created_files(self):
         with (
             tempfile.TemporaryDirectory() as distribution_dir,
