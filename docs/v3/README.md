@@ -220,6 +220,28 @@ than turned into a false product-ready signal. See the
 [`Phase 3I route`](evidence/PHASE3I_PRODUCTIZATION_ROUTE.md), and
 [`machine-readable conformance record`](../../fixtures/v3/productization/static-conformance-v1.json).
 
+### Phase 3J Safe Project Installer
+
+Phase 3J adds the first mutation boundary on top of the static compiler in
+[`tools/v3/installer.py`](../../tools/v3/installer.py). It normalizes the existing
+`InstallationPlan` with an authoritative `action` field, makes artifact lifecycle
+explicit (`INSTALL_PERSISTENT`, `PROJECT_PERSISTENT`, `EXECUTION_EPHEMERAL`), and
+filters only persistent artifacts into an `InstallPackage`.
+
+Only an explicitly supplied `PROJECT` root can be applied. The MVP writes to a
+project-local `.agent-skills-matrix/<runtime>/` host-managed staging tree and does not
+edit `.codex`, `.claude`, OpenCode, Hermes, provider, authentication or global config
+files. User/global scope is preview-only. Apply performs complete preflight, stale
+revalidation, atomic staging, ownership-marker commit, digest verification and bounded
+rollback; `ApplyResult` is separate from the immutable no-write plan.
+
+Codex, Claude Code and OpenCode retain honest static support with live blockers;
+Hermes is status-only because no adapter exists. The installer cannot upgrade live or
+effort-routing readiness. See the [`safe installer evidence`](evidence/SAFE_PROJECT_INSTALLER_V1.md),
+[`Phase 3J route`](evidence/PHASE3J_INSTALLER_ROUTE.md),
+[`InstallPackage schema`](../../schemas/v3/install-package.schema.json), and
+[`ApplyResult schema`](../../schemas/v3/apply-result.schema.json).
+
 ## Non-goals for this proposal
 
 This pass does not move or fork skills, rewrite `install.sh`, change `.superpowers/ROUTING_POLICY.yaml`, implement a general stage planner or model router, add a database or cloud service, install MCP servers, auto-import third-party skills, or implement non-Codex adapters. Those are follow-up phases and remain explicitly unimplemented.

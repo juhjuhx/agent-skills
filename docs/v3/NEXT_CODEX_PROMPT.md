@@ -1,210 +1,107 @@
 # AGENT SKILLS MATRIX v3
-# PHASE 3J — SAFE INSTALLER / GENERATOR MVP
+# PHASE 3K — USER-SCOPE INSTALLATION & UPGRADE CONTRACT
 
-Repository:
-juhjuhx/agent-skills
+這是 Phase 3J 成功後的下一階段提案；不要在 Phase 3J 執行。
 
-Current base:
-feat/v3-static-productization
+Repository: `juhjuhx/agent-skills`
 
-Current static decision:
-STATIC_PRODUCTIZATION_READY
+Current product state:
 
-Current live state:
+```yaml
+STAGE_ROUTER_PRODUCTION_READY: true
+STATIC_PRODUCTIZATION_READY: true
+PROJECT_INSTALLER_READY: true
+CODEX_LIVE_TRANSPORT_BLOCKED: true
+INTRA_RUNTIME_EFFORT_ROUTING_READINESS: NOT_READY
+CROSS_RUNTIME_ROUTING_READINESS: NOT_READY
+```
+
+## Mission
+
+在 project-only installer contract 已穩定後，研究 user-scope installation、upgrade
+與 cross-platform lifecycle。這不是 Phase 4，也不是 live model work。
+
+不得：
+
+- retry/debug Codex、Claude、OpenCode 或 Hermes live execution；
+- 修改 Stage Router weights 或實作 model/effort/adaptive routing；
+- 自動寫入 user/global runtime config；
+- 引入 config merge engine、registry service、daemon 或 database；
+- 把 project `InstallPackage` 直接重用為 global apply authorization。
+
+## Required order
+
+```text
+repo truth
+  → current project installer contract review
+  → user destination provenance
+  → cross-platform copy/symlink/reference contract
+  → ownership and migration model
+  → preview-only user plan
+  → tests
+  → explicit future apply gate
+```
+
+先研究，不要先寫 `~/.codex`、`~/.claude`、`~/.config/opencode` 或 Hermes config。
+
+## Scope boundary
+
+維持三個獨立 scope：
+
+- `PROJECT`: Phase 3J 已通過的可 apply scope。
+- `USER`: 本 phase 先做 detection/preview/contract only；若要 apply，必須有明確
+  destination contract、user confirmation boundary、ownership migration 與回復策略。
+- `GLOBAL`: 不應與 user scope 混稱；若無可靠 cross-platform contract，保持
+  `PREVIEW_ONLY`。
+
+Existing user-authored runtime config 仍然 out of scope。任何需修改 TOML、JSONC、
+settings、permission、MCP、plugin、CLAUDE/AGENTS 檔案的整合都要另立設計與
+fail-closed contract。
+
+## Questions to answer
+
+1. 各已驗證 runtime/version 是否真的支援 user-level skill/bootstrap destination？
+2. copy、symlink、reference 的 discovery 與 lifecycle 是否分別可證明？
+3. user-owned parent 與 ASM-managed exact artifact 如何區分？
+4. managed project → user migration 是否需要新 transaction type？
+5. upgrade、uninstall、revert 是否能保留既有 auth/permissions/config？
+6. Windows、macOS、Linux 的 symlink failure 是否能在 apply 前完整預測？
+7. 是否值得支援 user apply，還是長期保持 preview-only？
+
+## Required invariants
+
+- canonical `skills/<skill>/SKILL.md` remains source truth；generated copy 永不升格。
+- `InstallationPlan.no_actual_writes` 永遠為 `true`；執行狀態只進 `ApplyResult`。
+- `EXECUTION_EPHEMERAL` 永遠不能安裝成 user/global persistent state。
+- ownership marker 只擁有 exact listed paths，不擁有 home、runtime parent 或 config。
+- no `--force`、no adopt-existing、no recursive delete、no silent fallback between
+  symlink/copy/reference。
+- no credential/auth/provider/runtime/model invocation。
+- Stage Router unchanged；214 metadata / zero ranking body reads / NO_SKILL_NEEDED 保持。
+
+## Minimum proposed outputs
+
+- user-scope target contract fixture with immutable runtime/version evidence；
+- copy/symlink/reference capability matrix；
+- preview-only user `InstallPackage` examples；
+- migration/upgrade/revert state table；
+- tests proving no global write and stale/ownership fail-closed；
+- evidence doc and one dogfood route record。
+
+Do not implement actual user/global apply until a later explicit gate says the contract
+is safe and independently reviewed.
+
+## Live track
+
+Keep unchanged:
+
+```text
 CODEX_LIVE_TRANSPORT_BLOCKED
 INTRA_RUNTIME_EFFORT_ROUTING_READINESS = NOT_READY
 CROSS_RUNTIME_ROUTING_READINESS = NOT_READY
+```
 
-這是下一階段提案，不要在本 phase 執行。不要開始 Phase 4，不要重試 live
-model execution，不要修改 Stage Router weights，不要做 adaptive routing，也
-不要新增 runtime adapter。
+If Codex transport later recovers, resume the already-defined Phase 3G controlled effort
+experiment separately. Do not mix it into user-scope installer work.
 
-============================================================
-0. MISSION
-============================================================
-
-在 Phase 3I 已驗證的 static compiler 之上，建立最小、明確授權、可 preview 的
-installer/generator MVP。它可以偵測實際 runtime、解析安全安裝目的地、產生
-preview、在明確 apply 後只更新 Agent Skills Matrix 管理的檔案，並能對 managed
-artifact 做可逆的 uninstall/revert。
-
-Productization plane 仍與 execution plane 分離：
-
-  compiler / plan / preview / apply
-             不得
-  invoke runtime / model / provider / MCP / plugin
-
-============================================================
-1. PRESERVE PHASE 3I CONTRACT
-============================================================
-
-沿用而不重建：
-
-- canonical `skills/<skill>/SKILL.md` source truth；
-- validated immutable `RoutingCatalogSnapshot`；
-- generated + curated metadata provenance；
-- `RuntimeProductStatus` 四個獨立維度；
-- `InstallationPlan` 與 `GeneratedArtifactManifest`；
-- `.asm-generated.json` ownership marker；
-- selected-only materialization 與 `NO_SKILL_NEEDED`；
-- stale digest fail-closed；
-- Hermes `NOT_IMPLEMENTED` 不得產生假 adapter tree；
-- `STAGE_ROUTER_PRODUCTION_READY` 不等於 live routing ready。
-
-不要將 installer 變成 CatalogManager、RuntimeManager、Service、daemon、database
-或 plugin framework。
-
-============================================================
-2. REPO TRUTH FIRST
-============================================================
-
-先核對 branch、HEAD、status 與 Phase 3I evidence：
-
-- `docs/v3/evidence/STATIC_PRODUCTIZATION_V1.md`
-- `docs/v3/evidence/PHASE3I_PRODUCTIZATION_ROUTE.md`
-- `tools/v3/productization.py`
-- `schemas/v3/runtime-product-status.schema.json`
-- `schemas/v3/installation-plan.schema.json`
-- `schemas/v3/generated-artifact.schema.json`
-
-不要依賴 developer machine 的 executable 狀態作為 static tests 的輸入。
-
-============================================================
-3. ACTUAL DETECTION — EXPLICIT ACTION ONLY
-============================================================
-
-新增 runtime detection 只能在使用者明確執行 installer 的時候發生；不能在
-import、plan、compile、validate 或 tests 中自動呼叫 runtime。
-
-安全記錄：
-
-- runtime ID；
-- executable availability；
-- observed version；
-- release/source provenance；
-- adapter/static/live status。
-
-不得讀取、輸出或序列化 credentials、auth store、environment secrets、headers
-或 session tokens。Unknown version 或 contract 必須 fail closed。
-
-============================================================
-4. DESTINATION DISCOVERY
-============================================================
-
-只解析與目前 runtime contract 相符的 destination class。每個 destination 必須
-明確標記：
-
-- absent；
-- ASM-managed；
-- user-owned；
-- unknown；
-- symlinked / unsafe。
-
-拒絕：
-
-- home root；
-- 未經明確確認的 global runtime config；
-- arbitrary symlink escape；
-- user-owned 檔案的 force overwrite；
-- 以 filename 猜測 ownership。
-
-Installer 的預設操作仍是 preview；`apply` 必須是明確、單次、可觀測的使用者
-動作。不要提供 `--force` 來繞過 ownership 或 contract checks。
-
-============================================================
-5. APPLY BOUNDARY
-============================================================
-
-只允許執行 `InstallationPlan` 已列出的、非 destructive、managed-safe operation：
-
-- create absent generated file；
-- update ASM-managed file；
-- create required generated directory；
-- preserve canonical skill reference；
-- skip user-owned / unsupported runtime；
-- warn live-blocked。
-
-Apply 前重新驗證 snapshot、runtime contract、artifact manifest、ownership marker
-與 destination state，避免 TOCTOU 式 stale output。權限、model、effort、MCP、
-plugin、provider 設定不是 installer 可授予的 authority。
-
-============================================================
-6. UNINSTALL / REVERT
-============================================================
-
-只處理 marker 明確列出的 managed paths，並在刪除前要求：
-
-- marker generator/schema/runtime/snapshot digest 相符；
-- destination 仍是原 managed content；
-- 沒有 user-owned 取代或衍生變更。
-
-若任何條件不明確，改為 `CONFLICT` / `SKIP`，不要刪除。保留 preview 與 audit
-summary；不要建立資料庫。
-
-============================================================
-7. TESTS
-============================================================
-
-保持既有 300 tests 綠燈，增加 focused tests：
-
-- detection 不在 import/plan/compile 時執行；
-- explicit apply 才能寫入；
-- no global runtime write；
-- user-owned / unknown / symlink destination fail closed；
-- managed update 只更新 marker 允許的檔案；
-- stale snapshot / skill / runtime contract 在 apply 前失效；
-- uninstall 不刪 user-owned 或被修改的檔案；
-- Hermes 不產生假輸出；
-- `NO_SKILL_NEEDED` 與 selected-only materialization 不變；
-- raw credentials、prompts、skill bodies、runtime output 不進 installer log；
-- plan 與 preview deterministic / idempotent。
-
-不要為了 installer 測試啟動 Codex、Claude、OpenCode、Hermes 或任何模型。
-
-============================================================
-8. LIVE TRACK STATUS
-============================================================
-
-原樣保留：
-
-CODEX_LIVE_TRANSPORT_BLOCKED
-INTRA_RUNTIME_EFFORT_ROUTING_READINESS = NOT_READY
-CROSS_RUNTIME_ROUTING_READINESS = NOT_READY
-
-若未來 transport 在外部恢復，另行 resume 已定義的 Phase 3G controlled effort
-experiment；不要讓 installer 偷開 live benchmark 或 model policy。
-
-============================================================
-9. ACCEPTANCE
-============================================================
-
-Phase 3J 只能在下列條件全部成立時通過：
-
-- preview 與 apply 邊界清楚；
-- apply 需要明確使用者動作；
-- managed ownership / conflict / revert 可驗證；
-- canonical/generated boundary 未改變；
-- 沒有 global config 或 credentials side effect；
-- status 維度沒有被壓成單一 READY；
-- static compiler 的 deterministic/stale/no-body-load tests 仍通過；
-- Stage Router 與 runtime adapter 行為未被重寫。
-
-完成後才評估是否進入真正的安裝 productization；Phase 4 仍需要獨立的 live
-effort evidence，不能由 installer 結果推導。
-
-============================================================
-10. OUTPUT
-============================================================
-
-建議只新增必要的：
-
-- safe installer/generator command；
-- destination/ownership apply tests；
-- preview/apply/revert evidence；
-- `docs/v3/evidence/SAFE_INSTALLER_V1.md`；
-- 本 prompt 對應的 route/evidence record。
-
-不要新增另一套 skill library、runtime registry service、background process 或
-model router。
-
-STOP：本文件只描述 Phase 3J，現在不要執行它。
+STOP. This file is a proposal only.
