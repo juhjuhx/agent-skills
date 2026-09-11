@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/apply-result.schema.json",
+  "title": "Agent Skills Matrix v3 ApplyResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "result_version",
+    "transaction_id",
+    "package_digest",
+    "runtime_id",
+    "scope",
+    "status",
+    "actions_attempted",
+    "actions_completed",
+    "warnings",
+    "conflicts",
+    "rollback_status",
+    "sensitive_data_serialized"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "result_version": {"$ref": "common.schema.json#/$defs/shortString"},
+    "transaction_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "package_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "runtime_id": {"$ref": "common.schema.json#/$defs/runtimeId"},
+    "scope": {"type": "string", "enum": ["PROJECT", "USER", "GLOBAL"]},
+    "status": {
+      "type": "string",
+      "enum": ["PREVIEWED", "APPLIED", "NO_OP", "ABORTED", "ROLLED_BACK", "PARTIAL", "UNINSTALLED", "REVERTED", "CONFLICT", "REVERT_UNAVAILABLE"]
+    },
+    "actions_attempted": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "common.schema.json#/$defs/relativePath"}
+    },
+    "actions_completed": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "common.schema.json#/$defs/relativePath"}
+    },
+    "warnings": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "common.schema.json#/$defs/shortString"}
+    },
+    "conflicts": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "common.schema.json#/$defs/shortString"}
+    },
+    "rollback_status": {
+      "type": "string",
+      "enum": ["NOT_NEEDED", "SUCCEEDED", "FAILED", "NOT_ATTEMPTED"]
+    },
+    "sensitive_data_serialized": {"type": "boolean", "const": false}
+  }
+}

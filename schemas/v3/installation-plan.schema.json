@@ -46,12 +46,16 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["path", "kind", "content_digest", "source_digest"],
+        "required": ["path", "kind", "content_digest", "source_digest", "lifecycle"],
         "properties": {
           "path": {"$ref": "common.schema.json#/$defs/relativePath"},
           "kind": {"$ref": "common.schema.json#/$defs/shortString"},
           "content_digest": {"$ref": "common.schema.json#/$defs/digest"},
           "source_digest": {"$ref": "common.schema.json#/$defs/digest"},
+          "lifecycle": {
+            "type": "string",
+            "enum": ["INSTALL_PERSISTENT", "PROJECT_PERSISTENT", "EXECUTION_EPHEMERAL"]
+          },
           "selected_only": {"type": "boolean"},
           "body": {"type": "boolean"}
         }
@@ -65,10 +69,12 @@
         "additionalProperties": false,
         "required": [
           "operation",
+          "action",
           "source_artifact",
           "destination_class",
           "path",
           "content_digest",
+          "lifecycle",
           "overwrite_policy",
           "reason",
           "support_status",
@@ -90,6 +96,18 @@
               "WARN_LIVE_BLOCKED"
             ]
           },
+          "action": {
+            "type": "string",
+            "enum": [
+              "CREATE",
+              "UPDATE_MANAGED",
+              "NO_OP",
+              "SKIP_USER_OWNED",
+              "CONFLICT",
+              "WARN",
+              "SKIP_UNSUPPORTED"
+            ]
+          },
           "source_artifact": {"type": ["string", "null"]},
           "destination_class": {"$ref": "common.schema.json#/$defs/shortString"},
           "path": {
@@ -103,6 +121,10 @@
               {"$ref": "common.schema.json#/$defs/digest"},
               {"type": "null"}
             ]
+          },
+          "lifecycle": {
+            "type": "string",
+            "enum": ["INSTALL_PERSISTENT", "PROJECT_PERSISTENT", "EXECUTION_EPHEMERAL"]
           },
           "overwrite_policy": {"$ref": "common.schema.json#/$defs/shortString"},
           "reason": {"$ref": "common.schema.json#/$defs/shortString"},
