@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/runtime-product-status.schema.json",
+  "title": "Agent Skills Matrix v3 RuntimeProductStatus",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "runtime_id",
+    "runtime_name",
+    "install_availability",
+    "adapter_support",
+    "static_contract",
+    "live_execution",
+    "projection_modes",
+    "selected_only_skill_support",
+    "permission_projection_support",
+    "model_selection_surface",
+    "effort_selection_surface",
+    "mcp_support",
+    "plugin_support",
+    "observed_runtime_version",
+    "release_tag",
+    "release_commit",
+    "runtime_contract_digest",
+    "adapter_manifest_path",
+    "native_contract_path",
+    "evidence_refs"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "runtime_id": {"$ref": "common.schema.json#/$defs/runtimeId"},
+    "runtime_name": {"$ref": "common.schema.json#/$defs/shortString"},
+    "install_availability": {
+      "type": "string",
+      "enum": ["INSTALLED", "NOT_INSTALLED", "UNKNOWN"]
+    },
+    "adapter_support": {
+      "type": "string",
+      "enum": ["NATIVE_IMPLEMENTED", "READ_ONLY_IMPLEMENTED", "GUIDE_ONLY", "NOT_IMPLEMENTED"]
+    },
+    "static_contract": {
+      "type": "string",
+      "enum": ["VERIFIED", "PARTIAL", "UNVERIFIED"]
+    },
+    "live_execution": {
+      "type": "string",
+      "enum": [
+        "VERIFIED",
+        "TRANSPORT_BLOCKED",
+        "PROVIDER_BLOCKED",
+        "RUNTIME_BLOCKED",
+        "CONTRACT_BLOCKED",
+        "NOT_TESTED",
+        "UNKNOWN"
+      ]
+    },
+    "projection_modes": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/shortString"},
+      "uniqueItems": true
+    },
+    "selected_only_skill_support": {
+      "type": "string",
+      "enum": ["NATIVE", "HOST_MANAGED", "UNSUPPORTED", "UNKNOWN"]
+    },
+    "permission_projection_support": {
+      "type": "string",
+      "enum": ["NATIVE_EXACT", "HOST_MANAGED", "UNSUPPORTED", "UNKNOWN"]
+    },
+    "model_selection_surface": {
+      "type": "string",
+      "enum": ["KNOWN", "UNKNOWN", "UNSUPPORTED"]
+    },
+    "effort_selection_surface": {
+      "type": "string",
+      "enum": ["KNOWN", "UNKNOWN", "UNSUPPORTED"]
+    },
+    "mcp_support": {
+      "type": "string",
+      "enum": ["NATIVE", "HOST_MANAGED", "UNSUPPORTED", "UNKNOWN"]
+    },
+    "plugin_support": {
+      "type": "string",
+      "enum": ["NATIVE", "HOST_MANAGED", "UNSUPPORTED", "UNKNOWN"]
+    },
+    "observed_runtime_version": {"type": ["string", "null"]},
+    "release_tag": {"type": ["string", "null"]},
+    "release_commit": {"type": ["string", "null"]},
+    "runtime_contract_digest": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "adapter_manifest_path": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/relativePath"},
+        {"type": "null"}
+      ]
+    },
+    "native_contract_path": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/relativePath"},
+        {"type": "null"}
+      ]
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/relativePath"},
+      "uniqueItems": true
+    }
+  }
+}

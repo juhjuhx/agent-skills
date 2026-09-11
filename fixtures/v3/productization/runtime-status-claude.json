@@ -1,0 +1,27 @@
+{
+  "schema_version": "3.0",
+  "runtime_id": "claude-code",
+  "runtime_name": "Claude Code",
+  "install_availability": "INSTALLED",
+  "adapter_support": "READ_ONLY_IMPLEMENTED",
+  "static_contract": "VERIFIED",
+  "live_execution": "RUNTIME_BLOCKED",
+  "projection_modes": ["STATIC_METADATA", "SELECTED_ONLY"],
+  "selected_only_skill_support": "HOST_MANAGED",
+  "permission_projection_support": "NATIVE_EXACT",
+  "model_selection_surface": "KNOWN",
+  "effort_selection_surface": "KNOWN",
+  "mcp_support": "NATIVE",
+  "plugin_support": "NATIVE",
+  "observed_runtime_version": "2.1.235",
+  "release_tag": null,
+  "release_commit": null,
+  "runtime_contract_digest": "sha256:8d25516eaed8a4ad0a746efaf97de3b36e85e735ae6ba188651dc1305b6a00c5",
+  "adapter_manifest_path": "fixtures/v3/agents/claude-code.json",
+  "native_contract_path": "fixtures/v3/claude/claude-native-contract-2.1.235.json",
+  "evidence_refs": [
+    "docs/v3/evidence/RUNTIME_CAPABILITY_MATRIX.md",
+    "docs/v3/evidence/MODEL_RUNTIME_EVAL_V6.md",
+    "docs/v3/evidence/PHASE3D_CLAUDE_DOGFOOD_ROUTE.md"
+  ]
+}

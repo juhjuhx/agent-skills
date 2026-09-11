@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/generated-artifact.schema.json",
+  "title": "Agent Skills Matrix v3 GeneratedArtifactManifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_manifest_version",
+    "runtime_id",
+    "snapshot_id",
+    "snapshot_digest",
+    "registry_epoch",
+    "runtime_contract_digest",
+    "artifacts",
+    "ownership_marker",
+    "catalog_body_files_loaded",
+    "body_files_materialized",
+    "manifest_digest"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "artifact_manifest_version": {"$ref": "common.schema.json#/$defs/shortString"},
+    "runtime_id": {"$ref": "common.schema.json#/$defs/runtimeId"},
+    "snapshot_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "snapshot_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "registry_epoch": {"$ref": "common.schema.json#/$defs/recordId"},
+    "runtime_contract_digest": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "artifacts": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "kind", "content_digest", "source_digest", "selected_only", "body"],
+        "properties": {
+          "path": {"$ref": "common.schema.json#/$defs/relativePath"},
+          "kind": {"$ref": "common.schema.json#/$defs/shortString"},
+          "content_digest": {"$ref": "common.schema.json#/$defs/digest"},
+          "source_digest": {"$ref": "common.schema.json#/$defs/digest"},
+          "selected_only": {"type": "boolean"},
+          "body": {"type": "boolean"}
+        }
+      }
+    },
+    "ownership_marker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "generator_id", "schema_version", "managed"],
+      "properties": {
+        "path": {"$ref": "common.schema.json#/$defs/relativePath"},
+        "generator_id": {"$ref": "common.schema.json#/$defs/shortString"},
+        "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+        "managed": {"type": "boolean", "const": true}
+      }
+    },
+    "catalog_body_files_loaded": {"type": "integer", "const": 0},
+    "body_files_materialized": {"type": "integer", "minimum": 0},
+    "manifest_digest": {"$ref": "common.schema.json#/$defs/digest"}
+  }
+}
