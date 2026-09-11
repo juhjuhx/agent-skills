@@ -1,0 +1,25 @@
+{
+  "schema_version": "3.0",
+  "task_spec": {
+    "schema_version": "3.0",
+    "task_id": "T-phase3h-routing-defect-closure",
+    "task_type": "implementation",
+    "goal": "Close recorded Stage Router false-positive families through curated routing metadata, semantic regression tests, and evidence replay.",
+    "complexity": "COMPLEX",
+    "risk": "MEDIUM",
+    "ambiguity": "LOW",
+    "architecture_impact": "ARCHITECTURE-CHANGING",
+    "objectives": ["Close recorded Stage Router false-positive families through curated routing metadata, semantic regression tests, and evidence replay."],
+    "domains": ["software-engineering", "repository", "quality-and-safety"],
+    "artifact_requirements": ["defect census", "routing regression evidence", "semantic holdout", "verification report"]
+  },
+  "stages": [
+    {"id": "understand", "objective": "Establish the recorded defect families and the current routing snapshot from repository evidence.", "task_type": "research", "domains": ["repository", "software-engineering"], "required_outputs": ["defect census"], "evidence_required": ["recorded dogfood trace"]},
+    {"id": "research", "objective": "Inspect canonical skill procedures, routing provenance, and metadata causes for the recorded false positives.", "task_type": "research", "domains": ["repository", "software-engineering"], "required_outputs": ["source findings"], "evidence_required": ["skill body evidence", "metadata provenance"]},
+    {"id": "plan", "objective": "Plan metadata-first semantic fixes, positive counterparts, and deterministic regression replay.", "task_type": "design", "domains": ["repository", "software-engineering"], "required_outputs": ["routing cleanup plan"], "evidence_required": ["root-cause disposition"]},
+    {"id": "implement", "objective": "Implement curated semantic activation gates and focused routing regression tests without changing global weights.", "task_type": "implementation", "domains": ["repository", "software-engineering"], "required_outputs": ["routing metadata overlay", "regression tests"], "evidence_required": ["focused tests"]},
+    {"id": "review", "objective": "Review the routing cleanup for semantic relevance, required-skill preservation, trust, and permission safety.", "task_type": "review", "domains": ["repository", "quality-and-safety"], "required_outputs": ["review findings"], "evidence_required": ["semantic review", "security review"]},
+    {"id": "verify", "objective": "Replay A-J and the semantic holdout to verify determinism, body-load invariants, context cost, and performance.", "task_type": "review", "domains": ["repository", "quality-and-safety"], "required_outputs": ["verification report"], "evidence_required": ["determinism", "performance", "zero body loads"]},
+    {"id": "handoff", "objective": "Publish the Phase 3H evidence, production-readiness decision, and bounded next prompt.", "task_type": "handoff", "domains": ["repository", "documentation"], "required_outputs": ["handoff report"], "evidence_required": ["decision record"]}
+  ]
+}

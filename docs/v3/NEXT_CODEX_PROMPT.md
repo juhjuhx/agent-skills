@@ -1,130 +1,99 @@
 # AGENT SKILLS MATRIX v3
-# 下一步提案：CODEX PROVIDER TRANSPORT RECOVERY ONLY
+# 下一步提案：STATIC PRODUCTIZATION PREP
 
 Repository:
 juhjuhx/agent-skills
 
-Current Phase 3G result:
+Phase 3H result:
+STAGE_ROUTER_PRODUCTION_READY
+
+Independent live status:
 CODEX_LIVE_TRANSPORT_BLOCKED
 
-Observed blocker:
-`codex doctor --json --summary` reports the required ChatGPT inference endpoint
-is unreachable over DNS/HTTP. This is transport evidence, not model or effort
-quality evidence.
-
-本文件只是下一步提案，不要在 Phase 3G 內執行。不要開始 Phase 4，不要修改
-Stage Router weights，不要做 model-effect experiment，不要追逐新的 runtime，
-也不要安裝或重新 authentication 任何 runtime/model/provider/MCP/dependency。
+本文件只是下一步提案，不要在本 phase 執行。不要開始 Phase 4，不要做 model /
+effort routing，不要重試 Codex transport，不要修改 Stage Router weights，也不
+要追逐新的 runtime。
 
 ============================================================
 0. PURPOSE
 ============================================================
 
-Phase 3F 已完成 controlled-effort harness、route/bundle reuse、sanitized
-LiveExecutionRecord 與安全檢查。Phase 3G 在執行任何 benchmark 前重新做
-provider preflight，發現 transport 仍不可達，因此沒有執行 Smoke 0、H01 或 H03。
-這不是 effort 品質結論。
+Phase 3H 已以 recorded defect census、curated semantic patches、8 個 semantic
+holdout near-miss、未變更的 A–J regression、snapshot reuse、zero body reads 與
+deterministic replay 關閉反覆出現的 false-positive families。
 
-下一次只恢復已授權的 Codex provider transport，然後先跑一次 Smoke 0；只有
-Smoke 0 成功才補跑精確缺少的 cells。不要重做 architecture，也不要建立新的
-runtime diagnostic phase。
+剩餘的 `mathguard` 是一次、未載入 body、未執行 procedure 的 isolated backlog，
+不得用 fixture-specific exclusion 過度修補。
 
-============================================================
-1. FIRST CHECK — PROVIDER RECOVERY ONLY
-============================================================
-
-先重新確認：
-
-- `codex --version` 仍為 `codex-cli 0.153.4`；
-- release contract 仍為 `rust-v0.153.4@3d2ee51ca2d5db578f328aa75e20aa22c0197c9a`；
-- 已授權 explicit model `gpt-5.6-luna` 仍可安全 pin；
-- `codex doctor --json --summary` provider reachability 已恢復。
-
-不可：購買 credits、改 provider、登入新帳號、加入 credentials、放寬 sandbox、
-使用 interactive approval 或 dangerous bypass。若 provider 仍不可達，停止並
-保留 `CODEX_LIVE_TRANSPORT_BLOCKED` / `CODEX_CONTROLLED_EXPERIMENT_BLOCKED`；
-不要建立 3G.1 diagnostic rabbit hole。
-
-Smoke 0 contract：
-
-- `codex exec --ephemeral --ignore-user-config --ignore-rules`；
-- explicit authorized model only；
-- `model_reasoning_effort="low"`；
-- `approval_policy="never"` via verified `--config` override；
-- read-only sandbox、`--json`、isolated cwd、`shell=False`、`stdin=DEVNULL`、
-  finite timeout；
-- no repository mutation, MCP, shell or external tool requirement。
-
-若 Smoke 0 失敗，停止，不執行任何 H01/H03；只記錄直接可證明的 cause。
+Codex provider transport 仍為 `CODEX_LIVE_TRANSPORT_BLOCKED`，因此不能宣稱
+effort/model policy readiness，也不能把 Stage Router READY 誤讀為 Phase 4 gate。
 
 ============================================================
-2. PRESERVE CONTROLS
+1. SCOPE — STATIC ONLY
 ============================================================
 
-沿用 Phase 3F 已驗證的：
+下一步只做不依賴 live model 的 productization prep：
 
-- 一個 immutable H01 route/bundle 與一個 immutable H03 route/bundle；
-- explicit model、effort only as changed variable；
-- selected skill IDs/digests、TaskSpec/fixture/permission/instruction digests；
-- `--ephemeral`、`--ignore-user-config`、`--ignore-rules`、`--config approval_policy=never`；
-- same sandbox/tool/MCP boundary；
-- shell=False、stdin=DEVNULL、finite timeout、fresh isolated fixture。
+- 固化 `RoutingCatalogSnapshot` 的 load/validation/reuse contract；
+- 將 `StageRoute`、selected skill IDs/digests、provenance、body-load evidence
+  接到現有 runtime-neutral execution bundle 的靜態 conformance checks；
+- 保持生成 metadata、curated patch、compiled snapshot 的來源邊界；
+- 輸出 route explainability、determinism、stale-digest 與 zero-body-load checks；
+- 維持 `NO_SKILL_NEEDED`、trust/quarantine、permission fail-closed 與 selected-only
+  downstream loading。
 
-Stage Router 不得因 LOW/MEDIUM 分別重跑而改變 selected skills。Router defects
-（例如 maps/brandkit/permission-tuner）另記 backlog，不在 recovery task 修正。
-
-============================================================
-3. ONLY MISSING CELLS
-============================================================
-
-恢復後使用原 schedule 的未完成部分；這個新的 recovery task 最多六次 live invocation；
-已失敗的 provider probe 不得被冒充為 repetition：
-
-- H01 LOW：補足至 n=2；
-- H01 MEDIUM：補足至 n=2；
-- H03 LOW：n=1；
-- H03 MEDIUM：n=1；
-- 不跑 H09；
-- 不跑 HIGH/XHIGH；
-- 不跑第二個 model。
-
-仍使用 interleaved order，並記錄實際 n、執行順序與 confounders。若 provider、
-measurement integrity、fixture isolation 或 quota 任何一項再次失敗，立即停止。
+不要加入 runtime adapter、model preference、effort policy、adaptive learning、
+database、daemon、catalog manager 或背景服務。
 
 ============================================================
-4. EFFECT BOUNDARY
+2. REQUIRED REGRESSION CONTRACT
 ============================================================
 
-只有同一 Codex runtime、同一 explicit model、同一 task/fixture/route/skills/
-permissions/tools/context，且只改 `model_reasoning_effort`，才可分類
-`REASONING_EFFORT_EFFECT`。不執行 `MODEL_EFFECT`；跨 runtime 只能是歷史上的
-configuration context。
+每次靜態 productization change 必須重跑：
 
-LOW/MEDIUM 結果只可產生 evidence-only `RoutingPolicyProposal`，不能修改 active
-policy、Stage Router weights 或 runtime config。
+- A–J unchanged Stage Router regression；
+- 8-task semantic holdout（不調權重）；
+- Phase 3H dogfood replay；
+- curated override survives regeneration；
+- stale canonical skill digest invalidates the snapshot；
+- 214 metadata records / 0 SKILL.md body reads during ranking；
+- deterministic route ID and selected skill digests；
+- local schema, link, diff and secret/private-path checks。
+
+`mathguard` 若再次出現，先累積 recorded evidence；只有形成重複且具 material
+context/procedure cost 的 semantic family，才另提 bounded metadata cleanup。
 
 ============================================================
-5. ACCEPTANCE
+3. LIVE BOUNDARY
+============================================================
+
+不要執行 Codex、OpenCode、Claude 或 Hermes。
+
+若未來 transport 在外部恢復，另行 resume 既有 Phase 3G controlled LOW/MEDIUM
+experiment contract；不要重建 harness、不要重跑 Stage Router、不要在這個 static
+prep branch 偷開 effort routing。
+
+============================================================
+4. ACCEPTANCE
 ============================================================
 
 需要：
 
-- H01 LOW/MEDIUM 各至少 n=2；
-- H03 LOW/MEDIUM 各至少 n=1；
-- token/model-call/tool-call/cost 只在 installed semantics 證實時填值；
-- terminal outcome 由 tests/artifact/acceptance evidence 獨立判定；
-- security、permission、skill、route digest 控制無 material confounder；
-- readiness 分開回報 intra-runtime / cross-runtime。
-
-若 H01 與 H03 仍無法完成 paired observations，回報
-`CODEX_CONTROLLED_EXPERIMENT_INCONCLUSIVE` 或 `CODEX_CONTROLLED_EXPERIMENT_BLOCKED`
-並停止；不要把啟動成功當 model quality。
+- `STAGE_ROUTER_PRODUCTION_READY` evidence 仍有效；
+- 沒有 A–J material regression；
+- semantic positive/near-miss coverage 保持；
+- snapshot validation/reuse 可觀測且不讀 body；
+- no authority widening；
+- no model/runtime policy mutation；
+- `CODEX_LIVE_TRANSPORT_BLOCKED` 原樣保留。
 
 ============================================================
-6. NEXT DECISION
+5. FUTURE LIVE GATE
 ============================================================
 
-若 controlled effort evidence 成立且 intra-runtime gate READY，才可另提
-`PHASE 4A — CODEX CONSERVATIVE EFFORT ROUTER MVP`。該 phase 仍須 deterministic、
-measured、保守 escalation、無 adaptive learning。Cross-runtime readiness 仍須
-另外取得真實 runtime evidence。
+這不是 Phase 4。只有既有 Phase 3G 的 Smoke 0、H01 LOW/MEDIUM paired repetition
+與 H03 exploratory pair 在 provider transport 恢復後完成，才可重新評估
+`INTRA_RUNTIME_EFFORT_ROUTING_READINESS`。
+
+Cross-runtime readiness 仍為 `NOT_READY`，不可由 static adapter 或 blocked lane
+推導出來。

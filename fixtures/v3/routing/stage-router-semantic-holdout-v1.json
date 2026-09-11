@@ -1,0 +1,48 @@
+{
+  "schema_version": "3.0",
+  "holdout_id": "stage-router-semantic-holdout-v1",
+  "purpose": "Small semantic near-miss set for Stage Router precision regression; exact selected skill lists are intentionally absent.",
+  "tuning_policy": "HOLDOUT_NOT_FOR_ROUTING_TUNING",
+  "tasks": [
+    {
+      "task_id": "brand-style-guide",
+      "stage": {"id": "design", "objective": "Create a brand identity style guide with logo usage, visual identity rules, and brand assets.", "task_type": "design", "domains": ["visual-design", "branding"], "required_outputs": ["brand system"], "evidence_required": ["brand guidelines"]},
+      "semantic_rubric": {"required_semantics": ["branding", "visual identity"], "target_family": "brandkit", "target_expectation": "RELEVANT"}
+    },
+    {
+      "task_id": "api-design-system-near-miss",
+      "stage": {"id": "design", "objective": "Design an API contract and document how it integrates with the product design system constraints; no brand identity work is requested.", "task_type": "design", "domains": ["api-architecture", "software-engineering"], "required_outputs": ["API interface specification"], "evidence_required": ["interface constraints"]},
+      "semantic_rubric": {"required_semantics": ["API/interface design"], "forbidden_semantics": ["branding procedure"], "target_family": "brandkit", "target_expectation": "IRRELEVANT"}
+    },
+    {
+      "task_id": "skill-authoring-verification",
+      "stage": {"id": "verify", "objective": "Verify the skill authoring procedure, tests, and deployment metadata for a newly created agent skill before release.", "task_type": "review", "domains": ["skill-authoring", "documentation"], "required_outputs": ["skill verification record"], "evidence_required": ["skill tests", "deployment check"]},
+      "semantic_rubric": {"required_semantics": ["skill authoring", "skill deployment"], "target_family": "writing-skills", "target_expectation": "RELEVANT"}
+    },
+    {
+      "task_id": "release-verification-near-miss",
+      "stage": {"id": "verify", "objective": "Verify release artifacts, tests, changelog, and rollback evidence for a software release.", "task_type": "review", "domains": ["release", "software-engineering"], "required_outputs": ["release verification record"], "evidence_required": ["tests", "artifact integrity"]},
+      "semantic_rubric": {"required_semantics": ["release verification"], "forbidden_semantics": ["skill authoring"], "target_family": "writing-skills", "target_expectation": "IRRELEVANT"}
+    },
+    {
+      "task_id": "permission-sandbox-audit",
+      "stage": {"id": "review", "objective": "Audit the permission policy, sandbox access boundary, authorization rules, and least-privilege behavior.", "task_type": "review", "domains": ["security", "access-control"], "required_outputs": ["permission boundary findings"], "evidence_required": ["authorization coverage"]},
+      "semantic_rubric": {"required_semantics": ["permission", "sandbox policy", "authorization"], "target_family": "permission-tuner", "target_expectation": "RELEVANT"}
+    },
+    {
+      "task_id": "generic-code-review-near-miss",
+      "stage": {"id": "review", "objective": "Review a multi-file implementation for correctness, maintainability, and regression risk; no permission policy is in scope.", "task_type": "review", "domains": ["software-engineering", "repository"], "required_outputs": ["code review findings"], "evidence_required": ["diff inspection"]},
+      "semantic_rubric": {"required_semantics": ["code review"], "forbidden_semantics": ["permission tuning"], "target_family": "permission-tuner", "target_expectation": "IRRELEVANT"}
+    },
+    {
+      "task_id": "multi-model-deliberation",
+      "stage": {"id": "review", "objective": "Run a multi-model deliberation, compare independent model perspectives, and synthesize a consensus decision.", "task_type": "review", "domains": ["multi-model", "quality-and-safety"], "required_outputs": ["consensus decision"], "evidence_required": ["independent model perspectives"]},
+      "semantic_rubric": {"required_semantics": ["multi-model deliberation", "consensus"], "target_family": "llm-council", "target_expectation": "RELEVANT"}
+    },
+    {
+      "task_id": "ordinary-implementation-planning-near-miss",
+      "stage": {"id": "plan", "objective": "Plan the implementation steps, tests, and rollout for an ordinary single-agent feature; no model council or ensemble review is needed.", "task_type": "other", "domains": ["software-engineering", "repository"], "required_outputs": ["implementation plan"], "evidence_required": ["acceptance criteria"]},
+      "semantic_rubric": {"required_semantics": ["implementation planning"], "forbidden_semantics": ["multi-model deliberation"], "target_family": "llm-council", "target_expectation": "IRRELEVANT"}
+    }
+  ]
+}

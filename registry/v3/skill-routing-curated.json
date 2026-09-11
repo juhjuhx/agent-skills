@@ -1,6 +1,6 @@
 {
   "schema_version": "3.0",
-  "curated_version": "v3-routing-curated-1",
+  "curated_version": "v3-routing-curated-2",
   "registry": {
     "path": ".superpowers/SKILLS_INDEX.json",
     "source": "https://github.com/juhjuhx/agent-skills.git",
@@ -9,11 +9,1411 @@
     "skill_count": 214
   },
   "curator": {
-    "version": "0.1.0",
+    "version": "0.2.0",
     "policy": "SMALL_FIELD_PATCHES_ONLY",
     "body_policy": "READ_ONLY_NO_EXECUTION"
   },
   "skills": {
+    "redesign-existing-projects": {
+      "skill_id": "redesign-existing-projects",
+      "source_skill_digest": "sha256:683b70b9ce3480694d11a46c63a39b446746e3bea8a7d8ff20c35d4bfb0352e2",
+      "fields": {
+        "roles": {
+          "value": [
+            "PROCESS",
+            "DOMAIN",
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body audits and upgrades an existing website's visual patterns",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "stages": {
+          "value": [
+            "design",
+            "implement",
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "procedure scans, diagnoses, and fixes an existing UI",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design",
+            "implementation",
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body is an existing-site redesign audit and implementation workflow",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "frontend",
+            "visual-design",
+            "accessibility"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "procedure is limited to frontend/UI redesign quality",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "redesign",
+            "UI改造",
+            "upgrade design",
+            "improve existing site",
+            "fix generic look",
+            "refresh UI",
+            "make it look better"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body description explicitly lists redesign and existing-site UI requests",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "required_triggers": {
+          "value": [
+            "redesign",
+            "UI改造",
+            "upgrade design",
+            "improve existing site",
+            "fix generic look",
+            "refresh UI",
+            "make it look better"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic repository research or metadata work must not activate frontend redesign",
+          "last_verified": "2026-09-11T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
+      "notes": "Requires explicit existing-site/UI redesign intent."
+    },
+    "understand-diff": {
+      "skill_id": "understand-diff",
+      "source_skill_digest": "sha256:747a84b1a25f9b65f2b0dea3ed37bb701e70b31d8e5d03d04c4b10805c56a3fd",
+      "fields": {
+        "stages": {
+          "value": [
+            "understand"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body analyzes repository changes before implementation or review",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body is a diff/change-impact review procedure",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "repository"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body analyzes changed files and affected repository components",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "git diff",
+            "pull request",
+            "changed files",
+            "affected components",
+            "analyze code changes"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body analyzes changed files, affected components, and risks from a git diff or pull request",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "required_triggers": {
+          "value": [
+            "git diff",
+            "pull request",
+            "changed files",
+            "affected components",
+            "analyze code changes"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic repository understanding is insufficient without an explicit change/diff analysis request",
+          "last_verified": "2026-09-11T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
+      "notes": "Requires explicit diff/pull-request/change-impact analysis intent."
+    },
+    "invariant-guard": {
+      "skill_id": "invariant-guard",
+      "source_skill_digest": "sha256:a906ae2c53c33f2c8345bef777bb0611447dd2c4e9f09b627b9e087087d9ddb5",
+      "fields": {
+        "stages": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body verifies algorithm correctness through explicit invariants and postconditions",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body is an algorithm correctness review procedure",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "software-engineering"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body targets software algorithms, invariants, termination, and edge cases",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "algorithm correctness",
+            "loop invariant",
+            "postcondition",
+            "off-by-one",
+            "termination argument",
+            "recursion base case",
+            "edge cases"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body is a correctness-first algorithm/invariant procedure",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "required_triggers": {
+          "value": [
+            "algorithm correctness",
+            "loop invariant",
+            "postcondition",
+            "off-by-one",
+            "termination argument",
+            "recursion base case",
+            "edge cases"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic security/invariant language must not activate an algorithm-specific guard",
+          "last_verified": "2026-09-11T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
+      "notes": "Requires explicit algorithm/invariant/postcondition or edge-case correctness work."
+    },
+    "MCP Integration": {
+      "skill_id": "MCP Integration",
+      "source_skill_digest": "sha256:1cbfb6b1cf98f48a7c6938e113869a229cd5a59037712072fe11f21a47c6df0e",
+      "fields": {
+        "roles": {
+          "value": [
+            "DOMAIN",
+            "TOOL"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body configures Model Context Protocol servers and external tool integration",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "stages": {
+          "value": [
+            "research",
+            "design",
+            "implement"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "MCP server discovery and configuration are design/integration work",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "research",
+            "design",
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body covers MCP configuration methods, server types, and tool exposure",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "mcp",
+            "integrations",
+            "api-architecture"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "MCP is the explicit integration domain",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "MCP",
+            "Model Context Protocol",
+            "MCP server",
+            "MCP integration",
+            ".mcp.json"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body trigger description names MCP configuration and server surfaces",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "required_triggers": {
+          "value": [
+            "MCP",
+            "Model Context Protocol",
+            "MCP server",
+            "MCP integration",
+            ".mcp.json"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic research or API integration language must not imply MCP work",
+          "last_verified": "2026-09-11T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
+      "notes": "Requires explicit MCP/Model Context Protocol integration intent."
+    },
+    "survey-generator": {
+      "skill_id": "survey-generator",
+      "source_skill_digest": "sha256:4456da67e1317e9b5fa9ad5fcdc5dd8c69c75215cd455e8c9459f3f3d5f05e7d",
+      "fields": {
+        "roles": {
+          "value": [
+            "PROCESS",
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body compiles a literature survey with real-paper bibliography",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "stages": {
+          "value": [
+            "research",
+            "implement",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "survey collection, artifact generation, and wiki handoff are explicit",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "research",
+            "documentation",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body requires literature source collection and a cited survey artifact",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "research",
+            "literature",
+            "documentation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "procedure is limited to literature-survey generation",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "survey",
+            "literature review",
+            "lit review",
+            "deep dive"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body explicitly names survey and literature-review requests",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "required_triggers": {
+          "value": [
+            "survey",
+            "literature review",
+            "lit review",
+            "deep dive"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic research/evidence work must not activate survey generation",
+          "last_verified": "2026-09-11T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
+      "notes": "Requires explicit survey/literature-review/deep-dive intent."
+    },
+    "understand-dashboard": {
+      "skill_id": "understand-dashboard",
+      "source_skill_digest": "sha256:5c2155ab1dcdf54e0b7e3e508d666a5c8faaf7c89ad1f7e1753d115eb371a691",
+      "fields": {
+        "roles": {
+          "value": [
+            "PROCESS",
+            "DOMAIN"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body launches an interactive dashboard for an existing knowledge graph",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "stages": {
+          "value": [
+            "understand",
+            "research",
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "dashboard viewing follows explicit graph-understanding or visualization intent",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "research",
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "procedure visualizes rather than implements a generic code change",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "knowledge-graph",
+            "visualization",
+            "repository"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "dashboard requires a codebase knowledge graph and visualization request",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "knowledge graph dashboard",
+            "visualize the knowledge graph",
+            "interactive codebase dashboard",
+            "understand dashboard"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body names dashboard visualization as its only purpose",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "required_triggers": {
+          "value": [
+            "knowledge graph dashboard",
+            "visualize the knowledge graph",
+            "interactive codebase dashboard",
+            "understand dashboard"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic UNDERSTAND or design language must not launch a dashboard",
+          "last_verified": "2026-09-11T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
+      "notes": "Requires explicit knowledge-graph visualization/dashboard intent."
+    },
+    "understand-domain": {
+      "skill_id": "understand-domain",
+      "source_skill_digest": "sha256:8c3c3bb810bcd11752f66be7c88347ceb4435e47cdfaf1bf39663fa5f37d0cb4",
+      "fields": {
+        "roles": {
+          "value": [
+            "DOMAIN"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body extracts business domains and process flows into a domain graph",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "stages": {
+          "value": [
+            "understand",
+            "research",
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "domain-flow extraction requires explicit business-domain analysis",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "research",
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "procedure creates a domain knowledge artifact rather than generic implementation",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "business-domain",
+            "domain-analysis",
+            "knowledge-graph"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body is specifically a business domain and process-flow analyzer",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "business domain",
+            "domain knowledge",
+            "domain flow",
+            "business process",
+            "domain graph",
+            "understand-domain"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body description names business domain and process flow extraction",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "required_triggers": {
+          "value": [
+            "business domain",
+            "domain knowledge",
+            "domain flow",
+            "business process",
+            "domain graph",
+            "understand-domain"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic repository understanding must not activate business-domain extraction",
+          "last_verified": "2026-09-11T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
+      "notes": "Requires explicit business-domain/process-flow intent."
+    },
+    "understand": {
+      "skill_id": "understand",
+      "source_skill_digest": "sha256:e82730b349a1a6a51dab7f3e9b8e19a47da3d46682c122999d3392a905c3a28a",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "understand",
+            "research"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review",
+            "research"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "repository",
+            "architecture"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "source findings",
+            "architecture map"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "knowledge graph",
+            "analyze the codebase",
+            "codebase tour",
+            "codebase architecture",
+            "module dependencies"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body creates an interactive architecture knowledge graph for an explicit codebase analysis",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "required_triggers": {
+          "value": [
+            "knowledge graph",
+            "analyze the codebase",
+            "codebase tour",
+            "codebase architecture",
+            "module dependencies"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic UNDERSTAND framing is insufficient without a graph or explicit codebase-analysis need",
+          "last_verified": "2026-09-11T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-09T00:00:00Z"
+    },
+    "brooks-harness": {
+      "skill_id": "brooks-harness",
+      "source_skill_digest": "sha256:61018eb1d9a7dccde5e215cf11619579d11d2c800c0339c77a23c0a7776f5121",
+      "fields": {
+        "roles": {
+          "value": [
+            "PROCESS"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body is a maintenance orchestrator for the brooks-lint plugin itself",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "stages": {
+          "value": [
+            "plan",
+            "implement",
+            "review",
+            "verify",
+            "harden"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "the harness has author, evaluation, QA, trigger-audit, and release stages",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "implementation",
+            "review",
+            "documentation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "the procedure maintains brooks-lint skills, evals, and release documentation",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "plugin-maintenance",
+            "skill-authoring",
+            "quality-and-safety"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "the procedure is scoped to brooks-lint plugin and skill maintenance",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "brooks-lint",
+            "brooks harness",
+            "brooks-lint plugin",
+            "brooks-debt guide",
+            "brooks plugin maintenance"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "installed body names the maintained plugin and its maintenance surfaces",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "required_triggers": {
+          "value": [
+            "brooks-lint",
+            "brooks harness",
+            "brooks-lint plugin",
+            "brooks-debt guide",
+            "brooks plugin maintenance"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic verification or generic skill authoring is insufficient without brooks-lint scope",
+          "last_verified": "2026-09-11T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
+      "notes": "Requires explicit brooks-lint/plugin-maintenance intent; not a generic verification harness."
+    },
+    "brandkit": {
+      "skill_id": "brandkit",
+      "source_skill_digest": "sha256:b0c4837e1bd140ca816ae54948754ddd2ac1e2a4d3619363777a80caf00b2ede",
+      "tier": "TIER_2_DOMAIN",
+      "fields": {
+        "roles": {
+          "value": [
+            "DOMAIN"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "brand-kit body is visual identity/image generation, not generic review",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "stages": {
+          "value": [
+            "design",
+            "implement"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "brand-kit creation is a design or bounded asset implementation task",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design",
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body describes brand-system creation and application work",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "visual-design",
+            "branding"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "brand identity and visual-system semantics are required",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "brand",
+            "branding",
+            "brand identity",
+            "visual identity",
+            "logo",
+            "logo system",
+            "brand assets",
+            "brand guidelines",
+            "brand system"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body trigger terms are explicit brand and identity concepts",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "required_triggers": {
+          "value": [
+            "brand",
+            "branding",
+            "brand identity",
+            "visual identity",
+            "logo",
+            "brand assets",
+            "brand guidelines",
+            "brand system"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic design/frontend language is insufficient without brand intent",
+          "last_verified": "2026-09-11T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
+      "notes": "Requires explicit branding or visual-identity intent; remains available for true brand work."
+    },
+    "cost-tracker": {
+      "skill_id": "cost-tracker",
+      "source_skill_digest": "sha256:14c3382a580c426e546d0a06445f6fa4f5ee6f00c5380e82a166d825b3ab0ee5",
+      "tier": "TIER_3_SPECIALIZED",
+      "fields": {
+        "roles": {
+          "value": [
+            "VERIFY"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body measures session cost and budget state as verification evidence",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "stages": {
+          "value": [
+            "verify",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "cost checks belong to verification or budget-aware handoff",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review",
+            "implementation",
+            "handoff",
+            "documentation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "cost tracking is a cross-cutting evidence concern, not generic verification",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "context-engineering",
+            "cost-management"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body is specifically about usage, budget, quota, and token spend",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "cost",
+            "budget",
+            "quota",
+            "billing",
+            "token spend",
+            "usage accounting",
+            "spending limit"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "canonical description names cost and budget-alert use cases",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "required_triggers": {
+          "value": [
+            "cost",
+            "budget",
+            "quota",
+            "billing",
+            "token spend",
+            "usage accounting",
+            "spending limit"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic verify evidence must not activate cost accounting without a cost signal",
+          "last_verified": "2026-09-11T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
+      "notes": "Requires explicit cost, budget, quota, billing, or usage-accounting intent."
+    },
+    "llm-council": {
+      "skill_id": "llm-council",
+      "source_skill_digest": "sha256:8b7b2587dfc5812291ae2456fa5f2ae164392747333ffe5d30e46e8f5061f1a8",
+      "tier": "TIER_2_DOMAIN",
+      "fields": {
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body provides independent multi-model review and synthesis",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "stages": {
+          "value": [
+            "design",
+            "plan",
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "council deliberation applies to decisions, plans, and explicit reviews",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "design",
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "multi-model deliberation is not an ordinary implementation procedure",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "orchestration",
+            "multi-model",
+            "quality-and-safety"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body requires a council or independent model perspective context",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "multi-model",
+            "multi-llm",
+            "multiple AI perspectives",
+            "consensus",
+            "deliberation",
+            "model council",
+            "independent model perspectives",
+            "ensemble review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "canonical description names multi-LLM deliberation and consensus use",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "required_triggers": {
+          "value": [
+            "multi-model",
+            "multi-llm",
+            "multiple AI perspectives",
+            "consensus",
+            "deliberation",
+            "model council",
+            "independent model perspectives",
+            "ensemble review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic planning/review language must not imply a council",
+          "last_verified": "2026-09-11T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
+      "notes": "Requires explicit multi-model, consensus, deliberation, or independent-perspective intent."
+    },
+    "maps": {
+      "skill_id": "maps",
+      "source_skill_digest": "sha256:8c961ecf662838e3ff287570d343db8b1587ca7a6d565ec53eeab13f89407b29",
+      "tier": "TIER_2_DOMAIN",
+      "fields": {
+        "roles": {
+          "value": [
+            "DOMAIN"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body is location intelligence over geocoding and routing services",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "stages": {
+          "value": [
+            "implement"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "maps provides a domain procedure when a location task must be executed",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "canonical commands execute geocoding, POI, distance, and timezone work",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "geospatial",
+            "integrations"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic software-engineering implementation is insufficient without location semantics",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "geocode",
+            "geospatial",
+            "point of interest",
+            "nearby",
+            "directions",
+            "timezone",
+            "openstreetmap",
+            "nominatim",
+            "overpass",
+            "osrm",
+            "location pin",
+            "latitude",
+            "longitude"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body names location, POI, routing, timezone, and its data sources",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "required_triggers": {
+          "value": [
+            "geocode",
+            "geospatial",
+            "point of interest",
+            "nearby",
+            "directions",
+            "timezone",
+            "openstreetmap",
+            "nominatim",
+            "overpass",
+            "osrm",
+            "location pin",
+            "latitude",
+            "longitude"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic implementation or API language must not activate a geospatial procedure",
+          "last_verified": "2026-09-11T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
+      "notes": "Requires explicit geospatial/location intent; remains available for real map and routing tasks."
+    },
+    "permission-tuner": {
+      "skill_id": "permission-tuner",
+      "source_skill_digest": "sha256:0178a72b6eac740e85fd02aea6a7bf7ae476f9b838f7b349265a6ef4a0b04d99",
+      "tier": "TIER_1_CORE",
+      "fields": {
+        "stages": {
+          "value": [
+            "review",
+            "harden"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "roles": {
+          "value": [
+            "REVIEW"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "review",
+            "implementation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "security"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "permission",
+            "authorization",
+            "access boundary",
+            "sandbox policy",
+            "permission prompt",
+            "alwaysallow",
+            "alwaysdeny",
+            "least privilege",
+            "denial pattern",
+            "access control"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body analyzes permission denials and proposes allow/deny rules",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "required_triggers": {
+          "value": [
+            "permission",
+            "authorization",
+            "access boundary",
+            "sandbox policy",
+            "permission prompt",
+            "alwaysallow",
+            "alwaysdeny",
+            "least privilege",
+            "denial pattern",
+            "access control"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic security/review language must not activate permission tuning",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "negative_triggers": {
+          "value": [
+            "visual design",
+            "source research",
+            "generic code review",
+            "release verification"
+          ],
+          "provenance": "CURATED",
+          "confidence": 0.95,
+          "evidence": "reviewed semantic exclusion signals; not an authority grant",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "outputs": {
+          "value": [
+            "permission boundary"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "reviewed compatibility routing seed",
+          "last_verified": "2026-09-09T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
+      "notes": "Requires explicit permission, authorization, sandbox, access-boundary, or least-privilege intent."
+    },
+    "understand-chat": {
+      "skill_id": "understand-chat",
+      "source_skill_digest": "sha256:d8234baaabcee97c2e4be8204a58123de592164e8d7502398caeddf1223b2e17",
+      "tier": "TIER_2_DOMAIN",
+      "fields": {
+        "roles": {
+          "value": [
+            "DOMAIN"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body answers codebase questions through an existing knowledge graph",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "stages": {
+          "value": [
+            "understand"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "knowledge-graph questions are an understanding-stage procedure",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "research",
+            "design",
+            "implementation",
+            "review"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "codebase questions support later work but are not generic stage filler",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "repository",
+            "code-understanding",
+            "knowledge-graph"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body requires a codebase and .understand-anything graph",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "knowledge graph",
+            "understand code",
+            "codebase tour",
+            "codebase architecture",
+            "ask questions about a codebase",
+            "module dependencies"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "canonical description and body name codebase/knowledge-graph questions",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "required_triggers": {
+          "value": [
+            "knowledge graph",
+            "understand code",
+            "codebase tour",
+            "codebase architecture",
+            "ask questions about a codebase",
+            "module dependencies"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic understand stage language must not imply graph-backed chat analysis",
+          "last_verified": "2026-09-11T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
+      "notes": "Requires explicit codebase/knowledge-graph understanding intent; not a generic understand helper."
+    },
+    "wiki-viewer": {
+      "skill_id": "wiki-viewer",
+      "source_skill_digest": "sha256:fec1a5215966cbc408ff3bd39000a00ce61565e9d82902c9d11299b6a643b196",
+      "tier": "TIER_2_DOMAIN",
+      "fields": {
+        "roles": {
+          "value": [
+            "DOMAIN"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body renders a self-contained workflow-wiki viewer",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "stages": {
+          "value": [
+            "research",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "viewer applies to wiki research readouts and knowledge-base handoff",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "research",
+            "documentation",
+            "handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body produces a browsable documentation artifact for a wiki",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "research",
+            "documentation",
+            "knowledge-management"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "wiki pages, sources, claims, seeds, and link graph are the domain",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "wiki",
+            "knowledge base",
+            "page-link graph",
+            "seed queue",
+            "browse a wiki",
+            "research progress",
+            "wiki handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "canonical description names wiki browsing, research audit, and knowledge-base handoff",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "required_triggers": {
+          "value": [
+            "wiki",
+            "knowledge base",
+            "page-link graph",
+            "seed queue",
+            "browse a wiki",
+            "research progress",
+            "wiki handoff"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic handoff/research language must not imply wiki rendering",
+          "last_verified": "2026-09-11T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
+      "notes": "Requires explicit wiki, knowledge-base, seed, page-graph, or wiki-handoff intent."
+    },
+    "writing-skills": {
+      "skill_id": "writing-skills",
+      "source_skill_digest": "sha256:38ba648975ae6ba512d6695676f146163db61a496b867f716f4bdfb0ee3aca3e",
+      "tier": "TIER_3_SPECIALIZED",
+      "fields": {
+        "roles": {
+          "value": [
+            "PROCESS",
+            "VERIFY"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body is a TDD-like skill-authoring and deployment-verification process",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "stages": {
+          "value": [
+            "plan",
+            "implement",
+            "verify"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "skill creation spans authoring, testing, refactoring, and deployment verification",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "task_modes": {
+          "value": [
+            "implementation",
+            "documentation",
+            "review",
+            "design"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "skill work is a specialized documentation/process task",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "domains": {
+          "value": [
+            "skill-authoring",
+            "documentation"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "canonical description is limited to creating, editing, and verifying skills",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "triggers": {
+          "value": [
+            "skill authoring",
+            "create a skill",
+            "creating a skill",
+            "edit a skill",
+            "editing a skill",
+            "test a skill",
+            "verify a skill",
+            "skill deployment"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "body defines explicit skill creation/editing/testing/deployment triggers",
+          "last_verified": "2026-09-11T00:00:00Z"
+        },
+        "required_triggers": {
+          "value": [
+            "skill authoring",
+            "create a skill",
+            "creating a skill",
+            "edit a skill",
+            "editing a skill",
+            "test a skill",
+            "verify a skill",
+            "skill deployment"
+          ],
+          "provenance": "CURATED",
+          "confidence": 1.0,
+          "evidence": "generic VERIFY or documentation work must not activate skill authoring",
+          "last_verified": "2026-09-11T00:00:00Z"
+        }
+      },
+      "relationships": [],
+      "review_status": "REVIEWED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
+      "notes": "Requires explicit skill creation, editing, testing, authoring, or deployment intent."
+    },
     "algorithmic-art": {
       "skill_id": "algorithmic-art",
       "source_skill_digest": "sha256:ae33152e8850a9bb5442dcef96d05225864b3658021fb5ba43d7b48302c22fb0",
@@ -2578,74 +3978,6 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z"
     },
-    "permission-tuner": {
-      "skill_id": "permission-tuner",
-      "source_skill_digest": "sha256:0178a72b6eac740e85fd02aea6a7bf7ae476f9b838f7b349265a6ef4a0b04d99",
-      "tier": "TIER_1_CORE",
-      "fields": {
-        "stages": {
-          "value": [
-            "review",
-            "harden"
-          ],
-          "provenance": "CURATED",
-          "confidence": 1.0,
-          "evidence": "reviewed compatibility routing seed",
-          "last_verified": "2026-09-09T00:00:00Z"
-        },
-        "roles": {
-          "value": [
-            "REVIEW"
-          ],
-          "provenance": "CURATED",
-          "confidence": 1.0,
-          "evidence": "reviewed compatibility routing seed",
-          "last_verified": "2026-09-09T00:00:00Z"
-        },
-        "task_modes": {
-          "value": [
-            "review",
-            "implementation"
-          ],
-          "provenance": "CURATED",
-          "confidence": 1.0,
-          "evidence": "reviewed compatibility routing seed",
-          "last_verified": "2026-09-09T00:00:00Z"
-        },
-        "domains": {
-          "value": [
-            "security"
-          ],
-          "provenance": "CURATED",
-          "confidence": 1.0,
-          "evidence": "reviewed compatibility routing seed",
-          "last_verified": "2026-09-09T00:00:00Z"
-        },
-        "outputs": {
-          "value": [
-            "permission boundary"
-          ],
-          "provenance": "CURATED",
-          "confidence": 1.0,
-          "evidence": "reviewed compatibility routing seed",
-          "last_verified": "2026-09-09T00:00:00Z"
-        },
-        "negative_triggers": {
-          "value": [
-            "visual design",
-            "source research"
-          ],
-          "provenance": "CURATED",
-          "confidence": 0.95,
-          "evidence": "reviewed semantic exclusion signals; not an authority grant",
-          "last_verified": "2026-09-09T00:00:00Z"
-        }
-      },
-      "relationships": [],
-      "review_status": "REVIEWED",
-      "confidence": 1.0,
-      "last_verified": "2026-09-09T00:00:00Z"
-    },
     "plan-interrogate": {
       "skill_id": "plan-interrogate",
       "source_skill_digest": "sha256:b8b5cd8fc8088b2e0d5e909ddb2f7af5f6c923b174870e76b8a42c95d3f829e7",
@@ -3586,66 +4918,6 @@
       "confidence": 1.0,
       "last_verified": "2026-09-09T00:00:00Z"
     },
-    "understand": {
-      "skill_id": "understand",
-      "source_skill_digest": "sha256:e82730b349a1a6a51dab7f3e9b8e19a47da3d46682c122999d3392a905c3a28a",
-      "tier": "TIER_1_CORE",
-      "fields": {
-        "stages": {
-          "value": [
-            "understand",
-            "research"
-          ],
-          "provenance": "CURATED",
-          "confidence": 1.0,
-          "evidence": "reviewed compatibility routing seed",
-          "last_verified": "2026-09-09T00:00:00Z"
-        },
-        "roles": {
-          "value": [
-            "PROCESS"
-          ],
-          "provenance": "CURATED",
-          "confidence": 1.0,
-          "evidence": "reviewed compatibility routing seed",
-          "last_verified": "2026-09-09T00:00:00Z"
-        },
-        "task_modes": {
-          "value": [
-            "review",
-            "research"
-          ],
-          "provenance": "CURATED",
-          "confidence": 1.0,
-          "evidence": "reviewed compatibility routing seed",
-          "last_verified": "2026-09-09T00:00:00Z"
-        },
-        "domains": {
-          "value": [
-            "repository",
-            "architecture"
-          ],
-          "provenance": "CURATED",
-          "confidence": 1.0,
-          "evidence": "reviewed compatibility routing seed",
-          "last_verified": "2026-09-09T00:00:00Z"
-        },
-        "outputs": {
-          "value": [
-            "source findings",
-            "architecture map"
-          ],
-          "provenance": "CURATED",
-          "confidence": 1.0,
-          "evidence": "reviewed compatibility routing seed",
-          "last_verified": "2026-09-09T00:00:00Z"
-        }
-      },
-      "relationships": [],
-      "review_status": "REVIEWED",
-      "confidence": 1.0,
-      "last_verified": "2026-09-09T00:00:00Z"
-    },
     "using-superpowers": {
       "skill_id": "using-superpowers",
       "source_skill_digest": "sha256:1adce90aedd8b1362381f8bf8a7346966612cbde3591f74ab7e55e539fa1209a",
@@ -3882,5 +5154,5 @@
       "last_verified": "2026-09-09T00:00:00Z"
     }
   },
-  "overlay_digest": "sha256:c9f1177abbec0a565f7e9d3d2e56efeba6b408ae3108e148a97501979a2b37dc"
+  "overlay_digest": "sha256:71b448ecd63b4296a933179603f2abf8286bd1f8923e1a642a4404720c518188"
 }

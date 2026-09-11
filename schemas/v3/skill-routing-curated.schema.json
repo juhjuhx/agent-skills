@@ -73,6 +73,7 @@
         "negative_triggers": {"$ref": "#/$defs/stringListPatch"},
         "stage_exclusions": {"$ref": "#/$defs/stageListPatch"},
         "domain_exclusions": {"$ref": "#/$defs/stringListPatch"},
+        "required_triggers": {"$ref": "#/$defs/stringListPatch"},
         "inputs": {"$ref": "#/$defs/stringListPatch"},
         "outputs": {"$ref": "#/$defs/stringListPatch"}
       }
