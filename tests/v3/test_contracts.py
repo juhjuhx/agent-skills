@@ -267,6 +267,9 @@ class SchemaDocumentTests(unittest.TestCase):
             "CompiledExecutionBundle",
             "CodexNativeProjection",
             "SkillRoutingMetadata",
+            "RuntimeProductStatus",
+            "InstallationPlan",
+            "GeneratedArtifactManifest",
         )
 
         for name in schema_names:

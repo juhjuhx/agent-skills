@@ -42,6 +42,9 @@ SCHEMA_FILES = {
     "OpenCodeNativeProjection": "opencode-native-projection.schema.json",
     "ClaudeNativeContract": "claude-native-contract.schema.json",
     "ClaudeNativeProjection": "claude-native-projection.schema.json",
+    "RuntimeProductStatus": "runtime-product-status.schema.json",
+    "InstallationPlan": "installation-plan.schema.json",
+    "GeneratedArtifactManifest": "generated-artifact.schema.json",
 }
 
 KNOWN_CAPABILITIES = frozenset(

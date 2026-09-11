@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/installation-plan.schema.json",
+  "title": "Agent Skills Matrix v3 InstallationPlan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plan_version",
+    "runtime_id",
+    "snapshot",
+    "runtime_status",
+    "no_actual_writes",
+    "artifacts",
+    "operations",
+    "warnings",
+    "conflicts",
+    "plan_digest"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "plan_version": {"$ref": "common.schema.json#/$defs/shortString"},
+    "runtime_id": {"$ref": "common.schema.json#/$defs/runtimeId"},
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["snapshot_id", "snapshot_digest", "registry_epoch", "skill_count"],
+      "properties": {
+        "snapshot_id": {"$ref": "common.schema.json#/$defs/recordId"},
+        "snapshot_digest": {"$ref": "common.schema.json#/$defs/digest"},
+        "registry_epoch": {"$ref": "common.schema.json#/$defs/recordId"},
+        "skill_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "runtime_status": {"$ref": "runtime-product-status.schema.json"},
+    "stage_route": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/recordId"},
+        {"type": "null"}
+      ]
+    },
+    "no_actual_writes": {"type": "boolean", "const": true},
+    "artifacts": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "kind", "content_digest", "source_digest"],
+        "properties": {
+          "path": {"$ref": "common.schema.json#/$defs/relativePath"},
+          "kind": {"$ref": "common.schema.json#/$defs/shortString"},
+          "content_digest": {"$ref": "common.schema.json#/$defs/digest"},
+          "source_digest": {"$ref": "common.schema.json#/$defs/digest"},
+          "selected_only": {"type": "boolean"},
+          "body": {"type": "boolean"}
+        }
+      }
+    },
+    "operations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "operation",
+          "source_artifact",
+          "destination_class",
+          "path",
+          "content_digest",
+          "overwrite_policy",
+          "reason",
+          "support_status",
+          "preconditions",
+          "conflict_outcome"
+        ],
+        "properties": {
+          "operation": {
+            "type": "string",
+            "enum": [
+              "CREATE_DIRECTORY",
+              "CREATE_GENERATED_FILE",
+              "LINK_OR_REFERENCE_CANONICAL_SKILL",
+              "WRITE_PROJECT_CONFIG",
+              "SKIP_UNSUPPORTED_RUNTIME",
+              "SKIP_USER_OWNED",
+              "CONFLICT",
+              "NO_OP",
+              "WARN_LIVE_BLOCKED"
+            ]
+          },
+          "source_artifact": {"type": ["string", "null"]},
+          "destination_class": {"$ref": "common.schema.json#/$defs/shortString"},
+          "path": {
+            "anyOf": [
+              {"$ref": "common.schema.json#/$defs/relativePath"},
+              {"type": "null"}
+            ]
+          },
+          "content_digest": {
+            "anyOf": [
+              {"$ref": "common.schema.json#/$defs/digest"},
+              {"type": "null"}
+            ]
+          },
+          "overwrite_policy": {"$ref": "common.schema.json#/$defs/shortString"},
+          "reason": {"$ref": "common.schema.json#/$defs/shortString"},
+          "support_status": {"$ref": "common.schema.json#/$defs/shortString"},
+          "preconditions": {
+            "type": "array",
+            "items": {"$ref": "common.schema.json#/$defs/shortString"},
+            "uniqueItems": true
+          },
+          "conflict_outcome": {
+            "type": "string",
+            "enum": ["CREATE", "UPDATE_MANAGED", "SKIP_USER_OWNED", "CONFLICT", "NO_OP", "NOT_APPLICABLE"]
+          }
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/shortString"},
+      "uniqueItems": true
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/shortString"},
+      "uniqueItems": true
+    },
+    "plan_digest": {"$ref": "common.schema.json#/$defs/digest"}
+  }
+}
