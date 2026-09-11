@@ -23,10 +23,11 @@ from tools.v3.skill_scoring import ROUTING_HINTS as LEGACY_ROUTING_HINTS
 
 
 GENERATED_VERSION = "v3-routing-generated-1"
-CURATED_VERSION = "v3-routing-curated-1"
+CURATED_VERSION = "v3-routing-curated-2"
 OVERLAY_VERSION = "v3-routing-metadata-2"
 GENERATOR_VERSION = "0.1.0"
 COMPILER_VERSION = "0.1.0"
+CURATOR_VERSION = "0.2.0"
 OVERLAY_SOURCE = "v3_routing_metadata_overlay"
 DEFAULT_OVERLAY_RELATIVE_PATH = Path("registry/v3/skill-routing-metadata.json")
 DEFAULT_GENERATED_RELATIVE_PATH = Path("registry/v3/skill-routing-generated.json")
@@ -866,6 +867,7 @@ def _apply_curated_record(
         "negative_triggers": "negative_triggers",
         "stage_exclusions": "stage_exclusions",
         "domain_exclusions": "domain_exclusions",
+        "required_triggers": "required_triggers",
     }
     for field in (
         "roles",
@@ -878,6 +880,7 @@ def _apply_curated_record(
         "negative_triggers",
         "stage_exclusions",
         "domain_exclusions",
+        "required_triggers",
     ):
         if field not in patch.get("fields", {}):
             continue
@@ -1048,7 +1051,7 @@ def build_legacy_curated_overlay(
         "curated_version": CURATED_VERSION,
         "registry": identity,
         "curator": {
-            "version": "0.1.0",
+            "version": CURATOR_VERSION,
             "policy": "SMALL_FIELD_PATCHES_ONLY",
             "body_policy": "READ_ONLY_NO_EXECUTION",
         },

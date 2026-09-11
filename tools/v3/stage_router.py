@@ -30,6 +30,8 @@ from tools.v3.skill_scoring import (
     is_trivial_task,
     negative_trigger_matches,
     required_roles_for,
+    required_routing_triggers,
+    required_trigger_matches,
     score_candidate,
 )
 
@@ -347,6 +349,11 @@ def _hard_filter(
             "task_modes", []
         ):
             reasons.append(f"task type {task_type} is not supported by metadata")
+    required_triggers = required_routing_triggers(record)
+    if required_triggers and not required_trigger_matches(record, task_spec, stage):
+        reasons.append(
+            "required routing trigger is absent: " + ", ".join(required_triggers)
+        )
     requested_domains = set(
         str(item).lower() for item in stage.get("domains", [])
     ) | set(str(item).lower() for item in task_spec.get("domains", []))

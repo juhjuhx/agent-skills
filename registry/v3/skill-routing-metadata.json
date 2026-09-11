@@ -15,7 +15,7 @@
   },
   "compiled_from": {
     "generated_overlay_digest": "sha256:c47e2b526b104be10604c27563eb19b763410f89dde01626643260a059a1859b",
-    "curated_overlay_digest": "sha256:c9f1177abbec0a565f7e9d3d2e56efeba6b408ae3108e148a97501979a2b37dc",
+    "curated_overlay_digest": "sha256:71b448ecd63b4296a933179603f2abf8286bd1f8923e1a642a4404720c518188",
     "compiler_version": "0.1.0"
   },
   "census": {
@@ -37,9 +37,9 @@
       "source": 0,
       "source.license": 39,
       "stages": 198,
-      "task_modes": 189,
+      "task_modes": 192,
       "tools": 15,
-      "triggers": 62,
+      "triggers": 78,
       "trust": 0,
       "version": 64
     },
@@ -48,15 +48,15 @@
         "INFERRED_HIGH_CONFIDENCE": 214
       },
       "domains": {
-        "CURATED": 65,
-        "INFERRED_HIGH_CONFIDENCE": 149
+        "CURATED": 80,
+        "INFERRED_HIGH_CONFIDENCE": 134
       },
       "eval_status": {
         "INFERRED": 214
       },
       "extensions.routing": {
-        "CURATED": 11,
-        "INFERRED": 203
+        "CURATED": 27,
+        "INFERRED": 187
       },
       "inputs": {
         "INFERRED": 13
@@ -75,8 +75,8 @@
         "INFERRED": 214
       },
       "roles": {
-        "CURATED": 65,
-        "INFERRED_HIGH_CONFIDENCE": 149
+        "CURATED": 78,
+        "INFERRED_HIGH_CONFIDENCE": 136
       },
       "runtime_cost": {
         "INFERRED": 214
@@ -85,29 +85,29 @@
         "AUTHOR_DECLARED": 39
       },
       "stages": {
-        "CURATED": 65,
-        "INFERRED_HIGH_CONFIDENCE": 133
+        "CURATED": 80,
+        "INFERRED_HIGH_CONFIDENCE": 118
       },
       "task_modes": {
-        "CURATED": 64,
-        "INFERRED_HIGH_CONFIDENCE": 125
+        "CURATED": 79,
+        "INFERRED_HIGH_CONFIDENCE": 113
       },
       "tools": {
         "AUTHOR_DECLARED": 15
       },
       "triggers": {
-        "AUTHOR_DECLARED": 61,
-        "CURATED": 1
+        "AUTHOR_DECLARED": 60,
+        "CURATED": 18
       },
       "version": {
         "AUTHOR_DECLARED": 64
       }
     },
     "classification_counts": {
-      "AMBIGUOUS": 16,
+      "AMBIGUOUS": 9,
       "DEPRECATED": 2,
-      "PARTIAL": 131,
-      "ROUTING_READY": 65
+      "PARTIAL": 125,
+      "ROUTING_READY": 78
     },
     "tier_counts": {
       "TIER_1_CORE": 55,
@@ -116,10 +116,10 @@
       "TIER_4_DEPRECATED": 2
     },
     "provenance_counts": {
-      "AUTHOR_DECLARED": 179,
-      "CURATED": 322,
-      "INFERRED": 1024,
-      "INFERRED_HIGH_CONFIDENCE": 776
+      "AUTHOR_DECLARED": 178,
+      "CURATED": 413,
+      "INFERRED": 1008,
+      "INFERRED_HIGH_CONFIDENCE": 721
     },
     "capability_resolution": {
       "source-driven-development": {
@@ -163,7 +163,7 @@
         "note": "exact canonical registry ID is present"
       }
     },
-    "routing_ready_count": 65,
+    "routing_ready_count": 78,
     "tier_1_routing_ready_count": 55,
     "body_files_inspected": 214,
     "body_bytes_inspected": 2155285,
@@ -628,11 +628,10 @@
     "MCP Integration": {
       "skill_id": "MCP Integration",
       "source_skill_digest": "sha256:1cbfb6b1cf98f48a7c6938e113869a229cd5a59037712072fe11f21a47c6df0e",
-      "classification": "AMBIGUOUS",
+      "classification": "ROUTING_READY",
       "tier": "TIER_2_DOMAIN",
       "metadata": {
         "roles": [
-          "PROCESS",
           "DOMAIN",
           "TOOL"
         ],
@@ -642,17 +641,14 @@
           "implement"
         ],
         "task_modes": [
-          "implementation",
           "research",
-          "design"
+          "design",
+          "implementation"
         ],
         "domains": [
-          "context-engineering",
-          "software-engineering",
-          "frontend",
-          "api-architecture",
-          "research",
-          "mcp"
+          "mcp",
+          "integrations",
+          "api-architecture"
         ],
         "outputs": [
           "review findings",
@@ -696,32 +692,47 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "required_triggers": [
+              "MCP",
+              "Model Context Protocol",
+              "MCP server",
+              "MCP integration",
+              ".mcp.json"
+            ]
           }
-        }
+        },
+        "triggers": [
+          "MCP",
+          "Model Context Protocol",
+          "MCP server",
+          "MCP integration",
+          ".mcp.json"
+        ],
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
         "fields": {
           "roles": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body configures Model Context Protocol servers and external tool integration"
           },
           "stages": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity and role signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "MCP server discovery and configuration are design/integration work"
           },
           "task_modes": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body covers MCP configuration methods, server types, and tool exposure"
           },
           "domains": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category mapping and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "MCP is the explicit integration domain"
           },
           "outputs": {
             "source": "INFERRED",
@@ -759,19 +770,24 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "generic research or API integration language must not imply MCP work"
+          },
+          "triggers": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body trigger description names MCP configuration and server surfaces"
           }
         },
         "relationships": {}
       },
-      "review_status": "GENERATED",
-      "confidence": 0.8,
-      "last_verified": "2026-09-09T00:00:00Z",
+      "review_status": "CURATED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
       "body_policy": "READ_ONLY",
       "body_bytes_inspected": 12519,
-      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
+      "notes": "Requires explicit MCP/Model Context Protocol integration intent."
     },
     "Plugin Settings": {
       "skill_id": "Plugin Settings",
@@ -5672,30 +5688,23 @@
     "brandkit": {
       "skill_id": "brandkit",
       "source_skill_digest": "sha256:b0c4837e1bd140ca816ae54948754ddd2ac1e2a4d3619363777a80caf00b2ede",
-      "classification": "PARTIAL",
+      "classification": "ROUTING_READY",
       "tier": "TIER_2_DOMAIN",
       "metadata": {
         "roles": [
-          "PROCESS",
-          "DOMAIN",
-          "REVIEW"
+          "DOMAIN"
         ],
         "stages": [
           "design",
-          "implement",
-          "review",
-          "harden"
+          "implement"
         ],
         "task_modes": [
-          "implementation",
-          "review",
-          "design"
+          "design",
+          "implementation"
         ],
         "domains": [
-          "quality-and-safety",
-          "frontend",
           "visual-design",
-          "security"
+          "branding"
         ],
         "outputs": [
           "research brief",
@@ -5735,32 +5744,54 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "required_triggers": [
+              "brand",
+              "branding",
+              "brand identity",
+              "visual identity",
+              "logo",
+              "brand assets",
+              "brand guidelines",
+              "brand system"
+            ]
           }
-        }
+        },
+        "triggers": [
+          "brand",
+          "branding",
+          "brand identity",
+          "visual identity",
+          "logo",
+          "logo system",
+          "brand assets",
+          "brand guidelines",
+          "brand system"
+        ],
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
         "fields": {
           "roles": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "brand-kit body is visual identity/image generation, not generic review"
           },
           "stages": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity and role signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "brand-kit creation is a design or bounded asset implementation task"
           },
           "task_modes": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body describes brand-system creation and application work"
           },
           "domains": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category mapping and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "brand identity and visual-system semantics are required"
           },
           "outputs": {
             "source": "INFERRED",
@@ -5788,19 +5819,24 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "generic design/frontend language is insufficient without brand intent"
+          },
+          "triggers": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body trigger terms are explicit brand and identity concepts"
           }
         },
         "relationships": {}
       },
-      "review_status": "GENERATED",
-      "confidence": 0.8,
-      "last_verified": "2026-09-09T00:00:00Z",
+      "review_status": "CURATED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
       "body_policy": "READ_ONLY",
       "body_bytes_inspected": 15992,
-      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
+      "notes": "Requires explicit branding or visual-identity intent; remains available for true brand work."
     },
     "brooks-audit": {
       "skill_id": "brooks-audit",
@@ -6057,39 +6093,28 @@
     "brooks-harness": {
       "skill_id": "brooks-harness",
       "source_skill_digest": "sha256:61018eb1d9a7dccde5e215cf11619579d11d2c800c0339c77a23c0a7776f5121",
-      "classification": "AMBIGUOUS",
+      "classification": "ROUTING_READY",
       "tier": "TIER_2_DOMAIN",
       "metadata": {
         "roles": [
-          "PROCESS",
-          "DOMAIN",
-          "REVIEW",
-          "VERIFY"
+          "PROCESS"
         ],
         "stages": [
-          "design",
+          "plan",
           "implement",
           "review",
           "verify",
-          "harden",
-          "handoff"
+          "harden"
         ],
         "task_modes": [
           "implementation",
           "review",
-          "design",
-          "documentation",
-          "handoff"
+          "documentation"
         ],
         "domains": [
-          "orchestration",
-          "software-engineering",
-          "quality-and-safety",
-          "frontend",
-          "documentation",
-          "testing",
-          "release",
-          "repository"
+          "plugin-maintenance",
+          "skill-authoring",
+          "quality-and-safety"
         ],
         "outputs": [
           "review findings",
@@ -6132,32 +6157,47 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "required_triggers": [
+              "brooks-lint",
+              "brooks harness",
+              "brooks-lint plugin",
+              "brooks-debt guide",
+              "brooks plugin maintenance"
+            ]
           }
-        }
+        },
+        "triggers": [
+          "brooks-lint",
+          "brooks harness",
+          "brooks-lint plugin",
+          "brooks-debt guide",
+          "brooks plugin maintenance"
+        ],
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
         "fields": {
           "roles": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body is a maintenance orchestrator for the brooks-lint plugin itself"
           },
           "stages": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity and role signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "the harness has author, evaluation, QA, trigger-audit, and release stages"
           },
           "task_modes": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "the procedure maintains brooks-lint skills, evals, and release documentation"
           },
           "domains": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category mapping and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "the procedure is scoped to brooks-lint plugin and skill maintenance"
           },
           "outputs": {
             "source": "INFERRED",
@@ -6185,19 +6225,24 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "generic verification or generic skill authoring is insufficient without brooks-lint scope"
+          },
+          "triggers": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "installed body names the maintained plugin and its maintenance surfaces"
           }
         },
         "relationships": {}
       },
-      "review_status": "GENERATED",
-      "confidence": 0.8,
-      "last_verified": "2026-09-09T00:00:00Z",
+      "review_status": "CURATED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
       "body_policy": "READ_ONLY",
       "body_bytes_inspected": 7334,
-      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
+      "notes": "Requires explicit brooks-lint/plugin-maintenance intent; not a generic verification harness."
     },
     "brooks-health": {
       "skill_id": "brooks-health",
@@ -9187,7 +9232,7 @@
     "cost-tracker": {
       "skill_id": "cost-tracker",
       "source_skill_digest": "sha256:14c3382a580c426e546d0a06445f6fa4f5ee6f00c5380e82a166d825b3ab0ee5",
-      "classification": "PARTIAL",
+      "classification": "ROUTING_READY",
       "tier": "TIER_3_SPECIALIZED",
       "metadata": {
         "roles": [
@@ -9198,7 +9243,8 @@
           "handoff"
         ],
         "domains": [
-          "context-engineering"
+          "context-engineering",
+          "cost-management"
         ],
         "outputs": [
           "review findings",
@@ -9232,27 +9278,52 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "required_triggers": [
+              "cost",
+              "budget",
+              "quota",
+              "billing",
+              "token spend",
+              "usage accounting",
+              "spending limit"
+            ]
           }
-        }
+        },
+        "task_modes": [
+          "review",
+          "implementation",
+          "handoff",
+          "documentation"
+        ],
+        "triggers": [
+          "cost",
+          "budget",
+          "quota",
+          "billing",
+          "token spend",
+          "usage accounting",
+          "spending limit"
+        ],
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
         "fields": {
           "roles": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body measures session cost and budget state as verification evidence"
           },
           "stages": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity and role signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "cost checks belong to verification or budget-aware handoff"
           },
           "domains": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category mapping and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body is specifically about usage, budget, quota, and token spend"
           },
           "outputs": {
             "source": "INFERRED",
@@ -9280,19 +9351,29 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "generic verify evidence must not activate cost accounting without a cost signal"
+          },
+          "task_modes": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "cost tracking is a cross-cutting evidence concern, not generic verification"
+          },
+          "triggers": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "canonical description names cost and budget-alert use cases"
           }
         },
         "relationships": {}
       },
-      "review_status": "GENERATED",
-      "confidence": 0.8,
-      "last_verified": "2026-09-09T00:00:00Z",
+      "review_status": "CURATED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
       "body_policy": "READ_ONLY",
       "body_bytes_inspected": 3264,
-      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
+      "notes": "Requires explicit cost, budget, quota, billing, or usage-accounting intent."
     },
     "debugging-code": {
       "skill_id": "debugging-code",
@@ -13991,28 +14072,13 @@
           "REVIEW"
         ],
         "stages": [
-          "research",
-          "design",
-          "plan",
-          "implement",
-          "review",
-          "harden",
-          "handoff"
+          "review"
         ],
         "task_modes": [
-          "implementation",
-          "research",
-          "review",
-          "design",
-          "documentation",
-          "handoff"
+          "review"
         ],
         "domains": [
-          "software-engineering",
-          "quality-and-safety",
-          "frontend",
-          "documentation",
-          "release"
+          "software-engineering"
         ],
         "outputs": [
           "verification",
@@ -14056,9 +14122,28 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "required_triggers": [
+              "algorithm correctness",
+              "loop invariant",
+              "postcondition",
+              "off-by-one",
+              "termination argument",
+              "recursion base case",
+              "edge cases"
+            ]
           }
-        }
+        },
+        "triggers": [
+          "algorithm correctness",
+          "loop invariant",
+          "postcondition",
+          "off-by-one",
+          "termination argument",
+          "recursion base case",
+          "edge cases"
+        ],
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -14069,19 +14154,19 @@
             "evidence": "category and identity signals"
           },
           "stages": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity and role signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body verifies algorithm correctness through explicit invariants and postconditions"
           },
           "task_modes": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body is an algorithm correctness review procedure"
           },
           "domains": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category mapping and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body targets software algorithms, invariants, termination, and edge cases"
           },
           "outputs": {
             "source": "INFERRED",
@@ -14109,19 +14194,24 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "generic security/invariant language must not activate an algorithm-specific guard"
+          },
+          "triggers": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body is a correctness-first algorithm/invariant procedure"
           }
         },
         "relationships": {}
       },
-      "review_status": "GENERATED",
-      "confidence": 0.8,
-      "last_verified": "2026-09-09T00:00:00Z",
+      "review_status": "CURATED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
       "body_policy": "READ_ONLY",
       "body_bytes_inspected": 17439,
-      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
+      "notes": "Requires explicit algorithm/invariant/postcondition or edge-case correctness work."
     },
     "jupyter-live-kernel": {
       "skill_id": "jupyter-live-kernel",
@@ -14619,37 +14709,25 @@
     "llm-council": {
       "skill_id": "llm-council",
       "source_skill_digest": "sha256:8b7b2587dfc5812291ae2456fa5f2ae164392747333ffe5d30e46e8f5061f1a8",
-      "classification": "AMBIGUOUS",
+      "classification": "ROUTING_READY",
       "tier": "TIER_2_DOMAIN",
       "metadata": {
         "roles": [
-          "PROCESS",
-          "DOMAIN",
-          "REVIEW",
-          "VERIFY"
+          "REVIEW"
         ],
         "stages": [
-          "research",
           "design",
           "plan",
-          "implement",
-          "review",
-          "verify",
-          "harden",
-          "learn"
+          "review"
         ],
         "task_modes": [
-          "implementation",
-          "research",
-          "review",
-          "design"
+          "design",
+          "review"
         ],
         "domains": [
-          "software-engineering",
-          "quality-and-safety",
-          "frontend",
-          "research",
-          "testing"
+          "orchestration",
+          "multi-model",
+          "quality-and-safety"
         ],
         "outputs": [
           "review findings",
@@ -14693,32 +14771,53 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "required_triggers": [
+              "multi-model",
+              "multi-llm",
+              "multiple AI perspectives",
+              "consensus",
+              "deliberation",
+              "model council",
+              "independent model perspectives",
+              "ensemble review"
+            ]
           }
-        }
+        },
+        "triggers": [
+          "multi-model",
+          "multi-llm",
+          "multiple AI perspectives",
+          "consensus",
+          "deliberation",
+          "model council",
+          "independent model perspectives",
+          "ensemble review"
+        ],
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
         "fields": {
           "roles": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body provides independent multi-model review and synthesis"
           },
           "stages": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity and role signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "council deliberation applies to decisions, plans, and explicit reviews"
           },
           "task_modes": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "multi-model deliberation is not an ordinary implementation procedure"
           },
           "domains": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category mapping and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body requires a council or independent model perspective context"
           },
           "outputs": {
             "source": "INFERRED",
@@ -14751,19 +14850,24 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "generic planning/review language must not imply a council"
+          },
+          "triggers": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "canonical description names multi-LLM deliberation and consensus use"
           }
         },
         "relationships": {}
       },
-      "review_status": "GENERATED",
-      "confidence": 0.8,
-      "last_verified": "2026-09-09T00:00:00Z",
+      "review_status": "CURATED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
       "body_policy": "READ_ONLY",
       "body_bytes_inspected": 3781,
-      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
+      "notes": "Requires explicit multi-model, consensus, deliberation, or independent-perspective intent."
     },
     "llm-gate": {
       "skill_id": "llm-gate",
@@ -16047,21 +16151,20 @@
     "maps": {
       "skill_id": "maps",
       "source_skill_digest": "sha256:8c961ecf662838e3ff287570d343db8b1587ca7a6d565ec53eeab13f89407b29",
-      "classification": "PARTIAL",
+      "classification": "ROUTING_READY",
       "tier": "TIER_2_DOMAIN",
       "metadata": {
         "roles": [
           "DOMAIN"
         ],
         "stages": [
-          "understand",
           "implement"
         ],
         "task_modes": [
           "implementation"
         ],
         "domains": [
-          "software-engineering",
+          "geospatial",
           "integrations"
         ],
         "outputs": [
@@ -16100,32 +16203,63 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "required_triggers": [
+              "geocode",
+              "geospatial",
+              "point of interest",
+              "nearby",
+              "directions",
+              "timezone",
+              "openstreetmap",
+              "nominatim",
+              "overpass",
+              "osrm",
+              "location pin",
+              "latitude",
+              "longitude"
+            ]
           }
-        }
+        },
+        "triggers": [
+          "geocode",
+          "geospatial",
+          "point of interest",
+          "nearby",
+          "directions",
+          "timezone",
+          "openstreetmap",
+          "nominatim",
+          "overpass",
+          "osrm",
+          "location pin",
+          "latitude",
+          "longitude"
+        ],
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
         "fields": {
           "roles": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body is location intelligence over geocoding and routing services"
           },
           "stages": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity and role signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "maps provides a domain procedure when a location task must be executed"
           },
           "task_modes": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "canonical commands execute geocoding, POI, distance, and timezone work"
           },
           "domains": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category mapping and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "generic software-engineering implementation is insufficient without location semantics"
           },
           "outputs": {
             "source": "INFERRED",
@@ -16163,19 +16297,24 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "generic implementation or API language must not activate a geospatial procedure"
+          },
+          "triggers": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body names location, POI, routing, timezone, and its data sources"
           }
         },
         "relationships": {}
       },
-      "review_status": "GENERATED",
-      "confidence": 0.8,
-      "last_verified": "2026-09-09T00:00:00Z",
+      "review_status": "CURATED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
       "body_policy": "READ_ONLY",
       "body_bytes_inspected": 6726,
-      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
+      "notes": "Requires explicit geospatial/location intent; remains available for real map and routing tasks."
     },
     "mathguard": {
       "skill_id": "mathguard",
@@ -18454,10 +18593,36 @@
             "permission_inference": "UNKNOWN_CONSERVATIVE",
             "negative_triggers": [
               "visual design",
-              "source research"
+              "source research",
+              "generic code review",
+              "release verification"
+            ],
+            "required_triggers": [
+              "permission",
+              "authorization",
+              "access boundary",
+              "sandbox policy",
+              "permission prompt",
+              "alwaysallow",
+              "alwaysdeny",
+              "least privilege",
+              "denial pattern",
+              "access control"
             ]
           }
         },
+        "triggers": [
+          "permission",
+          "authorization",
+          "access boundary",
+          "sandbox policy",
+          "permission prompt",
+          "alwaysallow",
+          "alwaysdeny",
+          "least privilege",
+          "denial pattern",
+          "access control"
+        ],
         "outputs": [
           "permission boundary"
         ],
@@ -18508,8 +18673,13 @@
           },
           "extensions.routing": {
             "source": "CURATED",
-            "confidence": 0.95,
-            "evidence": "reviewed semantic exclusion signals; not an authority grant"
+            "confidence": 1.0,
+            "evidence": "generic security/review language must not activate permission tuning"
+          },
+          "triggers": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body analyzes permission denials and proposes allow/deny rules"
           },
           "outputs": {
             "source": "CURATED",
@@ -18521,10 +18691,10 @@
       },
       "review_status": "CURATED",
       "confidence": 1.0,
-      "last_verified": "2026-09-09T00:00:00Z",
+      "last_verified": "2026-09-11T00:00:00Z",
       "body_policy": "READ_ONLY",
       "body_bytes_inspected": 3112,
-      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
+      "notes": "Requires explicit permission, authorization, sandbox, access-boundary, or least-privilege intent."
     },
     "plan": {
       "skill_id": "plan",
@@ -19845,11 +20015,17 @@
     "redesign-existing-projects": {
       "skill_id": "redesign-existing-projects",
       "source_skill_digest": "sha256:683b70b9ce3480694d11a46c63a39b446746e3bea8a7d8ff20c35d4bfb0352e2",
-      "classification": "AMBIGUOUS",
+      "classification": "ROUTING_READY",
       "tier": "TIER_2_DOMAIN",
       "metadata": {
         "triggers": [
-          "重設計、redesign、UI改造、upgrade design、improve existing site、fix generic look、refresh UI、make it look better。"
+          "redesign",
+          "UI改造",
+          "upgrade design",
+          "improve existing site",
+          "fix generic look",
+          "refresh UI",
+          "make it look better"
         ],
         "roles": [
           "PROCESS",
@@ -19857,22 +20033,19 @@
           "REVIEW"
         ],
         "stages": [
-          "research",
           "design",
           "implement",
-          "review",
-          "harden"
+          "review"
         ],
         "task_modes": [
+          "design",
           "implementation",
-          "research",
-          "review",
-          "design"
+          "review"
         ],
         "domains": [
-          "quality-and-safety",
           "frontend",
-          "research"
+          "visual-design",
+          "accessibility"
         ],
         "outputs": [
           "review findings",
@@ -19913,37 +20086,47 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "required_triggers": [
+              "redesign",
+              "UI改造",
+              "upgrade design",
+              "improve existing site",
+              "fix generic look",
+              "refresh UI",
+              "make it look better"
+            ]
           }
-        }
+        },
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
         "fields": {
           "triggers": {
-            "source": "AUTHOR_DECLARED",
+            "source": "CURATED",
             "confidence": 1.0,
-            "evidence": "current registry triggers"
+            "evidence": "body description explicitly lists redesign and existing-site UI requests"
           },
           "roles": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body audits and upgrades an existing website's visual patterns"
           },
           "stages": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity and role signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "procedure scans, diagnoses, and fixes an existing UI"
           },
           "task_modes": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body is an existing-site redesign audit and implementation workflow"
           },
           "domains": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category mapping and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "procedure is limited to frontend/UI redesign quality"
           },
           "outputs": {
             "source": "INFERRED",
@@ -19971,19 +20154,19 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "generic repository research or metadata work must not activate frontend redesign"
           }
         },
         "relationships": {}
       },
-      "review_status": "GENERATED",
-      "confidence": 0.8,
-      "last_verified": "2026-09-09T00:00:00Z",
+      "review_status": "CURATED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
       "body_policy": "READ_ONLY",
       "body_bytes_inspected": 15065,
-      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
+      "notes": "Requires explicit existing-site/UI redesign intent."
     },
     "release": {
       "skill_id": "release",
@@ -22182,7 +22365,7 @@
     "survey-generator": {
       "skill_id": "survey-generator",
       "source_skill_digest": "sha256:4456da67e1317e9b5fa9ad5fcdc5dd8c69c75215cd455e8c9459f3f3d5f05e7d",
-      "classification": "AMBIGUOUS",
+      "classification": "ROUTING_READY",
       "tier": "TIER_2_DOMAIN",
       "metadata": {
         "roles": [
@@ -22192,22 +22375,17 @@
         "stages": [
           "research",
           "implement",
-          "review",
-          "harden",
           "handoff"
         ],
         "task_modes": [
           "research",
-          "review",
           "documentation",
           "handoff"
         ],
         "domains": [
-          "orchestration",
-          "quality-and-safety",
-          "documentation",
           "research",
-          "release"
+          "literature",
+          "documentation"
         ],
         "outputs": [
           "review findings",
@@ -22251,32 +22429,45 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "required_triggers": [
+              "survey",
+              "literature review",
+              "lit review",
+              "deep dive"
+            ]
           }
-        }
+        },
+        "triggers": [
+          "survey",
+          "literature review",
+          "lit review",
+          "deep dive"
+        ],
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
         "fields": {
           "roles": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body compiles a literature survey with real-paper bibliography"
           },
           "stages": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity and role signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "survey collection, artifact generation, and wiki handoff are explicit"
           },
           "task_modes": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body requires literature source collection and a cited survey artifact"
           },
           "domains": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category mapping and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "procedure is limited to literature-survey generation"
           },
           "outputs": {
             "source": "INFERRED",
@@ -22309,19 +22500,24 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "generic research/evidence work must not activate survey generation"
+          },
+          "triggers": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body explicitly names survey and literature-review requests"
           }
         },
         "relationships": {}
       },
-      "review_status": "GENERATED",
-      "confidence": 0.8,
-      "last_verified": "2026-09-09T00:00:00Z",
+      "review_status": "CURATED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
       "body_policy": "READ_ONLY",
       "body_bytes_inspected": 5859,
-      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
+      "notes": "Requires explicit survey/literature-review/deep-dive intent."
     },
     "systematic-debugging": {
       "skill_id": "systematic-debugging",
@@ -25031,9 +25227,23 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "required_triggers": [
+              "knowledge graph",
+              "analyze the codebase",
+              "codebase tour",
+              "codebase architecture",
+              "module dependencies"
+            ]
           }
         },
+        "triggers": [
+          "knowledge graph",
+          "analyze the codebase",
+          "codebase tour",
+          "codebase architecture",
+          "module dependencies"
+        ],
         "relationships": []
       },
       "provenance": {
@@ -25090,9 +25300,14 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "generic UNDERSTAND framing is insufficient without a graph or explicit codebase-analysis need"
+          },
+          "triggers": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body creates an interactive architecture knowledge graph for an explicit codebase analysis"
           }
         },
         "relationships": {}
@@ -25107,26 +25322,25 @@
     "understand-chat": {
       "skill_id": "understand-chat",
       "source_skill_digest": "sha256:d8234baaabcee97c2e4be8204a58123de592164e8d7502398caeddf1223b2e17",
-      "classification": "PARTIAL",
+      "classification": "ROUTING_READY",
       "tier": "TIER_2_DOMAIN",
       "metadata": {
         "roles": [
           "DOMAIN"
         ],
         "stages": [
-          "understand",
-          "research",
-          "implement",
-          "learn"
+          "understand"
         ],
         "task_modes": [
+          "research",
+          "design",
           "implementation",
-          "research"
+          "review"
         ],
         "domains": [
-          "context-engineering",
-          "software-engineering",
-          "repository"
+          "repository",
+          "code-understanding",
+          "knowledge-graph"
         ],
         "outputs": [
           "source findings",
@@ -25165,32 +25379,49 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "required_triggers": [
+              "knowledge graph",
+              "understand code",
+              "codebase tour",
+              "codebase architecture",
+              "ask questions about a codebase",
+              "module dependencies"
+            ]
           }
-        }
+        },
+        "triggers": [
+          "knowledge graph",
+          "understand code",
+          "codebase tour",
+          "codebase architecture",
+          "ask questions about a codebase",
+          "module dependencies"
+        ],
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
         "fields": {
           "roles": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body answers codebase questions through an existing knowledge graph"
           },
           "stages": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity and role signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "knowledge-graph questions are an understanding-stage procedure"
           },
           "task_modes": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "codebase questions support later work but are not generic stage filler"
           },
           "domains": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category mapping and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body requires a codebase and .understand-anything graph"
           },
           "outputs": {
             "source": "INFERRED",
@@ -25223,24 +25454,29 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "generic understand stage language must not imply graph-backed chat analysis"
+          },
+          "triggers": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "canonical description and body name codebase/knowledge-graph questions"
           }
         },
         "relationships": {}
       },
-      "review_status": "GENERATED",
-      "confidence": 0.8,
-      "last_verified": "2026-09-09T00:00:00Z",
+      "review_status": "CURATED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
       "body_policy": "READ_ONLY",
       "body_bytes_inspected": 3014,
-      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
+      "notes": "Requires explicit codebase/knowledge-graph understanding intent; not a generic understand helper."
     },
     "understand-dashboard": {
       "skill_id": "understand-dashboard",
       "source_skill_digest": "sha256:5c2155ab1dcdf54e0b7e3e508d666a5c8faaf7c89ad1f7e1753d115eb371a691",
-      "classification": "AMBIGUOUS",
+      "classification": "ROUTING_READY",
       "tier": "TIER_2_DOMAIN",
       "metadata": {
         "roles": [
@@ -25250,21 +25486,15 @@
         "stages": [
           "understand",
           "research",
-          "design",
-          "implement",
-          "learn"
+          "design"
         ],
         "task_modes": [
-          "implementation",
           "research",
           "design"
         ],
         "domains": [
-          "context-engineering",
-          "software-engineering",
-          "frontend",
-          "visual-design",
-          "research",
+          "knowledge-graph",
+          "visualization",
           "repository"
         ],
         "outputs": [
@@ -25305,32 +25535,45 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "required_triggers": [
+              "knowledge graph dashboard",
+              "visualize the knowledge graph",
+              "interactive codebase dashboard",
+              "understand dashboard"
+            ]
           }
-        }
+        },
+        "triggers": [
+          "knowledge graph dashboard",
+          "visualize the knowledge graph",
+          "interactive codebase dashboard",
+          "understand dashboard"
+        ],
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
         "fields": {
           "roles": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body launches an interactive dashboard for an existing knowledge graph"
           },
           "stages": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity and role signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "dashboard viewing follows explicit graph-understanding or visualization intent"
           },
           "task_modes": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "procedure visualizes rather than implements a generic code change"
           },
           "domains": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category mapping and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "dashboard requires a codebase knowledge graph and visualization request"
           },
           "outputs": {
             "source": "INFERRED",
@@ -25363,19 +25606,24 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "generic UNDERSTAND or design language must not launch a dashboard"
+          },
+          "triggers": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body names dashboard visualization as its only purpose"
           }
         },
         "relationships": {}
       },
-      "review_status": "GENERATED",
-      "confidence": 0.8,
-      "last_verified": "2026-09-09T00:00:00Z",
+      "review_status": "CURATED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
       "body_policy": "READ_ONLY",
       "body_bytes_inspected": 5237,
-      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
+      "notes": "Requires explicit knowledge-graph visualization/dashboard intent."
     },
     "understand-diff": {
       "skill_id": "understand-diff",
@@ -25390,7 +25638,6 @@
           "understand"
         ],
         "domains": [
-          "general",
           "repository"
         ],
         "outputs": [
@@ -25425,9 +25672,27 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "required_triggers": [
+              "git diff",
+              "pull request",
+              "changed files",
+              "affected components",
+              "analyze code changes"
+            ]
           }
-        }
+        },
+        "task_modes": [
+          "review"
+        ],
+        "triggers": [
+          "git diff",
+          "pull request",
+          "changed files",
+          "affected components",
+          "analyze code changes"
+        ],
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
@@ -25438,14 +25703,14 @@
             "evidence": "category and identity signals"
           },
           "stages": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity and role signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body analyzes repository changes before implementation or review"
           },
           "domains": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category mapping and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body analyzes changed files and affected repository components"
           },
           "outputs": {
             "source": "INFERRED",
@@ -25473,24 +25738,34 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "generic repository understanding is insufficient without an explicit change/diff analysis request"
+          },
+          "task_modes": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body is a diff/change-impact review procedure"
+          },
+          "triggers": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body analyzes changed files, affected components, and risks from a git diff or pull request"
           }
         },
         "relationships": {}
       },
-      "review_status": "GENERATED",
-      "confidence": 0.8,
-      "last_verified": "2026-09-09T00:00:00Z",
+      "review_status": "CURATED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
       "body_policy": "READ_ONLY",
       "body_bytes_inspected": 4114,
-      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
+      "notes": "Requires explicit diff/pull-request/change-impact analysis intent."
     },
     "understand-domain": {
       "skill_id": "understand-domain",
       "source_skill_digest": "sha256:8c3c3bb810bcd11752f66be7c88347ceb4435e47cdfaf1bf39663fa5f37d0cb4",
-      "classification": "PARTIAL",
+      "classification": "ROUTING_READY",
       "tier": "TIER_2_DOMAIN",
       "metadata": {
         "roles": [
@@ -25499,17 +25774,16 @@
         "stages": [
           "understand",
           "research",
-          "implement",
-          "learn"
+          "design"
         ],
         "task_modes": [
-          "implementation",
-          "research"
+          "research",
+          "design"
         ],
         "domains": [
-          "context-engineering",
-          "software-engineering",
-          "repository"
+          "business-domain",
+          "domain-analysis",
+          "knowledge-graph"
         ],
         "outputs": [
           "specification"
@@ -25548,32 +25822,49 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "required_triggers": [
+              "business domain",
+              "domain knowledge",
+              "domain flow",
+              "business process",
+              "domain graph",
+              "understand-domain"
+            ]
           }
-        }
+        },
+        "triggers": [
+          "business domain",
+          "domain knowledge",
+          "domain flow",
+          "business process",
+          "domain graph",
+          "understand-domain"
+        ],
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
         "fields": {
           "roles": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body extracts business domains and process flows into a domain graph"
           },
           "stages": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity and role signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "domain-flow extraction requires explicit business-domain analysis"
           },
           "task_modes": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "procedure creates a domain knowledge artifact rather than generic implementation"
           },
           "domains": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category mapping and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body is specifically a business domain and process-flow analyzer"
           },
           "outputs": {
             "source": "INFERRED",
@@ -25606,19 +25897,24 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "generic repository understanding must not activate business-domain extraction"
+          },
+          "triggers": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body description names business domain and process flow extraction"
           }
         },
         "relationships": {}
       },
-      "review_status": "GENERATED",
-      "confidence": 0.8,
-      "last_verified": "2026-09-09T00:00:00Z",
+      "review_status": "CURATED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
       "body_policy": "READ_ONLY",
       "body_bytes_inspected": 7607,
-      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
+      "notes": "Requires explicit business-domain/process-flow intent."
     },
     "understand-explain": {
       "skill_id": "understand-explain",
@@ -27065,39 +27361,25 @@
     "wiki-viewer": {
       "skill_id": "wiki-viewer",
       "source_skill_digest": "sha256:fec1a5215966cbc408ff3bd39000a00ce61565e9d82902c9d11299b6a643b196",
-      "classification": "AMBIGUOUS",
+      "classification": "ROUTING_READY",
       "tier": "TIER_2_DOMAIN",
       "metadata": {
         "roles": [
-          "PROCESS",
-          "DOMAIN",
-          "REVIEW"
+          "DOMAIN"
         ],
         "stages": [
           "research",
-          "design",
-          "implement",
-          "review",
-          "harden",
-          "handoff",
-          "learn"
+          "handoff"
         ],
         "task_modes": [
           "research",
-          "review",
-          "design",
           "documentation",
           "handoff"
         ],
         "domains": [
-          "orchestration",
-          "context-engineering",
-          "quality-and-safety",
-          "frontend",
-          "documentation",
-          "visual-design",
           "research",
-          "release"
+          "documentation",
+          "knowledge-management"
         ],
         "outputs": [
           "review findings",
@@ -27140,32 +27422,51 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "required_triggers": [
+              "wiki",
+              "knowledge base",
+              "page-link graph",
+              "seed queue",
+              "browse a wiki",
+              "research progress",
+              "wiki handoff"
+            ]
           }
-        }
+        },
+        "triggers": [
+          "wiki",
+          "knowledge base",
+          "page-link graph",
+          "seed queue",
+          "browse a wiki",
+          "research progress",
+          "wiki handoff"
+        ],
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
         "fields": {
           "roles": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body renders a self-contained workflow-wiki viewer"
           },
           "stages": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity and role signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "viewer applies to wiki research readouts and knowledge-base handoff"
           },
           "task_modes": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body produces a browsable documentation artifact for a wiki"
           },
           "domains": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category mapping and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "wiki pages, sources, claims, seeds, and link graph are the domain"
           },
           "outputs": {
             "source": "INFERRED",
@@ -27193,19 +27494,24 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "generic handoff/research language must not imply wiki rendering"
+          },
+          "triggers": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "canonical description names wiki browsing, research audit, and knowledge-base handoff"
           }
         },
         "relationships": {}
       },
-      "review_status": "GENERATED",
-      "confidence": 0.8,
-      "last_verified": "2026-09-09T00:00:00Z",
+      "review_status": "CURATED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
       "body_policy": "READ_ONLY",
       "body_bytes_inspected": 4216,
-      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
+      "notes": "Requires explicit wiki, knowledge-base, seed, page-graph, or wiki-handoff intent."
     },
     "wrap-up": {
       "skill_id": "wrap-up",
@@ -27592,17 +27898,21 @@
     "writing-skills": {
       "skill_id": "writing-skills",
       "source_skill_digest": "sha256:38ba648975ae6ba512d6695676f146163db61a496b867f716f4bdfb0ee3aca3e",
-      "classification": "PARTIAL",
+      "classification": "ROUTING_READY",
       "tier": "TIER_3_SPECIALIZED",
       "metadata": {
         "roles": [
+          "PROCESS",
           "VERIFY"
         ],
         "stages": [
+          "plan",
+          "implement",
           "verify"
         ],
         "domains": [
-          "general"
+          "skill-authoring",
+          "documentation"
         ],
         "outputs": [
           "verification",
@@ -27640,27 +27950,54 @@
             ],
             "body_loaded_for_route": false,
             "body_inspected_for_enrichment": true,
-            "permission_inference": "UNKNOWN_CONSERVATIVE"
+            "permission_inference": "UNKNOWN_CONSERVATIVE",
+            "required_triggers": [
+              "skill authoring",
+              "create a skill",
+              "creating a skill",
+              "edit a skill",
+              "editing a skill",
+              "test a skill",
+              "verify a skill",
+              "skill deployment"
+            ]
           }
-        }
+        },
+        "task_modes": [
+          "implementation",
+          "documentation",
+          "review",
+          "design"
+        ],
+        "triggers": [
+          "skill authoring",
+          "create a skill",
+          "creating a skill",
+          "edit a skill",
+          "editing a skill",
+          "test a skill",
+          "verify a skill",
+          "skill deployment"
+        ],
+        "relationships": []
       },
       "provenance": {
         "default": "UNKNOWN",
         "fields": {
           "roles": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body is a TDD-like skill-authoring and deployment-verification process"
           },
           "stages": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "identity and role signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "skill creation spans authoring, testing, refactoring, and deployment verification"
           },
           "domains": {
-            "source": "INFERRED_HIGH_CONFIDENCE",
-            "confidence": 0.8,
-            "evidence": "category mapping and identity signals"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "canonical description is limited to creating, editing, and verifying skills"
           },
           "outputs": {
             "source": "INFERRED",
@@ -27688,19 +28025,29 @@
             "evidence": "enrichment baseline has no execution measurements"
           },
           "extensions.routing": {
-            "source": "INFERRED",
-            "confidence": 0.55,
-            "evidence": "offline enrichment annotations"
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "generic VERIFY or documentation work must not activate skill authoring"
+          },
+          "task_modes": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "skill work is a specialized documentation/process task"
+          },
+          "triggers": {
+            "source": "CURATED",
+            "confidence": 1.0,
+            "evidence": "body defines explicit skill creation/editing/testing/deployment triggers"
           }
         },
         "relationships": {}
       },
-      "review_status": "GENERATED",
-      "confidence": 0.8,
-      "last_verified": "2026-09-09T00:00:00Z",
+      "review_status": "CURATED",
+      "confidence": 1.0,
+      "last_verified": "2026-09-11T00:00:00Z",
       "body_policy": "READ_ONLY",
       "body_bytes_inspected": 22624,
-      "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
+      "notes": "Requires explicit skill creation, editing, testing, authoring, or deployment intent."
     },
     "xurl": {
       "skill_id": "xurl",
@@ -28098,5 +28445,5 @@
       "notes": "Routing fields are derived or incomplete; unknown permissions remain conservative."
     }
   },
-  "overlay_digest": "sha256:482720a45d8b74f5e9cda4eddc283993611510ba31403d991c4f297605f66f4b"
+  "overlay_digest": "sha256:be8eec30841c3ff8beddc13549f14ca3b77737aa39059191ab99d63bf2c8c1b2"
 }

@@ -969,6 +969,53 @@ def negative_routing_signals(record: dict[str, Any]) -> dict[str, list[str]]:
     return result
 
 
+def required_routing_triggers(record: dict[str, Any]) -> tuple[str, ...]:
+    """Return semantic activation gates declared for a skill.
+
+    Required triggers are deliberately a small routing contract, not a
+    permission mechanism.  Inferred overlay data cannot establish this gate;
+    only curated/author-declared routing data can do so.  Direct test or
+    compatibility records without an overlay provenance block are treated as
+    declared metadata, matching the existing metadata-first contract.
+    """
+
+    routing = (record.get("extensions", {}) or {}).get("routing", {}) or {}
+    values = routing.get("required_triggers", [])
+    if not isinstance(values, list):
+        return ()
+    provenance = (
+        (routing.get("metadata_provenance", {}) or {}).get("fields", {}) or {}
+    ).get("extensions.routing")
+    if (
+        routing.get("source") == "v3_routing_metadata_overlay"
+        and isinstance(provenance, dict)
+        and provenance.get("source") not in {"AUTHOR_DECLARED", "CURATED"}
+    ):
+        return ()
+    return tuple(
+        sorted(
+            {
+                value.strip().lower()
+                for value in values
+                if isinstance(value, str) and value.strip()
+            }
+        )
+    )
+
+
+def required_trigger_matches(
+    record: dict[str, Any], task_spec: dict[str, Any], stage: dict[str, Any]
+) -> tuple[str, ...]:
+    """Return the required activation triggers present in the request."""
+
+    text = task_text(task_spec, stage)
+    return tuple(
+        signal
+        for signal in required_routing_triggers(record)
+        if _contains_term(text, signal)
+    )
+
+
 def negative_trigger_matches(
     record: dict[str, Any], task_spec: dict[str, Any], stage: dict[str, Any]
 ) -> tuple[str, ...]:
