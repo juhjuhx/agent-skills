@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/install-package.schema.json",
+  "title": "Agent Skills Matrix v3 InstallPackage",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "package_version",
+    "package_digest",
+    "plan_digest",
+    "runtime_id",
+    "scope",
+    "project_root_reference",
+    "project_root_digest",
+    "snapshot_digest",
+    "runtime_contract_digest",
+    "install_target_digest",
+    "source_manifest_digest",
+    "marker_digest",
+    "marker_path",
+    "artifacts",
+    "excluded_artifacts",
+    "installable",
+    "apply_allowed",
+    "warnings"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "package_version": {"$ref": "common.schema.json#/$defs/shortString"},
+    "package_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "plan_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "runtime_id": {"$ref": "common.schema.json#/$defs/runtimeId"},
+    "scope": {"type": "string", "enum": ["PROJECT", "USER", "GLOBAL"]},
+    "project_root_reference": {"$ref": "common.schema.json#/$defs/digest"},
+    "project_root_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "snapshot_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "runtime_contract_digest": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "install_target_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "source_manifest_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "marker_digest": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "marker_path": {"$ref": "common.schema.json#/$defs/relativePath"},
+    "artifacts": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_path",
+          "destination_path",
+          "kind",
+          "lifecycle",
+          "source_digest",
+          "content_digest",
+          "expected_state",
+          "expected_digest",
+          "action",
+          "origin"
+        ],
+        "properties": {
+          "source_path": {"$ref": "common.schema.json#/$defs/relativePath"},
+          "destination_path": {"$ref": "common.schema.json#/$defs/relativePath"},
+          "kind": {"$ref": "common.schema.json#/$defs/shortString"},
+          "lifecycle": {
+            "type": "string",
+            "enum": ["INSTALL_PERSISTENT", "PROJECT_PERSISTENT"]
+          },
+          "source_digest": {"$ref": "common.schema.json#/$defs/digest"},
+          "content_digest": {"$ref": "common.schema.json#/$defs/digest"},
+          "expected_state": {
+            "type": "string",
+            "enum": ["ABSENT", "ASM_MANAGED", "MODIFIED_MANAGED", "USER_OWNED", "MISSING", "UNSAFE", "UNKNOWN"]
+          },
+          "expected_digest": {
+            "anyOf": [
+              {"$ref": "common.schema.json#/$defs/digest"},
+              {"type": "null"}
+            ]
+          },
+          "action": {
+            "type": "string",
+            "enum": ["CREATE", "UPDATE_MANAGED", "NO_OP", "SKIP_USER_OWNED", "CONFLICT"]
+          },
+          "origin": {
+            "type": "string",
+            "enum": ["CREATED_BY_ASM", "UPDATED_ASM_MANAGED", "NO_OP", "USER_OWNED", "CONFLICT"]
+          }
+        }
+      }
+    },
+    "excluded_artifacts": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "kind", "lifecycle", "reason"],
+        "properties": {
+          "path": {"$ref": "common.schema.json#/$defs/relativePath"},
+          "kind": {"$ref": "common.schema.json#/$defs/shortString"},
+          "lifecycle": {
+            "type": "string",
+            "enum": ["EXECUTION_EPHEMERAL", "INSTALL_PERSISTENT", "PROJECT_PERSISTENT"]
+          },
+          "reason": {"$ref": "common.schema.json#/$defs/shortString"}
+        }
+      }
+    },
+    "installable": {"type": "boolean"},
+    "apply_allowed": {"type": "boolean"},
+    "warnings": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "common.schema.json#/$defs/shortString"}
+    }
+  }
+}

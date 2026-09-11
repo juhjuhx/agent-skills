@@ -45,6 +45,8 @@ SCHEMA_FILES = {
     "RuntimeProductStatus": "runtime-product-status.schema.json",
     "InstallationPlan": "installation-plan.schema.json",
     "GeneratedArtifactManifest": "generated-artifact.schema.json",
+    "InstallPackage": "install-package.schema.json",
+    "ApplyResult": "apply-result.schema.json",
 }
 
 KNOWN_CAPABILITIES = frozenset(
