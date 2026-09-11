@@ -1,0 +1,72 @@
+{
+  "schema_version": "3.0",
+  "evidence_id": "evidence:static-productization-v1",
+  "phase": "3I",
+  "status": "STATIC_PRODUCTIZATION_READY",
+  "inventory_fixture": "ALL_KNOWN_STATIC",
+  "snapshot": {
+    "snapshot_id": "snapshot:87dc6a8790b10450",
+    "skill_count": 214,
+    "catalog_body_files_loaded_during_ranking": 0
+  },
+  "dogfood_route": {
+    "fixture_id": "B-ordinary-bug",
+    "stage": "implement",
+    "route_id": "route:T-router-B-ordinary-bug:implement:14d41f3d0aa00a88",
+    "route_digest": "sha256:1c1b1e046606f193d3eed067229885b59baccf0993e0e63f4d1c4b3350ff2bce",
+    "selected_skill_ids": [
+      "diagnose",
+      "tdd",
+      "using-superpowers",
+      "verification-before-completion"
+    ],
+    "reselected_by_compiler": false
+  },
+  "runtime_projection": [
+    {
+      "runtime_id": "codex",
+      "static_artifacts": true,
+      "artifact_count_with_dogfood_route": 10,
+      "live_execution": "TRANSPORT_BLOCKED"
+    },
+    {
+      "runtime_id": "claude-code",
+      "static_artifacts": true,
+      "artifact_count_with_dogfood_route": 10,
+      "live_execution": "RUNTIME_BLOCKED"
+    },
+    {
+      "runtime_id": "opencode",
+      "static_artifacts": true,
+      "artifact_count_with_dogfood_route": 10,
+      "live_execution": "PROVIDER_BLOCKED"
+    },
+    {
+      "runtime_id": "hermes",
+      "static_artifacts": false,
+      "artifact_count_with_dogfood_route": 0,
+      "adapter_support": "NOT_IMPLEMENTED",
+      "live_execution": "PROVIDER_BLOCKED"
+    }
+  ],
+  "conformance": {
+    "stage_route_consumed_without_reselection": true,
+    "selected_only_materialization": true,
+    "no_skill_needed_materializes_zero_bodies": true,
+    "compile_is_idempotent": true,
+    "installation_plan_is_deterministic": true,
+    "stale_snapshot_is_rejected": true,
+    "stale_runtime_contract_is_rejected": true,
+    "user_owned_output_is_not_overwritten": true,
+    "global_runtime_paths_are_rejected": true,
+    "runtime_process_invocations": false,
+    "global_runtime_writes": false
+  },
+  "evidence_policy": {
+    "canonical_skill_source": "skills/<skill>/SKILL.md",
+    "generated_artifacts_are_derived": true,
+    "model_or_effort_policy_generated": false,
+    "live_readiness_upgraded": false,
+    "stage_router_weights_mutated": false
+  }
+}

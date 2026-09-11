@@ -198,6 +198,28 @@ fixtures prove contract compatibility only; quality conclusions require
 `REAL_EXECUTION`. No live task/model quality runs are claimed in this phase,
 so the current verdict is `INSUFFICIENT_LIVE_EVIDENCE`.
 
+### Phase 3I Static Distribution Compiler
+
+Phase 3I productizes the stable routing plane without entering the execution
+plane. [`tools/v3/productization.py`](../../tools/v3/productization.py) consumes
+one validated `RoutingCatalogSnapshot`, existing adapter manifests, and a
+fixture-driven runtime capability inventory to produce a no-write
+`InstallationPlan`, runtime capability report, and deterministic derived output
+tree. It supports plan/compile/validate/explain operations but never probes a
+runtime, invokes a model, reads credentials, or writes global runtime
+configuration.
+
+The canonical source remains `skills/<skill>/SKILL.md`; generated runtime files
+carry source/snapshot/content digests and are never a second skill library.
+Codex, Claude Code, and OpenCode have meaningful static projections; Hermes is
+reported honestly as `NOT_IMPLEMENTED` without a fake distribution. Runtime
+status keeps install availability, adapter support, static contract, and live
+execution independent, so `CODEX_LIVE_TRANSPORT_BLOCKED` is preserved rather
+than turned into a false product-ready signal. See the
+[`static productization evidence`](evidence/STATIC_PRODUCTIZATION_V1.md),
+[`Phase 3I route`](evidence/PHASE3I_PRODUCTIZATION_ROUTE.md), and
+[`machine-readable conformance record`](../../fixtures/v3/productization/static-conformance-v1.json).
+
 ## Non-goals for this proposal
 
 This pass does not move or fork skills, rewrite `install.sh`, change `.superpowers/ROUTING_POLICY.yaml`, implement a general stage planner or model router, add a database or cloud service, install MCP servers, auto-import third-party skills, or implement non-Codex adapters. Those are follow-up phases and remain explicitly unimplemented.
