@@ -44,6 +44,12 @@ from tools.v3.productization import (
     load_runtime_inventory,
 )
 from tools.v3.routing_catalog import RoutingCatalogSnapshot
+from tools.v3.user_scope import (
+    USER_SCOPE_APPLY_NOT_AUTHORIZED,
+    UserScopeError,
+    build_user_scope_preview,
+    load_user_scope_contract,
+)
 
 
 DEFAULT_TARGET_INVENTORY = (
@@ -1110,6 +1116,8 @@ def apply_install_package(
 ) -> dict[str, Any]:
     """Apply a package with all-target preflight and bounded rollback."""
 
+    if package.get("scope") == "USER":
+        raise InstallerError(USER_SCOPE_APPLY_NOT_AUTHORIZED)
     root = _safe_project_root(project_root)
     target = (
         copy.deepcopy(target)
@@ -1994,6 +2002,33 @@ def _render_package_text(
     return "\n".join(lines)
 
 
+def _render_user_scope_text(
+    status: dict[str, Any], preview: dict[str, Any], result: dict[str, Any]
+) -> str:
+    """Render a symbolic USER preview without exposing a real home path."""
+
+    target = preview.get("runtime_target", {})
+    lines = [
+        "Agent Skills Matrix v3",
+        f"Runtime: {status.get('runtime_name', status.get('runtime_id'))} {status.get('observed_runtime_version') or 'UNKNOWN'}",
+        f"Install contract: {preview.get('support_classification', target.get('support_classification', 'UNKNOWN'))}",
+        "Scope: USER",
+        f"Platform: {preview.get('platform', 'UNKNOWN')}",
+        f"Strategy: {preview.get('distribution_strategy', 'UNSUPPORTED')} ({preview.get('strategy_support', 'UNKNOWN')})",
+        f"Destination: {target.get('selected_destination') or 'none'}",
+        f"Planned managed paths: {len(preview.get('planned_managed_paths', []))}",
+        f"Collisions: {preview.get('collisions', {}).get('note', 'UNKNOWN')}",
+        f"Static integration: {target.get('support_classification', 'UNKNOWN')}",
+        f"Live execution: {status.get('live_execution', 'UNKNOWN')}",
+        "No changes were made.",
+    ]
+    if preview.get("warnings"):
+        lines.extend(["Warnings:", *(f"  {item}" for item in preview["warnings"])])
+    if result.get("status") != "PREVIEWED":
+        lines.append(f"Result: {result.get('status', 'UNKNOWN')}")
+    return "\n".join(lines)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Agent Skills Matrix v3 safe project installer"
@@ -2020,6 +2055,9 @@ def main(argv: list[str] | None = None) -> int:
         )
         command_parser.add_argument("--project", type=Path)
         command_parser.add_argument("--distribution", type=Path)
+        command_parser.add_argument(
+            "--platform", choices=("linux", "macos", "windows"), default="macos"
+        )
         command_parser.add_argument(
             "--inventory",
             type=Path,
@@ -2117,9 +2155,39 @@ def main(argv: list[str] | None = None) -> int:
             )
 
         scope = normalize_scope(args.scope)
+        if args.command == "apply" and scope == "USER":
+            raise InstallerError(USER_SCOPE_APPLY_NOT_AUTHORIZED)
         status = _status_for(
             args.runtime, inventory=args.inventory, fixture=args.fixture
         )
+        if args.command == "preview" and scope == "USER":
+            preview = build_user_scope_preview(
+                status,
+                _load_snapshot(),
+                contract=load_user_scope_contract(),
+                platform=args.platform,
+            )
+            result = {
+                "status": "PREVIEWED",
+                "runtime_id": status["runtime_id"],
+                "scope": "USER",
+                "preview_digest": preview["preview_digest"],
+                "warnings": preview["warnings"],
+                "conflicts": [],
+                "no_actual_writes": True,
+            }
+            if args.format == "json":
+                print(
+                    json.dumps(
+                        {"preview": preview, "result": result},
+                        ensure_ascii=False,
+                        sort_keys=True,
+                        indent=2,
+                    )
+                )
+            else:
+                print(_render_user_scope_text(status, preview, result))
+            return 0
         if args.command == "apply" and scope != "PROJECT":
             raise InstallerError(
                 "user/global apply is deferred; only PROJECT scope is supported"
@@ -2207,7 +2275,7 @@ def main(argv: list[str] | None = None) -> int:
         finally:
             if holder is not None:
                 holder.cleanup()
-    except (InstallerError, ProductizationError) as exc:
+    except (InstallerError, ProductizationError, UserScopeError) as exc:
         if getattr(args, "format", "text") == "json":
             print(
                 json.dumps(

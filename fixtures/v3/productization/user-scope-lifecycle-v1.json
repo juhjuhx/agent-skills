@@ -1,0 +1,67 @@
+{
+  "schema_version": "3.0",
+  "user_scope_lifecycle_version": "1.0",
+  "fixture_kind": "VIRTUAL_HOME_ONLY",
+  "real_home_access": false,
+  "snapshots": {
+    "A": {
+      "snapshot_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "runtime_id": "claude-code",
+      "strategy": "MANAGED_COPY"
+    },
+    "B": {
+      "snapshot_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "runtime_id": "claude-code",
+      "strategy": "MANAGED_COPY"
+    }
+  },
+  "transitions": [
+    {
+      "skill_id": "unchanged-skill",
+      "previous_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "current_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "expected": "UNCHANGED"
+    },
+    {
+      "skill_id": "updated-skill",
+      "previous_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "current_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "expected": "CONTENT_UPDATED"
+    },
+    {
+      "skill_id": "added-skill",
+      "previous_digest": null,
+      "current_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "expected": "ADDED"
+    },
+    {
+      "skill_id": "removed-skill",
+      "previous_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "current_digest": null,
+      "expected": "REMOVED"
+    },
+    {
+      "skill_id": "user-modified-skill",
+      "previous_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "current_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "current_state": "MODIFIED_MANAGED",
+      "expected": "CONFLICT_USER_MODIFIED"
+    }
+  ],
+  "collision_examples": [
+    {"path": "${HOME}/.claude/skills/foo", "state": "ABSENT"},
+    {"path": "${HOME}/.claude/skills/bar", "state": "ASM_MANAGED"},
+    {"path": "${HOME}/.claude/skills/baz", "state": "USER_OWNED"},
+    {"path": "${HOME}/.claude/skills/qux", "state": "AMBIGUOUS"}
+  ],
+  "migration": {
+    "operation": "INSTALL_USER_SEPARATELY",
+    "project_uninstall": "OPTIONAL_SEPARATE_TRANSACTION",
+    "automatic_project_delete": false
+  },
+  "symlink_cases": [
+    {"strategy": "DIRECTORY_SYMLINK", "target_state": "REPOSITORY_MOVED", "expected": "REVALIDATE"},
+    {"strategy": "FILE_SYMLINK", "target_state": "UNKNOWN", "expected": "UNSUPPORTED_FOR_APPLY"}
+  ],
+  "fixture_digest": "sha256:634660eb9182365d561ceef97884ecdda9d48b529774ab8aae3127821b20ae35"
+}
