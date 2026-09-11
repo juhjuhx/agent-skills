@@ -23,6 +23,8 @@ OVERLAY = ROOT / "registry/v3/skill-routing-metadata.json"
 GENERATED = ROOT / "registry/v3/skill-routing-generated.json"
 CURATED = ROOT / "registry/v3/skill-routing-curated.json"
 FIXTURES = ROOT / "fixtures/v3/router/routing-eval-v1.json"
+HOLDOUT = ROOT / "fixtures/v3/routing/stage-router-semantic-holdout-v1.json"
+CENSUS = ROOT / "fixtures/v3/routing/stage-router-defect-census-v1.json"
 
 
 def _digest(value: str) -> str:
@@ -42,6 +44,7 @@ def _record(
     outputs: list[str] | None = None,
     relationships: list[dict[str, str]] | None = None,
     negative_triggers: list[str] | None = None,
+    required_triggers: list[str] | None = None,
     instruction_tokens: int = 100,
 ) -> dict:
     roles = roles or [role]
@@ -72,9 +75,14 @@ def _record(
     }
     if relationships:
         record["relationships"] = relationships
+    routing = {}
     if negative_triggers:
+        routing["negative_triggers"] = negative_triggers
+    if required_triggers:
+        routing["required_triggers"] = required_triggers
+    if routing:
         record["extensions"] = {
-            "routing": {"negative_triggers": negative_triggers}
+            "routing": routing
         }
     return record
 
@@ -197,6 +205,157 @@ class RoutingQualityTests(unittest.TestCase):
         self.assertFalse(any("permissions" in item.get("fields", {}) for item in curated["skills"].values()))
         self.assertTrue(validate_curated_overlay(curated, registry_path=REGISTRY).valid)
 
+    def test_curated_semantic_gates_are_compiled_with_curated_provenance(self):
+        overlay = load_overlay(OVERLAY)
+        for skill_id in (
+            "brandkit",
+            "brooks-harness",
+            "cost-tracker",
+            "llm-council",
+            "maps",
+            "permission-tuner",
+            "understand",
+            "understand-chat",
+            "understand-dashboard",
+            "understand-diff",
+            "understand-domain",
+            "invariant-guard",
+            "MCP Integration",
+            "redesign-existing-projects",
+            "survey-generator",
+            "wiki-viewer",
+            "writing-skills",
+        ):
+            with self.subTest(skill_id=skill_id):
+                record = overlay["skills"][skill_id]
+                routing = record["metadata"]["extensions"]["routing"]
+                self.assertTrue(routing["required_triggers"])
+                self.assertEqual(
+                    record["provenance"]["fields"]["extensions.routing"]["source"],
+                    "CURATED",
+                )
+
+    def test_generated_inference_does_not_create_semantic_hard_gates(self):
+        generated = load_overlay(GENERATED)
+        self.assertFalse(
+            any(
+                "required_triggers" in (record.get("metadata", {}).get("extensions", {}).get("routing", {}) or {})
+                for record in generated["skills"].values()
+            )
+        )
+
+    def test_defect_census_is_complete_for_recorded_scope(self):
+        census = json.loads(CENSUS.read_text(encoding="utf-8"))
+        self.assertEqual(census["counted_occurrences"], len(census["occurrences"]))
+        self.assertEqual(
+            sum(item["recorded_repeat_count"] for item in census["families"]),
+            census["counted_occurrences"],
+        )
+        self.assertTrue(
+            all(item["disposition"] != "UNKNOWN" for item in census["families"])
+        )
+
+    def test_semantic_holdout_has_near_misses_without_expected_skill_lists(self):
+        holdout = json.loads(HOLDOUT.read_text(encoding="utf-8"))
+        self.assertEqual(len(holdout["tasks"]), 8)
+        self.assertEqual(holdout["tuning_policy"], "HOLDOUT_NOT_FOR_ROUTING_TUNING")
+        self.assertTrue(
+            all("expected_skills" not in task and "expected" not in task for task in holdout["tasks"])
+        )
+        snapshot = RoutingCatalogSnapshot.from_registry(REGISTRY, overlay_path=OVERLAY)
+        router = StageRouter(registry_epoch=snapshot.registry_epoch)
+        for item in holdout["tasks"]:
+            stage = item["stage"]
+            objective = stage["objective"]
+            task = _task(
+                task_id=item["task_id"],
+                task_type=stage["task_type"],
+                goal=objective,
+                risk="MEDIUM" if stage["id"] == "review" else "LOW",
+                ambiguity="MEDIUM",
+                domains=stage["domains"],
+            )
+            with self.subTest(task=item["task_id"]):
+                route = router.route(task, stage, snapshot)
+                selected = {candidate["skill_id"] for candidate in route["selected_skills"]}
+                target = item["semantic_rubric"]["target_family"]
+                if item["semantic_rubric"]["target_expectation"] == "RELEVANT":
+                    self.assertIn(target, selected)
+                else:
+                    self.assertNotIn(target, selected)
+                self.assertEqual(route["routing_evidence"]["body_files_loaded"], 0)
+
+    def test_positive_counterparts_remain_available_for_closed_families(self):
+        cases = [
+            (
+                "maps",
+                _task(task_type="implementation", goal="Implement geocoding, nearby points of interest, and directions with OpenStreetMap", domains=["geospatial", "integrations"]),
+                _stage("implement", objective="Implement geocoding, nearby points of interest, and directions with OpenStreetMap", task_type="implementation", domains=["geospatial", "integrations"], required_roles=["DOMAIN"]),
+            ),
+            (
+                "cost-tracker",
+                _task(task_type="review", goal="Verify token spend, budget quota, and usage accounting", domains=["context-engineering", "cost-management"]),
+                _stage("verify", objective="Verify token spend, budget quota, and usage accounting", task_type="review", domains=["context-engineering", "cost-management"], required_roles=["VERIFY"]),
+            ),
+            (
+                "wiki-viewer",
+                _task(task_type="research", goal="Browse a workflow wiki and render its knowledge-base page-link graph", domains=["research", "documentation"]),
+                _stage("research", objective="Browse a workflow wiki and render its knowledge-base page-link graph", task_type="research", domains=["research", "documentation"], required_roles=["DOMAIN"]),
+            ),
+            (
+                "understand",
+                _task(task_type="research", goal="Analyze the codebase architecture and map module dependencies into a knowledge graph", domains=["repository", "architecture"]),
+                _stage("understand", objective="Analyze the codebase architecture and map module dependencies into a knowledge graph", task_type="research", domains=["repository", "architecture"], required_roles=["PROCESS"]),
+            ),
+            (
+                "understand-chat",
+                _task(task_type="research", goal="Ask questions about a codebase using its module dependencies", domains=["repository", "code-understanding"]),
+                _stage("understand", objective="Ask questions about a codebase using its module dependencies", task_type="research", domains=["repository", "code-understanding"], required_roles=["DOMAIN"]),
+            ),
+            (
+                "understand-dashboard",
+                _task(task_type="research", goal="Visualize the knowledge graph in the interactive codebase dashboard", domains=["knowledge-graph", "visualization"]),
+                _stage("understand", objective="Visualize the knowledge graph in the interactive codebase dashboard", task_type="research", domains=["knowledge-graph", "visualization"], required_roles=["DOMAIN"]),
+            ),
+            (
+                "understand-domain",
+                _task(task_type="research", goal="Extract business domain flows and create a domain graph", domains=["business-domain", "domain-analysis"]),
+                _stage("understand", objective="Extract business domain flows and create a domain graph", task_type="research", domains=["business-domain", "domain-analysis"], required_roles=["DOMAIN"]),
+            ),
+            (
+                "understand-diff",
+                _task(task_type="review", goal="Analyze the git diff and affected components in this pull request", domains=["repository"]),
+                _stage("understand", objective="Analyze the git diff and affected components in this pull request", task_type="review", domains=["repository"], required_roles=["DOMAIN"]),
+            ),
+            (
+                "MCP Integration",
+                _task(task_type="design", goal="Design an MCP server integration using the Model Context Protocol", domains=["mcp", "integrations"]),
+                _stage("design", objective="Design an MCP server integration using the Model Context Protocol", task_type="design", domains=["mcp", "integrations"], required_roles=["TOOL"]),
+            ),
+            (
+                "survey-generator",
+                _task(task_type="research", goal="Compile a literature survey and deep dive with a bibliography", domains=["research", "literature"]),
+                _stage("research", objective="Compile a literature survey and deep dive with a bibliography", task_type="research", domains=["research", "literature"], required_roles=["PROCESS"]),
+            ),
+            (
+                "invariant-guard",
+                _task(task_type="review", goal="Review an algorithm's loop invariant, postcondition, and off-by-one edge cases", domains=["software-engineering"]),
+                _stage("review", objective="Review an algorithm's loop invariant, postcondition, and off-by-one edge cases", task_type="review", domains=["software-engineering"], required_roles=["REVIEW"]),
+            ),
+            (
+                "redesign-existing-projects",
+                _task(task_type="design", goal="Redesign an existing website UI and improve its generic visual patterns", domains=["frontend", "visual-design"]),
+                _stage("design", objective="Redesign an existing website UI and improve its generic visual patterns", task_type="design", domains=["frontend", "visual-design"], required_roles=["DOMAIN"]),
+            ),
+        ]
+        snapshot = RoutingCatalogSnapshot.from_registry(REGISTRY, overlay_path=OVERLAY)
+        router = StageRouter(registry_epoch=snapshot.registry_epoch)
+        for skill_id, task, stage in cases:
+            with self.subTest(skill_id=skill_id):
+                route = router.route(task, stage, snapshot)
+                self.assertIn(skill_id, {candidate["skill_id"] for candidate in route["selected_skills"]})
+
+
     def test_negative_trigger_suppresses_irrelevant_activation(self):
         catalog = [
             _record("generic-ui-process", stages=["design"], modes=["design"], domains=["visual-design"], negative_triggers=["visual design"], outputs=["design artifact"]),
@@ -221,6 +380,106 @@ class RoutingQualityTests(unittest.TestCase):
         selected = {item["skill_id"] for item in route["selected_skills"]}
         self.assertEqual(selected, {"main-process", "required-tool"})
         self.assertTrue(any("REQUIRES:main-process->required-tool" in effect for effect in route["routing_evidence"]["relationship_effects"]))
+
+    def test_required_trigger_blocks_generic_semantic_overlap(self):
+        candidate = _record(
+            "permission-specialist",
+            role="REVIEW",
+            roles=["REVIEW"],
+            stages=["review"],
+            modes=["review"],
+            domains=["quality-and-safety"],
+            required_triggers=["permission boundary", "sandbox policy"],
+        )
+        route = StageRouter(registry_epoch="test").route(
+            _task(
+                task_type="review",
+                goal="Review repository quality and test evidence",
+                domains=["quality-and-safety"],
+            ),
+            _stage(
+                "review",
+                objective="Review repository quality and test evidence",
+                task_type="review",
+                domains=["quality-and-safety"],
+                required_roles=["REVIEW"],
+            ),
+            [candidate],
+        )
+
+        self.assertEqual(route["status"], "NO_SKILL_NEEDED")
+        rejected = next(
+            item
+            for item in route["routing_evidence"]["rejected_candidates"]
+            if item["skill_id"] == "permission-specialist"
+        )
+        self.assertIn("required routing trigger", " ".join(rejected["reasons"]))
+
+    def test_required_trigger_preserves_true_semantic_match(self):
+        candidate = _record(
+            "permission-specialist",
+            role="REVIEW",
+            roles=["REVIEW"],
+            stages=["review"],
+            modes=["review"],
+            domains=["security"],
+            required_triggers=["permission boundary", "sandbox policy"],
+        )
+        route = StageRouter(registry_epoch="test").route(
+            _task(
+                task_type="review",
+                goal="Audit the permission boundary against the threat path",
+                domains=["security"],
+            ),
+            _stage(
+                "review",
+                objective="Audit the permission boundary against the threat path",
+                task_type="review",
+                domains=["security"],
+                required_roles=["REVIEW"],
+            ),
+            [candidate],
+        )
+
+        self.assertIn(
+            "permission-specialist",
+            {item["skill_id"] for item in route["selected_skills"]},
+        )
+
+    def test_relationship_expansion_cannot_bypass_required_trigger(self):
+        primary = _record(
+            "primary-process",
+            roles=["PROCESS"],
+            stages=["implement"],
+            modes=["implementation"],
+            relationships=[
+                {"type": "COMPLEMENTS", "target": "specialist"}
+            ],
+        )
+        specialist = _record(
+            "specialist",
+            role="DOMAIN",
+            roles=["DOMAIN"],
+            stages=["implement"],
+            modes=["implementation"],
+            domains=["software-engineering"],
+            required_triggers=["specialized protocol"],
+        )
+        route = StageRouter(registry_epoch="test").route(
+            _task(goal="Implement a routine software change"),
+            _stage("implement", required_roles=["PROCESS"]),
+            [primary, specialist],
+        )
+
+        selected = {item["skill_id"] for item in route["selected_skills"]}
+        self.assertIn("primary-process", selected)
+        self.assertNotIn("specialist", selected)
+        rejected = next(
+            item
+            for item in route["routing_evidence"]["rejected_candidates"]
+            if item["skill_id"] == "specialist"
+        )
+        self.assertIn("required routing trigger", " ".join(rejected["reasons"]))
 
     def test_stage_and_domain_exclusions_are_negative_routing_signals(self):
         catalog = [
@@ -363,6 +622,37 @@ class RoutingQualityTests(unittest.TestCase):
         second = [router.route(item["task_spec"], item["stage"], snapshot) for item in suite["fixtures"]]
         self.assertEqual(first, second)
         self.assertEqual(first[0]["status"], "NO_SKILL_NEEDED")
+
+    def test_warm_routing_performance_smoke(self):
+        snapshot = RoutingCatalogSnapshot.from_registry(REGISTRY, overlay_path=OVERLAY)
+        router = StageRouter(registry_epoch=snapshot.registry_epoch)
+        task = _task(
+            task_type="review",
+            goal="Audit the repository and verify the changed files",
+            complexity="COMPLEX",
+            ambiguity="MEDIUM",
+            domains=["repository"],
+        )
+        stage = _stage(
+            "review",
+            objective="Audit the repository and verify the changed files",
+            task_type="review",
+            domains=["repository"],
+            required_roles=["REVIEW", "VERIFY"],
+            evidence=["source inspection", "tests"],
+        )
+        routes = [router.route(task, stage, snapshot, measure=True) for _ in range(3)]
+        timings = [
+            route["routing_evidence"]["timings_ms"]["total_route_ms"]
+            for route in routes
+        ]
+        self.assertLess(max(timings), 250.0)
+        self.assertTrue(
+            all(
+                route["routing_evidence"]["body_files_loaded"] == 0
+                for route in routes
+            )
+        )
 
 
 if __name__ == "__main__":

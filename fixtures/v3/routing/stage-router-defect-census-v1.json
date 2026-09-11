@@ -1,0 +1,201 @@
+{
+  "schema_version": "3.0",
+  "census_id": "stage-router-defect-census-v1",
+  "scope": "recorded Stage Router false-positive observations from Phase 3C through Phase 3H dogfood replay",
+  "evidence_policy": "Only explicit dogfood route observations are counted; missing scores, relationship effects, and unseen occurrences remain null or unknown.",
+  "source_evidence": [
+    "docs/v3/evidence/PHASE3C1_DOGFOOD_ROUTE.md",
+    "docs/v3/evidence/PHASE3C2_OPENCODE_DOGFOOD_ROUTE.md",
+    "docs/v3/evidence/PHASE3C3_OPENCODE_DIAGNOSTIC_ROUTE.md",
+    "docs/v3/evidence/PHASE3C_LIVE_BENCHMARK_DOGFOOD_ROUTE.md",
+    "docs/v3/evidence/PHASE3D_CLAUDE_DOGFOOD_ROUTE.md",
+    "docs/v3/evidence/PHASE3E_HERMES_QUALIFICATION_ROUTE.md",
+    "docs/v3/evidence/PHASE3F_CODEX_EFFORT_ROUTE.md",
+    "docs/v3/evidence/PHASE3G_CODEX_EFFORT_RECOVERY_ROUTE.md",
+    "fixtures/v3/routing/phase3h-dogfood-v1.json"
+  ],
+  "counted_occurrences": 26,
+  "families": [
+    {
+      "family_id": "brandkit",
+      "classification": ["DOMAIN_FALSE_POSITIVE", "GENERIC_TRIGGER_OVERREACH", "ROLE_FALSE_POSITIVE"],
+      "disposition": "FIXED_METADATA",
+      "root_cause": "Broad review/design/security compatibility metadata treated generic stage language as sufficient for a branding procedure.",
+      "semantic_boundary": "Requires explicit branding, visual identity, logo, or brand-system intent; remains eligible for true brand work.",
+      "recorded_repeat_count": 5
+    },
+    {
+      "family_id": "maps",
+      "classification": ["DOMAIN_FALSE_POSITIVE", "GENERIC_TRIGGER_OVERREACH"],
+      "disposition": "FIXED_METADATA",
+      "root_cause": "Generic implementation compatibility was broader than the location-intelligence procedure.",
+      "semantic_boundary": "Requires geospatial, geocoding, POI, directions, timezone, or explicit map-provider intent.",
+      "recorded_repeat_count": 1
+    },
+    {
+      "family_id": "permission-tuner",
+      "classification": ["ROLE_FALSE_POSITIVE", "MISSING_NEGATIVE_SIGNAL"],
+      "disposition": "FIXED_METADATA",
+      "root_cause": "Security/review role metadata did not require a permission, authorization, sandbox, or access-boundary need.",
+      "semantic_boundary": "Requires explicit permission, authorization, least-privilege, sandbox, access-control, or denial-pattern intent.",
+      "recorded_repeat_count": 1
+    },
+    {
+      "family_id": "writing-skills",
+      "classification": ["ROLE_FALSE_POSITIVE", "GENERIC_TRIGGER_OVERREACH", "STAGE_MISMATCH"],
+      "disposition": "FIXED_METADATA",
+      "root_cause": "A skill-authoring procedure was exposed as a generic VERIFY candidate because its outputs overlapped broad evidence vocabulary.",
+      "semantic_boundary": "Requires creating, editing, testing, verifying, or deploying an agent skill.",
+      "recorded_repeat_count": 3
+    },
+    {
+      "family_id": "cost-tracker",
+      "classification": ["ROLE_FALSE_POSITIVE", "MISSING_NEGATIVE_SIGNAL"],
+      "disposition": "FIXED_METADATA",
+      "root_cause": "Cost/usage verification metadata was observed in a generic VERIFY route without a cost or quota requirement; body availability was also missing.",
+      "semantic_boundary": "Requires cost, budget, quota, billing, token spend, usage accounting, or spending-limit intent.",
+      "recorded_repeat_count": 1
+    },
+    {
+      "family_id": "llm-council",
+      "classification": ["PROCESS_FALSE_POSITIVE", "ROLE_FALSE_POSITIVE", "GENERIC_TRIGGER_OVERREACH"],
+      "disposition": "FIXED_METADATA",
+      "root_cause": "Multi-model deliberation metadata was treated as a generic plan/review/verification enhancement.",
+      "semantic_boundary": "Requires explicit multi-model, council, consensus, deliberation, ensemble, or independent model perspectives.",
+      "recorded_repeat_count": 2
+    },
+    {
+      "family_id": "wiki-viewer",
+      "classification": ["STAGE_MISMATCH", "DOMAIN_FALSE_POSITIVE"],
+      "disposition": "FIXED_METADATA",
+      "root_cause": "Wiki/documentation handoff vocabulary made a wiki-rendering procedure look relevant to ordinary evidence handoff.",
+      "semantic_boundary": "Requires wiki, knowledge-base, page-link graph, seed queue, wiki browsing, or wiki handoff intent.",
+      "recorded_repeat_count": 1
+    },
+    {
+      "family_id": "understand-chat",
+      "classification": ["DOMAIN_FALSE_POSITIVE", "STAGE_MISMATCH", "GENERIC_TRIGGER_OVERREACH"],
+      "disposition": "FIXED_METADATA",
+      "root_cause": "Knowledge-graph-backed conversation understanding was exposed by generic UNDERSTAND language.",
+      "semantic_boundary": "Requires codebase questions, codebase tour/architecture, module dependencies, or an explicit knowledge-graph workflow.",
+      "recorded_repeat_count": 2
+    },
+    {
+      "family_id": "understand",
+      "classification": ["DOMAIN_FALSE_POSITIVE", "STAGE_MISMATCH"],
+      "disposition": "FIXED_METADATA",
+      "root_cause": "The related knowledge-graph understand variant was selected alongside understand-chat for a bounded non-graph task.",
+      "semantic_boundary": "Requires the installed knowledge-graph/source-understanding procedure's explicit repository-understanding need.",
+      "recorded_repeat_count": 1
+    },
+    {
+      "family_id": "brooks-harness",
+      "classification": ["PROCESS_FALSE_POSITIVE", "GENERIC_TRIGGER_OVERREACH"],
+      "disposition": "FIXED_METADATA",
+      "root_cause": "A plugin-maintenance harness was selected as a generic verification process for a repository-local contract task.",
+      "semantic_boundary": "Requires brooks-lint/plugin maintenance or an explicit harness-maintenance request.",
+      "recorded_repeat_count": 1
+    },
+    {
+      "family_id": "understand-dashboard",
+      "classification": ["DOMAIN_FALSE_POSITIVE", "STAGE_MISMATCH"],
+      "disposition": "FIXED_METADATA",
+      "root_cause": "Dashboard visualization metadata treated generic UNDERSTAND work as a request to launch a knowledge-graph dashboard.",
+      "semantic_boundary": "Requires explicit knowledge-graph dashboard or visualization intent.",
+      "recorded_repeat_count": 1
+    },
+    {
+      "family_id": "understand-domain",
+      "classification": ["DOMAIN_FALSE_POSITIVE", "STAGE_MISMATCH"],
+      "disposition": "FIXED_METADATA",
+      "root_cause": "Business-domain graph extraction metadata treated generic repository understanding as domain-flow analysis.",
+      "semantic_boundary": "Requires explicit business-domain, domain-flow, or business-process intent.",
+      "recorded_repeat_count": 1
+    },
+    {
+      "family_id": "MCP Integration",
+      "classification": ["DOMAIN_FALSE_POSITIVE", "GENERIC_TRIGGER_OVERREACH"],
+      "disposition": "FIXED_METADATA",
+      "root_cause": "MCP integration metadata was activated by generic research/integration vocabulary without an MCP request.",
+      "semantic_boundary": "Requires explicit MCP, Model Context Protocol, MCP server, or .mcp.json intent.",
+      "recorded_repeat_count": 1
+    },
+    {
+      "family_id": "survey-generator",
+      "classification": ["DOMAIN_FALSE_POSITIVE", "GENERIC_TRIGGER_OVERREACH"],
+      "disposition": "FIXED_METADATA",
+      "root_cause": "Literature-survey metadata treated generic research as a request for a survey artifact.",
+      "semantic_boundary": "Requires survey, literature review, lit review, or deep-dive intent.",
+      "recorded_repeat_count": 1
+    },
+    {
+      "family_id": "understand-diff",
+      "classification": ["DOMAIN_FALSE_POSITIVE", "STAGE_MISMATCH"],
+      "disposition": "FIXED_METADATA",
+      "root_cause": "Git-diff analysis metadata activated in an UNDERSTAND stage without changed-file or pull-request analysis.",
+      "semantic_boundary": "Requires explicit git diff, pull request, changed-files, or change-impact analysis intent.",
+      "recorded_repeat_count": 1
+    },
+    {
+      "family_id": "invariant-guard",
+      "classification": ["DOMAIN_FALSE_POSITIVE", "GENERIC_TRIGGER_OVERREACH"],
+      "disposition": "FIXED_METADATA",
+      "root_cause": "Algorithm-invariant metadata activated from broad safety/invariant vocabulary during routing research.",
+      "semantic_boundary": "Requires explicit algorithm correctness, loop invariant, postcondition, termination, or edge-case proof work.",
+      "recorded_repeat_count": 1
+    },
+    {
+      "family_id": "redesign-existing-projects",
+      "classification": ["DOMAIN_FALSE_POSITIVE", "GENERIC_TRIGGER_OVERREACH"],
+      "disposition": "FIXED_METADATA",
+      "root_cause": "Frontend redesign metadata activated from generic repository/design-quality language during routing research.",
+      "semantic_boundary": "Requires explicit existing-site/UI redesign intent.",
+      "recorded_repeat_count": 1
+    },
+    {
+      "family_id": "mathguard",
+      "classification": ["DOMAIN_FALSE_POSITIVE", "GENERIC_TRIGGER_OVERREACH"],
+      "disposition": "FALSE_POSITIVE_CONFIRMED_BUT_DEFERRED",
+      "root_cause": "A single final dogfood replay selected a mathematical/data-safety procedure from broad research/evidence vocabulary.",
+      "semantic_boundary": "Requires explicit mathematical proof, numeric bounds, statistics, or quantitative reasoning work.",
+      "recorded_repeat_count": 1
+    }
+  ],
+  "occurrences": [
+    {"phase": "3C.1", "task": "live evidence", "fixture": null, "stage": "HARDEN", "skill_id": "brandkit", "role": null, "selection_score": null, "score_components": null, "metadata_triggers": ["generic design/security compatibility"], "relationship_influence": "NONE_RECORDED", "body_loaded": true, "procedure_executed": false, "expected_semantic_reason_not_selected": "Runtime hardening had no branding or visual-identity requirement.", "evidence_ref": "docs/v3/evidence/PHASE3C1_DOGFOOD_ROUTE.md#L38"},
+    {"phase": "3C.2", "task": "OpenCode read-only adapter", "fixture": null, "stage": "REVIEW", "skill_id": "brandkit", "role": "PROCESS", "selection_score": null, "score_components": null, "metadata_triggers": ["review stage", "generic design/security compatibility"], "relationship_influence": "NONE_RECORDED", "body_loaded": true, "procedure_executed": false, "expected_semantic_reason_not_selected": "Adapter/configuration review was not brand-kit creation.", "evidence_ref": "docs/v3/evidence/PHASE3C2_OPENCODE_DOGFOOD_ROUTE.md#L255"},
+    {"phase": "3C.2", "task": "OpenCode read-only adapter", "fixture": null, "stage": "HARDEN", "skill_id": "brandkit", "role": "DOMAIN", "selection_score": null, "score_components": null, "metadata_triggers": ["harden stage", "generic security/domain compatibility"], "relationship_influence": "NONE_RECORDED", "body_loaded": true, "procedure_executed": false, "expected_semantic_reason_not_selected": "Permission/config hardening had no branding domain.", "evidence_ref": "docs/v3/evidence/PHASE3C2_OPENCODE_DOGFOOD_ROUTE.md#L256"},
+    {"phase": "3C.2", "task": "OpenCode read-only adapter", "fixture": null, "stage": "VERIFY", "skill_id": "llm-council", "role": "DOMAIN", "selection_score": null, "score_components": null, "metadata_triggers": ["verification stage", "generic review/evidence compatibility"], "relationship_influence": "NONE_RECORDED", "body_loaded": true, "procedure_executed": false, "expected_semantic_reason_not_selected": "Local schema and smoke verification did not require multi-model deliberation.", "evidence_ref": "docs/v3/evidence/PHASE3C2_OPENCODE_DOGFOOD_ROUTE.md#L257"},
+    {"phase": "3C.2", "task": "OpenCode read-only adapter", "fixture": null, "stage": "VERIFY", "skill_id": "brooks-harness", "role": "PROCESS", "selection_score": null, "score_components": null, "metadata_triggers": ["verification stage", "generic harness/test compatibility"], "relationship_influence": "NONE_RECORDED", "body_loaded": true, "procedure_executed": false, "expected_semantic_reason_not_selected": "The task did not maintain the brooks-lint plugin or harness.", "evidence_ref": "docs/v3/evidence/PHASE3C2_OPENCODE_DOGFOOD_ROUTE.md#L258"},
+    {"phase": "3C.3", "task": "OpenCode runtime diagnostic", "fixture": null, "stage": "VERIFY", "skill_id": "writing-skills", "role": "VERIFY", "selection_score": null, "score_components": null, "metadata_triggers": ["verification stage", "broad evidence outputs"], "relationship_influence": "NONE_RECORDED", "body_loaded": true, "procedure_executed": false, "expected_semantic_reason_not_selected": "Runtime diagnostics were not skill authoring or deployment.", "evidence_ref": "docs/v3/evidence/PHASE3C3_OPENCODE_DIAGNOSTIC_ROUTE.md#L78"},
+    {"phase": "3C", "task": "bounded live benchmark", "fixture": null, "stage": "VERIFY", "skill_id": "writing-skills", "role": "VERIFY", "selection_score": null, "score_components": null, "metadata_triggers": ["verification stage", "broad evidence outputs"], "relationship_influence": "NONE_RECORDED", "body_loaded": true, "procedure_executed": false, "expected_semantic_reason_not_selected": "Benchmark evidence verification was not skill authoring.", "evidence_ref": "docs/v3/evidence/PHASE3C_LIVE_BENCHMARK_DOGFOOD_ROUTE.md#L33"},
+    {"phase": "3D", "task": "Claude read-only adapter", "fixture": null, "stage": "UNDERSTAND", "skill_id": "understand", "role": "PROCESS", "selection_score": null, "score_components": null, "metadata_triggers": ["understand stage", "generic repository understanding"], "relationship_influence": "NONE_RECORDED", "body_loaded": false, "procedure_executed": false, "expected_semantic_reason_not_selected": "The adapter task was bounded by existing contracts and did not require a knowledge-graph understand workflow.", "evidence_ref": "docs/v3/evidence/PHASE3D_CLAUDE_DOGFOOD_ROUTE.md#L82"},
+    {"phase": "3D", "task": "Claude read-only adapter", "fixture": null, "stage": "UNDERSTAND", "skill_id": "understand-chat", "role": "DOMAIN", "selection_score": null, "score_components": null, "metadata_triggers": ["understand stage", "generic repository understanding"], "relationship_influence": "NONE_RECORDED", "body_loaded": false, "procedure_executed": false, "expected_semantic_reason_not_selected": "No knowledge-graph-backed code question was requested.", "evidence_ref": "docs/v3/evidence/PHASE3D_CLAUDE_DOGFOOD_ROUTE.md#L83"},
+    {"phase": "3D", "task": "Claude read-only adapter", "fixture": null, "stage": "DESIGN", "skill_id": "brandkit", "role": "PROCESS", "selection_score": null, "score_components": null, "metadata_triggers": ["design stage", "generic visual/design compatibility"], "relationship_influence": "NONE_RECORDED", "body_loaded": false, "procedure_executed": false, "expected_semantic_reason_not_selected": "Runtime contract design had no brand-system or visual-identity output.", "evidence_ref": "docs/v3/evidence/PHASE3D_CLAUDE_DOGFOOD_ROUTE.md#L88"},
+    {"phase": "3D", "task": "Claude read-only adapter", "fixture": null, "stage": "PLAN", "skill_id": "llm-council", "role": "VERIFY", "selection_score": null, "score_components": null, "metadata_triggers": ["plan stage", "generic decision/review compatibility"], "relationship_influence": "NONE_RECORDED", "body_loaded": false, "procedure_executed": false, "expected_semantic_reason_not_selected": "The implementation plan did not request multi-model deliberation.", "evidence_ref": "docs/v3/evidence/PHASE3D_CLAUDE_DOGFOOD_ROUTE.md#L93"},
+    {"phase": "3E", "task": "Hermes qualification", "fixture": null, "stage": "VERIFY", "skill_id": "cost-tracker", "role": "VERIFY", "selection_score": null, "score_components": null, "metadata_triggers": ["verification stage", "cost/usage metadata"], "relationship_influence": "NONE_RECORDED", "body_loaded": false, "procedure_executed": false, "expected_semantic_reason_not_selected": "Qualification verification did not require cost/quota accounting; no body was available.", "evidence_ref": "docs/v3/evidence/PHASE3E_HERMES_QUALIFICATION_ROUTE.md#L75"},
+    {"phase": "3F", "task": "Codex effort evaluation", "fixture": null, "stage": "IMPLEMENT", "skill_id": "maps", "role": "DOMAIN", "selection_score": null, "score_components": null, "metadata_triggers": ["implementation stage", "generic implementation compatibility"], "relationship_influence": "NONE_RECORDED", "body_loaded": true, "procedure_executed": false, "expected_semantic_reason_not_selected": "The experiment harness was not geospatial or map-provider work.", "evidence_ref": "docs/v3/evidence/PHASE3F_CODEX_EFFORT_ROUTE.md#L35"},
+    {"phase": "3F", "task": "Codex effort evaluation", "fixture": null, "stage": "REVIEW", "skill_id": "brandkit", "role": "PROCESS", "selection_score": null, "score_components": null, "metadata_triggers": ["review stage", "generic design compatibility"], "relationship_influence": "NONE_RECORDED", "body_loaded": true, "procedure_executed": false, "expected_semantic_reason_not_selected": "Experiment review had no branding or visual-identity requirement.", "evidence_ref": "docs/v3/evidence/PHASE3F_CODEX_EFFORT_ROUTE.md#L35"},
+    {"phase": "3F", "task": "Codex effort evaluation", "fixture": null, "stage": "REVIEW", "skill_id": "permission-tuner", "role": "REVIEW", "selection_score": null, "score_components": null, "metadata_triggers": ["review stage", "generic security compatibility"], "relationship_influence": "NONE_RECORDED", "body_loaded": true, "procedure_executed": false, "expected_semantic_reason_not_selected": "Experiment review did not inspect a permission or authorization boundary.", "evidence_ref": "docs/v3/evidence/PHASE3F_CODEX_EFFORT_ROUTE.md#L35"},
+    {"phase": "3G", "task": "Codex effort recovery", "fixture": null, "stage": "UNDERSTAND", "skill_id": "understand-chat", "role": "DOMAIN", "selection_score": null, "score_components": null, "metadata_triggers": ["understand stage", "generic repository understanding"], "relationship_influence": "NONE_RECORDED", "body_loaded": true, "procedure_executed": false, "expected_semantic_reason_not_selected": "Transport recovery did not require graph-backed chat analysis.", "evidence_ref": "docs/v3/evidence/PHASE3G_CODEX_EFFORT_RECOVERY_ROUTE.md#L25"},
+    {"phase": "3G", "task": "Codex effort recovery", "fixture": null, "stage": "VERIFY", "skill_id": "writing-skills", "role": "VERIFY", "selection_score": null, "score_components": null, "metadata_triggers": ["verification stage", "broad evidence outputs"], "relationship_influence": "NONE_RECORDED", "body_loaded": true, "procedure_executed": false, "expected_semantic_reason_not_selected": "Transport evidence verification was not skill authoring.", "evidence_ref": "docs/v3/evidence/PHASE3G_CODEX_EFFORT_RECOVERY_ROUTE.md#L27"},
+    {"phase": "3G", "task": "Codex effort recovery", "fixture": null, "stage": "HANDOFF", "skill_id": "wiki-viewer", "role": "DOMAIN", "selection_score": null, "score_components": null, "metadata_triggers": ["handoff stage", "generic documentation/research compatibility"], "relationship_influence": "NONE_RECORDED", "body_loaded": true, "procedure_executed": false, "expected_semantic_reason_not_selected": "The handoff did not require rendering or browsing a workflow wiki.", "evidence_ref": "docs/v3/evidence/PHASE3G_CODEX_EFFORT_RECOVERY_ROUTE.md#L28"},
+    {"phase": "3H", "task": "Stage Router defect closure", "fixture": "phase3h-dogfood-v1", "stage": "UNDERSTAND", "skill_id": "understand-dashboard", "role": "PROCESS", "selection_score": null, "score_components": null, "metadata_triggers": ["understand stage", "generic repository evidence"], "relationship_influence": "NONE_RECORDED", "body_loaded": false, "procedure_executed": false, "expected_semantic_reason_not_selected": "The task did not request a knowledge-graph dashboard.", "evidence_ref": "docs/v3/evidence/PHASE3H_ROUTING_CLEANUP_ROUTE.md#dogfood-routes-after"},
+    {"phase": "3H", "task": "Stage Router defect closure", "fixture": "phase3h-dogfood-v1", "stage": "UNDERSTAND", "skill_id": "understand-domain", "role": "DOMAIN", "selection_score": null, "score_components": null, "metadata_triggers": ["understand stage", "repository domain vocabulary"], "relationship_influence": "NONE_RECORDED", "body_loaded": false, "procedure_executed": false, "expected_semantic_reason_not_selected": "The task did not request business-domain flow extraction.", "evidence_ref": "docs/v3/evidence/PHASE3H_ROUTING_CLEANUP_ROUTE.md#dogfood-routes-after"},
+    {"phase": "3H", "task": "Stage Router defect closure", "fixture": "phase3h-dogfood-v1", "stage": "RESEARCH", "skill_id": "MCP Integration", "role": "DOMAIN", "selection_score": null, "score_components": null, "metadata_triggers": ["research stage", "integration vocabulary"], "relationship_influence": "NONE_RECORDED", "body_loaded": false, "procedure_executed": false, "expected_semantic_reason_not_selected": "No MCP server or Model Context Protocol integration was in scope.", "evidence_ref": "docs/v3/evidence/PHASE3H_ROUTING_CLEANUP_ROUTE.md#dogfood-routes-after"},
+    {"phase": "3H", "task": "Stage Router defect closure", "fixture": "phase3h-dogfood-v1", "stage": "RESEARCH", "skill_id": "survey-generator", "role": "PROCESS", "selection_score": null, "score_components": null, "metadata_triggers": ["research stage", "generic research outputs"], "relationship_influence": "NONE_RECORDED", "body_loaded": false, "procedure_executed": false, "expected_semantic_reason_not_selected": "No literature survey, bibliography, or deep-dive artifact was requested.", "evidence_ref": "docs/v3/evidence/PHASE3H_ROUTING_CLEANUP_ROUTE.md#dogfood-routes-after"},
+    {"phase": "3H", "task": "Stage Router defect closure", "fixture": "phase3h-dogfood-v1", "stage": "UNDERSTAND", "skill_id": "understand-diff", "role": "DOMAIN", "selection_score": null, "score_components": null, "metadata_triggers": ["understand stage", "repository evidence"], "relationship_influence": "NONE_RECORDED", "body_loaded": false, "procedure_executed": false, "expected_semantic_reason_not_selected": "No git diff or pull-request change-impact analysis was requested.", "evidence_ref": "docs/v3/evidence/PHASE3H_ROUTING_CLEANUP_ROUTE.md#dogfood-routes-after"},
+    {"phase": "3H", "task": "Stage Router defect closure", "fixture": "phase3h-dogfood-v1", "stage": "RESEARCH", "skill_id": "invariant-guard", "role": "DOMAIN", "selection_score": null, "score_components": null, "metadata_triggers": ["research stage", "quality-and-safety domain"], "relationship_influence": "NONE_RECORDED", "body_loaded": false, "procedure_executed": false, "expected_semantic_reason_not_selected": "No algorithm, loop invariant, postcondition, or numeric correctness proof was requested.", "evidence_ref": "docs/v3/evidence/PHASE3H_ROUTING_CLEANUP_ROUTE.md#dogfood-routes-after"},
+    {"phase": "3H", "task": "Stage Router defect closure", "fixture": "phase3h-dogfood-v1", "stage": "RESEARCH", "skill_id": "redesign-existing-projects", "role": "DOMAIN", "selection_score": null, "score_components": null, "metadata_triggers": ["research stage", "repository/design-quality vocabulary"], "relationship_influence": "NONE_RECORDED", "body_loaded": false, "procedure_executed": false, "expected_semantic_reason_not_selected": "No existing website/UI redesign was requested.", "evidence_ref": "docs/v3/evidence/PHASE3H_ROUTING_CLEANUP_ROUTE.md#dogfood-routes-after"},
+    {"phase": "3H", "task": "Stage Router defect closure", "fixture": "phase3h-dogfood-v1", "stage": "RESEARCH", "skill_id": "mathguard", "role": "DOMAIN", "selection_score": null, "score_components": null, "metadata_triggers": ["research stage", "quality/evidence vocabulary"], "relationship_influence": "NONE_RECORDED", "body_loaded": false, "procedure_executed": false, "expected_semantic_reason_not_selected": "No mathematical proof, quantitative bound, or statistical reasoning was requested.", "evidence_ref": "docs/v3/evidence/PHASE3H_ROUTING_CLEANUP_ROUTE.md#dogfood-routes-after"}
+  ],
+  "non_defect_observations": [
+    {"phase": "3H", "stage": "RESEARCH", "skill_id": "orchestrate", "disposition": "NOT_A_DEFECT", "reason": "The task is explicitly a multi-stage routing cleanup and the procedure is semantically aligned with resident orchestration."},
+    {"phase": "3H", "stage": "HANDOFF", "skill_id": "session-handoff", "disposition": "NOT_A_DEFECT", "reason": "The final stage explicitly publishes a bounded handoff and next prompt."}
+  ],
+  "relationship_audit": {
+    "recorded_defect_occurrences_with_relationship_cause": 0,
+    "disposition": "NOT_A_DEFECT",
+    "action": "Recheck semantic compatibility after graph expansion; no global relationship deletion is justified by the recorded evidence."
+  }
+}
