@@ -250,7 +250,7 @@ Phase 3J security checks confirmed:
 
 | Check | Result |
 |---|---|
-| full repository tests | PASS — 317/317 |
+| full repository tests | PASS — 318/318 |
 | Phase 3I productization/schema compatibility | PASS |
 | deterministic package/plan | PASS |
 | clean apply + repeat apply | PASS; second apply `NO_OP` |
