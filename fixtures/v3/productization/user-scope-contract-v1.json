@@ -1,0 +1,262 @@
+{
+  "schema_version": "3.0",
+  "user_scope_contract_version": "1.0",
+  "generator_id": "agent-skills-matrix-v3-user-scope-contract",
+  "scope": "USER",
+  "apply_allowed": false,
+  "no_real_home_access": true,
+  "symbolic_roots": {
+    "home": "${HOME}",
+    "asm_user_data": "${ASM_USER_DATA}",
+    "xdg_config": "${XDG_CONFIG_HOME}",
+    "codex_home": "${CODEX_HOME}"
+  },
+  "runtime_targets": [
+    {
+      "runtime_id": "codex",
+      "observed_runtime_version": "0.153.4",
+      "release_tag": "rust-v0.153.4",
+      "release_commit": "3d2ee51ca2d5db578f328aa75e20aa22c0197c9a",
+      "runtime_contract_digest": "sha256:692da7699367f6f4fbbd46c0021278c1311440bcebf0bcb9b836690c05e56196",
+      "apply_allowed": false,
+      "native_user_skill_roots": [
+        {
+          "path": "${HOME}/.agents/skills",
+          "support": "UPSTREAM_ONLY",
+          "discovery": "LAZY",
+          "evidence_status": "INSTALLED_VERSION_NOT_PINNED",
+          "notes": "Current first-party source shows this root, but the pinned 0.153.4 config contract does not contain the skill-loader path."
+        },
+        {
+          "path": "${CODEX_HOME}/skills",
+          "support": "LEGACY",
+          "discovery": "LAZY",
+          "evidence_status": "INSTALLED_VERSION_NOT_PINNED",
+          "notes": "Retained as a historical/legacy candidate; no optimistic apply decision."
+        }
+      ],
+      "native_project_skill_roots": ["${PROJECT}/.agents/skills"],
+      "selected_destination": "${HOME}/.agents/skills",
+      "selected_strategy": "NATIVE_SHARED_DIRECTORY",
+      "strategy_support": "UNKNOWN",
+      "support_classification": "PREVIEW_ONLY",
+      "skill_delivery": "NATIVE",
+      "config_mutation_required": false,
+      "symlink_support": {
+        "DIRECTORY_SYMLINK": "UNKNOWN",
+        "FILE_SYMLINK": "UNKNOWN",
+        "WINDOWS_JUNCTION": "UNKNOWN"
+      },
+      "same_name_precedence": "UNKNOWN",
+      "evidence_refs": [
+        "fixtures/v3/codex/codex-native-config-contract.json",
+        "docs/v3/evidence/PHASE26_RUNTIME_PROVENANCE_ROUTE.md",
+        "https://github.com/openai/codex/blob/main/codex-rs/core-skills/src/loader.rs"
+      ]
+    },
+    {
+      "runtime_id": "claude-code",
+      "observed_runtime_version": "2.1.235",
+      "release_tag": null,
+      "release_commit": null,
+      "runtime_contract_digest": "sha256:8d25516eaed8a4ad0a746efaf97de3b36e85e735ae6ba188651dc1305b6a00c5",
+      "apply_allowed": false,
+      "native_user_skill_roots": [
+        {
+          "path": "${HOME}/.claude/skills",
+          "support": "UPSTREAM_ONLY",
+          "discovery": "LAZY",
+          "evidence_status": "INSTALLED_PATH_NOT_PINNED",
+          "notes": "The installed contract proves the Skills surface, while the personal path is supported by current first-party documentation rather than an immutable installed source ref."
+        }
+      ],
+      "native_project_skill_roots": ["${PROJECT}/.claude/skills"],
+      "selected_destination": "${HOME}/.claude/skills",
+      "selected_strategy": "MANAGED_COPY",
+      "strategy_support": "UNKNOWN",
+      "support_classification": "PREVIEW_ONLY",
+      "skill_delivery": "NATIVE",
+      "config_mutation_required": false,
+      "symlink_support": {
+        "DIRECTORY_SYMLINK": "UNKNOWN",
+        "FILE_SYMLINK": "UNKNOWN",
+        "WINDOWS_JUNCTION": "UNKNOWN"
+      },
+      "same_name_precedence": "UNKNOWN",
+      "evidence_refs": [
+        "fixtures/v3/claude/claude-native-contract-2.1.235.json",
+        "docs/v3/evidence/MODEL_RUNTIME_EVAL_V6.md",
+        "https://code.claude.com/docs/en/agent-sdk/skills"
+      ]
+    },
+    {
+      "runtime_id": "opencode",
+      "observed_runtime_version": "1.18.25",
+      "release_tag": "v1.18.25",
+      "release_commit": "cb7d8b2f5e44876ef98b661dc10590c915af3a9f",
+      "runtime_contract_digest": "sha256:3e4147fcd2a6edb726aec76ed2782343d92df9593cfcf49e8685f21bfc129853",
+      "apply_allowed": false,
+      "native_user_skill_roots": [
+        {
+          "path": "${XDG_CONFIG_HOME}/opencode/skills",
+          "support": "UPSTREAM_ONLY",
+          "discovery": "LAZY",
+          "evidence_status": "INSTALLED_PATH_NOT_PINNED",
+          "notes": "Current OpenCode documentation lists this global root; the pinned 1.18.25 contract does not claim the complete discovery matrix."
+        },
+        {
+          "path": "${HOME}/.claude/skills",
+          "support": "UPSTREAM_ONLY",
+          "discovery": "LAZY",
+          "evidence_status": "INSTALLED_PATH_NOT_PINNED",
+          "notes": "Compatibility discovery is documented currently, not promoted to an installed-version apply contract."
+        },
+        {
+          "path": "${HOME}/.agents/skills",
+          "support": "UPSTREAM_ONLY",
+          "discovery": "LAZY",
+          "evidence_status": "INSTALLED_PATH_NOT_PINNED",
+          "notes": "This is the shared-tree candidate; exact 1.18.25 behavior remains unverified here."
+        }
+      ],
+      "native_project_skill_roots": ["${PROJECT}/.opencode/skills", "${PROJECT}/.claude/skills", "${PROJECT}/.agents/skills"],
+      "selected_destination": "${HOME}/.agents/skills",
+      "selected_strategy": "NATIVE_SHARED_DIRECTORY",
+      "strategy_support": "UNKNOWN",
+      "support_classification": "PREVIEW_ONLY",
+      "skill_delivery": "NATIVE",
+      "config_mutation_required": false,
+      "symlink_support": {
+        "DIRECTORY_SYMLINK": "UNKNOWN",
+        "FILE_SYMLINK": "UNKNOWN",
+        "WINDOWS_JUNCTION": "UNKNOWN"
+      },
+      "same_name_precedence": "DOCUMENTED_CURRENTLY_NOT_PINNED",
+      "evidence_refs": [
+        "fixtures/v3/opencode/opencode-native-contract-1.18.25.json",
+        "docs/v3/evidence/MODEL_RUNTIME_EVAL_V4.md",
+        "https://opencode.ai/docs/skills"
+      ]
+    },
+    {
+      "runtime_id": "hermes",
+      "observed_runtime_version": "v0.20.0",
+      "release_tag": null,
+      "release_commit": null,
+      "runtime_contract_digest": null,
+      "apply_allowed": false,
+      "native_user_skill_roots": [],
+      "native_project_skill_roots": [],
+      "selected_destination": null,
+      "selected_strategy": "UNSUPPORTED",
+      "strategy_support": "UNSUPPORTED",
+      "support_classification": "NOT_IMPLEMENTED",
+      "skill_delivery": "UNSUPPORTED",
+      "config_mutation_required": false,
+      "symlink_support": {
+        "DIRECTORY_SYMLINK": "UNSUPPORTED",
+        "FILE_SYMLINK": "UNSUPPORTED",
+        "WINDOWS_JUNCTION": "UNSUPPORTED"
+      },
+      "same_name_precedence": "UNKNOWN",
+      "evidence_refs": [
+        "docs/v3/evidence/MODEL_RUNTIME_EVAL_V7.md",
+        "docs/v3/evidence/PHASE3E_HERMES_QUALIFICATION_ROUTE.md"
+      ]
+    }
+  ],
+  "strategies": [
+    {
+      "strategy": "NATIVE_SHARED_DIRECTORY",
+      "runtime_support": {"codex": "UNKNOWN", "claude-code": "UNSUPPORTED", "opencode": "UNKNOWN", "hermes": "UNSUPPORTED"},
+      "os_support": {"linux": "UNKNOWN", "macos": "UNKNOWN", "windows": "UNKNOWN"},
+      "privilege": "NONE_EXPECTED_BUT_RUNTIME_DISCOVERY_MUST_BE_VERIFIED",
+      "lifecycle": "DERIVED_TREE_WITH_EXACT_PATH_OWNERSHIP",
+      "upgrade": "REPLACE_ONLY_ASM_MANAGED_UNMODIFIED_ENTRIES",
+      "uninstall": "REMOVE_ONLY_EXACT_UNMODIFIED_ASM_ENTRIES",
+      "failure_mode": "PATH_OR_DISCOVERY_CONTRACT_UNKNOWN",
+      "evidence_status": "PREVIEW_ONLY",
+      "config_mutation_required": false
+    },
+    {
+      "strategy": "MANAGED_COPY",
+      "runtime_support": {"codex": "UNKNOWN", "claude-code": "UNKNOWN", "opencode": "UNKNOWN", "hermes": "UNSUPPORTED"},
+      "os_support": {"linux": "SUPPORTED_WITH_PRECONDITION", "macos": "SUPPORTED_WITH_PRECONDITION", "windows": "SUPPORTED_WITH_PRECONDITION"},
+      "privilege": "NONE_EXPECTED_FOR_SYMBOLIC_PREVIEW",
+      "lifecycle": "DERIVED_COPY_BOUND_TO_CANONICAL_DIGEST",
+      "upgrade": "UPDATE_ONLY_WHEN_OWNERSHIP_AND_DIGEST_MATCH",
+      "uninstall": "DELETE_ONLY_CREATED_UNMODIFIED_ENTRIES",
+      "failure_mode": "NATIVE_DISCOVERY_OR_USER_COLLISION",
+      "evidence_status": "PREVIEW_ONLY",
+      "config_mutation_required": false
+    },
+    {
+      "strategy": "DIRECTORY_SYMLINK",
+      "runtime_support": {"codex": "UNKNOWN", "claude-code": "UNKNOWN", "opencode": "UNKNOWN", "hermes": "UNSUPPORTED"},
+      "os_support": {"linux": "SUPPORTED_WITH_PRECONDITION", "macos": "SUPPORTED_WITH_PRECONDITION", "windows": "SUPPORTED_WITH_PRECONDITION"},
+      "privilege": "PLATFORM_AND_RUNTIME_PRECONDITION",
+      "lifecycle": "LINK_TARGET_MUST_REMAIN_PRESENT_AND_BOUND",
+      "upgrade": "TARGET_DIGEST_AND_RELOCATION_MUST_BE_REVALIDATED",
+      "uninstall": "REMOVE_LINK_ONLY_WHEN_EXACT_TARGET_IS_BOUND",
+      "failure_mode": "BROKEN_LINK_OR_RUNTIME_DOES_NOT_FOLLOW_LINK",
+      "evidence_status": "UNKNOWN",
+      "config_mutation_required": false
+    },
+    {
+      "strategy": "FILE_SYMLINK",
+      "runtime_support": {"codex": "UNKNOWN", "claude-code": "UNKNOWN", "opencode": "UNKNOWN", "hermes": "UNSUPPORTED"},
+      "os_support": {"linux": "UNKNOWN", "macos": "UNKNOWN", "windows": "UNKNOWN"},
+      "privilege": "PLATFORM_AND_RUNTIME_PRECONDITION",
+      "lifecycle": "EXACT_LINK_TARGET_REQUIRED",
+      "upgrade": "REVALIDATE_TARGET_BEFORE_EACH_CHANGE",
+      "uninstall": "REMOVE_LINK_ONLY",
+      "failure_mode": "RUNTIME_OR_PLATFORM_DOES_NOT_FOLLOW_FILE_LINK",
+      "evidence_status": "UNVERIFIED",
+      "config_mutation_required": false
+    },
+    {
+      "strategy": "WINDOWS_JUNCTION",
+      "runtime_support": {"codex": "UNKNOWN", "claude-code": "UNKNOWN", "opencode": "UNKNOWN", "hermes": "UNSUPPORTED"},
+      "os_support": {"linux": "UNSUPPORTED", "macos": "UNSUPPORTED", "windows": "SUPPORTED_WITH_PRECONDITION"},
+      "privilege": "WINDOWS_FILESYSTEM_PRECONDITION",
+      "lifecycle": "DIRECTORY_LINK_SEMANTICS_REQUIRE_RUNTIME_PROOF",
+      "upgrade": "REVALIDATE_JUNCTION_AND_TARGET_IDENTITY",
+      "uninstall": "REMOVE_JUNCTION_ONLY_WHEN_EXACTLY_OWNED",
+      "failure_mode": "JUNCTION_ESCAPE_OR_RUNTIME_DISCOVERY_MISMATCH",
+      "evidence_status": "UNKNOWN",
+      "config_mutation_required": false
+    },
+    {
+      "strategy": "CONFIG_REFERENCE",
+      "runtime_support": {"codex": "UNSUPPORTED", "claude-code": "UNSUPPORTED", "opencode": "UNSUPPORTED", "hermes": "UNSUPPORTED"},
+      "os_support": {"linux": "UNSUPPORTED", "macos": "UNSUPPORTED", "windows": "UNSUPPORTED"},
+      "privilege": "USER_CONFIG_MUTATION_REQUIRED",
+      "lifecycle": "OUT_OF_SCOPE",
+      "upgrade": "OUT_OF_SCOPE",
+      "uninstall": "OUT_OF_SCOPE",
+      "failure_mode": "USER_AUTHORITY_CONFIG_MERGE",
+      "evidence_status": "OUT_OF_SCOPE",
+      "config_mutation_required": true
+    },
+    {
+      "strategy": "UNSUPPORTED",
+      "runtime_support": {"codex": "UNSUPPORTED", "claude-code": "UNSUPPORTED", "opencode": "UNSUPPORTED", "hermes": "UNSUPPORTED"},
+      "os_support": {"linux": "UNSUPPORTED", "macos": "UNSUPPORTED", "windows": "UNSUPPORTED"},
+      "privilege": "NONE",
+      "lifecycle": "NONE",
+      "upgrade": "NONE",
+      "uninstall": "NONE",
+      "failure_mode": "FAIL_CLOSED",
+      "evidence_status": "VERIFIED_FAIL_CLOSED",
+      "config_mutation_required": false
+    }
+  ],
+  "evidence_refs": [
+    "docs/v3/evidence/SAFE_PROJECT_INSTALLER_V1.md",
+    "docs/v3/evidence/USER_SCOPE_INSTALLATION_V1.md",
+    "https://code.claude.com/docs/en/agent-sdk/skills",
+    "https://opencode.ai/docs/skills",
+    "https://github.com/openai/codex/blob/main/codex-rs/core-skills/src/loader.rs"
+  ],
+  "contract_digest": "sha256:e14cb499d229f6af0af2fe091dd86e962af45a29884ef9a4402b9ad5e96def8d"
+}
