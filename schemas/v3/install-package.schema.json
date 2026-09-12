@@ -41,8 +41,134 @@
         {"type": "null"}
       ]
     },
+    "runtime_version": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/shortString"},
+        {"type": "null"}
+      ]
+    },
+    "runtime_fingerprint": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "user_scope_contract_digest": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "distribution_strategy": {
+      "anyOf": [
+        {"type": "string", "enum": ["MANAGED_COPY"]},
+        {"type": "null"}
+      ]
+    },
+    "scope_root_reference": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "scope_root_digest": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "target_root_identity": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "source_store_root_reference": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "source_store_manifest_digest": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "confirmation_binding_digest": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "confirmation_digest": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "package_kind": {
+      "type": "string",
+      "enum": ["INSTALL", "UNINSTALL", "REVERT"]
+    },
+    "revert_manifest_path": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/relativePath"},
+        {"type": "null"}
+      ]
+    },
+    "revert_manifest_digest": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "source_skill_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "common.schema.json#/$defs/shortString"}
+    },
+    "collision_observations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["skill_id", "destination_path", "state"],
+        "properties": {
+          "skill_id": {"$ref": "common.schema.json#/$defs/shortString"},
+          "destination_path": {"$ref": "common.schema.json#/$defs/relativePath"},
+          "state": {
+            "type": "string",
+            "enum": ["ABSENT", "ASM_MANAGED", "MODIFIED_MANAGED", "USER_OWNED", "MISSING", "UNSAFE", "UNKNOWN", "CLAUDE_SYNCED", "PROJECT_DUPLICATE", "BUNDLED_COLLISION", "AMBIGUOUS"]
+          }
+        }
+      }
+    },
+    "collision_observations_digest": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "transaction_policy": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/shortString"},
+        {"type": "null"}
+      ]
+    },
+    "marker_root": {
+      "type": "string",
+      "enum": ["PROJECT", "ASM_USER_DATA"]
+    },
     "install_target_digest": {"$ref": "common.schema.json#/$defs/digest"},
     "source_manifest_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "generated_artifact_manifest_digest": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
     "marker_digest": {
       "anyOf": [
         {"$ref": "common.schema.json#/$defs/digest"},
@@ -71,6 +197,11 @@
         "properties": {
           "source_path": {"$ref": "common.schema.json#/$defs/relativePath"},
           "destination_path": {"$ref": "common.schema.json#/$defs/relativePath"},
+          "destination_root": {
+            "type": "string",
+            "enum": ["PROJECT", "CLAUDE_PERSONAL", "ASM_USER_DATA"]
+          },
+          "skill_id": {"$ref": "common.schema.json#/$defs/shortString"},
           "kind": {"$ref": "common.schema.json#/$defs/shortString"},
           "lifecycle": {
             "type": "string",
@@ -80,7 +211,7 @@
           "content_digest": {"$ref": "common.schema.json#/$defs/digest"},
           "expected_state": {
             "type": "string",
-            "enum": ["ABSENT", "ASM_MANAGED", "MODIFIED_MANAGED", "USER_OWNED", "MISSING", "UNSAFE", "UNKNOWN"]
+            "enum": ["ABSENT", "ASM_MANAGED", "MODIFIED_MANAGED", "USER_OWNED", "MISSING", "UNSAFE", "UNKNOWN", "CLAUDE_SYNCED", "PROJECT_DUPLICATE", "BUNDLED_COLLISION", "AMBIGUOUS"]
           },
           "expected_digest": {
             "anyOf": [
@@ -88,13 +219,23 @@
               {"type": "null"}
             ]
           },
+          "collision_state": {
+            "type": "string",
+            "enum": ["ABSENT", "ASM_MANAGED", "MODIFIED_MANAGED", "USER_OWNED", "MISSING", "UNSAFE", "UNKNOWN", "CLAUDE_SYNCED", "PROJECT_DUPLICATE", "BUNDLED_COLLISION", "AMBIGUOUS"]
+          },
           "action": {
             "type": "string",
-            "enum": ["CREATE", "UPDATE_MANAGED", "NO_OP", "SKIP_USER_OWNED", "CONFLICT"]
+            "enum": ["CREATE", "UPDATE_MANAGED", "NO_OP", "SKIP_USER_OWNED", "CONFLICT", "REMOVE", "RESTORE"]
           },
           "origin": {
             "type": "string",
-            "enum": ["CREATED_BY_ASM", "UPDATED_ASM_MANAGED", "NO_OP", "USER_OWNED", "CONFLICT"]
+            "enum": ["CREATED_BY_ASM", "UPDATED_ASM_MANAGED", "NO_OP", "REMOVED_BY_ASM", "RESTORED_ASM_MANAGED", "USER_OWNED", "CONFLICT"]
+          },
+          "backup_path": {
+            "anyOf": [
+              {"$ref": "common.schema.json#/$defs/relativePath"},
+              {"type": "null"}
+            ]
           }
         }
       }

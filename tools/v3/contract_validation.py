@@ -47,6 +47,7 @@ SCHEMA_FILES = {
     "GeneratedArtifactManifest": "generated-artifact.schema.json",
     "InstallPackage": "install-package.schema.json",
     "ApplyResult": "apply-result.schema.json",
+    "TransactionRecovery": "transaction-recovery.schema.json",
 }
 
 KNOWN_CAPABILITIES = frozenset(

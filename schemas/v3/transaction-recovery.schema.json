@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/juhjuhx/agent-skills/schemas/v3/transaction-recovery.schema.json",
+  "title": "Agent Skills Matrix v3 USER transaction recovery journal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "journal_version",
+    "journal_digest",
+    "transaction_id",
+    "package_digest",
+    "runtime_id",
+    "scope",
+    "strategy",
+    "home_root_identity",
+    "asm_user_data_root_identity",
+    "target_root_identity",
+    "operations_digest",
+    "operations",
+    "phase",
+    "active_operation_index",
+    "completed_operation_indexes",
+    "manifest_path",
+    "manifest_before_digest",
+    "manifest_after_digest",
+    "manifest_after",
+    "manifest_backup_path",
+    "manifest_backup_digest",
+    "created_directories",
+    "sensitive_data_serialized"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "journal_version": {"$ref": "common.schema.json#/$defs/shortString"},
+    "journal_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "transaction_id": {"$ref": "common.schema.json#/$defs/recordId"},
+    "package_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "runtime_id": {"$ref": "common.schema.json#/$defs/runtimeId"},
+    "scope": {"type": "string", "const": "USER"},
+    "strategy": {"type": "string", "enum": ["MANAGED_COPY"]},
+    "home_root_identity": {"$ref": "common.schema.json#/$defs/digest"},
+    "asm_user_data_root_identity": {"$ref": "common.schema.json#/$defs/digest"},
+    "target_root_identity": {"$ref": "common.schema.json#/$defs/digest"},
+    "operations_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "operations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "index",
+          "skill_id",
+          "destination_root",
+          "destination_path",
+          "action",
+          "expected_state",
+          "expected_digest",
+          "new_digest",
+          "stage_path",
+          "stage_digest",
+          "backup_path",
+          "backup_digest",
+          "source_path",
+          "source_digest",
+          "content_digest"
+        ],
+        "properties": {
+          "index": {"type": "integer", "minimum": 0},
+          "skill_id": {"$ref": "common.schema.json#/$defs/shortString"},
+          "destination_root": {
+            "type": "string",
+            "enum": ["CLAUDE_PERSONAL", "ASM_USER_DATA"]
+          },
+          "destination_path": {"$ref": "common.schema.json#/$defs/relativePath"},
+          "action": {
+            "type": "string",
+            "enum": ["CREATE", "UPDATE_MANAGED", "NO_OP", "REMOVE", "RESTORE"]
+          },
+          "expected_state": {
+            "type": "string",
+            "enum": ["ABSENT", "ASM_MANAGED", "MISSING"]
+          },
+          "expected_digest": {
+            "anyOf": [
+              {"$ref": "common.schema.json#/$defs/digest"},
+              {"type": "null"}
+            ]
+          },
+          "new_digest": {
+            "anyOf": [
+              {"$ref": "common.schema.json#/$defs/digest"},
+              {"type": "null"}
+            ]
+          },
+          "stage_path": {
+            "anyOf": [
+              {"$ref": "common.schema.json#/$defs/relativePath"},
+              {"type": "null"}
+            ]
+          },
+          "stage_digest": {
+            "anyOf": [
+              {"$ref": "common.schema.json#/$defs/digest"},
+              {"type": "null"}
+            ]
+          },
+          "backup_path": {
+            "anyOf": [
+              {"$ref": "common.schema.json#/$defs/relativePath"},
+              {"type": "null"}
+            ]
+          },
+          "backup_digest": {
+            "anyOf": [
+              {"$ref": "common.schema.json#/$defs/digest"},
+              {"type": "null"}
+            ]
+          },
+          "source_path": {"$ref": "common.schema.json#/$defs/relativePath"},
+          "source_digest": {"$ref": "common.schema.json#/$defs/digest"},
+          "content_digest": {"$ref": "common.schema.json#/$defs/digest"}
+        }
+      }
+    },
+    "phase": {
+      "type": "string",
+      "enum": [
+        "PREPARED",
+        "STAGED",
+        "MUTATING",
+        "OWNERSHIP_COMMITTED",
+        "VERIFIED",
+        "COMPLETE",
+        "RECOVERY_REQUIRED",
+        "ROLLED_BACK"
+      ]
+    },
+    "active_operation_index": {
+      "anyOf": [
+        {"type": "integer", "minimum": 0},
+        {"type": "null"}
+      ]
+    },
+    "completed_operation_indexes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "integer", "minimum": 0}
+    },
+    "manifest_path": {"$ref": "common.schema.json#/$defs/relativePath"},
+    "manifest_before_digest": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "manifest_after_digest": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "manifest_after": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["stage_path", "digest"],
+          "properties": {
+            "stage_path": {"$ref": "common.schema.json#/$defs/relativePath"},
+            "digest": {"$ref": "common.schema.json#/$defs/digest"}
+          }
+        },
+        {"type": "null"}
+      ]
+    },
+    "manifest_backup_path": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/relativePath"},
+        {"type": "null"}
+      ]
+    },
+    "manifest_backup_digest": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "created_directories": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "common.schema.json#/$defs/relativePath"}
+    },
+    "sensitive_data_serialized": {"type": "boolean", "const": false}
+  }
+}
