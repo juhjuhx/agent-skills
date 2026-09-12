@@ -65,6 +65,27 @@ PROJECT_STAGING_ROOT = ".agent-skills-matrix"
 SCOPES = frozenset({"PROJECT", "USER", "GLOBAL"})
 INSTALL_ACTIONS = frozenset({"CREATE", "UPDATE_MANAGED", "NO_OP"})
 CONFLICT_ACTIONS = frozenset({"SKIP_USER_OWNED", "CONFLICT"})
+# ``action`` is the normalized mutation semantic.  ``operation`` remains a
+# descriptive plan field for compatibility, but these pairs are validated so
+# a serialized plan cannot carry two contradictory meanings.
+PLAN_OPERATION_ACTIONS = {
+    "CREATE_DIRECTORY": frozenset({"CREATE", "UPDATE_MANAGED"}),
+    "CREATE_GENERATED_FILE": frozenset({"CREATE", "UPDATE_MANAGED"}),
+    "LINK_OR_REFERENCE_CANONICAL_SKILL": frozenset(
+        {"CREATE", "UPDATE_MANAGED"}
+    ),
+    "WRITE_PROJECT_CONFIG": frozenset(),
+    "SKIP_UNSUPPORTED_RUNTIME": frozenset({"SKIP_UNSUPPORTED"}),
+    "SKIP_USER_OWNED": frozenset({"SKIP_USER_OWNED"}),
+    "CONFLICT": frozenset({"CONFLICT"}),
+    "NO_OP": frozenset({"NO_OP"}),
+    "WARN_LIVE_BLOCKED": frozenset({"WARN"}),
+}
+PLAN_ACTIONS = frozenset(
+    action
+    for actions in PLAN_OPERATION_ACTIONS.values()
+    for action in actions
+)
 RUNTIME_EXECUTABLES = {
     "codex": "codex",
     "claude-code": "claude",
@@ -560,12 +581,21 @@ def _validate_plan(plan: dict[str, Any], manifest: dict[str, Any]) -> None:
             ),
             None,
         )
-        if (
-            operation is None
-            or operation.get("action") not in INSTALL_ACTIONS | CONFLICT_ACTIONS
-        ):
+        if operation is None:
             raise InstallerError(
                 f"InstallationPlan has no authoritative action: {item['path']}"
+            )
+        operation_name = operation.get("operation")
+        action = operation.get("action")
+        if action not in PLAN_ACTIONS:
+            raise InstallerError(
+                f"InstallationPlan has no authoritative action: {item['path']}"
+            )
+        allowed_actions = PLAN_OPERATION_ACTIONS.get(operation_name, frozenset())
+        if action not in allowed_actions:
+            raise InstallerError(
+                "InstallationPlan operation/action semantics conflict: "
+                f"{item['path']} ({operation_name!r} cannot represent {action!r})"
             )
 
 
@@ -1067,6 +1097,12 @@ def _revalidate_package(
     if package.get("project_root_digest") != _project_identity(root):
         raise InstallerError("STALE_PLAN: project root identity changed")
     _, manifest, files = _load_distribution(distribution_dir)
+    manifest_runtime_contract = manifest.get("runtime_contract_digest")
+    if manifest_runtime_contract != package.get("runtime_contract_digest"):
+        raise InstallerError("STALE_PLAN: runtime contract changed")
+    target_runtime_contract = target.get("runtime_contract_digest")
+    if target_runtime_contract != package.get("runtime_contract_digest"):
+        raise InstallerError("STALE_PLAN: runtime contract target changed")
     if manifest.get("manifest_digest") != package.get("source_manifest_digest"):
         raise InstallerError("STALE_PLAN: generated artifact manifest changed")
     if manifest.get("snapshot_digest") != package.get("snapshot_digest"):
