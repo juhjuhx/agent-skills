@@ -272,6 +272,7 @@ class SchemaDocumentTests(unittest.TestCase):
             "GeneratedArtifactManifest",
             "InstallPackage",
             "ApplyResult",
+            "TransactionRecovery",
         )
 
         for name in schema_names:
