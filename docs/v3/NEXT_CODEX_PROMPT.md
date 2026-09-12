@@ -1,8 +1,10 @@
 # AGENT SKILLS MATRIX v3 — NEXT PROPOSAL
-# PHASE 3M — CLAUDE USER-SCOPE APPLY MVP
+# PHASE 3N — CLAUDE USER-SCOPE APPLY MVP
+# CONTRACT-CLOSURE GATE
 
-本提案承接 Phase 3L：Claude Code `2.1.235` 的 user-scope discovery contract 已
-完成資格化，但本文件不授權現在 apply，也不代表 Claude live execution 已恢復。
+本提案承接 Phase 3M integration checkpoint。Phase 3M 已確認 static/productization/
+project transaction 與 Claude user discovery contract 可以組合，但尚未授權任何
+USER mutation。
 
 Current state:
 
@@ -12,45 +14,60 @@ STATIC_PRODUCTIZATION_READY: true
 PROJECT_INSTALLER_READY: true
 CLAUDE_USER_CONTRACT_READY: true
 CLAUDE_DISTRIBUTION_STRATEGY: MANAGED_COPY_PREFERRED
-CLAUDE_USER_APPLY_AUTHORIZED: false
+USER_APPLY_ARCHITECTURE_READINESS: USER_APPLY_ARCHITECTURE_PARTIAL
+CLAUDE_USER_APPLY_ELIGIBILITY: NEEDS_CONTRACT_CHANGE
+STACK_INTEGRATION_STATUS: STACK_SAFE_TO_CONTINUE_TO_3N
 CODEX_LIVE_TRANSPORT_BLOCKED: true
 INTRA_RUNTIME_EFFORT_ROUTING_READINESS: NOT_READY
 CROSS_RUNTIME_ROUTING_READINESS: NOT_READY
 ```
 
-## Scope
+## Required contract closure before mutation
 
-若要繼續，只能做 Claude-only 的 `PHASE 3M — CLAUDE USER-SCOPE APPLY MVP`：
+Phase 3N 只能在 virtual HOME 先完成以下 gate，不能把 Phase 3L 的 READY 當成
+authorization：
 
-- 只支援 `scope=USER` 的 `MANAGED_COPY`；
-- 先 preview，再由明確 apply action 授權；
-- 所有測試使用 virtual HOME，不碰真實 `~/.claude`；
-- 不修改 `settings.json`、`CLAUDE.md`、MCP、plugin、hook、permission、provider、auth；
-- 重用 Phase 3J 的 InstallPackage、ownership、stale-plan、atomic staging、rollback、
-  uninstall/revert 契約；
-- exact-path ownership、source/installed digest、user collision、synced/bundled collision
-  必須在 mutation 前完整 revalidate；
-- 不新增 Codex/OpenCode/Hermes user apply，不做 model/effort/adaptive routing，不進 Phase 4。
+1. 將 generic `InstallPackage`/target contract 擴充為可驗證的 `scope=USER`，保留
+   一般 package，不建立 `ClaudeInstallPackage`；
+2. package 必須綁定 Claude 2.1.235 fingerprint/contract digest、
+   `MANAGED_COPY`、symbolic USER root、collision observations、exact managed paths
+   與每個 destination 的 expected state；
+3. 重用 Phase 3J 的 all-target preflight、stage、revalidate、marker-last、digest
+   verify、bounded rollback，不建立第二個 transaction engine；
+4. 對 process death / partial state 提供 bounded recovery marker 或明確的
+   fail-closed/manual-recovery protocol；
+5. `CLAUDE_SYNCED`、user-owned、ambiguous、unknown、bundled collision 不得被
+   adopt/overwrite；bundled collision 在沒有窄化 confirmation contract 前直接
+   BLOCK；
+6. runtime version 變動時新 apply/update 必須 `RUNTIME_REQUALIFICATION_REQUIRED`，
+   但 exact managed cleanup 不得依賴 runtime inference；
+7. `USER_SCOPE_APPLY_AUTHORIZED` 在本 gate 完成前維持 false。
 
-## Gate
+## Authorized future scope
 
-先確認：
+只有上述 contract closure 通過後，才可實作：
 
-```text
-USER_SCOPE_APPLY_AUTHORIZED = explicitly granted by a future task
-real-home protection = proven by virtual-home tests
-managed-copy target = unchanged and version-bound
-no config mutation = proven
-rollback/uninstall/revert = exact-state only
-```
+- Claude Code only；
+- USER scope only；
+- `MANAGED_COPY` only；
+- explicit preview → exact confirmation → apply；
+- virtual HOME first；
+- exact-path ownership、uninstall、revert；
+- no real-home canary unless a later task explicitly requests it after preview,
+  zero-collision check, bounded subset, and rollback validation。
 
-若任何一項無法證明，維持 `CLAUDE_USER_PREVIEW_ONLY`，不要擴大權限或加入
-symlink fallback。Claude 的 `RUNTIME_BLOCKED` 與這個靜態 installer contract 保持
-正交。
+仍禁止 Codex/OpenCode/Hermes USER apply、runtime config mutation、provider/auth/model
+work、symlink fallback、force/adopt、recursive delete、Stage Router 變更與 Phase 4。
 
 ## Live tracks
 
-不要在 3M 重試 Codex、Claude、OpenCode 或 Hermes live execution。若 Codex transport
-另行恢復，回到既有 Phase 3G controlled effort cells；不要重建 harness。
+不要重試 Codex、Claude、OpenCode 或 Hermes live execution。若 Codex transport 在別的
+環境獨立恢復，回到既有 Phase 3G contract；不要在 3N 重建 benchmark harness。
 
-STOP. 本文件是下一階段提案，不要在 Phase 3L 執行。
+## References
+
+- [Phase 3M integration checkpoint](evidence/INTEGRATION_CHECKPOINT_V1.md)
+- [Current v3 contract index](CURRENT_V3_CONTRACT_INDEX.md)
+- [Claude user-scope contract](evidence/CLAUDE_USER_SCOPE_V1.md)
+
+STOP. 本文件是下一階段提案，不要在 Phase 3M 執行 USER apply。
