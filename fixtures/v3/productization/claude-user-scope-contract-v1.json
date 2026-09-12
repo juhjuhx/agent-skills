@@ -1,0 +1,111 @@
+{
+  "schema_version": "3.0",
+  "claude_user_scope_contract_version": "1.0",
+  "generator_id": "agent-skills-matrix-v3-claude-user-scope-contract",
+  "runtime_id": "claude-code",
+  "runtime_name": "Claude Code",
+  "observed_runtime_version": "2.1.235",
+  "release_tag": "v2.1.235",
+  "release_publication_date": "2026-08-18",
+  "scope": "USER",
+  "apply_allowed": false,
+  "no_real_home_access": true,
+  "runtime_contract_digest": "sha256:8d25516eaed8a4ad0a746efaf97de3b36e85e735ae6ba188651dc1305b6a00c5",
+  "provenance": {
+    "version_status": "INSTALLED_RUNTIME_VERIFIED",
+    "release_status": "RELEASE_SUPPORTED",
+    "publication_date_status": "RELEASE_SUPPORTED",
+    "installation_type": "VERSIONED_STANDALONE_EXECUTABLE",
+    "executable_path_class": "USER_LOCAL_BIN_SYMLINK",
+    "version_target_path_class": "USER_LOCAL_VERSION_DIRECTORY",
+    "executable_sha256": "sha256:83b8f806f6f2eea316cfe246628e6c23374711d868f1fd0409db551b877b7748",
+    "observed_version": "2.1.235",
+    "verification_method": "claude --version; file; shasum; no inference",
+    "source_ref": "github.com/anthropics/claude-code/releases/tag/v2.1.235"
+  },
+  "personal_skill_root": "${HOME}/.claude/skills",
+  "project_skill_root": "${PROJECT}/.claude/skills",
+  "synced_skill_root": "${HOME}/.claude/skills/synced",
+  "asm_user_data_root": "${ASM_USER_DATA}/v3/claude",
+  "precedence_cases": [
+    {"case": "PERSONAL_ONLY", "documented_resolution": "PERSONAL"},
+    {"case": "PROJECT_ONLY", "documented_resolution": "PROJECT"},
+    {"case": "PERSONAL_AND_PROJECT_SAME_NAME", "documented_resolution": "PERSONAL"},
+    {"case": "DIFFERENT_NAMES", "documented_resolution": "BOTH_AVAILABLE"}
+  ],
+  "claims": [
+    {
+      "claim": "personal_skill_root",
+      "current_doc": "CURRENT_DOC_SUPPORTED",
+      "release_2_1_235": "UNKNOWN",
+      "installed_artifact": "INSTALLED_RUNTIME_VERIFIED",
+      "final_support": "INSTALLED_RUNTIME_VERIFIED",
+      "notes": "Exact personal root appears in the versioned local binary; end-to-end discovery is not invoked in this phase."
+    },
+    {
+      "claim": "project_skill_root",
+      "current_doc": "CURRENT_DOC_SUPPORTED",
+      "release_2_1_235": "UNKNOWN",
+      "installed_artifact": "INSTALLED_RUNTIME_VERIFIED",
+      "final_support": "INSTALLED_RUNTIME_VERIFIED",
+      "notes": "Project .claude/skills is present in the installed discovery surface; no project files are changed."
+    },
+    {
+      "claim": "precedence",
+      "current_doc": "CURRENT_DOC_SUPPORTED",
+      "release_2_1_235": "UNKNOWN",
+      "installed_artifact": "UNKNOWN",
+      "final_support": "CURRENT_DOC_SUPPORTED",
+      "notes": "Enterprise > personal > project is documented currently; preserve a future-apply warning until behavior is exercised under a version-bound non-inference surface."
+    },
+    {
+      "claim": "directory_symlink",
+      "current_doc": "CURRENT_DOC_SUPPORTED",
+      "release_2_1_235": "UNKNOWN",
+      "installed_artifact": "UNKNOWN",
+      "final_support": "CURRENT_DOC_SUPPORTED",
+      "notes": "Directory-link following is documented currently, but is not promoted to installed-version proof."
+    },
+    {
+      "claim": "file_symlink",
+      "current_doc": "UNKNOWN",
+      "release_2_1_235": "UNKNOWN",
+      "installed_artifact": "UNKNOWN",
+      "final_support": "UNSUPPORTED_FOR_APPLY",
+      "notes": "Directory-link support is not evidence for a SKILL.md file link."
+    },
+    {
+      "claim": "bundled_collision",
+      "current_doc": "CURRENT_DOC_SUPPORTED",
+      "release_2_1_235": "UNKNOWN",
+      "installed_artifact": "UNKNOWN",
+      "final_support": "CURRENT_DOC_SUPPORTED",
+      "notes": "A future apply must warn and require bounded confirmation; no silent bundled override."
+    },
+    {
+      "claim": "synced_collision",
+      "current_doc": "CURRENT_DOC_SUPPORTED",
+      "release_2_1_235": "UNKNOWN",
+      "installed_artifact": "INSTALLED_RUNTIME_VERIFIED",
+      "final_support": "CURRENT_DOC_SUPPORTED",
+      "notes": "The installed binary contains a syncedSkills surface; ASM never owns the reserved synced directory."
+    }
+  ],
+  "collision_policy": {
+    "synced": "PRESERVE_CLAUDE_SYNCED",
+    "bundled": "CONFLICT_REQUIRES_CONFIRMATION",
+    "personal_project_duplicate": "WARN_PRECEDENCE_UNCERTAIN",
+    "user_owned": "CONFLICT_PRESERVE",
+    "ambiguous": "CONFLICT_FAIL_CLOSED"
+  },
+  "preferred_strategy": "MANAGED_COPY_PREFERRED",
+  "evidence_refs": [
+    "fixtures/v3/claude/claude-native-contract-2.1.235.json",
+    "fixtures/v3/productization/claude-user-distribution-strategy-v1.json",
+    "fixtures/v3/productization/claude-user-lifecycle-v1.json",
+    "docs/v3/evidence/MODEL_RUNTIME_EVAL_V6.md",
+    "https://github.com/anthropics/claude-code/releases/tag/v2.1.235",
+    "https://code.claude.com/docs/en/skills"
+  ],
+  "contract_digest": "sha256:3d85bc1ac6754d53618c6e7d8fc5571c1eb41e10181ad5b2311f15e7b8801746"
+}

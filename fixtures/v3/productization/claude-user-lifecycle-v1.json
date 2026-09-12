@@ -1,0 +1,50 @@
+{
+  "schema_version": "3.0",
+  "lifecycle_version": "1.0",
+  "fixture_kind": "VIRTUAL_HOME_ONLY",
+  "real_home_access": false,
+  "runtime_id": "claude-code",
+  "runtime_version": "2.1.235",
+  "collision_states": [
+    "ABSENT",
+    "ASM_MANAGED",
+    "CLAUDE_SYNCED",
+    "USER_OWNED",
+    "PROJECT_DUPLICATE",
+    "BUNDLED_COLLISION",
+    "AMBIGUOUS",
+    "UNKNOWN"
+  ],
+  "transitions": [
+    {"skill_id": "unchanged", "previous_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "current_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "expected": "UNCHANGED"},
+    {"skill_id": "added", "previous_digest": null, "current_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "expected": "ADDED"},
+    {"skill_id": "updated", "previous_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "current_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "expected": "CONTENT_UPDATED"},
+    {"skill_id": "removed", "previous_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "current_digest": null, "expected": "REMOVED"},
+    {"skill_id": "modified", "previous_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "current_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "current_state": "MODIFIED_MANAGED", "expected": "USER_MODIFIED_CONFLICT"},
+    {"skill_id": "renamed", "previous_digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888", "current_digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999", "current_skill_id": "renamed-new", "expected": "EXPLICIT_RENAMED"}
+  ],
+  "collision_examples": [
+    {"path": "${HOME}/.claude/skills/absent", "state": "ABSENT"},
+    {"path": "${HOME}/.claude/skills/asm-managed", "state": "ASM_MANAGED"},
+    {"path": "${HOME}/.claude/skills/synced", "state": "CLAUDE_SYNCED"},
+    {"path": "${HOME}/.claude/skills/user-owned", "state": "USER_OWNED"},
+    {"path": "${PROJECT}/.claude/skills/project-duplicate", "state": "PROJECT_DUPLICATE"},
+    {"path": "${HOME}/.claude/skills/bundled", "state": "BUNDLED_COLLISION"},
+    {"path": "${HOME}/.claude/skills/ambiguous", "state": "AMBIGUOUS"},
+    {"path": "${HOME}/.claude/skills/unknown", "state": "UNKNOWN"}
+  ],
+  "link_cases": [
+    {"strategy": "DIRECTORY_SYMLINK", "target_state": "BOUND", "expected": "BOUND"},
+    {"strategy": "DIRECTORY_SYMLINK", "target_state": "REPOSITORY_MOVED", "expected": "REPOSITORY_RELOCATION_REQUIRES_REVALIDATION"},
+    {"strategy": "DIRECTORY_SYMLINK", "target_state": "MISSING", "expected": "BROKEN_TARGET"},
+    {"strategy": "FILE_SYMLINK", "target_state": "UNKNOWN", "expected": "UNSUPPORTED_FOR_APPLY"},
+    {"strategy": "PARENT_DIRECTORY_SYMLINK", "target_state": "USER_OWNED_PARENT", "expected": "UNSUPPORTED_FOR_APPLY"}
+  ],
+  "ownership": {
+    "parent_directories_owned": false,
+    "synced_root_owned": false,
+    "modified_managed_outcome": "CONFLICT",
+    "missing_backup_revert": "REVERT_UNAVAILABLE"
+  },
+  "fixture_digest": "sha256:04da179ea049d81e024eb5fc655f24c504742632b8a8480a1336fb477254b914"
+}

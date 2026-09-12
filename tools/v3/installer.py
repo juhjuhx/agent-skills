@@ -50,6 +50,7 @@ from tools.v3.user_scope import (
     build_user_scope_preview,
     load_user_scope_contract,
 )
+from tools.v3.claude_user_scope import build_claude_user_preview
 
 
 DEFAULT_TARGET_INVENTORY = (
@@ -2161,12 +2162,19 @@ def main(argv: list[str] | None = None) -> int:
             args.runtime, inventory=args.inventory, fixture=args.fixture
         )
         if args.command == "preview" and scope == "USER":
-            preview = build_user_scope_preview(
-                status,
-                _load_snapshot(),
-                contract=load_user_scope_contract(),
-                platform=args.platform,
-            )
+            if args.runtime == "claude-code":
+                preview = build_claude_user_preview(
+                    status,
+                    _load_snapshot(),
+                    platform=args.platform,
+                )
+            else:
+                preview = build_user_scope_preview(
+                    status,
+                    _load_snapshot(),
+                    contract=load_user_scope_contract(),
+                    platform=args.platform,
+                )
             result = {
                 "status": "PREVIEWED",
                 "runtime_id": status["runtime_id"],

@@ -1,0 +1,89 @@
+{
+  "schema_version": "3.0",
+  "strategy_version": "1.0",
+  "runtime_id": "claude-code",
+  "runtime_version": "2.1.235",
+  "strategies": [
+    {
+      "strategy": "MANAGED_COPY",
+      "runtime_discovery_evidence": "INSTALLED_RUNTIME_VERIFIED",
+      "final_support": "INSTALLED_RUNTIME_VERIFIED",
+      "os_support": {
+        "linux": "SUPPORTED_WITH_PRECONDITION",
+        "macos": "SUPPORTED_WITH_PRECONDITION",
+        "windows": "SUPPORTED_WITH_PRECONDITION"
+      },
+      "privilege": "NONE_EXPECTED",
+      "config_mutation_required": false,
+      "lifecycle": {
+        "source": "CANONICAL_DIGEST_BOUND",
+        "installed": "EXACT_MANAGED_DIGEST",
+        "modified": "CONFLICT",
+        "upgrade": "UPDATE_ONLY_WHEN_UNMODIFIED",
+        "removal": "REMOVE_ONLY_CREATED_UNCHANGED"
+      }
+    },
+    {
+      "strategy": "DIRECTORY_SYMLINK",
+      "runtime_discovery_evidence": "CURRENT_DOC_SUPPORTED",
+      "final_support": "CURRENT_DOC_SUPPORTED",
+      "os_support": {
+        "linux": "SUPPORTED_WITH_PRECONDITION",
+        "macos": "SUPPORTED_WITH_PRECONDITION",
+        "windows": "UNKNOWN"
+      },
+      "privilege": "OS_AND_TARGET_PRECONDITION",
+      "config_mutation_required": false,
+      "lifecycle": {
+        "source": "STABLE_ASM_USER_DATA_PREFERRED",
+        "installed": "EXACT_LINK_TARGET_AND_DIGEST",
+        "modified": "CONFLICT",
+        "upgrade": "REVALIDATE_TARGET",
+        "removal": "REMOVE_LINK_ONLY"
+      }
+    },
+    {
+      "strategy": "FILE_SYMLINK",
+      "runtime_discovery_evidence": "UNKNOWN",
+      "final_support": "UNSUPPORTED_FOR_APPLY",
+      "os_support": {
+        "linux": "UNKNOWN",
+        "macos": "UNKNOWN",
+        "windows": "UNKNOWN"
+      },
+      "privilege": "UNKNOWN",
+      "config_mutation_required": false,
+      "lifecycle": {
+        "source": "UNVERIFIED",
+        "installed": "UNVERIFIED",
+        "modified": "UNSUPPORTED_FOR_APPLY",
+        "upgrade": "UNSUPPORTED_FOR_APPLY",
+        "removal": "REMOVE_LINK_ONLY"
+      }
+    },
+    {
+      "strategy": "PARENT_DIRECTORY_SYMLINK",
+      "runtime_discovery_evidence": "NOT_SUPPORTED",
+      "final_support": "NOT_SUPPORTED",
+      "os_support": {
+        "linux": "UNSUPPORTED",
+        "macos": "UNSUPPORTED",
+        "windows": "UNSUPPORTED"
+      },
+      "privilege": "NOT_APPLICABLE",
+      "config_mutation_required": false,
+      "lifecycle": {
+        "source": "USER_PARENT_MUST_REMAIN_USER_OWNED",
+        "installed": "NOT_SUPPORTED",
+        "modified": "NOT_SUPPORTED",
+        "upgrade": "NOT_SUPPORTED",
+        "removal": "NOT_SUPPORTED"
+      }
+    }
+  ],
+  "evidence_refs": [
+    "fixtures/v3/productization/claude-user-scope-contract-v1.json",
+    "https://code.claude.com/docs/en/skills"
+  ],
+  "fixture_digest": "sha256:0af5ddb71f55966ca6a9081b6ce6345aa61495ee19ad2d4bbdcffb7ca091c681"
+}
