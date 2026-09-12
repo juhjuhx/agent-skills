@@ -1,6 +1,6 @@
 # Agent Skills Matrix v3 — Current Contract Index
 
-這是 Phase 3M 的 current index。它只列目前 authoritative implementation；較早
+這是 Phase 3N 的 current index。它只列目前 authoritative implementation；較早
 phase 的文件仍是不可改寫的 historical evidence。任何未明確列為 current 的
 runtime/user claim，不得被當成 mutation authority。
 
@@ -12,6 +12,8 @@ STATIC_PRODUCTIZATION_READY: true
 PROJECT_INSTALLER_READY: true
 CLAUDE_USER_CONTRACT_READY: true
 CLAUDE_USER_APPLY_AUTHORIZED: false
+CLAUDE_USER_APPLY_ENGINE: VIRTUAL_HOME_ONLY
+REAL_HOME_APPLY_AUTHORIZED: false
 CODEX_LIVE_TRANSPORT_STATUS: CODEX_LIVE_TRANSPORT_BLOCKED
 INTRA_RUNTIME_EFFORT_ROUTING_READINESS: NOT_READY
 CROSS_RUNTIME_ROUTING_READINESS: NOT_READY
@@ -29,11 +31,12 @@ CROSS_RUNTIME_ROUTING_READINESS: NOT_READY
 | static compiler | `tools/v3/productization.py` | `schemas/v3/generated-artifact.schema.json` | productization CLI and installer | pure/static; no runtime subprocess or global write |
 | generated artifact | compiler output | `artifact-manifest.json`, `.asm-generated.json` | package builder | derived; owns exact generated paths only |
 | plan | `build_installation_plan()` in `productization.py` | `schemas/v3/installation-plan.schema.json` | preview/package builder | immutable intent; `no_actual_writes=true`; `action` authoritative |
-| package | `build_install_package()` in `installer.py` | `schemas/v3/install-package.schema.json` | explicit PROJECT apply | immutable filtered candidate; USER/GLOBAL apply currently rejected |
+| package | `build_install_package()` and `build_user_install_package()` in `installer.py` | `schemas/v3/install-package.schema.json` | explicit PROJECT apply or Claude USER virtual apply | one generic immutable candidate; USER is Claude/MANAGED_COPY/virtual-root only |
 | mutation result | `_result()` in `installer.py` | `schemas/v3/apply-result.schema.json` | apply/uninstall/revert | actual outcome, not plan or authorization |
 | project ownership | marker validation in `installer.py` | `.asm-installed.json` under project staging | project transaction/lifecycle | exact artifacts only; no parent ownership |
-| generic USER contract | `tools/v3/user_scope.py` | `fixtures/v3/productization/user-scope-contract-v1.json`, lifecycle fixture | symbolic preview/migration | preview-only; `USER_SCOPE_APPLY_NOT_AUTHORIZED` |
-| Claude USER contract | `tools/v3/claude_user_scope.py` | Claude user-scope, strategy, lifecycle fixtures | Claude USER preview | version-bound discovery/strategy evidence; not an apply package |
+| USER recovery journal | USER transaction helpers in `installer.py` | `schemas/v3/transaction-recovery.schema.json` | explicit recovery entrypoint | exact virtual-root/process-crash record; no credentials or body copies |
+| generic USER contract | `tools/v3/user_scope.py` plus USER package fields in `installer.py` | `fixtures/v3/productization/user-scope-contract-v1.json`, lifecycle fixture | symbolic preview/migration | preview for other runtimes; Claude virtual apply only |
+| Claude USER contract | `tools/v3/claude_user_scope.py` | Claude user-scope, strategy, lifecycle fixtures | Claude USER preview and virtual apply target | version-bound discovery/strategy evidence; narrows USER apply to MANAGED_COPY |
 | live evaluation | `tools/v3/live_benchmark.py` and historical V1–V9 docs | `docs/v3/evidence/MODEL_RUNTIME_EVAL_V9.md` | benchmark reporting | orthogonal to filesystem productization |
 
 ## Shared semantics
@@ -79,7 +82,8 @@ model.
 
 ### Transaction
 
-The current transaction authority is the Phase 3J flow in `installer.py`:
+The current transaction authority is the Phase 3J flow plus its Phase 3N virtual-USER
+specialization in `installer.py`:
 
 ```text
 all-target preflight
@@ -88,22 +92,23 @@ all-target preflight
 → atomic replacement
 → ownership state last
 → digest verification
-→ bounded rollback
+→ bounded rollback or deterministic process-crash recovery
 ```
 
-It is PROJECT-only today. A future USER apply must parameterize this authority rather
-than implement a parallel engine. Cross-process crash recovery is currently
-`BOUNDED_MANUAL_RECOVERY`, so USER apply is not authorized by this index.
+PROJECT semantics remain unchanged. Claude USER mutation is enabled only for an
+explicit existing virtual HOME and `MANAGED_COPY`; real HOME authorization remains
+false. The USER journal is process-crash recoverable for the supported virtual model,
+but the implementation does not claim power-loss durability.
 
 ## USER / Claude composition
 
 | concept | current authority | current status |
 |---|---|---|
-| generic USER scope | `user_scope.py` | symbolic preview only |
+| generic USER scope | `user_scope.py` plus generic USER package fields in `installer.py` | preview for other runtimes; Claude virtual apply only |
 | Claude version/fingerprint/path evidence | `claude_user_scope.py` + Claude fixtures | `CLAUDE_USER_CONTRACT_READY` |
 | preferred distribution | Claude strategy fixture | `MANAGED_COPY_PREFERRED` |
-| generic USER package | `installer.py` / package schema | representable as reserved schema, not installable |
-| Claude USER apply | none | must be implemented only after a future contract-closure gate |
+| generic USER package | `build_user_install_package()` / `install-package.schema.json` | immutable, digest-bound USER candidate; only virtual Claude apply is enabled |
+| Claude USER apply | `apply_user_install_package()` / `recover_user_transaction()` | virtual HOME only; exact confirmation; no real-home authorization |
 
 The future package should remain generic. Its USER target contract must bind scope,
 Claude runtime fingerprint/contract digest, managed-copy strategy, symbolic root,
@@ -134,9 +139,11 @@ specific package class is prohibited.
 - [`schemas/v3/installation-plan.schema.json`](../../schemas/v3/installation-plan.schema.json)
 - [`schemas/v3/install-package.schema.json`](../../schemas/v3/install-package.schema.json)
 - [`schemas/v3/apply-result.schema.json`](../../schemas/v3/apply-result.schema.json)
+- [`schemas/v3/transaction-recovery.schema.json`](../../schemas/v3/transaction-recovery.schema.json)
 
 ## Next boundary
 
-The next proposed phase is Claude-only `PHASE 3N — CLAUDE USER-SCOPE APPLY MVP`, but
-only after it closes the generic USER target/package and crash-recovery gaps identified
-in the integration checkpoint. No current document authorizes real USER mutation.
+The next proposed phase is Claude-only `PHASE 3O — CLAUDE REAL-HOME CANARY &
+CLONE-TO-USE UX`. It must begin preview-only and require explicit user authorization;
+no current document authorizes real USER mutation. Codex live transport and all
+runtime-routing readiness states remain unchanged.

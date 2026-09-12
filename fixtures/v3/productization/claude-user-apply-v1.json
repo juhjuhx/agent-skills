@@ -1,0 +1,59 @@
+{
+  "schema_version": "3.0",
+  "apply_contract_version": "1.0",
+  "fixture_kind": "VIRTUAL_HOME_ONLY",
+  "runtime_id": "claude-code",
+  "runtime_version": "2.1.235",
+  "scope": "USER",
+  "distribution_strategy": "MANAGED_COPY",
+  "real_home_apply_authorized": false,
+  "package_contract": {
+    "generic_install_package": true,
+    "exact_confirmation": true,
+    "bound_fields": [
+      "runtime_fingerprint",
+      "runtime_contract_digest",
+      "user_scope_contract_digest",
+      "target_root_identity",
+      "snapshot_digest",
+      "generated_artifact_manifest_digest",
+      "collision_observations",
+      "expected_destination_state",
+      "transaction_policy"
+    ],
+    "execution_ephemeral_persistence": false
+  },
+  "transaction_journal": {
+    "schema": "schemas/v3/transaction-recovery.schema.json",
+    "phases": [
+      "PREPARED",
+      "STAGED",
+      "MUTATING",
+      "OWNERSHIP_COMMITTED",
+      "VERIFIED",
+      "COMPLETE",
+      "RECOVERY_REQUIRED",
+      "ROLLED_BACK"
+    ],
+    "marker_last": true,
+    "recovery_guarantee": "PROCESS_CRASH_RECOVERABLE"
+  },
+  "supported_boundaries": [
+    "after_prepared",
+    "after_staging",
+    "after_create",
+    "after_update",
+    "before_ownership",
+    "after_ownership",
+    "before_verify"
+  ],
+  "forbidden": [
+    "REAL_HOME",
+    "RUNTIME_CONFIG",
+    "AUTH_STATE",
+    "MODEL_INVOCATION",
+    "FORCE_OR_ADOPT",
+    "SILENT_STRATEGY_FALLBACK",
+    "RECURSIVE_DELETE"
+  ]
+}

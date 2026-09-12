@@ -1,10 +1,11 @@
 # AGENT SKILLS MATRIX v3 — NEXT PROPOSAL
-# PHASE 3N — CLAUDE USER-SCOPE APPLY MVP
-# CONTRACT-CLOSURE GATE
+# PHASE 3O — CLAUDE REAL-HOME CANARY & CLONE-TO-USE UX
+# EXPLICIT DEPLOYMENT GATE
 
-本提案承接 Phase 3M integration checkpoint。Phase 3M 已確認 static/productization/
-project transaction 與 Claude user discovery contract 可以組合，但尚未授權任何
-USER mutation。
+本提案承接 Phase 3N。Phase 3N 已在 virtual HOME 完成 Claude Code
+`MANAGED_COPY` 的 package、exact confirmation、交易 journal、process-crash
+recovery、single/mixed/full-catalog lifecycle、upgrade、uninstall 與 revert。
+本文件不授權真實 HOME mutation。
 
 Current state:
 
@@ -13,61 +14,61 @@ STAGE_ROUTER_PRODUCTION_READY: true
 STATIC_PRODUCTIZATION_READY: true
 PROJECT_INSTALLER_READY: true
 CLAUDE_USER_CONTRACT_READY: true
-CLAUDE_DISTRIBUTION_STRATEGY: MANAGED_COPY_PREFERRED
-USER_APPLY_ARCHITECTURE_READINESS: USER_APPLY_ARCHITECTURE_PARTIAL
-CLAUDE_USER_APPLY_ELIGIBILITY: NEEDS_CONTRACT_CHANGE
-STACK_INTEGRATION_STATUS: STACK_SAFE_TO_CONTINUE_TO_3N
+CLAUDE_USER_APPLY_ENGINE: VIRTUAL_HOME_ONLY
+USER_APPLY_ARCHITECTURE_READINESS: USER_APPLY_ARCHITECTURE_READY
+CLAUDE_USER_APPLY_AUTHORIZED: false
+INSTALLER_IMPLEMENTED: true
+VIRTUAL_HOME_VERIFIED: true
+PROCESS_CRASH_RECOVERY_VERIFIED: true
+REAL_HOME_CANARY_VERIFIED: false
+FULL_CATALOG_USER_READY: false
 CODEX_LIVE_TRANSPORT_BLOCKED: true
 INTRA_RUNTIME_EFFORT_ROUTING_READINESS: NOT_READY
 CROSS_RUNTIME_ROUTING_READINESS: NOT_READY
 ```
 
-## Required contract closure before mutation
+## Required Phase 3O boundary
 
-Phase 3N 只能在 virtual HOME 先完成以下 gate，不能把 Phase 3L 的 READY 當成
-authorization：
+Phase 3O 只能處理 Claude Code、USER scope、`MANAGED_COPY`。必須先做 preview，
+再由使用者明確授權 exact package digest；不得新增 `--force`、real-home bypass、
+config merge 或其他 runtime apply。
 
-1. 將 generic `InstallPackage`/target contract 擴充為可驗證的 `scope=USER`，保留
-   一般 package，不建立 `ClaudeInstallPackage`；
-2. package 必須綁定 Claude 2.1.235 fingerprint/contract digest、
-   `MANAGED_COPY`、symbolic USER root、collision observations、exact managed paths
-   與每個 destination 的 expected state；
-3. 重用 Phase 3J 的 all-target preflight、stage、revalidate、marker-last、digest
-   verify、bounded rollback，不建立第二個 transaction engine；
-4. 對 process death / partial state 提供 bounded recovery marker 或明確的
-   fail-closed/manual-recovery protocol；
-5. `CLAUDE_SYNCED`、user-owned、ambiguous、unknown、bundled collision 不得被
-   adopt/overwrite；bundled collision 在沒有窄化 confirmation contract 前直接
-   BLOCK；
-6. runtime version 變動時新 apply/update 必須 `RUNTIME_REQUALIFICATION_REQUIRED`，
-   但 exact managed cleanup 不得依賴 runtime inference；
-7. `USER_SCOPE_APPLY_AUTHORIZED` 在本 gate 完成前維持 false。
+第一個 real-home canary 必須：
 
-## Authorized future scope
+1. 明確由使用者請求；
+2. 使用目前 package/confirmation/transaction contract；
+3. 只包含 1–3 個 bounded skills；
+4. zero collision、zero synced/bundled conflict、zero user-owned overwrite；
+5. 完成 post-install digest/ownership validation；
+6. 驗證 uninstall/reinstall/revert；
+7. 失敗時保留 exact transaction evidence，不能猜測或 recursive cleanup。
 
-只有上述 contract closure 通過後，才可實作：
+只有 bounded canary 成功後，才可另行評估 `FULL_CATALOG_USER_READY`。Phase 3O
+不得默認寫入 214 個 skill，也不得把 virtual-home success 宣稱為 real-home
+success。
 
-- Claude Code only；
-- USER scope only；
-- `MANAGED_COPY` only；
-- explicit preview → exact confirmation → apply；
-- virtual HOME first；
-- exact-path ownership、uninstall、revert；
-- no real-home canary unless a later task explicitly requests it after preview,
-  zero-collision check, bounded subset, and rollback validation。
+## Explicitly out of scope
 
-仍禁止 Codex/OpenCode/Hermes USER apply、runtime config mutation、provider/auth/model
-work、symlink fallback、force/adopt、recursive delete、Stage Router 變更與 Phase 4。
+Codex/OpenCode/Hermes USER apply、runtime config、provider/auth/model work、live
+benchmark、Stage Router weights、model/effort routing、adaptive learning、plugin、
+MCP、Claude settings、CLAUDE.md、hooks、permissions、Phase 4 都不在本 prompt。
 
-## Live tracks
+Codex live transport 仍為 blocked；若它在其他環境獨立恢復，只能回到既有
+Phase 3G contract，不能在 Phase 3O 順便重跑或改 benchmark harness。
 
-不要重試 Codex、Claude、OpenCode 或 Hermes live execution。若 Codex transport 在別的
-環境獨立恢復，回到既有 Phase 3G contract；不要在 3N 重建 benchmark harness。
+## Required evidence
+
+保留 virtual-home regression，並新增 real-home canary 的明確 audit boundary、
+preview transcript 的 sanitized metadata、post-install/revert evidence 與
+rollback result。不得保存 credentials、environment、raw prompt、skill body、
+runtime output 或私人絕對路徑。
 
 ## References
 
-- [Phase 3M integration checkpoint](evidence/INTEGRATION_CHECKPOINT_V1.md)
+- [Phase 3N Claude USER apply evidence](evidence/CLAUDE_USER_APPLY_V1.md)
+- [Phase 3N route](evidence/PHASE3N_USER_APPLY_ROUTE.md)
 - [Current v3 contract index](CURRENT_V3_CONTRACT_INDEX.md)
-- [Claude user-scope contract](evidence/CLAUDE_USER_SCOPE_V1.md)
+- [Phase 3M integration checkpoint](evidence/INTEGRATION_CHECKPOINT_V1.md)
 
-STOP. 本文件是下一階段提案，不要在 Phase 3M 執行 USER apply。
+STOP. 本文件只提出 Phase 3O；除非使用者另行明確授權，不得執行 real-home
+canary，也不得將任何 live-routing readiness 升級。
