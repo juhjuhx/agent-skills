@@ -15,7 +15,9 @@ from tools.v3.claude_canary import (
     CanaryPreparationError,
     build_canary_preview,
     build_status_report,
+    bounded_canary_candidate_ids,
     inventory_claude_personal_scope,
+    validate_canary_authorization_digests,
     select_canary_skills,
 )
 from tools.v3.installer import main
@@ -83,13 +85,20 @@ class ClaudeRealHomeCanaryTests(unittest.TestCase):
 
     def test_unknown_bundled_evidence_blocks_zero_collision_gate(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            preview = build_canary_preview(
-                self.snapshot,
-                self.status,
-                home_root=Path(directory),
-                project_root=ROOT,
-                candidate_ids=("module-map",),
-            )
+            with patch(
+                "tools.v3.claude_canary.collect_installed_claude_bundled_evidence",
+                return_value={
+                    "calibration": {"passed": False},
+                    "candidate_results": {"module-map": "BUNDLED_COLLISION_UNKNOWN"},
+                },
+            ):
+                preview = build_canary_preview(
+                    self.snapshot,
+                    self.status,
+                    home_root=Path(directory),
+                    project_root=ROOT,
+                    candidate_ids=("module-map",),
+                )
             self.assertEqual(preview["status"], "CANARY_PREPARATION_BLOCKED")
             self.assertGreater(preview["collision_report"]["unknown"], 0)
             self.assertFalse(preview["real_home_apply_authorized"])
@@ -99,20 +108,58 @@ class ClaudeRealHomeCanaryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             home = Path(directory)
             before = sorted(path.relative_to(home).as_posix() for path in home.rglob("*"))
-            preview = build_canary_preview(
-                self.snapshot,
-                self.status,
-                home_root=home,
-                project_root=ROOT,
-                candidate_ids=("module-map",),
-                bundled_skill_slugs=set(),
-            )
+            with patch(
+                "tools.v3.claude_canary.collect_installed_claude_bundled_evidence",
+                return_value={
+                    "calibration": {"passed": True},
+                    "candidate_results": {"module-map": "BUNDLED_COLLISION_NONE_VERIFIED"},
+                },
+            ):
+                preview = build_canary_preview(
+                    self.snapshot,
+                    self.status,
+                    home_root=home,
+                    project_root=ROOT,
+                    candidate_ids=("module-map",),
+                )
             after = sorted(path.relative_to(home).as_posix() for path in home.rglob("*"))
             self.assertEqual(before, after)
             self.assertTrue(preview["package_digest"].startswith("sha256:"))
             self.assertTrue(preview["confirmation_digest"].startswith("sha256:"))
             self.assertFalse(preview["package_preview"]["apply_allowed"])
             self.assertNotIn(str(home), json.dumps(preview))
+
+    def test_ready_gate_requires_calibrated_bundled_evidence_and_fresh_digests(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            with patch(
+                "tools.v3.claude_canary.collect_installed_claude_bundled_evidence",
+                return_value={
+                    "calibration": {"passed": True},
+                    "candidate_results": {"module-map": "BUNDLED_COLLISION_NONE_VERIFIED"},
+                },
+            ):
+                preview = build_canary_preview(
+                    self.snapshot,
+                    self.status,
+                    home_root=Path(directory),
+                    project_root=ROOT,
+                    candidate_ids=("module-map",),
+                )
+            self.assertEqual(preview["status"], "CLAUDE_REAL_HOME_CANARY_READY_FOR_USER_AUTH")
+            self.assertEqual(preview["collision_report"]["unknown"], 0)
+            self.assertNotEqual(
+                preview["package_digest"],
+                "sha256:c0c03a6b2a77e8c3bda0185e3a383e3d3dedb01ebbc087f3d342b5b5ebf7d763",
+            )
+            self.assertFalse(preview["real_home_apply_authorized"])
+
+    def test_historical_phase3o_digests_are_rejected(self) -> None:
+        with self.assertRaisesRegex(CanaryPreparationError, "historical"):
+            validate_canary_authorization_digests(
+                package_digest="sha256:c0c03a6b2a77e8c3bda0185e3a383e3d3dedb01ebbc087f3d342b5b5ebf7d763",
+                confirmation_digest="sha256:6a2a29bbc55f38a0a4ebb8228ae48296a7b1a4d0980282a9c5e7f3a3f6cfd308",
+                preview_digest="sha256:bbd9a1910857b87b0af169f519a6ae96d80b36ed122a3162fff0096f0c007e25",
+            )
 
     def test_canary_selection_rejects_more_than_three_skills(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -134,6 +181,16 @@ class ClaudeRealHomeCanaryTests(unittest.TestCase):
                     ),
                 )
             self.assertEqual(CANARY_MAX_SKILLS, 3)
+
+    def test_candidate_evidence_search_is_bounded_at_five(self) -> None:
+        self.assertEqual(
+            len(bounded_canary_candidate_ids(None)),
+            5,
+        )
+        with self.assertRaisesRegex(CanaryPreparationError, "five"):
+            bounded_canary_candidate_ids(
+                ("module-map", "a", "b", "c", "d", "e")
+            )
 
     def test_status_report_is_honest_and_path_free(self) -> None:
         report = build_status_report()
@@ -168,9 +225,9 @@ class ClaudeRealHomeCanaryTests(unittest.TestCase):
                         "json",
                     ]
                 )
-            self.assertEqual(result, 2)
+            self.assertEqual(result, 0)
             payload = json.loads(output.getvalue())
-            self.assertEqual(payload["status"], "CANARY_PREPARATION_BLOCKED")
+            self.assertEqual(payload["status"], "CLAUDE_REAL_HOME_CANARY_READY_FOR_USER_AUTH")
             self.assertFalse(payload["real_home_apply_authorized"])
 
     def test_real_home_apply_remains_rejected(self) -> None:
