@@ -79,8 +79,9 @@ python3 -m tools.v3.installer canary-preview \
 
 這個 command 只讀取最小 personal-scope metadata，最多選 3 個 skill，並輸出
 symbolic destination、collision、package digest 與 confirmation digest。它不會
-建立 package file，也不會執行 apply；Phase 3O.1 的 ready 結果是 historical
-preview，穩定化期間必須重新驗證，新的 package 仍須是
+建立 package file，也不會執行 apply。Phase 3O.1 的 ready 結果是 historical
+preview；目前 stabilization 已完成一次新的只讀 revalidation，新的 package
+仍須是
 `apply_allowed=false`、`consumable=false`。
 
 `apply --scope user` 沒有 hidden bypass。任何新 preview 都會生成新的 package
@@ -89,6 +90,10 @@ identity；舊 digest 不會跨 preview 或 target state 重用。
 `doctor`／`explain` 是產品 façade；`package`、`apply`、`recover`、`uninstall`、
 `revert` 是目前保留的明確 lifecycle verbs。阻擋時 JSON 會包含穩定的
 `error_code`、`safe_state` 與 `next_action`，不回傳私人絕對路徑。
+
+目前 final canary 是一個 `module-map`、零碰撞的 exact preview；要進入未來
+real-home execution，仍必須由使用者明確確認該次 preview 所列的 package digest
+與 confirmation digest。穩定化 epoch 不會自動消費這份確認。
 
 ## 其他 lifecycle command
 

@@ -14,9 +14,9 @@ CLAUDE_USER_CONTRACT_READY: true
 CLAUDE_USER_APPLY_AUTHORIZED: false
 CLAUDE_USER_APPLY_ENGINE: VIRTUAL_HOME_ONLY
 REAL_HOME_APPLY_AUTHORIZED: false
-CLAUDE_REAL_HOME_CANARY_READINESS: PENDING_STABILIZATION_REVALIDATION
-AUTONOMOUS_STABILIZATION: IN_PROGRESS
-BETA_CANDIDATE_STABLE: PENDING_FINAL_DOUBLE_PASS
+CLAUDE_REAL_HOME_CANARY_READINESS: CLAUDE_REAL_HOME_CANARY_READY_FOR_USER_AUTH
+AUTONOMOUS_STABILIZATION: COMPLETE
+BETA_CANDIDATE_STABLE: true
 CODEX_LIVE_TRANSPORT_STATUS: CODEX_LIVE_TRANSPORT_BLOCKED
 INTRA_RUNTIME_EFFORT_ROUTING_READINESS: NOT_READY
 CROSS_RUNTIME_ROUTING_READINESS: NOT_READY
@@ -163,9 +163,19 @@ The current stabilization façade is `python3 -m tools.v3.installer`: `status` a
 continues to require an explicitly supplied virtual root and exact package
 confirmation; real HOME remains rejected. No command invokes a model or provider.
 
-Phase 3O.1 closed the two exact preparation blockers and produced a fresh, non-
-authorizing one-skill preview. Stabilization must revalidate that preview after any
-relevant contract or source change. `tools/v3/asm_user_data.py` and
+Phase 3O.1 closed the two exact preparation blockers and stabilization produced a
+fresh, non-authorizing one-skill preview after revalidation. Its package,
+confirmation and preview digests are recorded in the final stabilization and
+canary evidence; any change to source, destination, runtime fingerprint or
+contract invalidates them. `tools/v3/asm_user_data.py` and
 `tools/v3/claude_bundled.py` are the current authorities for those evidence tracks.
 No current document authorizes real USER mutation. Codex live transport and all
 runtime-routing readiness states remain unchanged.
+
+## Stabilization authority boundary
+
+The final candidate is stable for non-privileged product work and fresh-clone
+validation. The canary package remains `consumable: false` until a later user
+message explicitly authorizes the exact package and confirmation digests. The
+current epoch did not mutate real HOME, real Claude directories or real ASM user
+data, and it did not publish or merge anything.

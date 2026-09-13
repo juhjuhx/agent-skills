@@ -1,9 +1,9 @@
 # AGENT SKILLS MATRIX v3 — NEXT PROPOSAL
 # PHASE 3P — EXECUTE EXACT CLAUDE REAL-HOME CANARY
 
-Phase 3P stabilization 正在重新驗證 Phase 3O.1 的 canary package。舊 preview
-識別碼只保留為 historical evidence，不能授權或重播任何 mutation；沒有任何
-真實 HOME mutation。
+Phase 3P stabilization 已完成。下方是最後一次只讀 real-home inventory 後產生的
+fresh canary package；舊 preview 識別碼只保留為 historical evidence，不能授權
+或重播任何 mutation。整個 epoch 沒有真實 HOME mutation。
 
 不要執行本 prompt，除非使用者明確授權下方 exact package digest 與
 confirmation digest。若 preview、destination、root identity、runtime fingerprint
@@ -12,7 +12,7 @@ confirmation digest。若 preview、destination、root identity、runtime finger
 Current state:
 
 ```yaml
-CLAUDE_REAL_HOME_CANARY_READINESS: PENDING_STABILIZATION_REVALIDATION
+CLAUDE_REAL_HOME_CANARY_READINESS: CLAUDE_REAL_HOME_CANARY_READY_FOR_USER_AUTH
 CLONE_TO_USE_UX_READINESS: CLONE_TO_USE_UX_READY
 REAL_HOME_APPLY_AUTHORIZED: false
 INSTALLER_IMPLEMENTED: true
@@ -28,8 +28,8 @@ CROSS_RUNTIME_ROUTING_READINESS: NOT_READY
 Stabilization boundary:
 
 ```yaml
-AUTONOMOUS_STABILIZATION: IN_PROGRESS
-BETA_CANDIDATE_STABLE: PENDING_FINAL_DOUBLE_PASS
+AUTONOMOUS_STABILIZATION: COMPLETE
+BETA_CANDIDATE_STABLE: true
 REAL_HOME_CANARY_EXECUTION: FORBIDDEN_IN_THIS_EPOCH
 ```
 
@@ -41,9 +41,14 @@ runtime_version: 2.1.235
 scope: USER
 strategy: MANAGED_COPY
 selected_skill: module-map
-package_digest: NOT_YET_REFRESHED_AFTER_STABILIZATION
-confirmation_digest: NOT_YET_REFRESHED_AFTER_STABILIZATION
-preview_digest: NOT_YET_REFRESHED_AFTER_STABILIZATION
+files: 2
+bytes: 1959
+collisions: 0
+package_digest: sha256:0408c2a7153c8a6e403feed51f734a496e50e1d98d416b7637e07b5adb794866
+confirmation_digest: sha256:242ba68b6d044d9cb2a555f5dba52eb5e62e91441175ea0330ba7737440f83c1
+preview_digest: sha256:261b7a8fc3ea537eaa9ffaf1c133cdf963ec43c6367532530afce7f6ca277b75
+package_context_digest: sha256:7bfe442b008983c49a0ebcb09012fdda7a7b465f1af4c7ad8e699e8026c82506
+recovery_guarantee: PROCESS_CRASH_RECOVERABLE
 real_home_apply_authorized: false
 consumable: false
 ```
@@ -57,15 +62,32 @@ preview_digest: sha256:9174543748ac7451ea74ede04cdd68dbe88eca83cae2846d52dda96a5
 status: HISTORICAL_NON_AUTHORIZING
 ```
 
-穩定化完成後必須重新 inventory、重新驗證 Claude fingerprint、ASM user-data
-root、bundled collision 與所有 stale inputs，再產生新的 exact digests。
+這組 digest 綁定 Claude Code 2.1.235、`MANAGED_COPY`、`module-map`、符號化
+`${HOME}/.claude/skills` 與 `${ASM_USER_DATA}/v3/claude`，以及當次 zero-collision
+inventory。任何 source、destination、ASM root、runtime fingerprint、contract 或
+collision state 變化都會使它失效，必須重新 preview/package/confirm。
 
 ## Required authorization wording
 
-使用者未來必須明確確認最終重新產生的 exact package digest 與 exact
-confirmation digest，並明確允許 Claude Code 2.1.235、USER、MANAGED_COPY、
-一個 `module-map` skill canary。只有該 exact confirmation 才能進入後續
-execution gate；本 prompt 本身不是授權。若 digest 尚未刷新，不能執行。
+使用者未來若要進入後續 execution gate，必須明確確認以下 exact package digest
+與 exact confirmation digest，並明確允許 Claude Code 2.1.235、USER、
+`MANAGED_COPY`、一個 `module-map` skill canary。只有該 exact confirmation 才能
+進入後續 gate；本 prompt 本身不是授權。若任何 digest 已失效，不能執行。
+
+## Exact authorization request
+
+```text
+請明確授權只執行以下 exact canary：
+runtime: Claude Code 2.1.235
+scope: USER
+strategy: MANAGED_COPY
+skill: module-map
+package_digest: sha256:0408c2a7153c8a6e403feed51f734a496e50e1d98d416b7637e07b5adb794866
+confirmation_digest: sha256:242ba68b6d044d9cb2a555f5dba52eb5e62e91441175ea0330ba7737440f83c1
+
+只有這兩個 digest 完全相符時才可進入未來的 Phase 3P canary executor。
+本文件與本 prompt 不會自動授權；目前仍未執行任何真實 HOME mutation。
+```
 
 ## Constraints
 

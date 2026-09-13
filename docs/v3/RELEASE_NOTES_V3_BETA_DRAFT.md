@@ -18,6 +18,9 @@ installer, and a Claude-only virtual USER managed-copy lifecycle.
 - exact package confirmation and digest-bound process-crash recovery;
 - read-only `status`, `doctor`, `explain` and bounded Claude canary preview;
 - fresh-clone onboarding and repository CI regression workflow.
+- autonomous stabilization evidence: fail-closed ASM user-data resolution,
+  retired-preview protection, actionable diagnostics and final exact-digest
+  canary handoff.
 
 ## Limitations
 
@@ -26,6 +29,8 @@ installer, and a Claude-only virtual USER managed-copy lifecycle.
 - Codex live transport is blocked and effort-routing readiness remains NOT_READY;
 - Codex/OpenCode USER scope and Hermes adapter remain preview/status-only;
 - full-catalog real-user rollout has not been validated or authorized.
+- the current one-skill real-home preview is ready for a separate explicit
+  authorization gate, but this candidate does not consume that authorization.
 
 ## Safety posture
 
@@ -36,4 +41,3 @@ tampered recovery journals. The virtual transaction guarantee is
 atomicity.
 
 Publication and real-user installation require separate explicit authority.
-
