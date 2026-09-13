@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "evidence_kind": "CLAUDE_CANDIDATE_BUNDLED_COLLISION",
+  "runtime_id": "claude-code",
+  "runtime_version": "2.1.235",
+  "artifact_fingerprint": "sha256:83b8f806f6f2eea316cfe246628e6c23374711d868f1fd0409db551b877b7748",
+  "artifact_size_bytes": 313334608,
+  "inspection_method": "BOUNDED_EXACT_TOKEN_SCAN",
+  "calibration": {
+    "passed": true,
+    "completeness_claim": "CANDIDATE_SPECIFIC_ONLY",
+    "known_bundled_identifiers": ["claude-code-guide"],
+    "recovered_bundled_identifiers": ["claude-code-guide"],
+    "required_registry_markers": [
+      "getBundledSkills",
+      "getRegisteredBundledSkillsIgnoringKillSwitch",
+      "registerBundledSkill",
+      "getBundledSkillsRoot"
+    ],
+    "recovered_registry_markers": [
+      "getBundledSkills",
+      "getBundledSkillsRoot",
+      "getRegisteredBundledSkillsIgnoringKillSwitch",
+      "registerBundledSkill"
+    ]
+  },
+  "candidate_results": {
+    "module-map": "BUNDLED_COLLISION_NONE_VERIFIED"
+  },
+  "raw_artifact_persisted": false,
+  "raw_excerpts_persisted": false,
+  "artifact_path_persisted": false,
+  "evidence_digest": "sha256:1cb888ca19ff4c5b718d127a4896c91ca0f00beb46bd5d16800ceed41ed6ceb1"
+}
