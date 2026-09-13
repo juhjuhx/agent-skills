@@ -10,6 +10,12 @@ The current machine-readable baseline contains **214 indexed skills**, exposed t
 
 ## Quick Install
 
+> `install.sh` 是歷史相容的分類安裝器，會依其舊流程寫入使用者範圍；它不是
+> v3 Phase 3P 的產品流程。v3 的新 clone 請先閱讀
+> [`docs/v3/CLONE_TO_USE.md`](docs/v3/CLONE_TO_USE.md)：它先做 static diagnostics，
+> PROJECT apply 使用明確專案根，Claude USER apply 僅在 virtual HOME 測試環境可用。
+> 本穩定化 epoch 不執行 real-home 安裝。
+
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/juhjuhx/agent-skills/main/install.sh)"
 ```
@@ -40,7 +46,11 @@ Without flags → **interactive mode**: pick which categories to install / 不�
 
 ## Architecture v3
 
-Agent Skills Matrix v3 is a documentation-only architecture proposal: **Canonical Core + Generated Native Adapters**. There is one canonical skill source, while each runtime maps it to its own native instructions, skills, commands, subagents, plugins, hooks, MCP, permissions, sandbox, model profiles, reasoning effort, context strategy, and learning surfaces.
+Agent Skills Matrix v3 is now a tested static/productization candidate for the
+**Canonical Core + Generated Native Adapters** architecture. The repository has a
+metadata-first Stage Router, deterministic runtime projections, a safe PROJECT
+installer, and a Claude-only MANAGED_COPY virtual-HOME installer. Real-home mutation,
+live model execution, and model/effort routing remain explicitly gated.
 
 ### Supported runtime targets
 
@@ -83,7 +93,10 @@ Stages route independently: Understand, Research, Design, Plan, Implement, Revie
 - [Agent and Model contracts](docs/v3/AGENT_ADAPTER_CONTRACT.md)
 - [Learning, evaluation, provenance, and review](docs/v3/LEARNING_AND_EVALS.md)
 
-This proposal does not change the current skills, installer, runtime router, or `.superpowers/ROUTING_POLICY.yaml`.
+The legacy `install.sh` remains available for compatibility, but it is not the v3
+installer authority. The current v3 product flow is documented in
+[`docs/v3/CLONE_TO_USE.md`](docs/v3/CLONE_TO_USE.md); it does not change
+`.superpowers/ROUTING_POLICY.yaml`, invoke a model, or enable real-home mutation.
 
 ## Complete Skills Catalog
 

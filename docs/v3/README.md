@@ -1,6 +1,10 @@
 # Agent Skills Matrix v3
 
-> Status: **proposed architecture; Phase 1 contracts, the Phase 2.6 provenance-hardened Codex vertical slice, the Phase 3A.2 deterministic Stage Router quality pass, and the Phase 3B runtime/model evaluation contracts implemented**. The router is metadata-first and stage-local; the evaluation harness records candidates and evidence but does not activate adaptive model routing or implement the other native adapters.
+> Status: **v3 static/productization Beta candidate under stabilization**. The Phase 3H
+> Stage Router, Phase 3I compiler, Phase 3J PROJECT installer, Phase 3N virtual Claude
+> USER installer, and Phase 3O.1 canary preparation are implemented and regression-tested.
+> Real-home mutation, live model execution, and adaptive/model-effort routing remain
+> separate authority-gated tracks.
 
 ## Why v3
 

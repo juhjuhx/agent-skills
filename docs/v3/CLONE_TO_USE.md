@@ -9,10 +9,19 @@ Claude real-home canary 在取得 exact user authorization 前永遠是唯讀。
 git clone <repository>
 cd agent-skills
 python3 -m tools.v3.installer status
+python3 -m tools.v3.installer doctor
 ```
 
 `status` 會分開顯示 Stage Router、static productization、project installer、
 Claude USER engine、live execution 與 effort/cross-runtime routing 狀態。
+`doctor` 只驗證 repository 內的 snapshot、schema、runtime fixture 與 zero-body-load
+invariant；它不探測 runtime executable、不讀設定、不啟動模型。
+
+需要查看同一份狀態的機器可讀解釋時使用：
+
+```sh
+python3 -m tools.v3.installer explain --format json
+```
 
 ## Project-local 使用
 
@@ -30,6 +39,36 @@ python3 -m tools.v3.installer apply \
 
 Project installer 仍是現階段唯一不需 real-home canary 的 apply 路徑。
 
+## Claude USER 虛擬 HOME 測試
+
+USER apply 目前只允許明確提供的虛擬 HOME 與虛擬 ASM user-data root；不能省略
+任何 root，也不會從 `$HOME` 偷偷取得授權。下面的流程會把 package 與所有檔案
+留在暫存目錄：
+
+```sh
+work="$(mktemp -d)"
+mkdir -p "$work/home" "$work/asm"
+python3 -m tools.v3.installer package \
+  --runtime claude-code --scope user --strategy managed-copy \
+  --home-root "$work/home" --asm-user-data-root "$work/asm" \
+  --output "$work/package.json"
+```
+
+接著以 package 內的 exact digest 做 apply（不是泛用的 `yes`）：
+
+```sh
+package_digest="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["package_digest"])' "$work/package.json")"
+python3 -m tools.v3.installer apply \
+  --runtime claude-code --scope user --strategy managed-copy \
+  --home-root "$work/home" --asm-user-data-root "$work/asm" \
+  --package "$work/package.json" \
+  --confirm-package-digest "$package_digest"
+```
+
+同一 package 再套用會是 `NO_OP`。`uninstall`、`revert` 與 `recover` 也必須帶
+`--strategy managed-copy`，並只接受同一個虛擬 root；它們不需要 Claude executable
+或 provider。這條路徑是測試與開發用的 virtual USER engine，不是 real-home 授權。
+
 ## Claude personal canary 預覽
 
 ```sh
@@ -46,6 +85,10 @@ symbolic destination、collision、package digest 與 confirmation digest。它�
 
 `apply --scope user` 沒有 hidden bypass。任何新 preview 都會生成新的 package
 identity；舊 digest 不會跨 preview 或 target state 重用。
+
+`doctor`／`explain` 是產品 façade；`package`、`apply`、`recover`、`uninstall`、
+`revert` 是目前保留的明確 lifecycle verbs。阻擋時 JSON 會包含穩定的
+`error_code`、`safe_state` 與 `next_action`，不回傳私人絕對路徑。
 
 ## 其他 lifecycle command
 

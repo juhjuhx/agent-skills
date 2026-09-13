@@ -3,9 +3,9 @@
   "epoch_id": "v3-autonomous-product-stabilization-2026-09-13",
   "starting_head": "975a8b443fcc3da6c39ebf0f7a6b748f296f54c7",
   "branch": "fix/v3-claude-canary-authorization-closure",
-  "current_milestone": "A",
+  "current_milestone": "B",
   "epoch_status": "IN_PROGRESS",
-  "completed_milestones": [],
+  "completed_milestones": ["A"],
   "known_blockers": [
     "CODEX_LIVE_TRANSPORT_BLOCKED",
     "INTRA_RUNTIME_EFFORT_ROUTING_READINESS=NOT_READY",
@@ -14,5 +14,5 @@
   "real_home_apply_authorized": false,
   "real_home_canary_verified": false,
   "full_catalog_user_ready": false,
-  "next_autonomous_action": "commit the read-only diagnostics and actionable error UX, then begin fresh-clone verification"
+  "next_autonomous_action": "finish fresh-clone lifecycle replay, then run the complete failure-injection and contract regression matrix"
 }

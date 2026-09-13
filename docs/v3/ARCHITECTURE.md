@@ -1,6 +1,10 @@
 # v3 Architecture and ADRs
 
-> Status: **proposed**. Phase 1 contracts, the provenance-bound Codex execution slice, the Phase 3A.2 metadata-first Stage Router quality pass, and the Phase 3B runtime/model evaluation harness are implemented; the current production registry, v2 runtime policy, and production model policy remain unchanged.
+> Status: **implemented static/productization candidate; deployment-adjacent work remains gated**.
+> Phase 1 contracts, the provenance-bound Codex execution slice, the Phase 3A.2
+> metadata-first Stage Router quality pass, runtime/productization contracts, the safe
+> PROJECT installer, and the virtual Claude USER lifecycle are implemented. Real-home
+> mutation, live runtime execution, and production model policy remain unchanged.
 
 ## System shape
 
