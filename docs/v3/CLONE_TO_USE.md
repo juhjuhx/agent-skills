@@ -79,8 +79,8 @@ python3 -m tools.v3.installer canary-preview \
 
 這個 command 只讀取最小 personal-scope metadata，最多選 3 個 skill，並輸出
 symbolic destination、collision、package digest 與 confirmation digest。它不會
-建立 package file，也不會執行 apply；目前 `module-map` 的 Phase 3O.1 結果為
-`CLAUDE_REAL_HOME_CANARY_READY_FOR_USER_AUTH`，但 package 仍是
+建立 package file，也不會執行 apply；Phase 3O.1 的 ready 結果是 historical
+preview，穩定化期間必須重新驗證，新的 package 仍須是
 `apply_allowed=false`、`consumable=false`。
 
 `apply --scope user` 沒有 hidden bypass。任何新 preview 都會生成新的 package

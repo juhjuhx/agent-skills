@@ -1,6 +1,6 @@
 # Agent Skills Matrix v3 — Current Contract Index
 
-這是 Phase 3O.1 的 current index。它只列目前 authoritative implementation；較早
+這是 Phase 3P 穩定化中的 current index。它只列目前 authoritative implementation；較早
 phase 的文件仍是不可改寫的 historical evidence。任何未明確列為 current 的
 runtime/user claim，不得被當成 mutation authority。
 
@@ -14,7 +14,9 @@ CLAUDE_USER_CONTRACT_READY: true
 CLAUDE_USER_APPLY_AUTHORIZED: false
 CLAUDE_USER_APPLY_ENGINE: VIRTUAL_HOME_ONLY
 REAL_HOME_APPLY_AUTHORIZED: false
-CLAUDE_REAL_HOME_CANARY_READINESS: CLAUDE_REAL_HOME_CANARY_READY_FOR_USER_AUTH
+CLAUDE_REAL_HOME_CANARY_READINESS: PENDING_STABILIZATION_REVALIDATION
+AUTONOMOUS_STABILIZATION: IN_PROGRESS
+BETA_CANDIDATE_STABLE: PENDING_FINAL_DOUBLE_PASS
 CODEX_LIVE_TRANSPORT_STATUS: CODEX_LIVE_TRANSPORT_BLOCKED
 INTRA_RUNTIME_EFFORT_ROUTING_READINESS: NOT_READY
 CROSS_RUNTIME_ROUTING_READINESS: NOT_READY
@@ -42,6 +44,9 @@ CROSS_RUNTIME_ROUTING_READINESS: NOT_READY
 | generic USER contract | `tools/v3/user_scope.py` plus USER package fields in `installer.py` | `fixtures/v3/productization/user-scope-contract-v1.json`, lifecycle fixture | symbolic preview/migration | preview for other runtimes; Claude virtual apply only |
 | Claude USER contract | `tools/v3/claude_user_scope.py` | Claude user-scope, strategy, lifecycle fixtures | Claude USER preview and virtual apply target | version-bound discovery/strategy evidence; narrows USER apply to MANAGED_COPY |
 | live evaluation | `tools/v3/live_benchmark.py` and historical V1–V9 docs | `docs/v3/evidence/MODEL_RUNTIME_EVAL_V9.md` | benchmark reporting | orthogonal to filesystem productization |
+| static diagnostics | `tools/v3/diagnostics.py` plus `installer.py` `doctor` / `explain` | diagnostics report contract and v3 tests | fresh-clone/status UX and CI | read-only; validates snapshot/schema/runtime fixtures; never probes runtime or model |
+| stabilization state | repository-local epoch state | `docs/v3/AUTONOMOUS_STABILIZATION_STATE.md`, `fixtures/v3/stabilization/epoch-state-v1.json` | resumable Phase 3P work | progress metadata only; never an authority token |
+| CI gate | `.github/workflows/v3-stabilization.yml` | workflow definition | pull/push regression | tests, lint, scoped formatting, compile, diagnostics and disposable PROJECT flow; no publication |
 
 ## Shared semantics
 
@@ -151,9 +156,16 @@ specific package class is prohibited.
 
 ## Next boundary
 
+The current stabilization façade is `python3 -m tools.v3.installer`: `status` and
+`explain` are read-only status views; `doctor` is a read-only static-contract check;
+`preview` and `package` produce immutable intent/candidate artifacts; `apply`,
+`recover`, `uninstall`, and `revert` remain explicit lifecycle verbs. USER apply
+continues to require an explicitly supplied virtual root and exact package
+confirmation; real HOME remains rejected. No command invokes a model or provider.
+
 Phase 3O.1 closed the two exact preparation blockers and produced a fresh, non-
-authorizing one-skill preview. The current canary status is
-`CLAUDE_REAL_HOME_CANARY_READY_FOR_USER_AUTH`; this is not a mutation authorization.
-`tools/v3/asm_user_data.py` and `tools/v3/claude_bundled.py` are the current authorities
-for the new evidence. No current document authorizes real USER mutation. Codex live
-transport and all runtime-routing readiness states remain unchanged.
+authorizing one-skill preview. Stabilization must revalidate that preview after any
+relevant contract or source change. `tools/v3/asm_user_data.py` and
+`tools/v3/claude_bundled.py` are the current authorities for those evidence tracks.
+No current document authorizes real USER mutation. Codex live transport and all
+runtime-routing readiness states remain unchanged.
