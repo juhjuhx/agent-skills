@@ -1,0 +1,27 @@
+{
+  "schema_version": "3.0",
+  "fixture_kind": "PHASE3O_SANITIZED_PREVIEW_INPUT",
+  "runtime_id": "claude-code",
+  "runtime_version": "2.1.235",
+  "scope": "USER",
+  "strategy": "MANAGED_COPY",
+  "maximum_skill_count": 3,
+  "selected_skill_ids": ["module-map"],
+  "selection": [
+    {
+      "skill_id": "module-map",
+      "source_path": "pro-module-map/SKILL.md",
+      "source_digest": "sha256:12b79ba718e4e85e21ca862808f5fe61647b59c59675fa78e45c272ecb34c4df",
+      "size_bytes": 1959,
+      "supporting_file_count": 0,
+      "reason": "低風險、唯讀、零工具、單一 SKILL.md 的架構導覽技能。"
+    }
+  ],
+  "collision_evidence": "REAL_HOME_NOT_INCLUDED; bundled-name evidence remains UNKNOWN",
+  "real_home_apply_authorized": false,
+  "executable_package": false,
+  "notes": [
+    "本 fixture 不包含真實 HOME 路徑、root identity、package digest 或 confirmation digest。",
+    "它只固定候選選擇與 sanitized metadata，不能授權任何 mutation。"
+  ]
+}
