@@ -32,6 +32,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.v3.contract_validation import validate_instance
+from tools.v3.diagnostics import build_static_diagnostics_report
 from tools.v3.productization import (
     GLOBAL_RUNTIME_DIRS,
     ROOT,
@@ -46,6 +47,7 @@ from tools.v3.productization import (
     snapshot_digest,
 )
 from tools.v3.routing_catalog import RoutingCatalogSnapshot
+from tools.v3.stage_router import RoutingError
 from tools.v3.user_scope import (
     USER_SCOPE_APPLY_NOT_AUTHORIZED,
     UserScopeError,
@@ -5034,6 +5036,86 @@ def _render_user_package_text(
     return _render_package_text(status, package, result, project=None)
 
 
+_ERROR_GUIDANCE: dict[str, tuple[str, str, str]] = {
+    USER_SCOPE_APPLY_NOT_AUTHORIZED: (
+        "USER scope apply is not authorized in this phase.",
+        "Use an explicitly supplied virtual HOME package flow; real HOME remains blocked.",
+        "NO_MUTATION",
+    ),
+    "USER_CONFIRMATION_REQUIRED": (
+        "The supplied confirmation does not match the exact package.",
+        "Rebuild the package and confirm its exact package digest.",
+        "NO_MUTATION",
+    ),
+    "STALE_PACKAGE": (
+        "The package or one of its bound inputs is stale.",
+        "Run preview/package again and confirm the newly rendered digest.",
+        "NO_MUTATION",
+    ),
+    "RECOVERY_REQUIRED": (
+        "A previous transaction requires recovery before new mutation.",
+        "Run the bounded recover command for the exact transaction.",
+        "NO_NEW_MUTATION",
+    ),
+    "RECOVERY_BLOCKED": (
+        "Recovery evidence is invalid or tampered.",
+        "Inspect the exact transaction and resolve it manually; no automatic cleanup was performed.",
+        "NO_NEW_MUTATION",
+    ),
+    "RUNTIME_REQUALIFICATION_REQUIRED": (
+        "The installed runtime no longer matches its qualified contract.",
+        "Re-qualify the runtime before building a new package.",
+        "NO_MUTATION",
+    ),
+    "UNKNOWN_RUNTIME": (
+        "The requested runtime is not in the validated inventory.",
+        "Choose a runtime with a checked-in support contract.",
+        "NO_MUTATION",
+    ),
+    "USER_OWNED_CONFLICT": (
+        "A user-owned destination conflicts with the requested artifact.",
+        "Preserve the destination and create a fresh preview after resolving the conflict.",
+        "NO_MUTATION",
+    ),
+    "INVALID_TARGET": (
+        "The supplied target is not a safe, explicit destination.",
+        "Supply an absolute project or virtual HOME root that passes target validation.",
+        "NO_MUTATION",
+    ),
+    "CONTRACT_MISMATCH": (
+        "A validated product contract does not match the requested operation.",
+        "Re-run static diagnostics and rebuild the package from current contracts.",
+        "NO_MUTATION",
+    ),
+}
+
+
+def _error_details(exc: Exception) -> dict[str, str | bool]:
+    """Convert internal failures into stable, path-safe user guidance."""
+
+    message = str(exc)
+    match = re.match(r"^([A-Z][A-Z0-9_]+)(?::|$)", message)
+    code = match.group(1) if match else ""
+    if not code:
+        if isinstance(exc, RoutingError):
+            code = exc.reason_code
+        elif "unknown runtime" in message.lower() or "absent from inventory" in message.lower():
+            code = "UNKNOWN_RUNTIME"
+        elif "project" in message.lower() or "home_root" in message.lower() or "target" in message.lower():
+            code = "INVALID_TARGET"
+        else:
+            code = "CONTRACT_MISMATCH"
+    guidance = _ERROR_GUIDANCE.get(code, _ERROR_GUIDANCE["CONTRACT_MISMATCH"])
+    return {
+        "error": code,
+        "error_code": code,
+        "message": guidance[0],
+        "safe_state": guidance[2],
+        "next_action": guidance[1],
+        "no_actual_writes": True,
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Agent Skills Matrix v3 safe project installer"
@@ -5142,6 +5224,25 @@ def main(argv: list[str] | None = None) -> int:
     status_parser.add_argument("--fixture", default="ALL_KNOWN_STATIC")
     status_parser.add_argument("--format", choices=("text", "json"), default="text")
 
+    for command in ("doctor", "explain"):
+        diagnostics_parser = subparsers.add_parser(
+            command,
+            help=(
+                "validate static contracts without probing runtimes"
+                if command == "doctor"
+                else "explain product readiness without probing runtimes"
+            ),
+        )
+        diagnostics_parser.add_argument(
+            "--inventory",
+            type=Path,
+            default=ROOT / "fixtures/v3/productization/runtime-inventory-v1.json",
+        )
+        diagnostics_parser.add_argument("--fixture", default="ALL_KNOWN_STATIC")
+        diagnostics_parser.add_argument(
+            "--format", choices=("text", "json"), default="text"
+        )
+
     canary_parser = subparsers.add_parser(
         "canary-preview",
         help="prepare a read-only Claude real-home canary preview",
@@ -5174,6 +5275,37 @@ def main(argv: list[str] | None = None) -> int:
             else:
                 print(render_status_report(report))
             return 0
+
+        if args.command == "explain":
+            report = build_status_report(
+                inventory=load_runtime_inventory(
+                    args.inventory, fixture_name=args.fixture
+                )
+            )
+            if args.format == "json":
+                print(json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2))
+            else:
+                print(render_status_report(report))
+            return 0
+
+        if args.command == "doctor":
+            report = build_static_diagnostics_report(
+                inventory=args.inventory,
+                fixture=args.fixture,
+            )
+            if args.format == "json":
+                print(json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2))
+            else:
+                print(
+                    "Agent Skills Matrix v3\n"
+                    f"Static diagnostics: {report['status']}\n"
+                    f"Metadata records: {report['checks']['metadata_records']}\n"
+                    f"Ranking body reads: {report['checks']['ranking_body_reads']}\n"
+                    "Runtime probe: NOT_RUN\n"
+                    "Model invocation: NOT_RUN\n"
+                    "No changes were made."
+                )
+            return 0 if report["status"] == "PASS" else 2
 
         if args.command == "canary-preview":
             if args.runtime != CLAUDE_RUNTIME_ID:
@@ -5575,17 +5707,29 @@ def main(argv: list[str] | None = None) -> int:
         finally:
             if holder is not None:
                 holder.cleanup()
-    except (InstallerError, ProductizationError, UserScopeError, CanaryPreparationError) as exc:
+    except (
+        InstallerError,
+        ProductizationError,
+        UserScopeError,
+        CanaryPreparationError,
+        RoutingError,
+        ValueError,
+    ) as exc:
+        details = _error_details(exc)
         if getattr(args, "format", "text") == "json":
             print(
                 json.dumps(
-                    {"status": "BLOCKED", "error": str(exc)},
+                    {"status": "BLOCKED", **details},
                     ensure_ascii=False,
                     sort_keys=True,
                 )
             )
         else:
-            print(f"BLOCKED: {exc}")
+            print(
+                f"BLOCKED [{details['error_code']}]: {details['message']}\n"
+                f"Next: {details['next_action']}\n"
+                f"State: {details['safe_state']} — no changes were made."
+            )
         return 2
 
 
