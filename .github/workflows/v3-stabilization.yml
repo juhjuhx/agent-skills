@@ -1,0 +1,68 @@
+name: v3 stabilization
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Static contracts and regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install test tools
+        run: python -m pip install --disable-pip-version-check pytest ruff
+
+      - name: Run v3 regression suite
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python -B -m pytest -q tests/v3
+
+      - name: Run static lint
+        run: python -m ruff check tools/v3 tests/v3
+
+      - name: Check stabilized-file formatting
+        run: >-
+          python -m ruff format --check
+          tools/v3/diagnostics.py
+          tests/v3/test_stabilization_cli.py
+          tests/v3/test_runtime_model_evaluation.py
+
+      - name: Compile Python sources
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python -B -m compileall -q tools/v3 tests/v3
+
+      - name: Validate fresh-clone static diagnostics
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python -B -m tools.v3.installer doctor --format json
+
+      - name: Exercise disposable project flow
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          work="$(mktemp -d)"
+          mkdir -p "$work/project"
+          python -B -m tools.v3.installer preview \
+            --runtime claude-code --scope project --project "$work/project" \
+            --format json
+          python -B -m tools.v3.installer apply \
+            --runtime claude-code --scope project --project "$work/project" \
+            --format json
+          python -B -m tools.v3.installer uninstall \
+            --runtime claude-code --scope project --project "$work/project" \
+            --apply --format json
