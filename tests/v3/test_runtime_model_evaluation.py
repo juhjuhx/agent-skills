@@ -7,7 +7,7 @@ import unittest
 from copy import deepcopy
 from pathlib import Path
 
-from tools.v3.contract_validation import validate_file, validate_instance
+from tools.v3.contract_validation import validate_instance
 from tools.v3.runtime_model_evaluation import (
     assess_model_candidate,
     assess_runtime_candidate,
@@ -93,7 +93,12 @@ def minimal_model_candidate() -> dict:
     }
 
 
-def task_spec(*, task_id: str = "task:evaluation", required_capabilities=None, complexity="STANDARD") -> dict:
+def task_spec(
+    *,
+    task_id: str = "task:evaluation",
+    required_capabilities=None,
+    complexity="STANDARD",
+) -> dict:
     return {
         "schema_version": "3.0",
         "task_id": task_id,
@@ -123,12 +128,14 @@ def stage_route(*, status: str = "SKILLS_SELECTED") -> dict:
         "stage": "implement",
         "registry_epoch": "registry:test",
         "status": status,
-        "selected_skills": [] if status == "NO_SKILL_NEEDED" else [
+        "selected_skills": []
+        if status == "NO_SKILL_NEEDED"
+        else [
             {"skill_id": "test-driven-development", "role": "PROCESS", "reason": "test"}
         ],
-        "role_assignments": [] if status == "NO_SKILL_NEEDED" else [
-            {"skill_id": "test-driven-development", "role": "PROCESS"}
-        ],
+        "role_assignments": []
+        if status == "NO_SKILL_NEEDED"
+        else [{"skill_id": "test-driven-development", "role": "PROCESS"}],
         "adapter": "codex",
         "model_profile": "unselected",
         "granted_capabilities": ["editing", "sandbox", "structured_output"],
@@ -168,7 +175,13 @@ def codex_manifest() -> dict:
         return json.load(handle)
 
 
-def base_result(*, result_id: str = "result:a", evidence_class: str = "REAL_EXECUTION", quality=None, efficiency=None) -> dict:
+def base_result(
+    *,
+    result_id: str = "result:a",
+    evidence_class: str = "REAL_EXECUTION",
+    quality=None,
+    efficiency=None,
+) -> dict:
     quality = quality or {
         "acceptance_criteria_coverage": 1.0,
         "test_pass": True,
@@ -193,14 +206,40 @@ def base_result(*, result_id: str = "result:a", evidence_class: str = "REAL_EXEC
         run_id=f"run:{result_id}",
         evidence_class=evidence_class,
         outcome="PASS" if evidence_class == "REAL_EXECUTION" else "UNKNOWN",
-        terminal_outcome="VERIFIED_SUCCESS" if evidence_class == "REAL_EXECUTION" else "UNKNOWN",
-        stage_outcomes=[{"stage": "implement", "outcome": "PASS" if evidence_class == "REAL_EXECUTION" else "UNKNOWN"}],
+        terminal_outcome="VERIFIED_SUCCESS"
+        if evidence_class == "REAL_EXECUTION"
+        else "UNKNOWN",
+        stage_outcomes=[
+            {
+                "stage": "implement",
+                "outcome": "PASS" if evidence_class == "REAL_EXECUTION" else "UNKNOWN",
+            }
+        ],
         quality=quality,
         efficiency=efficiency,
-        reliability={"reroutes": 0, "failed_tool_calls": 0, "retries": 0, "invalid_edits": 0, "recovery_success": True},
-        security={"permission_violation": False, "unsafe_proposal": False, "secret_exposure": False, "sandbox_mismatch": False},
-        portability={"handoff_artifact_complete": True, "runtime_specific_leakage": False, "capabilities_lost": []},
-        provenance={"source": "test", "method": "deterministic-test", "evidence_class": evidence_class},
+        reliability={
+            "reroutes": 0,
+            "failed_tool_calls": 0,
+            "retries": 0,
+            "invalid_edits": 0,
+            "recovery_success": True,
+        },
+        security={
+            "permission_violation": False,
+            "unsafe_proposal": False,
+            "secret_exposure": False,
+            "sandbox_mismatch": False,
+        },
+        portability={
+            "handoff_artifact_complete": True,
+            "runtime_specific_leakage": False,
+            "capabilities_lost": [],
+        },
+        provenance={
+            "source": "test",
+            "method": "deterministic-test",
+            "evidence_class": evidence_class,
+        },
     )
 
 
@@ -242,7 +281,9 @@ class RuntimeModelEvaluationContractTests(unittest.TestCase):
                     self.assertTrue(result.valid, result.errors)
 
     def test_development_set_references_the_existing_a_to_j_fixtures(self):
-        with (ROOT / "fixtures/v3/model-routing/development/index.json").open(encoding="utf-8") as handle:
+        with (ROOT / "fixtures/v3/model-routing/development/index.json").open(
+            encoding="utf-8"
+        ) as handle:
             development = json.load(handle)
 
         self.assertEqual(development["fixture_set"], "DEVELOPMENT")
@@ -250,22 +291,41 @@ class RuntimeModelEvaluationContractTests(unittest.TestCase):
         self.assertEqual(
             {item["source_fixture_id"] for item in development["fixtures"]},
             {
-                "A-readme-typo", "B-ordinary-bug", "C-api-architecture",
-                "D-large-frontend-feature", "E-security-sensitive-change",
-                "F-deep-source-research", "G-visual-design",
-                "H-github-repository-audit", "I-new-product-specification", "J-release-gate",
+                "A-readme-typo",
+                "B-ordinary-bug",
+                "C-api-architecture",
+                "D-large-frontend-feature",
+                "E-security-sensitive-change",
+                "F-deep-source-research",
+                "G-visual-design",
+                "H-github-repository-audit",
+                "I-new-product-specification",
+                "J-release-gate",
             },
         )
-        self.assertTrue(all(item["expected_runtime"] is None and item["expected_model"] is None for item in development["fixtures"]))
+        self.assertTrue(
+            all(
+                item["expected_runtime"] is None and item["expected_model"] is None
+                for item in development["fixtures"]
+            )
+        )
 
     def test_holdout_set_is_separate_and_has_no_expected_identity_labels(self):
-        with (ROOT / "fixtures/v3/model-routing/holdout/index.json").open(encoding="utf-8") as handle:
+        with (ROOT / "fixtures/v3/model-routing/holdout/index.json").open(
+            encoding="utf-8"
+        ) as handle:
             holdout = json.load(handle)
 
         self.assertEqual(holdout["fixture_set"], "HOLDOUT")
         self.assertEqual(len(holdout["fixtures"]), 12)
         self.assertTrue(holdout["holdout_policy"]["no_expected_runtime_or_model"])
-        self.assertTrue(all(item.get("expected_runtime") is None and item.get("expected_model") is None for item in holdout["fixtures"]))
+        self.assertTrue(
+            all(
+                item.get("expected_runtime") is None
+                and item.get("expected_model") is None
+                for item in holdout["fixtures"]
+            )
+        )
 
     def test_runtime_and_model_identifiers_cannot_cross_layers(self):
         runtime = minimal_runtime_candidate()
@@ -346,7 +406,9 @@ class RuntimeModelEvaluationContractTests(unittest.TestCase):
         model["capabilities"]["security"] = False
 
         result = assess_model_candidate(
-            task_spec(), minimal_runtime_candidate(), model,
+            task_spec(),
+            minimal_runtime_candidate(),
+            model,
             required_model_capabilities=["security"],
         )
 
@@ -362,8 +424,15 @@ class RuntimeModelEvaluationContractTests(unittest.TestCase):
             "runtime_candidate": minimal_runtime_candidate(),
             "model_candidate": minimal_model_candidate(),
             "adapter_manifest": codex_manifest(),
-            "policy": {"level": "workspace-write", "filesystem": "workspace-write", "network": "none"},
-            "live_runtime": {"sandbox_mode": "workspace-write", "network_access": False},
+            "policy": {
+                "level": "workspace-write",
+                "filesystem": "workspace-write",
+                "network": "none",
+            },
+            "live_runtime": {
+                "sandbox_mode": "workspace-write",
+                "network_access": False,
+            },
             "selection_scope": "TASK_DEFAULT",
             "evidence_mode": "HOST_MANAGED_FIXTURE",
         }
@@ -389,8 +458,15 @@ class RuntimeModelEvaluationContractTests(unittest.TestCase):
                 runtime_candidate=minimal_runtime_candidate(),
                 model_candidate=model,
                 adapter_manifest=codex_manifest(),
-                policy={"level": "workspace-write", "filesystem": "workspace-write", "network": "none"},
-                live_runtime={"sandbox_mode": "workspace-write", "network_access": False},
+                policy={
+                    "level": "workspace-write",
+                    "filesystem": "workspace-write",
+                    "network": "none",
+                },
+                live_runtime={
+                    "sandbox_mode": "workspace-write",
+                    "network_access": False,
+                },
             )
 
     def test_execution_configuration_rejects_runtime_adapter_mismatch(self):
@@ -407,8 +483,15 @@ class RuntimeModelEvaluationContractTests(unittest.TestCase):
                 runtime_candidate=minimal_runtime_candidate(),
                 model_candidate=minimal_model_candidate(),
                 adapter_manifest=manifest,
-                policy={"level": "workspace-write", "filesystem": "workspace-write", "network": "none"},
-                live_runtime={"sandbox_mode": "workspace-write", "network_access": False},
+                policy={
+                    "level": "workspace-write",
+                    "filesystem": "workspace-write",
+                    "network": "none",
+                },
+                live_runtime={
+                    "sandbox_mode": "workspace-write",
+                    "network_access": False,
+                },
             )
 
     def test_no_skill_configuration_drops_model_reference_and_work(self):
@@ -422,12 +505,18 @@ class RuntimeModelEvaluationContractTests(unittest.TestCase):
             runtime_candidate=minimal_runtime_candidate(),
             model_candidate=minimal_model_candidate(),
             adapter_manifest=codex_manifest(),
-            policy={"level": "workspace-write", "filesystem": "workspace-write", "network": "none"},
+            policy={
+                "level": "workspace-write",
+                "filesystem": "workspace-write",
+                "network": "none",
+            },
             live_runtime={"sandbox_mode": "workspace-write", "network_access": False},
         )
 
         self.assertIsNone(configuration["model_candidate_ref"])
-        self.assertEqual(configuration["no_model_work_reason"], route["no_skill_reason"])
+        self.assertEqual(
+            configuration["no_model_work_reason"], route["no_skill_reason"]
+        )
 
     def test_no_skill_route_requires_no_model_routing_work(self):
         route = stage_route(status="NO_SKILL_NEEDED")
@@ -444,9 +533,24 @@ class RuntimeModelEvaluationContractTests(unittest.TestCase):
             source_runtime_ref="runtime:codex",
             destination_runtime_ref="runtime:hermes",
             reason="destination runtime has required long-running coordination",
-            portable_artifact_refs=["TaskSpec:task:evaluation", "StagePlan:task:evaluation"],
-            working_tree_state={"commit": "abc123", "dirty": True, "changed_paths": ["tools/v3/example.py"]},
-            permission_envelope={"level": "workspace-write", "filesystem": "workspace-write", "network": "none", "external_write": False, "secrets": False, "publish": False, "delete": False},
+            portable_artifact_refs=[
+                "TaskSpec:task:evaluation",
+                "StagePlan:task:evaluation",
+            ],
+            working_tree_state={
+                "commit": "abc123",
+                "dirty": True,
+                "changed_paths": ["tools/v3/example.py"],
+            },
+            permission_envelope={
+                "level": "workspace-write",
+                "filesystem": "workspace-write",
+                "network": "none",
+                "external_write": False,
+                "secrets": False,
+                "publish": False,
+                "delete": False,
+            },
             lost_capabilities=["hooks"],
             handoff_cost={"class": "medium", "latency_ms": 50, "context_tokens": 200},
         )
@@ -538,15 +642,62 @@ class RuntimeModelEvaluationContractTests(unittest.TestCase):
     def test_default_and_heuristic_baselines_do_not_make_model_preferences(self):
         candidates = [minimal_model_candidate()]
 
-        default = baseline_select(task_spec(), candidates, "BASELINE_DEFAULT", default_candidate_id=candidates[0]["candidate_id"])
-        heuristic = baseline_select(task_spec(complexity="COMPLEX"), candidates, "BASELINE_HEURISTIC")
+        default = baseline_select(
+            task_spec(),
+            candidates,
+            "BASELINE_DEFAULT",
+            default_candidate_id=candidates[0]["candidate_id"],
+        )
+        heuristic = baseline_select(
+            task_spec(complexity="COMPLEX"), candidates, "BASELINE_HEURISTIC"
+        )
 
         self.assertEqual(default["candidate_id"], heuristic["candidate_id"])
         self.assertNotIn("preferred_provider", heuristic)
 
-    def test_pareto_frontier_keeps_non_dominated_real_results_without_scalar_score(self):
-        fast = base_result(result_id="result:fast", quality={"acceptance_criteria_coverage": 0.8, "test_pass": True, "artifact_correctness": True, "review_findings": 0, "source_accuracy": 0.8, "user_correction": False}, efficiency={"latency_ms": 50, "wall_time_ms": 60, "model_calls": 1, "tool_calls": 1, "context_tokens": 100, "tokens_total": 150, "cost_units": 0.5})
-        strong = base_result(result_id="result:strong", quality={"acceptance_criteria_coverage": 1.0, "test_pass": True, "artifact_correctness": True, "review_findings": 0, "source_accuracy": 1.0, "user_correction": False}, efficiency={"latency_ms": 200, "wall_time_ms": 220, "model_calls": 2, "tool_calls": 2, "context_tokens": 200, "tokens_total": 300, "cost_units": 2.0})
+    def test_pareto_frontier_keeps_non_dominated_real_results_without_scalar_score(
+        self,
+    ):
+        fast = base_result(
+            result_id="result:fast",
+            quality={
+                "acceptance_criteria_coverage": 0.8,
+                "test_pass": True,
+                "artifact_correctness": True,
+                "review_findings": 0,
+                "source_accuracy": 0.8,
+                "user_correction": False,
+            },
+            efficiency={
+                "latency_ms": 50,
+                "wall_time_ms": 60,
+                "model_calls": 1,
+                "tool_calls": 1,
+                "context_tokens": 100,
+                "tokens_total": 150,
+                "cost_units": 0.5,
+            },
+        )
+        strong = base_result(
+            result_id="result:strong",
+            quality={
+                "acceptance_criteria_coverage": 1.0,
+                "test_pass": True,
+                "artifact_correctness": True,
+                "review_findings": 0,
+                "source_accuracy": 1.0,
+                "user_correction": False,
+            },
+            efficiency={
+                "latency_ms": 200,
+                "wall_time_ms": 220,
+                "model_calls": 2,
+                "tool_calls": 2,
+                "context_tokens": 200,
+                "tokens_total": 300,
+                "cost_units": 2.0,
+            },
+        )
 
         frontier = pareto_frontier([fast, strong])
 
@@ -566,10 +717,17 @@ class RuntimeModelEvaluationContractTests(unittest.TestCase):
         self.assertNotIn("ROUTING_POLICY.yaml", proposal.get("writes", []))
 
     def test_evidence_envelope_is_append_only_and_references_checked_in_inputs(self):
-        with (ROOT / "fixtures/v3/model-routing/evidence-v1.json").open(encoding="utf-8") as handle:
+        with (ROOT / "fixtures/v3/model-routing/evidence-v1.json").open(
+            encoding="utf-8"
+        ) as handle:
             evidence = json.load(handle)
 
-        for field in ("runtime_candidates", "model_candidates", "development_fixtures", "holdout_fixtures"):
+        for field in (
+            "runtime_candidates",
+            "model_candidates",
+            "development_fixtures",
+            "holdout_fixtures",
+        ):
             self.assertTrue((ROOT / evidence[field]).is_file(), field)
         self.assertEqual(evidence["verdict"], "INSUFFICIENT_LIVE_EVIDENCE")
         self.assertEqual(evidence["live_quality_runs"]["n"], 0)
@@ -577,7 +735,9 @@ class RuntimeModelEvaluationContractTests(unittest.TestCase):
         self.assertEqual(evidence["history"]["mode"], "APPEND_ONLY")
 
     def test_model_profile_authority_is_rejected_even_if_field_is_injected(self):
-        with (ROOT / "fixtures/v3/models/openai-compatible.json").open(encoding="utf-8") as handle:
+        with (ROOT / "fixtures/v3/models/openai-compatible.json").open(
+            encoding="utf-8"
+        ) as handle:
             profile = json.load(handle)
         profile["capabilities"]["filesystem"] = True
 
@@ -585,7 +745,9 @@ class RuntimeModelEvaluationContractTests(unittest.TestCase):
 
         self.assertFalse(result.valid)
 
-    def test_second_configuration_gate_does_not_count_repetitions_as_configurations(self):
+    def test_second_configuration_gate_does_not_count_repetitions_as_configurations(
+        self,
+    ):
         result = live_evidence_gate(
             completed_configuration_ids=["configuration:codex:0"],
             completed_task_classes=["bugfix", "design", "handoff"],
@@ -596,7 +758,9 @@ class RuntimeModelEvaluationContractTests(unittest.TestCase):
 
         self.assertEqual(result["verdict"], "INSUFFICIENT_LIVE_EVIDENCE")
         self.assertEqual(result["completed_configuration_count"], 1)
-        self.assertTrue(any("second" in item for item in result["missing_requirements"]))
+        self.assertTrue(
+            any("second" in item for item in result["missing_requirements"])
+        )
 
     def test_runtime_capability_gap_is_explicit_after_codex_evidence_is_adequate(self):
         result = live_evidence_gate(

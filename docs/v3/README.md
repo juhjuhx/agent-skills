@@ -1,6 +1,10 @@
 # Agent Skills Matrix v3
 
-> Status: **proposed architecture; Phase 1 contracts, the Phase 2.6 provenance-hardened Codex vertical slice, the Phase 3A.2 deterministic Stage Router quality pass, and the Phase 3B runtime/model evaluation contracts implemented**. The router is metadata-first and stage-local; the evaluation harness records candidates and evidence but does not activate adaptive model routing or implement the other native adapters.
+> Status: **v3 static/productization Beta candidate under stabilization**. The Phase 3H
+> Stage Router, Phase 3I compiler, Phase 3J PROJECT installer, Phase 3N virtual Claude
+> USER installer, and Phase 3O.1 canary preparation are implemented and regression-tested.
+> Real-home mutation, live model execution, and adaptive/model-effort routing remain
+> separate authority-gated tracks.
 
 ## Why v3
 
@@ -241,6 +245,59 @@ effort-routing readiness. See the [`safe installer evidence`](evidence/SAFE_PROJ
 [`Phase 3J route`](evidence/PHASE3J_INSTALLER_ROUTE.md),
 [`InstallPackage schema`](../../schemas/v3/install-package.schema.json), and
 [`ApplyResult schema`](../../schemas/v3/apply-result.schema.json).
+
+### Phase 3K–3L USER contract qualification
+
+Phase 3K defines USER scope as a separate contract rather than PROJECT with a
+different path. It models native discovery roots, platform strategy support,
+exact-path ownership, collisions, upgrade/removal/revert, and project/USER
+coexistence without authorizing USER writes. Phase 3L qualifies only Claude Code
+`2.1.235`; the personal root is represented symbolically as
+`${HOME}/.claude/skills`, and `MANAGED_COPY` remains the preferred future strategy.
+Codex and OpenCode USER scope remain preview-only; Hermes has no adapter.
+
+See the [USER scope evidence](evidence/USER_SCOPE_INSTALLATION_V1.md) and
+[Claude USER evidence](evidence/CLAUDE_USER_SCOPE_V1.md).
+
+### Phase 3M–3N USER lifecycle and recovery
+
+Phase 3M is the integration checkpoint for the current contract lineage. It keeps
+`InstallationPlan`, `InstallPackage`, `ApplyResult`, ownership, and transaction
+state as separate layers. Phase 3N implements the first Claude-only USER
+`MANAGED_COPY` mutation engine for explicit virtual HOME roots. It supports exact
+package confirmation, staging, marker-last ownership, digest verification,
+process-crash recovery, upgrade, uninstall, and exact-backup revert. It does not
+authorize real HOME, provider, runtime, or model actions.
+
+The [USER apply evidence](evidence/CLAUDE_USER_APPLY_V1.md) is the current lifecycle
+boundary. The guarantee is `PROCESS_CRASH_RECOVERABLE` for the supported virtual
+filesystem model, not a claim of power-loss durability.
+
+### Phase 3O–3O.1 real-home canary boundary
+
+Phase 3O adds read-only inventory, bounded 1–3 skill canary selection, symbolic
+preview, and clone-to-use UX. Phase 3O.1 closes the ASM user-data and
+candidate-specific bundled-collision evidence blockers for the current Claude
+`module-map` preview. The resulting package is an exact, non-authorizing preview;
+it must be regenerated when any bound input becomes stale. `REAL_HOME_APPLY_AUTHORIZED`
+and `REAL_HOME_CANARY_VERIFIED` remain false.
+
+See the [canary preparation guide](CLONE_TO_USE.md), [canary preview evidence](evidence/CLAUDE_REAL_HOME_CANARY_PREVIEW_V2.md),
+and [current contract index](CURRENT_V3_CONTRACT_INDEX.md).
+
+### Phase 3P autonomous stabilization boundary
+
+The current work epoch hardens the existing product path through fresh-clone
+smoke tests, CLI diagnostics, installer/recovery regression, portability and
+security review, catalog health, documentation, CI, and two final integrated
+verification passes. It may produce a Beta candidate locally, but it does not
+merge, publish, mutate real HOME, invoke a model, or resume blocked live-routing
+experiments. The epoch state is recorded in
+[`AUTONOMOUS_STABILIZATION_STATE.md`](AUTONOMOUS_STABILIZATION_STATE.md).
+
+The user-facing façade is documented in [`CLONE_TO_USE.md`](CLONE_TO_USE.md):
+`status`, `doctor`, `explain`, `preview`, `package`, `apply`, `recover`,
+`uninstall`, and `revert` remain explicit and status-aware.
 
 ## Non-goals for this proposal
 

@@ -1,4 +1,4 @@
-"""Read-only Phase 3O Claude real-home canary preparation.
+"""Read-only Phase 3O.1 Claude real-home canary preparation.
 
 This module may inspect a supplied or current HOME only for bounded
 filesystem metadata.  It never applies, creates, updates, deletes, uninstalls,
@@ -26,6 +26,20 @@ from tools.v3.claude_user_scope import (
     load_claude_user_contract,
     validate_claude_skill_slug,
 )
+from tools.v3.asm_user_data import (
+    ASMUserDataError,
+    ASMUserDataPathObservation,
+    ASMUserDataResolution,
+    observe_asm_user_data_path,
+    resolve_asm_user_data_root,
+)
+from tools.v3.claude_bundled import (
+    BUNDLED_COLLISION_NONE_VERIFIED,
+    BUNDLED_COLLISION_PRESENT,
+    BUNDLED_COLLISION_UNKNOWN,
+    ClaudeBundledEvidenceError,
+    collect_installed_claude_bundled_evidence,
+)
 from tools.v3.contract_validation import validate_instance
 from tools.v3.productization import (
     ROOT,
@@ -36,12 +50,33 @@ from tools.v3.productization import (
 from tools.v3.routing_catalog import RoutingCatalogSnapshot
 
 
-CANARY_VERSION = "1.0"
+CANARY_VERSION = "1.2"
+CANARY_PREVIEW_CONTEXT_VERSION = "3P-STABILIZATION-1"
 CANARY_MAX_SKILLS = 3
 CANARY_PREFERRED_SKILLS = ("module-map",)
+CANARY_MAX_EVIDENCE_CANDIDATES = 5
+CANARY_FALLBACK_CANDIDATES = (
+    "module-map",
+    "full-output-enforcement",
+    "verification-before-completion",
+    "writing-plans",
+    "test-driven-development",
+)
 CANARY_STATUS_READY = "CLAUDE_REAL_HOME_CANARY_READY_FOR_USER_AUTH"
 CANARY_STATUS_BLOCKED = "CANARY_PREPARATION_BLOCKED"
 REAL_HOME_APPLY_AUTHORIZED = False
+RETIRED_PHASE3O_PREVIEW_DIGESTS = frozenset(
+    {
+        "sha256:c0c03a6b2a77e8c3bda0185e3a383e3d3dedb01ebbc087f3d342b5b5ebf7d763",
+        "sha256:6a2a29bbc55f38a0a4ebb8228ae48296a7b1a4d0980282a9c5e7f3a3f6cfd308",
+        "sha256:bbd9a1910857b87b0af169f519a6ae96d80b36ed122a3162fff0096f0c007e25",
+        # Phase 3O.1 identifiers were valid preparation evidence at the time,
+        # but can never authorize a later stabilization epoch.
+        "sha256:a87e54bcbe516ded434feacf118daaba39fa2129434e6b1a5320e4671fb022de",
+        "sha256:9dceb3f9233adc712e26c3378278e6192963ebc0e0efc0a3f841617476e5f197",
+        "sha256:9174543748ac7451ea74ede04cdd68dbe88eca83cae2846d52dda96a5b1a080d",
+    }
+)
 SAFE_COLLISION_STATES = frozenset({"ABSENT", "ASM_MANAGED"})
 COLLISION_STATES = frozenset(
     {
@@ -59,6 +94,53 @@ COLLISION_STATES = frozenset(
 
 class CanaryPreparationError(ValueError):
     """Raised when a canary cannot be prepared without guessing."""
+
+
+def validate_canary_authorization_digests(
+    *,
+    package_digest: str,
+    confirmation_digest: str,
+    preview_digest: str,
+) -> None:
+    """Reject historical blocked previews at the authorization boundary."""
+
+    supplied = (package_digest, confirmation_digest, preview_digest)
+    if any(value in RETIRED_PHASE3O_PREVIEW_DIGESTS for value in supplied):
+        raise CanaryPreparationError(
+            "historical Phase 3O canary digest cannot be reused"
+        )
+    if any(
+        not isinstance(value, str) or not value.startswith("sha256:")
+        for value in supplied
+    ):
+        raise CanaryPreparationError("canary authorization digest is malformed")
+
+
+def bounded_canary_candidate_ids(
+    candidate_ids: Iterable[str] | None,
+) -> tuple[str, ...]:
+    """Bound candidate-specific evidence before any artifact scan occurs."""
+
+    values = tuple(
+        dict.fromkeys(
+            str(item)
+            for item in (
+                candidate_ids
+                if candidate_ids is not None
+                else CANARY_FALLBACK_CANDIDATES
+            )
+        )
+    )
+    if not values:
+        raise CanaryPreparationError("candidate evidence requires at least one slug")
+    if len(values) > CANARY_MAX_EVIDENCE_CANDIDATES:
+        raise CanaryPreparationError(
+            "candidate evidence may inspect at most five slugs"
+        )
+    try:
+        return tuple(validate_claude_skill_slug(value) for value in values)
+    except ClaudeUserScopeError as exc:
+        raise CanaryPreparationError(str(exc)) from exc
 
 
 def _redacted_identity(path: Path, *, label: str) -> str:
@@ -169,13 +251,14 @@ def inventory_claude_personal_scope(
     project_root: str | Path | None = ROOT,
     skill_slugs: Iterable[str] = (),
     bundled_skill_slugs: Iterable[str] | None = None,
+    bundled_collision_states: Mapping[str, str] | None = None,
+    bundled_evidence_label: str | None = None,
 ) -> dict[str, Any]:
     """Inspect only exact candidate paths and direct-root metadata.
 
-    ``bundled_skill_slugs`` is an explicit evidence input for fixture tests.
-    Omitting it intentionally keeps bundled collision status UNKNOWN; the
-    current checked-in Claude evidence does not contain a version-bound
-    bundled-name inventory.
+    ``bundled_skill_slugs`` remains a compatibility input for offline fixture
+    tests.  Production canary preparation uses the calibrated installed
+    artifact through ``bundled_collision_states`` instead of a CLI override.
     """
 
     home = _safe_read_home(home_root)
@@ -187,9 +270,29 @@ def inventory_claude_personal_scope(
         raise CanaryPreparationError(str(exc)) from exc
     if len(safe_slugs) != len(slugs):
         raise CanaryPreparationError("candidate skill slugs are not unique")
-    bundled = None if bundled_skill_slugs is None else {
-        validate_claude_skill_slug(str(slug)) for slug in bundled_skill_slugs
-    }
+    bundled = None
+    if bundled_skill_slugs is not None:
+        bundled = {
+            validate_claude_skill_slug(str(slug)) for slug in bundled_skill_slugs
+        }
+    if bundled is not None and bundled_collision_states is not None:
+        raise CanaryPreparationError(
+            "bundled collision evidence must use one authoritative input"
+        )
+    bounded_bundled_states: dict[str, str] = {}
+    if bundled_collision_states is not None:
+        for slug, state in bundled_collision_states.items():
+            safe_slug = validate_claude_skill_slug(str(slug))
+            normalized = str(state).upper()
+            if normalized not in {
+                BUNDLED_COLLISION_NONE_VERIFIED,
+                BUNDLED_COLLISION_PRESENT,
+                BUNDLED_COLLISION_UNKNOWN,
+            }:
+                raise CanaryPreparationError(
+                    f"invalid bundled collision evidence: {normalized}"
+                )
+            bounded_bundled_states[safe_slug] = normalized
 
     personal = home / ".claude" / "skills"
     synced_root = home / ".claude" / "skills" / "synced"
@@ -227,11 +330,23 @@ def inventory_claude_personal_scope(
             if project_skills is None
             else _path_state(project_skills / slug)
         )
-        bundled_state = (
-            "UNKNOWN"
-            if bundled is None
-            else "BUNDLED_COLLISION" if slug in bundled else "ABSENT"
-        )
+        if bounded_bundled_states:
+            bundled_result = bounded_bundled_states.get(
+                slug, BUNDLED_COLLISION_UNKNOWN
+            )
+            bundled_state = (
+                "BUNDLED_COLLISION"
+                if bundled_result == BUNDLED_COLLISION_PRESENT
+                else "ABSENT"
+                if bundled_result == BUNDLED_COLLISION_NONE_VERIFIED
+                else "UNKNOWN"
+            )
+        else:
+            bundled_state = (
+                "UNKNOWN"
+                if bundled is None
+                else "BUNDLED_COLLISION" if slug in bundled else "ABSENT"
+            )
         overall = _worst_collision(
             (personal_state, synced_state, project_state, bundled_state)
         )
@@ -261,7 +376,11 @@ def inventory_claude_personal_scope(
         "personal_child_names_persisted": False,
         "access": _access_class(personal if personal.exists() else home),
         "bundled_evidence": (
-            "EXPLICIT_FIXTURE_EVIDENCE" if bundled is not None else "NOT_AVAILABLE"
+            bundled_evidence_label
+            if bundled_evidence_label is not None
+            else "EXPLICIT_FIXTURE_EVIDENCE"
+            if bundled is not None
+            else "NOT_AVAILABLE"
         ),
         "candidates": candidates,
         "read_only": True,
@@ -365,7 +484,12 @@ def select_canary_skills(
     return result
 
 
-def _target_identity(home: Path) -> str:
+def _target_identity(
+    home: Path,
+    *,
+    asm_resolution: ASMUserDataResolution | None = None,
+    asm_path_observation: ASMUserDataPathObservation | None = None,
+) -> str:
     personal = home / ".claude" / "skills"
     personal_identity = (
         _redacted_identity(personal, label="Claude personal skill root")
@@ -383,6 +507,25 @@ def _target_identity(home: Path) -> str:
             "home_root_identity": _redacted_identity(home, label="HOME"),
             "personal_root_identity": personal_identity,
             "asm_user_data_root": CLAUDE_ASM_USER_DATA_ROOT,
+            "asm_user_data_root_identity": (
+                asm_resolution.root_identity if asm_resolution is not None else None
+            ),
+            "asm_user_data_parent_identity": (
+                asm_resolution.parent_identity if asm_resolution is not None else None
+            ),
+            "asm_user_data_contract_digest": (
+                asm_resolution.contract_digest if asm_resolution is not None else None
+            ),
+            "asm_managed_path_identity": (
+                asm_path_observation.identity
+                if asm_path_observation is not None
+                else None
+            ),
+            "asm_managed_path_state": (
+                asm_path_observation.state
+                if asm_path_observation is not None
+                else None
+            ),
         }
     )
 
@@ -411,6 +554,8 @@ def _build_non_authorizing_package(
     home: Path,
     selected: list[dict[str, Any]],
     platform: str,
+    asm_resolution: ASMUserDataResolution | None,
+    asm_path_observation: ASMUserDataPathObservation | None,
 ) -> dict[str, Any]:
     """Reuse the generic USER package builder, then bind only redacted preview state."""
 
@@ -448,13 +593,47 @@ def _build_non_authorizing_package(
             prune_missing=False,
         )
 
-    identity = _target_identity(home)
+    identity = _target_identity(
+        home,
+        asm_resolution=asm_resolution,
+        asm_path_observation=asm_path_observation,
+    )
     package["scope_root_reference"] = digest_value(
         {
             "scope": "USER",
             "home_root_identity": _redacted_identity(home, label="HOME"),
             "personal_skill_root": CLAUDE_PERSONAL_SKILL_ROOT,
             "asm_user_data_root": CLAUDE_ASM_USER_DATA_ROOT,
+            "asm_user_data_root_identity": (
+                asm_resolution.root_identity if asm_resolution is not None else None
+            ),
+            "asm_user_data_parent_identity": (
+                asm_resolution.parent_identity if asm_resolution is not None else None
+            ),
+            "asm_user_data_contract_digest": (
+                asm_resolution.contract_digest if asm_resolution is not None else None
+            ),
+            "asm_managed_path_identity": (
+                asm_path_observation.identity
+                if asm_path_observation is not None
+                else None
+            ),
+            "asm_managed_path_state": (
+                asm_path_observation.state
+                if asm_path_observation is not None
+                else None
+            ),
+        }
+    )
+    # Bind the non-authorizing canary preview to a stable epoch context.  This
+    # is deliberately deterministic (not a nonce): it makes a retired
+    # Phase 3O.1 package distinguishable while preserving reproducibility for
+    # identical inputs within this stabilization contract.
+    package["package_context_digest"] = digest_value(
+        {
+            "context": "CLAUDE_REAL_HOME_CANARY_PREVIEW",
+            "canary_version": CANARY_VERSION,
+            "stabilization_context": CANARY_PREVIEW_CONTEXT_VERSION,
         }
     )
     package["scope_root_digest"] = identity
@@ -463,7 +642,31 @@ def _build_non_authorizing_package(
         {
             "root_class": "ASM_USER_DATA",
             "symbolic_root": CLAUDE_ASM_USER_DATA_ROOT,
-            "resolution": "SYMBOLIC_ONLY",
+            "resolution": (
+                "RESOLVED_EPHEMERAL"
+                if asm_resolution is not None
+                else "UNRESOLVED"
+            ),
+            "root_identity": (
+                asm_resolution.root_identity if asm_resolution is not None else None
+            ),
+            "parent_identity": (
+                asm_resolution.parent_identity if asm_resolution is not None else None
+            ),
+            "contract_digest": (
+                asm_resolution.contract_digest if asm_resolution is not None else None
+            ),
+            "expected_state": asm_resolution.state if asm_resolution is not None else None,
+            "managed_path_identity": (
+                asm_path_observation.identity
+                if asm_path_observation is not None
+                else None
+            ),
+            "managed_path_state": (
+                asm_path_observation.state
+                if asm_path_observation is not None
+                else None
+            ),
         }
     )
     package["installable"] = False
@@ -472,8 +675,12 @@ def _build_non_authorizing_package(
         set(
             package.get("warnings", [])
             + [
-                "Phase 3O preview only: no real-home mutation is authorized",
-                "real ASM user-data root is symbolic only; no destination is resolved",
+                "Phase 3O.1 preview only: no real-home mutation is authorized",
+                (
+                    "ASM user-data root is resolved ephemerally and is not written"
+                    if asm_resolution is not None
+                    else "ASM user-data root could not be safely resolved"
+                ),
                 "package is non-authorizing and is not written to disk",
             ]
         )
@@ -528,6 +735,7 @@ def _package_preview(package: Mapping[str, Any], *, selected: list[dict[str, Any
         "snapshot_digest": package.get("snapshot_digest"),
         "runtime_contract_digest": package.get("runtime_contract_digest"),
         "user_scope_contract_digest": package.get("user_scope_contract_digest"),
+        "package_context_digest": package.get("package_context_digest"),
         "source_skill_ids": package.get("source_skill_ids", []),
         "artifact_count": len(artifacts),
         "file_count": len(files),
@@ -552,7 +760,7 @@ def build_canary_preview(
     bundled_skill_slugs: Iterable[str] | None = None,
     platform: str = "macos",
 ) -> dict[str, Any]:
-    """Build the exact but non-authorizing Phase 3O preview."""
+    """Build the exact but non-authorizing Phase 3O.1 preview."""
 
     contract = load_claude_user_contract()
     load_claude_distribution_strategy()
@@ -575,28 +783,129 @@ def build_canary_preview(
         raise CanaryPreparationError("unsupported canary platform")
     home = _safe_read_home(home_root)
     requested_ids = (
-        tuple(dict.fromkeys(str(item) for item in candidate_ids))
+        bounded_canary_candidate_ids(candidate_ids)
         if candidate_ids is not None
         else None
     )
+    available_ids = set(_record_map(snapshot))
+    candidate_input = (
+        requested_ids
+        if requested_ids is not None
+        else tuple(
+            slug
+            for slug in bounded_canary_candidate_ids(None)
+            if slug in available_ids
+        )
+    )
+    if not candidate_input:
+        raise CanaryPreparationError("no bounded canary candidate is present in snapshot")
+    bundled_evidence: dict[str, Any]
+    if bundled_skill_slugs is not None:
+        # Kept solely for historical offline fixture callers.  The user-facing
+        # CLI never exposes this input; real preparation uses the installed
+        # artifact inspector below.
+        bundled_set = {str(slug) for slug in bundled_skill_slugs}
+        bundled_evidence = {
+            "schema_version": "fixture-only",
+            "artifact_fingerprint": None,
+            "artifact_path_persisted": False,
+            "inspection_method": "EXPLICIT_FIXTURE_EVIDENCE",
+            "calibration": {"passed": True, "completeness_claim": "FIXTURE_ONLY"},
+            "candidate_results": {
+                str(slug): (
+                    BUNDLED_COLLISION_PRESENT
+                    if str(slug) in bundled_set
+                    else "BUNDLED_COLLISION_NONE_VERIFIED"
+                )
+                for slug in candidate_input
+            },
+        }
+        bundled_states = {
+            slug: result
+            for slug, result in bundled_evidence["candidate_results"].items()
+        }
+        bundled_label = "EXPLICIT_FIXTURE_EVIDENCE"
+    else:
+        try:
+            bundled_evidence = dict(
+                collect_installed_claude_bundled_evidence(candidate_input)
+            )
+        except ClaudeBundledEvidenceError as exc:
+            if "fingerprint changed" in str(exc):
+                raise CanaryPreparationError(str(exc)) from exc
+            bundled_evidence = {
+                "schema_version": "1.0",
+                "artifact_fingerprint_status": "UNAVAILABLE",
+                "artifact_path_persisted": False,
+                "inspection_method": "BOUNDED_EXACT_TOKEN_SCAN",
+                "calibration": {"passed": False},
+                "candidate_results": {
+                    str(slug): BUNDLED_COLLISION_UNKNOWN for slug in candidate_input
+                },
+                "error_class": type(exc).__name__,
+            }
+        bundled_states = {
+            str(slug): str(result)
+            for slug, result in dict(
+                bundled_evidence.get("candidate_results", {})
+            ).items()
+        }
+        bundled_label = (
+            "INSTALLED_ARTIFACT_CALIBRATED"
+            if bundled_evidence.get("calibration", {}).get("passed") is True
+            else "INSTALLED_ARTIFACT_UNCALIBRATED"
+        )
     inventory = inventory_claude_personal_scope(
         home_root=home,
         project_root=project_root,
-        skill_slugs=requested_ids or CANARY_PREFERRED_SKILLS,
-        bundled_skill_slugs=bundled_skill_slugs,
+        skill_slugs=candidate_input,
+        bundled_collision_states=bundled_states,
+        bundled_evidence_label=bundled_label,
     )
+    selected_candidate_ids = requested_ids
+    if selected_candidate_ids is None:
+        eligible = tuple(
+            slug
+            for slug in candidate_input
+            if inventory.get("candidates", {}).get(slug, {}).get("overall")
+            in SAFE_COLLISION_STATES
+        )
+        selected_candidate_ids = (eligible[0] if eligible else candidate_input[0],)
     selected = select_canary_skills(
         snapshot,
         inventory,
-        candidate_ids=requested_ids,
+        candidate_ids=selected_candidate_ids,
         platform=platform,
     )
+    try:
+        asm_resolution = resolve_asm_user_data_root(
+            home_root=home,
+            platform=platform,
+            allow_fixture_root=home_root is not None,
+        )
+        asm_error: str | None = None
+        try:
+            asm_path_observation = observe_asm_user_data_path(
+                asm_resolution,
+                "v3/claude",
+            )
+            asm_path_error: str | None = None
+        except ASMUserDataError as exc:
+            asm_path_observation = None
+            asm_path_error = str(exc)
+    except ASMUserDataError as exc:
+        asm_resolution = None
+        asm_error = str(exc)
+        asm_path_observation = None
+        asm_path_error = str(exc)
     package_data = _build_non_authorizing_package(
         snapshot,
         runtime_status,
         home=home,
         selected=selected,
         platform=platform,
+        asm_resolution=asm_resolution,
+        asm_path_observation=asm_path_observation,
     )
     package = package_data["package"]
     states = [item["collision"]["overall"] for item in selected]
@@ -615,9 +924,20 @@ def build_canary_preview(
     blockers: list[str] = []
     if any(state not in SAFE_COLLISION_STATES for state in states):
         blockers.append("zero-collision requirement is not proven")
-    if inventory.get("bundled_evidence") != "EXPLICIT_FIXTURE_EVIDENCE":
-        blockers.append("version-bound bundled-skill inventory is unavailable")
-    blockers.append("ASM user-data root has symbolic contract only; no real destination is resolved")
+    if inventory.get("bundled_evidence") != "INSTALLED_ARTIFACT_CALIBRATED":
+        blockers.append("version-bound bundled-skill evidence is unavailable or uncalibrated")
+    selected_ids = {item["skill_id"] for item in selected}
+    if any(
+        bundled_states.get(skill_id) != BUNDLED_COLLISION_NONE_VERIFIED
+        for skill_id in selected_ids
+    ):
+        blockers.append("candidate-specific bundled collision is not cleared")
+    if asm_resolution is None:
+        blockers.append("ASM user-data root cannot be safely resolved: " + str(asm_error))
+    if asm_path_observation is None:
+        blockers.append(
+            "ASM managed subroot cannot be safely resolved: " + str(asm_path_error)
+        )
     if inventory.get("personal_root_state") == "AMBIGUOUS":
         blockers.append("Claude personal skill root is ambiguous")
     if any(not item.get("eligible_for_canary") for item in selected):
@@ -644,10 +964,46 @@ def build_canary_preview(
         "personal_skill_root": CLAUDE_PERSONAL_SKILL_ROOT,
         "inventory": inventory,
         "selected_skills": selected,
+        "candidate_evaluation": [
+            {
+                "skill_id": skill_id,
+                "collision": inventory["candidates"][skill_id],
+                "selected": skill_id in selected_ids,
+            }
+            for skill_id in candidate_input
+        ],
         "collision_report": collision_report,
+        "bundled_collision_evidence": bundled_evidence,
         "asm_user_data_preview": {
-            "symbolic_root": CLAUDE_ASM_USER_DATA_ROOT,
-            "resolution": "SYMBOLIC_ONLY_UNRESOLVED",
+            "symbolic_root": "${ASM_USER_DATA}",
+            "claude_subroot": CLAUDE_ASM_USER_DATA_ROOT,
+            "resolution": (
+                "RESOLVED_EPHEMERAL" if asm_resolution is not None else "BLOCKED"
+            ),
+            "resolution_rule": (
+                asm_resolution.resolution_rule if asm_resolution is not None else None
+            ),
+            "state": asm_resolution.state if asm_resolution is not None else "UNKNOWN",
+            "root_identity": (
+                asm_resolution.root_identity if asm_resolution is not None else None
+            ),
+            "parent_identity": (
+                asm_resolution.parent_identity if asm_resolution is not None else None
+            ),
+            "contract_digest": (
+                asm_resolution.contract_digest if asm_resolution is not None else None
+            ),
+            "managed_subroot_symbolic": "${ASM_USER_DATA}/v3/claude",
+            "managed_subroot_state": (
+                asm_path_observation.state
+                if asm_path_observation is not None
+                else "UNKNOWN"
+            ),
+            "managed_subroot_identity": (
+                asm_path_observation.identity
+                if asm_path_observation is not None
+                else None
+            ),
             "planned_source_paths": [
                 f"{CLAUDE_ASM_USER_DATA_ROOT}/skills/{item['slug']}/SKILL.md"
                 for item in selected
@@ -712,6 +1068,11 @@ def build_canary_preview(
     path_free = copy.deepcopy(preview)
     path_free["preview_digest"] = ""
     preview["preview_digest"] = digest_value(path_free)
+    validate_canary_authorization_digests(
+        package_digest=preview["package_digest"],
+        confirmation_digest=preview["confirmation_digest"],
+        preview_digest=preview["preview_digest"],
+    )
     return preview
 
 

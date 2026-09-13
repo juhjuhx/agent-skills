@@ -1,6 +1,6 @@
 # Agent Skills Matrix v3 — Current Contract Index
 
-這是 Phase 3O 的 current index。它只列目前 authoritative implementation；較早
+這是 Phase 3P 穩定化中的 current index。它只列目前 authoritative implementation；較早
 phase 的文件仍是不可改寫的 historical evidence。任何未明確列為 current 的
 runtime/user claim，不得被當成 mutation authority。
 
@@ -14,7 +14,9 @@ CLAUDE_USER_CONTRACT_READY: true
 CLAUDE_USER_APPLY_AUTHORIZED: false
 CLAUDE_USER_APPLY_ENGINE: VIRTUAL_HOME_ONLY
 REAL_HOME_APPLY_AUTHORIZED: false
-CLAUDE_REAL_HOME_CANARY_READINESS: CLAUDE_REAL_HOME_CANARY_BLOCKED
+CLAUDE_REAL_HOME_CANARY_READINESS: CLAUDE_REAL_HOME_CANARY_READY_FOR_USER_AUTH
+AUTONOMOUS_STABILIZATION: COMPLETE
+BETA_CANDIDATE_STABLE: true
 CODEX_LIVE_TRANSPORT_STATUS: CODEX_LIVE_TRANSPORT_BLOCKED
 INTRA_RUNTIME_EFFORT_ROUTING_READINESS: NOT_READY
 CROSS_RUNTIME_ROUTING_READINESS: NOT_READY
@@ -29,7 +31,9 @@ CROSS_RUNTIME_ROUTING_READINESS: NOT_READY
 | route selection | `tools/v3/stage_router.py` | `fixtures/v3/router/` and route records | bundle/compiler/adapters | `StageRoute` is intent; no runtime/config authority |
 | execution bundle | `tools/v3/execution_bundle.py` | `schemas/v3/compiled-execution-bundle.schema.json` | runtime adapters | execution-local and ephemeral; never install |
 | product status | `tools/v3/productization.py` status loaders | `schemas/v3/runtime-product-status.schema.json`, `fixtures/v3/productization/runtime-status-*.json` | report/plan/compiler | install, adapter, static, and live dimensions stay independent |
-| canary/status façade | `tools/v3/claude_canary.py` and `installer.py` `status` / `canary-preview` commands | `fixtures/v3/productization/claude-real-home-canary-selection-v1.json`, Phase 3O evidence | read-only real-home inventory and non-authorizing preview | metadata-only; no real-home mutation or runtime invocation |
+| canary/status façade | `tools/v3/claude_canary.py` and `installer.py` `status` / `canary-preview` commands | `fixtures/v3/productization/claude-real-home-canary-selection-v1.json`, Phase 3O.1 evidence | read-only real-home inventory and non-authorizing preview | metadata-only; no real-home mutation or runtime invocation; old Phase 3O digests are retired |
+| ASM user-data resolution | `tools/v3/asm_user_data.py` | `fixtures/v3/productization/asm-user-data-contract-v1.json` | canary package binding and future generic USER lifecycle | read-only platform-native root resolver; symbolic public evidence; no root creation |
+| Claude bundled candidate evidence | `tools/v3/claude_bundled.py` | `fixtures/v3/productization/claude-bundled-collision-v1.json` | candidate-specific canary gate | fingerprint-bound bounded token scan; calibrated absence only; no global bundled inventory |
 | static compiler | `tools/v3/productization.py` | `schemas/v3/generated-artifact.schema.json` | productization CLI and installer | pure/static; no runtime subprocess or global write |
 | generated artifact | compiler output | `artifact-manifest.json`, `.asm-generated.json` | package builder | derived; owns exact generated paths only |
 | plan | `build_installation_plan()` in `productization.py` | `schemas/v3/installation-plan.schema.json` | preview/package builder | immutable intent; `no_actual_writes=true`; `action` authoritative |
@@ -40,6 +44,9 @@ CROSS_RUNTIME_ROUTING_READINESS: NOT_READY
 | generic USER contract | `tools/v3/user_scope.py` plus USER package fields in `installer.py` | `fixtures/v3/productization/user-scope-contract-v1.json`, lifecycle fixture | symbolic preview/migration | preview for other runtimes; Claude virtual apply only |
 | Claude USER contract | `tools/v3/claude_user_scope.py` | Claude user-scope, strategy, lifecycle fixtures | Claude USER preview and virtual apply target | version-bound discovery/strategy evidence; narrows USER apply to MANAGED_COPY |
 | live evaluation | `tools/v3/live_benchmark.py` and historical V1–V9 docs | `docs/v3/evidence/MODEL_RUNTIME_EVAL_V9.md` | benchmark reporting | orthogonal to filesystem productization |
+| static diagnostics | `tools/v3/diagnostics.py` plus `installer.py` `doctor` / `explain` | diagnostics report contract and v3 tests | fresh-clone/status UX and CI | read-only; validates snapshot/schema/runtime fixtures; never probes runtime or model |
+| stabilization state | repository-local epoch state | `docs/v3/AUTONOMOUS_STABILIZATION_STATE.md`, `fixtures/v3/stabilization/epoch-state-v1.json` | resumable Phase 3P work | progress metadata only; never an authority token |
+| CI gate | `.github/workflows/v3-stabilization.yml` | workflow definition | pull/push regression | tests, lint, scoped formatting, compile, diagnostics and disposable PROJECT flow; no publication |
 
 ## Shared semantics
 
@@ -134,6 +141,9 @@ specific package class is prohibited.
 - [Phase 3K USER contract](evidence/USER_SCOPE_INSTALLATION_V1.md)
 - [Phase 3L Claude contract](evidence/CLAUDE_USER_SCOPE_V1.md)
 - [Phase 3M integration checkpoint](evidence/INTEGRATION_CHECKPOINT_V1.md)
+- [ASM user-data contract](evidence/ASM_USER_DATA_CONTRACT_V1.md)
+- [Claude bundled collision evidence](evidence/CLAUDE_BUNDLED_COLLISION_V1.md)
+- [Claude real-home canary preview v2](evidence/CLAUDE_REAL_HOME_CANARY_PREVIEW_V2.md)
 - [`tools/v3/productization.py`](../../tools/v3/productization.py)
 - [`tools/v3/installer.py`](../../tools/v3/installer.py)
 - [`tools/v3/claude_canary.py`](../../tools/v3/claude_canary.py)
@@ -146,9 +156,26 @@ specific package class is prohibited.
 
 ## Next boundary
 
-Phase 3O completed its preview-only boundary but is blocked from issuing a consumable
-authorization. The next work is limited to the two exact evidence gaps: bind a safe
-`${ASM_USER_DATA}/v3/claude` destination contract, and provide version-bound bundled
-skill collision evidence for Claude Code `2.1.235`. After those are proven, a fresh
-preview may be considered. No current document authorizes real USER mutation. Codex
-live transport and all runtime-routing readiness states remain unchanged.
+The current stabilization façade is `python3 -m tools.v3.installer`: `status` and
+`explain` are read-only status views; `doctor` is a read-only static-contract check;
+`preview` and `package` produce immutable intent/candidate artifacts; `apply`,
+`recover`, `uninstall`, and `revert` remain explicit lifecycle verbs. USER apply
+continues to require an explicitly supplied virtual root and exact package
+confirmation; real HOME remains rejected. No command invokes a model or provider.
+
+Phase 3O.1 closed the two exact preparation blockers and stabilization produced a
+fresh, non-authorizing one-skill preview after revalidation. Its package,
+confirmation and preview digests are recorded in the final stabilization and
+canary evidence; any change to source, destination, runtime fingerprint or
+contract invalidates them. `tools/v3/asm_user_data.py` and
+`tools/v3/claude_bundled.py` are the current authorities for those evidence tracks.
+No current document authorizes real USER mutation. Codex live transport and all
+runtime-routing readiness states remain unchanged.
+
+## Stabilization authority boundary
+
+The final candidate is stable for non-privileged product work and fresh-clone
+validation. The canary package remains `consumable: false` until a later user
+message explicitly authorizes the exact package and confirmation digests. The
+current epoch did not mutate real HOME, real Claude directories or real ASM user
+data, and it did not publish or merge anything.

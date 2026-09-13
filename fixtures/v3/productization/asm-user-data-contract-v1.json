@@ -1,0 +1,34 @@
+{
+  "schema_version": "3.0",
+  "contract_version": "1.0",
+  "generator_id": "agent-skills-matrix-v3-asm-user-data",
+  "product_directory": "Agent Skills Matrix",
+  "symbolic_root": "${ASM_USER_DATA}",
+  "derived": true,
+  "managed": true,
+  "canonical": false,
+  "platforms": {
+    "macos": {
+      "resolution_rule": "${HOME}/Library/Application Support/Agent Skills Matrix",
+      "support": "READY_FOR_VERSION_INDEPENDENT_RESOLUTION"
+    },
+    "linux": {
+      "resolution_rule": "${XDG_DATA_HOME}/agent-skills-matrix or ${HOME}/.local/share/agent-skills-matrix",
+      "support": "SUPPORTED_WITH_PRECONDITION"
+    },
+    "windows": {
+      "resolution_rule": "${LOCALAPPDATA}/Agent Skills Matrix or ${HOME}/AppData/Local/Agent Skills Matrix",
+      "support": "SUPPORTED_WITH_PRECONDITION"
+    }
+  },
+  "safety": {
+    "no_runtime_owned_path": true,
+    "no_repository_path": true,
+    "no_filesystem_root": true,
+    "no_real_path_in_public_evidence": true,
+    "root_must_not_be_symlink": true,
+    "parent_chain_must_not_escape": true,
+    "missing_root_state": "EXPECTED_ABSENT"
+  },
+  "contract_digest": "sha256:b158ae49df8674d3b87c6434083c8915b6ebe8d1a78c50456a9d6004ca0b204d"
+}
