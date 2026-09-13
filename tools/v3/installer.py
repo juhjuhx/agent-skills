@@ -33,6 +33,7 @@ if __package__ in {None, ""}:
 
 from tools.v3.contract_validation import validate_instance
 from tools.v3.diagnostics import build_static_diagnostics_report
+from tools.v3.asm_user_data import ASMUserDataError, resolve_asm_user_data_root
 from tools.v3.productization import (
     GLOBAL_RUNTIME_DIRS,
     ROOT,
@@ -296,6 +297,22 @@ def _safe_virtual_roots(
     asm = _safe_virtual_root(asm_user_data_root, label="virtual ASM user-data root")
     if home == asm or home in asm.parents or asm in home.parents:
         raise InstallerError("virtual HOME and ASM user-data roots must be separate")
+    # A virtual transaction must never be able to target the real product-owned
+    # data root, including platforms whose native data directory is outside
+    # HOME (for example an absolute XDG_DATA_HOME override).  Resolution is
+    # read-only; an invalid host contract does not affect explicitly isolated
+    # fixture roots, but a successfully resolved native root is reserved.
+    try:
+        actual_asm = resolve_asm_user_data_root().resolved_path
+    except (ASMUserDataError, OSError):
+        actual_asm = None
+    if actual_asm is not None:
+        try:
+            actual_asm = actual_asm.resolve(strict=False)
+            if asm == actual_asm or asm in actual_asm.parents or actual_asm in asm.parents:
+                raise InstallerError("virtual ASM user-data root overlaps the real ASM data root")
+        except TypeError:
+            raise InstallerError("virtual ASM user-data root identity is invalid")
     return home, asm
 
 

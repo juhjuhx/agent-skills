@@ -4,10 +4,19 @@ from __future__ import annotations
 
 import io
 import json
+import tempfile
 import unittest
 from contextlib import redirect_stdout
+from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
-from tools.v3.installer import InstallerError, _error_details, main
+from tools.v3.installer import (
+    InstallerError,
+    _error_details,
+    _safe_virtual_roots,
+    main,
+)
 
 
 class StabilizationCliTests(unittest.TestCase):
@@ -78,6 +87,19 @@ class StabilizationCliTests(unittest.TestCase):
         serialized = json.dumps(details)
         self.assertNotIn("/Users/huang", serialized)
         self.assertEqual(details["error_code"], "INVALID_TARGET")
+
+    def test_virtual_apply_rejects_real_asm_root_outside_real_home(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "virtual-home"
+            asm = root / "native-user-data"
+            home.mkdir()
+            asm.mkdir()
+            with patch(
+                "tools.v3.installer.resolve_asm_user_data_root",
+                return_value=SimpleNamespace(resolved_path=asm),
+            ), self.assertRaisesRegex(InstallerError, "real ASM"):
+                _safe_virtual_roots(home, asm)
 
 
 if __name__ == "__main__":
