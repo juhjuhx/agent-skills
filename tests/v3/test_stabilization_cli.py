@@ -11,6 +11,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
+from tools.v3.asm_user_data import ASMUserDataError
 from tools.v3.installer import (
     InstallerError,
     _error_details,
@@ -99,6 +100,19 @@ class StabilizationCliTests(unittest.TestCase):
                 "tools.v3.installer.resolve_asm_user_data_root",
                 return_value=SimpleNamespace(resolved_path=asm),
             ), self.assertRaisesRegex(InstallerError, "real ASM"):
+                _safe_virtual_roots(home, asm)
+
+    def test_virtual_apply_fails_closed_when_real_asm_contract_is_unverifiable(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            home = root / "virtual-home"
+            asm = root / "virtual-asm"
+            home.mkdir()
+            asm.mkdir()
+            with patch(
+                "tools.v3.installer.resolve_asm_user_data_root",
+                side_effect=ASMUserDataError("host contract is invalid"),
+            ), self.assertRaisesRegex(InstallerError, "reserve real ASM"):
                 _safe_virtual_roots(home, asm)
 
 

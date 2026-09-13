@@ -303,16 +303,18 @@ def _safe_virtual_roots(
     # read-only; an invalid host contract does not affect explicitly isolated
     # fixture roots, but a successfully resolved native root is reserved.
     try:
-        actual_asm = resolve_asm_user_data_root().resolved_path
-    except (ASMUserDataError, OSError):
-        actual_asm = None
-    if actual_asm is not None:
-        try:
-            actual_asm = actual_asm.resolve(strict=False)
-            if asm == actual_asm or asm in actual_asm.parents or actual_asm in asm.parents:
-                raise InstallerError("virtual ASM user-data root overlaps the real ASM data root")
-        except TypeError:
-            raise InstallerError("virtual ASM user-data root identity is invalid")
+        actual_asm = resolve_asm_user_data_root().resolved_path.resolve(strict=False)
+    except (ASMUserDataError, OSError) as exc:
+        # An unverified native data contract must not leave an escape hatch for
+        # an absolute Linux/Windows data root outside HOME.  Virtual mutation
+        # is useful, but it is never more important than proving that it is
+        # separate from the real product-owned root.
+        raise InstallerError("cannot reserve real ASM user-data root") from exc
+    try:
+        if asm == actual_asm or asm in actual_asm.parents or actual_asm in asm.parents:
+            raise InstallerError("virtual ASM user-data root overlaps the real ASM data root")
+    except TypeError as exc:
+        raise InstallerError("virtual ASM user-data root identity is invalid") from exc
     return home, asm
 
 
