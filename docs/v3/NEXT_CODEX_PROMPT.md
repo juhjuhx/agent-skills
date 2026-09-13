@@ -1,22 +1,15 @@
 # AGENT SKILLS MATRIX v3 — NEXT PROPOSAL
-# PHASE 3O — CLAUDE REAL-HOME CANARY & CLONE-TO-USE UX
-# EXPLICIT DEPLOYMENT GATE
+# PHASE 3O FOLLOW-UP — CLOSE CANARY PREPARATION BLOCKERS
 
-本提案承接 Phase 3N。Phase 3N 已在 virtual HOME 完成 Claude Code
-`MANAGED_COPY` 的 package、exact confirmation、交易 journal、process-crash
-recovery、single/mixed/full-catalog lifecycle、upgrade、uninstall 與 revert。
-本文件不授權真實 HOME mutation。
+Phase 3O 已完成唯讀 real-home inventory、bounded candidate selection、非授權
+package/confirmation digest 與 clone-to-use façade；沒有任何真實 HOME mutation。
 
 Current state:
 
 ```yaml
-STAGE_ROUTER_PRODUCTION_READY: true
-STATIC_PRODUCTIZATION_READY: true
-PROJECT_INSTALLER_READY: true
-CLAUDE_USER_CONTRACT_READY: true
-CLAUDE_USER_APPLY_ENGINE: VIRTUAL_HOME_ONLY
-USER_APPLY_ARCHITECTURE_READINESS: USER_APPLY_ARCHITECTURE_READY
-CLAUDE_USER_APPLY_AUTHORIZED: false
+CLAUDE_REAL_HOME_CANARY_READINESS: CLAUDE_REAL_HOME_CANARY_BLOCKED
+CLONE_TO_USE_UX_READINESS: CLONE_TO_USE_UX_READY
+REAL_HOME_APPLY_AUTHORIZED: false
 INSTALLER_IMPLEMENTED: true
 VIRTUAL_HOME_VERIFIED: true
 PROCESS_CRASH_RECOVERY_VERIFIED: true
@@ -27,48 +20,31 @@ INTRA_RUNTIME_EFFORT_ROUTING_READINESS: NOT_READY
 CROSS_RUNTIME_ROUTING_READINESS: NOT_READY
 ```
 
-## Required Phase 3O boundary
+## Exact blocker
 
-Phase 3O 只能處理 Claude Code、USER scope、`MANAGED_COPY`。必須先做 preview，
-再由使用者明確授權 exact package digest；不得新增 `--force`、real-home bypass、
-config merge 或其他 runtime apply。
+不要執行 Phase 3P。要讓下一次 preview 能進入 authorization gate，必須先以
+contract-only 變更補齊兩項證據：
 
-第一個 real-home canary 必須：
+1. 為 `${ASM_USER_DATA}/v3/claude` 綁定一個不含真實私人路徑、但能在未來
+   transaction 中安全解析與 revalidate 的 user-data destination contract；
+2. 提供與 Claude Code `2.1.235` 綁定的 bundled-skill collision inventory，或
+   等價的 non-inference evidence，使 canary 候選不再是 `UNKNOWN`。
 
-1. 明確由使用者請求；
-2. 使用目前 package/confirmation/transaction contract；
-3. 只包含 1–3 個 bounded skills；
-4. zero collision、zero synced/bundled conflict、zero user-owned overwrite；
-5. 完成 post-install digest/ownership validation；
-6. 驗證 uninstall/reinstall/revert；
-7. 失敗時保留 exact transaction evidence，不能猜測或 recursive cleanup。
+不能把本次 preview digest 視為授權，也不能用 CLI 參數宣稱 `bundled = none`。
+補證後必須重新 inventory、重新 package、重新產生兩個 digest；舊 digest 不可重用。
 
-只有 bounded canary 成功後，才可另行評估 `FULL_CATALOG_USER_READY`。Phase 3O
-不得默認寫入 214 個 skill，也不得把 virtual-home success 宣稱為 real-home
-success。
+## Constraints
 
-## Explicitly out of scope
+只處理上述兩項 contract evidence 與驗證；不得執行 real-home apply、Claude
+inference、provider/auth、Codex/其他 runtime、Stage Router、model/effort routing、
+full-catalog rollout 或新增 bypass。
 
-Codex/OpenCode/Hermes USER apply、runtime config、provider/auth/model work、live
-benchmark、Stage Router weights、model/effort routing、adaptive learning、plugin、
-MCP、Claude settings、CLAUDE.md、hooks、permissions、Phase 4 都不在本 prompt。
+References:
 
-Codex live transport 仍為 blocked；若它在其他環境獨立恢復，只能回到既有
-Phase 3G contract，不能在 Phase 3O 順便重跑或改 benchmark harness。
-
-## Required evidence
-
-保留 virtual-home regression，並新增 real-home canary 的明確 audit boundary、
-preview transcript 的 sanitized metadata、post-install/revert evidence 與
-rollback result。不得保存 credentials、environment、raw prompt、skill body、
-runtime output 或私人絕對路徑。
-
-## References
-
-- [Phase 3N Claude USER apply evidence](evidence/CLAUDE_USER_APPLY_V1.md)
-- [Phase 3N route](evidence/PHASE3N_USER_APPLY_ROUTE.md)
+- [Phase 3O preview evidence](evidence/CLAUDE_REAL_HOME_CANARY_PREVIEW_V1.md)
+- [Phase 3O route](evidence/PHASE3O_CANARY_PREP_ROUTE.md)
+- [Clone-to-use guide](CLONE_TO_USE.md)
 - [Current v3 contract index](CURRENT_V3_CONTRACT_INDEX.md)
-- [Phase 3M integration checkpoint](evidence/INTEGRATION_CHECKPOINT_V1.md)
 
-STOP. 本文件只提出 Phase 3O；除非使用者另行明確授權，不得執行 real-home
-canary，也不得將任何 live-routing readiness 升級。
+STOP. 只有 exact blockers 取得新證據後，才可重新 preview；本 prompt 不授權任何
+real-home mutation。

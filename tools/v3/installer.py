@@ -64,6 +64,14 @@ from tools.v3.claude_user_scope import (
     validate_claude_skill_slug,
     validate_claude_skill_slugs,
 )
+from tools.v3.claude_canary import (
+    CANARY_STATUS_READY,
+    CanaryPreparationError,
+    build_canary_preview,
+    build_status_report,
+    render_canary_preview,
+    render_status_report,
+)
 
 
 DEFAULT_TARGET_INVENTORY = (
@@ -1188,11 +1196,14 @@ def _user_source_manifest(
     repository_root: str | Path,
     asm_user_data_root: Path,
     slugs: dict[str, str],
+    skill_ids: set[str] | None = None,
 ) -> tuple[dict[str, Any], dict[str, bytes]]:
     entries: list[dict[str, Any]] = []
     sources: dict[str, bytes] = {}
     for record in sorted(snapshot.records, key=lambda item: item["skill_id"]):
         skill_id = str(record["skill_id"])
+        if skill_ids is not None and skill_id not in skill_ids:
+            continue
         raw, source_path = _canonical_user_source(
             record,
             repository_root=repository_root,
@@ -1248,6 +1259,8 @@ def build_user_install_package(
     contract: dict[str, Any] | None = None,
     platform: str = "macos",
     collision_states: dict[str, str] | None = None,
+    skill_ids: set[str] | None = None,
+    prune_missing: bool | None = None,
 ) -> dict[str, Any]:
     """Build an immutable generic USER package for Claude MANAGED_COPY."""
 
@@ -1263,11 +1276,28 @@ def build_user_install_package(
         )
     except ClaudeUserScopeError as exc:
         raise InstallerError(str(exc)) from exc
+    selected_ids = (
+        {str(skill_id) for skill_id in skill_ids}
+        if skill_ids is not None
+        else {str(record["skill_id"]) for record in snapshot.records}
+    )
+    available_ids = {str(record["skill_id"]) for record in snapshot.records}
+    missing_ids = selected_ids - available_ids
+    if missing_ids:
+        raise InstallerError(
+            "USER package selected skill IDs are absent from snapshot: "
+            + ", ".join(sorted(missing_ids))
+        )
+    if not selected_ids:
+        raise InstallerError("USER package requires at least one skill")
+    if prune_missing is None:
+        prune_missing = skill_ids is None
     source_manifest, source_bytes = _user_source_manifest(
         snapshot,
         repository_root=repository_root,
         asm_user_data_root=asm,
         slugs=slugs,
+        skill_ids=selected_ids,
     )
     previous_manifest, marker_digest = _read_user_manifest(asm)
     old_map = (
@@ -1284,6 +1314,8 @@ def build_user_install_package(
     current_keys: set[tuple[str, str]] = set()
     for record in sorted(snapshot.records, key=lambda item: item["skill_id"]):
         skill_id = str(record["skill_id"])
+        if skill_id not in selected_ids:
+            continue
         slug = slugs[skill_id]
         for root_class, root, destination in (
             (
@@ -1361,6 +1393,8 @@ def build_user_install_package(
     # Removal is explicit and never inferred as a rename.  Both the stable
     # ASM source and Claude personal copy are exact managed paths.
     for key, old_item in sorted(old_map.items()):
+        if not prune_missing:
+            break
         if key in current_keys:
             continue
         root_class, destination_path = key
@@ -1483,7 +1517,7 @@ def build_user_install_package(
         "package_kind": "INSTALL",
         "revert_manifest_path": None,
         "revert_manifest_digest": None,
-        "source_skill_ids": sorted(record["skill_id"] for record in snapshot.records),
+        "source_skill_ids": sorted(selected_ids),
         "collision_observations": collision_observations,
         "collision_observations_digest": digest_value(collision_observations),
         "transaction_policy": "USER_MANAGED_COPY_PROCESS_CRASH_RECOVERABLE",
@@ -5097,8 +5131,72 @@ def main(argv: list[str] | None = None) -> int:
     recover_parser.add_argument("--transaction", required=True)
     recover_parser.add_argument("--format", choices=("text", "json"), default="text")
 
+    status_parser = subparsers.add_parser(
+        "status", help="show product and runtime status without probing executables"
+    )
+    status_parser.add_argument(
+        "--inventory",
+        type=Path,
+        default=ROOT / "fixtures/v3/productization/runtime-inventory-v1.json",
+    )
+    status_parser.add_argument("--fixture", default="ALL_KNOWN_STATIC")
+    status_parser.add_argument("--format", choices=("text", "json"), default="text")
+
+    canary_parser = subparsers.add_parser(
+        "canary-preview",
+        help="prepare a read-only Claude real-home canary preview",
+    )
+    canary_parser.add_argument("--runtime", default=CLAUDE_RUNTIME_ID)
+    canary_parser.add_argument("--home-root", type=Path)
+    canary_parser.add_argument("--project", type=Path, default=ROOT)
+    canary_parser.add_argument("--skills", nargs="+")
+    canary_parser.add_argument(
+        "--platform", choices=("linux", "macos", "windows"), default="macos"
+    )
+    canary_parser.add_argument(
+        "--inventory",
+        type=Path,
+        default=ROOT / "fixtures/v3/productization/runtime-inventory-v1.json",
+    )
+    canary_parser.add_argument("--fixture", default="ALL_KNOWN_STATIC")
+    canary_parser.add_argument("--format", choices=("text", "json"), default="text")
+
     args = parser.parse_args(argv)
     try:
+        if args.command == "status":
+            report = build_status_report(
+                inventory=load_runtime_inventory(
+                    args.inventory, fixture_name=args.fixture
+                )
+            )
+            if args.format == "json":
+                print(json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2))
+            else:
+                print(render_status_report(report))
+            return 0
+
+        if args.command == "canary-preview":
+            if args.runtime != CLAUDE_RUNTIME_ID:
+                raise CanaryPreparationError(
+                    "Phase 3O qualifies Claude Code only"
+                )
+            status = _status_for(
+                args.runtime, inventory=args.inventory, fixture=args.fixture
+            )
+            preview = build_canary_preview(
+                _load_snapshot(),
+                status,
+                home_root=args.home_root,
+                project_root=args.project,
+                candidate_ids=args.skills,
+                platform=args.platform,
+            )
+            if args.format == "json":
+                print(json.dumps(preview, ensure_ascii=False, sort_keys=True, indent=2))
+            else:
+                print(render_canary_preview(preview))
+            return 0 if preview["status"] == CANARY_STATUS_READY else 2
+
         if args.command == "detect":
             target = load_install_target(args.runtime, args.targets)
             result = detect_runtime(
@@ -5477,7 +5575,7 @@ def main(argv: list[str] | None = None) -> int:
         finally:
             if holder is not None:
                 holder.cleanup()
-    except (InstallerError, ProductizationError, UserScopeError) as exc:
+    except (InstallerError, ProductizationError, UserScopeError, CanaryPreparationError) as exc:
         if getattr(args, "format", "text") == "json":
             print(
                 json.dumps(
