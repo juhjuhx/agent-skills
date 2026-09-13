@@ -1,13 +1,17 @@
 # AGENT SKILLS MATRIX v3 — NEXT PROPOSAL
-# PHASE 3O FOLLOW-UP — CLOSE CANARY PREPARATION BLOCKERS
+# PHASE 3P — EXECUTE EXACT CLAUDE REAL-HOME CANARY
 
-Phase 3O 已完成唯讀 real-home inventory、bounded candidate selection、非授權
-package/confirmation digest 與 clone-to-use façade；沒有任何真實 HOME mutation。
+Phase 3O.1 已完成兩項 blocker closure、重新 inventory、candidate-specific bundled
+proof 與新的非授權 package/confirmation digest；沒有任何真實 HOME mutation。
+
+不要執行本 prompt，除非使用者明確授權下方 exact package digest 與
+confirmation digest。若 preview、destination、root identity、runtime fingerprint
+或任何 stale input 改變，必須先重新 package。
 
 Current state:
 
 ```yaml
-CLAUDE_REAL_HOME_CANARY_READINESS: CLAUDE_REAL_HOME_CANARY_BLOCKED
+CLAUDE_REAL_HOME_CANARY_READINESS: CLAUDE_REAL_HOME_CANARY_READY_FOR_USER_AUTH
 CLONE_TO_USE_UX_READINESS: CLONE_TO_USE_UX_READY
 REAL_HOME_APPLY_AUTHORIZED: false
 INSTALLER_IMPLEMENTED: true
@@ -20,31 +24,48 @@ INTRA_RUNTIME_EFFORT_ROUTING_READINESS: NOT_READY
 CROSS_RUNTIME_ROUTING_READINESS: NOT_READY
 ```
 
-## Exact blocker
+## Exact authorization handoff
 
-不要執行 Phase 3P。要讓下一次 preview 能進入 authorization gate，必須先以
-contract-only 變更補齊兩項證據：
+```yaml
+runtime: claude-code
+runtime_version: 2.1.235
+scope: USER
+strategy: MANAGED_COPY
+selected_skill: module-map
+package_digest: sha256:a87e54bcbe516ded434feacf118daaba39fa2129434e6b1a5320e4671fb022de
+confirmation_digest: sha256:9dceb3f9233adc712e26c3378278e6192963ebc0e0efc0a3f841617476e5f197
+preview_digest: sha256:9174543748ac7451ea74ede04cdd68dbe88eca83cae2846d52dda96a5b1a080d
+real_home_apply_authorized: false
+consumable: false
+```
 
-1. 為 `${ASM_USER_DATA}/v3/claude` 綁定一個不含真實私人路徑、但能在未來
-   transaction 中安全解析與 revalidate 的 user-data destination contract；
-2. 提供與 Claude Code `2.1.235` 綁定的 bundled-skill collision inventory，或
-   等價的 non-inference evidence，使 canary 候選不再是 `UNKNOWN`。
+本次 canary 為 1 skill、2 files、1959 bytes、0 collisions，目標為
+`${HOME}/.claude/skills`，ASM root 為 `${ASM_USER_DATA}`，recovery guarantee 為
+`PROCESS_CRASH_RECOVERABLE`。未來執行仍須在 mutation 前完整 revalidate；Phase 3O
+舊 digest 不可重用。
 
-不能把本次 preview digest 視為授權，也不能用 CLI 參數宣稱 `bundled = none`。
-補證後必須重新 inventory、重新 package、重新產生兩個 digest；舊 digest 不可重用。
+## Required authorization wording
+
+使用者必須明確確認「允許對上述 exact package digest 與 exact confirmation
+digest 執行 Claude Code 2.1.235、USER、MANAGED_COPY、一個 `module-map` skill
+canary」。只有這個 exact confirmation 才能進入後續執行 gate；本 prompt 本身
+不是授權。
 
 ## Constraints
 
-只處理上述兩項 contract evidence 與驗證；不得執行 real-home apply、Claude
-inference、provider/auth、Codex/其他 runtime、Stage Router、model/effort routing、
-full-catalog rollout 或新增 bypass。
+下一階段仍只能執行 exact one-skill canary；不得擴展為 full catalog，不得執行
+Claude inference、provider/auth、Codex/其他 runtime、Stage Router、
+model/effort routing 或新增 bypass。Phase 3O.1 已 STOP，沒有任何 apply 發生。
 
 References:
 
 - [Phase 3O preview evidence](evidence/CLAUDE_REAL_HOME_CANARY_PREVIEW_V1.md)
+- [Phase 3O.1 canary preview](evidence/CLAUDE_REAL_HOME_CANARY_PREVIEW_V2.md)
+- [ASM user-data contract](evidence/ASM_USER_DATA_CONTRACT_V1.md)
+- [Claude bundled collision evidence](evidence/CLAUDE_BUNDLED_COLLISION_V1.md)
 - [Phase 3O route](evidence/PHASE3O_CANARY_PREP_ROUTE.md)
 - [Clone-to-use guide](CLONE_TO_USE.md)
 - [Current v3 contract index](CURRENT_V3_CONTRACT_INDEX.md)
 
-STOP. 只有 exact blockers 取得新證據後，才可重新 preview；本 prompt 不授權任何
-real-home mutation。
+STOP. DO NOT EXECUTE WITHOUT EXPLICIT USER AUTHORIZATION FOR THE EXACT DIGESTS
+ABOVE. 本 prompt 本身不是授權。
