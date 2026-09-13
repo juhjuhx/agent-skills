@@ -31,6 +31,11 @@ jobs:
           PYTHONDONTWRITEBYTECODE: "1"
         run: python -B -m pytest -q tests/v3
 
+      - name: Run repository regression suite
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python -B -m pytest -q
+
       - name: Run static lint
         run: python -m ruff check tools/v3 tests/v3
 

@@ -107,6 +107,12 @@
         {"type": "null"}
       ]
     },
+    "package_context_digest": {
+      "anyOf": [
+        {"$ref": "common.schema.json#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
     "package_kind": {
       "type": "string",
       "enum": ["INSTALL", "UNINSTALL", "REVERT"]

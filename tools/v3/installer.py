@@ -1599,6 +1599,10 @@ def _validate_user_package(package: dict[str, Any]) -> None:
     ):
         if not re.fullmatch(r"sha256:[0-9a-f]{64}", str(package.get(field))):
             raise InstallerError(f"USER package has an invalid {field}")
+    if package.get("package_context_digest") is not None and not re.fullmatch(
+        r"sha256:[0-9a-f]{64}", str(package.get("package_context_digest"))
+    ):
+        raise InstallerError("USER package has an invalid package_context_digest")
     if package.get("marker_root") != "ASM_USER_DATA":
         raise InstallerError("USER package ownership state is not in ASM user data")
     if package.get("marker_path") != USER_MANIFEST_RELATIVE:

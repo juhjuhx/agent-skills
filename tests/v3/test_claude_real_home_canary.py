@@ -147,6 +147,9 @@ class ClaudeRealHomeCanaryTests(unittest.TestCase):
                 )
             self.assertEqual(preview["status"], "CLAUDE_REAL_HOME_CANARY_READY_FOR_USER_AUTH")
             self.assertEqual(preview["collision_report"]["unknown"], 0)
+            self.assertTrue(
+                preview["package_preview"]["package_context_digest"].startswith("sha256:")
+            )
             self.assertNotEqual(
                 preview["package_digest"],
                 "sha256:c0c03a6b2a77e8c3bda0185e3a383e3d3dedb01ebbc087f3d342b5b5ebf7d763",
@@ -160,6 +163,22 @@ class ClaudeRealHomeCanaryTests(unittest.TestCase):
                 confirmation_digest="sha256:6a2a29bbc55f38a0a4ebb8228ae48296a7b1a4d0980282a9c5e7f3a3f6cfd308",
                 preview_digest="sha256:bbd9a1910857b87b0af169f519a6ae96d80b36ed122a3162fff0096f0c007e25",
             )
+
+    def test_phase3o1_identifiers_are_retired_after_stabilization_refresh(self) -> None:
+        old_values = (
+            "sha256:a87e54bcbe516ded434feacf118daaba39fa2129434e6b1a5320e4671fb022de",
+            "sha256:9dceb3f9233adc712e26c3378278e6192963ebc0e0efc0a3f841617476e5f197",
+            "sha256:9174543748ac7451ea74ede04cdd68dbe88eca83cae2846d52dda96a5b1a080d",
+        )
+        for old in old_values:
+            with self.subTest(old=old), self.assertRaisesRegex(
+                CanaryPreparationError, "historical"
+            ):
+                validate_canary_authorization_digests(
+                    package_digest=old,
+                    confirmation_digest="sha256:" + "1" * 64,
+                    preview_digest="sha256:" + "2" * 64,
+                )
 
     def test_canary_selection_rejects_more_than_three_skills(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

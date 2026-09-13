@@ -50,7 +50,8 @@ from tools.v3.productization import (
 from tools.v3.routing_catalog import RoutingCatalogSnapshot
 
 
-CANARY_VERSION = "1.1"
+CANARY_VERSION = "1.2"
+CANARY_PREVIEW_CONTEXT_VERSION = "3P-STABILIZATION-1"
 CANARY_MAX_SKILLS = 3
 CANARY_PREFERRED_SKILLS = ("module-map",)
 CANARY_MAX_EVIDENCE_CANDIDATES = 5
@@ -69,6 +70,11 @@ RETIRED_PHASE3O_PREVIEW_DIGESTS = frozenset(
         "sha256:c0c03a6b2a77e8c3bda0185e3a383e3d3dedb01ebbc087f3d342b5b5ebf7d763",
         "sha256:6a2a29bbc55f38a0a4ebb8228ae48296a7b1a4d0980282a9c5e7f3a3f6cfd308",
         "sha256:bbd9a1910857b87b0af169f519a6ae96d80b36ed122a3162fff0096f0c007e25",
+        # Phase 3O.1 identifiers were valid preparation evidence at the time,
+        # but can never authorize a later stabilization epoch.
+        "sha256:a87e54bcbe516ded434feacf118daaba39fa2129434e6b1a5320e4671fb022de",
+        "sha256:9dceb3f9233adc712e26c3378278e6192963ebc0e0efc0a3f841617476e5f197",
+        "sha256:9174543748ac7451ea74ede04cdd68dbe88eca83cae2846d52dda96a5b1a080d",
     }
 )
 SAFE_COLLISION_STATES = frozenset({"ABSENT", "ASM_MANAGED"})
@@ -619,6 +625,17 @@ def _build_non_authorizing_package(
             ),
         }
     )
+    # Bind the non-authorizing canary preview to a stable epoch context.  This
+    # is deliberately deterministic (not a nonce): it makes a retired
+    # Phase 3O.1 package distinguishable while preserving reproducibility for
+    # identical inputs within this stabilization contract.
+    package["package_context_digest"] = digest_value(
+        {
+            "context": "CLAUDE_REAL_HOME_CANARY_PREVIEW",
+            "canary_version": CANARY_VERSION,
+            "stabilization_context": CANARY_PREVIEW_CONTEXT_VERSION,
+        }
+    )
     package["scope_root_digest"] = identity
     package["target_root_identity"] = identity
     package["source_store_root_reference"] = digest_value(
@@ -718,6 +735,7 @@ def _package_preview(package: Mapping[str, Any], *, selected: list[dict[str, Any
         "snapshot_digest": package.get("snapshot_digest"),
         "runtime_contract_digest": package.get("runtime_contract_digest"),
         "user_scope_contract_digest": package.get("user_scope_contract_digest"),
+        "package_context_digest": package.get("package_context_digest"),
         "source_skill_ids": package.get("source_skill_ids", []),
         "artifact_count": len(artifacts),
         "file_count": len(files),
