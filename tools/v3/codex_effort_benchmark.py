@@ -27,7 +27,6 @@ from tools.v3.codex_effort_evaluation import (
 )
 from tools.v3.contract_validation import validate_instance
 from tools.v3.live_benchmark import (
-    ProcessObservation,
     build_live_execution_record,
     digest_bytes,
     digest_value,

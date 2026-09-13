@@ -24,7 +24,6 @@ from tools.v3.execution_bundle import compile_execution_bundle, validate_bundle
 from tools.v3.live_benchmark import ProcessObservation, run_headless_command, sanitize_text
 from tools.v3.opencode_native_contract import (
     NativeContractError,
-    NativeConfigValidation,
     load_native_contract,
     validate_opencode_config,
 )

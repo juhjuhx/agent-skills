@@ -93,7 +93,10 @@ def build_static_diagnostics_report(
                 {
                     "snapshot_id": snapshot.snapshot_id,
                     "records": [
-                        [record.get("skill_id"), record.get("source", {}).get("digest", "")]
+                        [
+                            record.get("skill_id"),
+                            record.get("source", {}).get("digest", ""),
+                        ]
                         for record in snapshot.records
                     ],
                 }

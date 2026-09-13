@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import copy
 import hashlib
-import json
 from typing import Any, Iterable
 
 from tools.v3.contract_validation import KNOWN_CAPABILITIES, validate_instance
