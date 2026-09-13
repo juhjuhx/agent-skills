@@ -118,6 +118,61 @@ class ASMUserDataContractTests(unittest.TestCase):
                     allow_fixture_root=False,
                 )
 
+    def test_linux_windows_and_macos_resolution_rules_are_symbolic(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            home = root / "home"
+            xdg = root / "xdg-data"
+            local = root / "local-app-data"
+            home.mkdir()
+            xdg.mkdir()
+            local.mkdir()
+            cases = (
+                (
+                    "linux",
+                    {"XDG_DATA_HOME": str(xdg)},
+                    "${XDG_DATA_HOME}/agent-skills-matrix",
+                ),
+                (
+                    "windows",
+                    {"LOCALAPPDATA": str(local)},
+                    "${LOCALAPPDATA}/Agent Skills Matrix",
+                ),
+                (
+                    "macos",
+                    {},
+                    "${HOME}/Library/Application Support/Agent Skills Matrix",
+                ),
+            )
+            for platform, environ, rule in cases:
+                with self.subTest(platform=platform):
+                    resolution = resolve_asm_user_data_root(
+                        home_root=home,
+                        platform=platform,
+                        environ=environ,
+                        allow_fixture_root=True,
+                    )
+                    self.assertEqual(resolution.resolution_rule, rule)
+                    self.assertEqual(resolution.state, "EXPECTED_ABSENT")
+                    self.assertFalse(resolution.to_public_dict()["actual_path_persisted"])
+
+    def test_platform_data_override_with_symlink_parent_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            home = root / "home"
+            target = root / "real-data"
+            link = root / "linked-data"
+            home.mkdir()
+            target.mkdir()
+            link.symlink_to(target, target_is_directory=True)
+            with self.assertRaisesRegex(ASMUserDataError, "symlink"):
+                resolve_asm_user_data_root(
+                    home_root=home,
+                    platform="linux",
+                    environ={"XDG_DATA_HOME": str(link)},
+                    allow_fixture_root=True,
+                )
+
 
 if __name__ == "__main__":
     unittest.main()
