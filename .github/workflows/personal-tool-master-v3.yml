@@ -1,0 +1,24 @@
+name: Personal Tool Master V3
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  v3:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python3 scripts/build_v3_catalog.py --check
+      - run: python3 -m unittest discover -s runtime/skills-router/tests -p 'test_*.py' -v
+      - run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+      - run: node --test runtime/skills-router/tests/test_v3_advisory.mjs
+      - run: bash -n install.sh && sh -n runtime/skills-router/adapters/claude/claude-user-prompt.sh
+      - run: git diff --check
