@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "agent-skills registry <-> router versioned contract (V3.1 P3)",
+  "description": "Provider (registry) publishes a metadata-only versioned index; consumer (router) validates it. This document carries DIGESTS + metadata only — never skill bodies, never private paths in a public-safe build. POLICY_EPOCH / CAPABILITY_DECLARATION are advisory compatibility info, NOT execution authorization.",
+  "type": "object",
+  "required": [
+    "registry_schema_version",
+    "registry_revision",
+    "router_version_min",
+    "source_commit",
+    "build_time"
+  ],
+  "properties": {
+    "registry_schema_version": {
+      "type": "integer", "minimum": 1,
+      "description": "REGISTRY_SCHEMA_VERSION — provider schema major. Consumer accepts majors in its supported range; a newer major is incompatible and rejected."
+    },
+    "registry_revision": {
+      "type": "string", "minLength": 1,
+      "description": "REGISTRY_REVISION — monotonic build identifier (short sha of canonical content). Caller-supplied expected revision mismatch => STALE (degrade, never crash)."
+    },
+    "source_commit": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{40}$|^unknown$",
+      "description": "SOURCE_COMMIT — git HEAD the registry was built at. Full 40-hex, or the literal sentinel 'unknown' when built outside a repo. Commit-anchored queries require a real SHA; 'unknown' degrades to advisory."
+    },
+    "policy_epoch": {
+      "type": "integer", "minimum": 1,
+      "default": 1,
+      "description": "POLICY_EPOCH — compatibility marker only. Mismatch with consumer's expectation degrades with a warning; it NEVER gates host tool execution (R3)."
+    },
+    "router_version_min": {
+      "type": "string", "minLength": 1,
+      "description": "ROUTER_VERSION — minimum consumer version that can understand this contract. Consumer outside the range => incompatible."
+    },
+    "build_time": {
+      "type": "string",
+      "description": "ISO-8601 UTC build timestamp (evidence only)."
+    },
+    "layer_counts": {
+      "type": "object",
+      "description": "Per-layer record counts at build time (reconciliation evidence).",
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "skills": {
+      "type": "array",
+      "description": "Metadata-only index entries. Body content is NEVER inlined — only body_sha256.",
+      "items": {
+        "type": "object",
+        "required": ["skill_id", "body_sha256", "status", "visibility"],
+        "properties": {
+          "skill_id": { "type": "string", "minLength": 1 },
+          "body_sha256": {
+            "type": "string", "pattern": "^[0-9a-f]{64}$",
+            "description": "BODY_SHA256 — verifies body integrity only. HASH_VERIFIED != SAFE, and != MODEL_LOADED (R3)."
+          },
+          "capability_declaration": {
+            "type": "array", "items": { "type": "string" },
+            "description": "CAPABILITY_DECLARATION — advisory. Declaring a capability does NOT grant the host permission to use it."
+          },
+          "host_compatibility": {
+            "type": "array", "items": { "type": "string" },
+            "description": "HOST_COMPATIBILITY — empty means any host. Non-empty and requested host absent => INCOMPATIBLE, refuse to load/enable."
+          },
+          "status": { "type": "string" },
+          "visibility": { "type": "string" },
+          "relative_path": { "type": ["string", "null"] }
+        }
+      }
+    }
+  }
+}
