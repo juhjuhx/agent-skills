@@ -76,6 +76,18 @@ OpenCode 的歷史 MiMo 免費模型研究、debug 與文件式新 session 續�
 
 歷史單 fixture 的 token 縮減不保證固定 86% 節省；另一次必要 native tools 完成後，整段模型摘要在 180 秒 timeout。公開候選的 29／18 Python 與 15 Node 測試、來源／安裝結果保留在 [2026-10-12 驗收紀錄](docs/發布驗收.md)。最終文件、CI、tag／Release 查驗與上述歷史結果分開。
 
+## 實作狀態（Registry / Scout / Forge / V3 composer）
+
+| 層 | 狀態 | 說明 |
+|---|---|---|
+| P0 Catalog | PASS | 640 筆 = 492 現役 + 148 私人恢復，零重疊，digest 全對 |
+| P1 Registry | PASS | public / private / history 三層；provenance 錨定、license gate、symlink 阻擋、雙側路徑 redaction、rollback |
+| **P2 Scout** | **PARTIAL** | 已實測：GitHub Discovery、Metadata、Candidate Staging、有界 403/429 重試（普通 403 不重試）、fail-open。**未實作且未啟用：完整 commit-SHA 捕捉、深度逐檔安全掃描、自動升級信任名單** —— 因此 Scout 不得宣稱完整自動安裝或深度安全審查 |
+| P3 Forge | PASS | 遞迴界（per-parent generation、MAX_DEPTH=2、fan-out 3）、lineage cycle 阻擋、regression gate、rollback |
+| V3 skill-composer | PASS | BM25 組合 + advisory fallback；不 import、不改動 `tool_master.py`；14 核心 digest 不變；advisory 非阻擋、legacy enforcing 不重部署、router fallback 保持 |
+
+公開 repo 只含 public 層與白名單代碼／測試；**private registry、history layer 與 forge-workspace 全數 gitignored 且不進入 Git**。Scout 的 candidate staging 在本機私人區完成，第三方技能不會自動啟用。
+
 ## 維護命令
 
 ```sh
