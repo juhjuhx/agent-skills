@@ -29,8 +29,9 @@ def _scout():
 class FakeResp:
     """Minimal context-manager body for an injected fake fetcher."""
 
-    def __init__(self, payload):
+    def __init__(self, payload, headers=None):
         self._payload = json.dumps(payload).encode("utf-8")
+        self._headers = headers or {}
 
     def __enter__(self):
         return self
@@ -43,6 +44,10 @@ class FakeResp:
 
     def close(self):
         pass
+
+    @property
+    def headers(self):
+        return self._headers
 
 
 def _ok_fetch(sha):
@@ -282,6 +287,115 @@ class CandidateGatingTest(unittest.TestCase):
             [])
         self.assertNotEqual(ev["recommendation"], "reject")
         self.assertFalse(ev["security_blocked"])
+
+
+class LiveFlowPinningTest(unittest.TestCase):
+    """M4-P4-001（獨立審查 HIGH）：branch 名稱絕不得以 source_commit 身份流進活路徑。
+
+    審查發現 pin_candidate/resolve_source_commit 在 live 流程是死代碼 —
+    github_search 直接把 default_branch 寫進 source_commit。修法：
+    github_search 發 source_commit=None + unpinned_source_commit=<branch>；
+    assess_candidate 做 lazy pinning（成功 40-hex / 失敗 None）。
+    """
+
+    def test_github_search_emits_unpinned_not_branch(self):
+        s = _scout()
+        items = {"items": [
+            {"full_name": "o/r", "name": "r",
+             "description": "a useful skill for reviewing agent code",
+             "html_url": "https://github.com/o/r", "default_branch": "main",
+             "license": {"spdx_id": "MIT"}, "archived": False,
+             "pushed_at": "2026-01-01", "stargazers_count": 10},
+        ]}
+        def fake_urlopen(req, timeout=None):
+            return FakeResp(items)
+        out, meta = s.github_search("r", limit=5, urlopen=fake_urlopen)
+        self.assertIsNotNone(out)
+        for c in out:
+            self.assertIsNone(c["source_commit"],
+                              "branch name must never masquerade as a commit pin")
+            self.assertEqual(c["unpinned_source_commit"], "main")
+            self.assertFalse(c["commit_pinned"])
+
+    def test_assess_pins_40hex_in_live_flow(self):
+        s = _scout()
+        cand = {"id": "gh:o/r", "name": "r", "description": "useful skill",
+                "source_repo": "https://github.com/o/r",
+                "unpinned_source_commit": "main", "source_commit": None}
+        ev = s.assess_candidate(cand, [], ".", fetch=_ok_fetch("c" * 40))
+        self.assertTrue(ev["commit_pinned"])
+        self.assertEqual(ev["pinned_candidate"]["source_commit"], "c" * 40)
+
+    def test_assess_failure_keeps_null_not_branch(self):
+        s = _scout()
+        cand = {"id": "gh:o/r", "name": "r", "description": "useful skill",
+                "source_repo": "https://github.com/o/r",
+                "unpinned_source_commit": "main", "source_commit": None}
+        ev = s.assess_candidate(cand, [], ".", fetch=_fail_fetch())
+        self.assertFalse(ev["commit_pinned"])
+        self.assertIsNone(ev["pinned_candidate"]["source_commit"])
+        self.assertEqual(ev["pinned_candidate"]["unpinned_source_commit"], "main")
+        self.assertIn("commit_unpinned_reason", ev)
+
+    def test_stage_proposal_never_carries_branch_name(self):
+        """reviewer 要求的 CLI e2e：discover→stage 後 proposal 檔的 source_commit
+        只能是 40-hex 或 None，絕不是 branch 名稱。"""
+        s = _scout()
+        import shutil
+        tmp = Path(tempfile.mkdtemp())
+        (tmp / "registry/history").mkdir(parents=True)
+        (tmp / "registry/history/registry.json").write_text(
+            json.dumps({"layer": "history", "records": [
+                {"id": "hist:x", "name": "x", "status": "candidate",
+                 "source_repo": "https://github.com/o/r",
+                 "description": "a clean useful skill with documentation"},
+            ]}), encoding="utf-8")
+        old_props, old_state = s.PROPOSALS, s.SCOUT_STATE
+        s.PROPOSALS = tmp / "proposals"
+        s.SCOUT_STATE = tmp / "scout-state.json"
+        real_urlopen = s.urllib.request.urlopen
+        # /commits/ resolve 成功 → 40-hex
+        s.urllib.request.urlopen = lambda url, timeout=None: FakeResp({"sha": "c" * 40})
+        try:
+            rc = s.main(["stage", "hist:x", "--root", str(tmp)])
+            self.assertEqual(rc, 0)
+            prop = json.loads((s.PROPOSALS / "hist-x.json").read_text(encoding="utf-8"))
+            self.assertEqual(prop["candidate"]["source_commit"], "c" * 40)
+            self.assertFalse(prop["candidate"]["source_commit"] in ("main",))
+            self.assertTrue(prop["evaluation"]["commit_pinned"])
+            self.assertFalse(prop["execution_granted"])
+        finally:
+            s.urllib.request.urlopen = real_urlopen
+            s.PROPOSALS, s.SCOUT_STATE = old_props, old_state
+            shutil.rmtree(tmp, ignore_errors=True)
+        # /commits/ resolve 失敗 → source_commit 必須是 None（不是 branch）
+        tmp2 = Path(tempfile.mkdtemp())
+        (tmp2 / "registry/history").mkdir(parents=True)
+        (tmp2 / "registry/history/registry.json").write_text(
+            json.dumps({"layer": "history", "records": [
+                {"id": "hist:y", "name": "y", "status": "candidate",
+                 "source_repo": "https://github.com/o/r",
+                 "description": "a clean useful skill with documentation"},
+            ]}), encoding="utf-8")
+        old_props2, old_state2 = s.PROPOSALS, s.SCOUT_STATE
+        s.PROPOSALS = tmp2 / "proposals"
+        s.SCOUT_STATE = tmp2 / "scout-state.json"
+        real_urlopen2 = s.urllib.request.urlopen
+        import urllib.error
+        s.urllib.request.urlopen = lambda url, timeout=None: (_ for _ in ()).throw(
+            urllib.error.HTTPError(url, 404, "not found", {}, None))
+        try:
+            rc = s.main(["stage", "hist:y", "--root", str(tmp2)])
+            self.assertEqual(rc, 0)
+            prop = json.loads((s.PROPOSALS / "hist-y.json").read_text(encoding="utf-8"))
+            self.assertIsNone(prop["candidate"]["source_commit"],
+                              "failed pin must leave source_commit null, not a branch name")
+            self.assertFalse(prop["evaluation"]["commit_pinned"])
+            self.assertIn("commit_unpinned_reason", prop["evaluation"])
+        finally:
+            s.urllib.request.urlopen = real_urlopen2
+            s.PROPOSALS, s.SCOUT_STATE = old_props2, old_state2
+            shutil.rmtree(tmp2, ignore_errors=True)
 
 
 class ScoutCliTest(unittest.TestCase):

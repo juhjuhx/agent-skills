@@ -225,12 +225,18 @@ def resolve_source_commit(repo_full_name, branch, fetch=None):
 
 def pin_candidate(candidate, fetch=None):
     """為候選附加 commit pin：能解析就 40-hex，不能就 'unresolved' + 原因。
-    'unresolved' 絕不冒充 pin（DISCOVERED != TRUSTED）。"""
+    'unresolved' 絕不冒充 pin（DISCOVERED != TRUSTED）。
+
+    M4-P4-001：live-flow lazy pinning — candidate 的 branch hint 可在
+    unpinned_source_commit（github_search 的輸出格式）；pin 成功前
+    source_commit 絕不回填 branch。
+    """
     out = dict(candidate)
     if out.get("source_commit") and is_full_commit_ref(out["source_commit"]):
         out["commit_pinned"] = True
         return out
-    res = resolve_source_commit(out.get("source_repo"), out.get("source_commit"), fetch=fetch)
+    branch = out.get("source_commit") or out.get("unpinned_source_commit")
+    res = resolve_source_commit(out.get("source_repo"), branch, fetch=fetch)
     if res["ok"]:
         out["source_commit"] = res["sha"]
         out["commit_pinned"] = True
@@ -241,7 +247,7 @@ def pin_candidate(candidate, fetch=None):
         out["commit_resolution"] = res["resolved_from"]
         # 不偽裝成 pin：source_commit 欄位只承載 40-hex；解析失敗就清空，
         # 原始 branch／未解析值存 unpinned_source_commit 供追查。
-        out["unpinned_source_commit"] = out.get("source_commit")
+        out["unpinned_source_commit"] = out.get("unpinned_source_commit") or branch
         out["source_commit"] = None
     return out
 
@@ -349,12 +355,18 @@ def find_duplicate_candidates(candidate, existing_records):
 
 
 def assess_candidate(candidate, existing_names, root=".", existing_records=None,
-                     candidate_dir=None):
-    """M4 P4 — 完整候選評估：評分 + 安全掃描 + 重複偵測。
+                     candidate_dir=None, fetch=None):
+    """M4 P4 — 完整候選評估：評分 + 安全掃描 + 重複偵測 + commit pinning。
 
     門控紀律：security blocked（high 級 secret 命中）或 exact/digest 重複
     → recommendation 強制 'reject'（絕不進 stage）。UNREVIEWED 技能永遠
     不得直達 active runtime（stage 只是隔離區，execution_granted=False）。
+
+    M4-P4-001：評估時對未 pin 的 candidate 做 lazy pinning — 能解析出
+    40-hex 就升級 source_commit；不能就保持 None + 原因。這樣任何到達
+    stage 的 candidate 其 source_commit 都是 40-hex 或 None，絕不是
+    branch 名稱（Invariant B 在活路徑上真正生效）。
+    fetch 可注入（hermetic 測試用；預設 urllib.request.urlopen）。
     """
     ev = evaluate_candidate(candidate, existing_names, root)
     scan = security_scan(candidate, root=root, candidate_dir=candidate_dir)
@@ -363,6 +375,13 @@ def assess_candidate(candidate, existing_names, root=".", existing_records=None,
     ev["security_blocked"] = scan["blocked"]
     ev["duplicate_matches"] = dup["matches"]
     hard_dup = any(m["kind"] in ("exact", "digest") for m in dup["matches"])
+    # live-flow pinning：pin_candidate 回傳 pin 後的候選，並把 pin 狀態記進評估
+    # （注意：ev["candidate"] 是候選 id 字串，不可覆蓋；pinned 用獨立金鑰）
+    pinned = pin_candidate(candidate, fetch=fetch or urllib.request.urlopen)
+    ev["pinned_candidate"] = pinned
+    ev["commit_pinned"] = pinned.get("commit_pinned", False)
+    if not ev["commit_pinned"]:
+        ev["commit_unpinned_reason"] = pinned.get("commit_unpinned_reason")
     if scan["blocked"]:
         ev["recommendation"] = "reject"
         ev["reject_reason"] = "security_scan_high"
@@ -372,14 +391,16 @@ def assess_candidate(candidate, existing_names, root=".", existing_records=None,
     return ev
 
 
-def github_search(query, limit=10, token=None, sleep=time.sleep):
-    """線上 GitHub API；保留檢查時間與來源 commit（default_branch；完整 SHA 需後續 resolve）。
+def github_search(query, limit=10, token=None, sleep=time.sleep, urlopen=None):
+    """線上 GitHub API；保留檢查時間與來源 commit（branch 記 unpinned_source_commit；
+    source_commit 絕不回填 branch，由 pin_candidate 做 lazy 解析，解析失敗為 None）。
 
     重試政策（有上限，fail-open）：
     - 429 一律視為 rate-limit → Retry-After backoff 後重試（上限 MAX_RETRIES 次）。
     - 403 只有帶 rate-limit 訊號（Retry-After 或 X-RateLimit-Remaining: 0）才是；
       普通 403 Forbidden（無權限／WAF／bot check）絕不重試，直接 fail-open。
     - 其他錯誤終止回傳 (None, {error})，絕不中斷呼叫端。
+    urlopen 可注入（hermetic 測試用 fake；預設 urllib.request.urlopen）。
     """
     url = "https://api.github.com/search/repositories?" + urllib.parse.urlencode({
         "q": f"{query} agent skill in:name,description", "per_page": str(limit)})
@@ -387,11 +408,12 @@ def github_search(query, limit=10, token=None, sleep=time.sleep):
     if token:
         headers["Authorization"] = f"Bearer {token}"
     req = urllib.request.Request(url, headers=headers)
+    opener = urlopen or urllib.request.urlopen
     attempt = 0
     while True:
         attempt += 1
         try:
-            with urllib.request.urlopen(req, timeout=15) as resp:
+            with opener(req, timeout=15) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
                 items = data.get("items", [])[:limit]
                 out = []
@@ -401,7 +423,13 @@ def github_search(query, limit=10, token=None, sleep=time.sleep):
                         "name": it.get("name", ""),
                         "description": it.get("description", ""),
                         "source_repo": it.get("html_url"),
-                        "source_commit": it.get("default_branch"),  # branch；完整 SHA 需後續 resolve
+                        # M4-P4-001 fix：branch 名稱絕不冒充 pin（Invariant B）。
+                        # source_commit 只承載 40-hex；branch 記在 unpinned_source_commit，
+                        # 由 assess_candidate / stage 觸發 pin_candidate 做 lazy 解析；
+                        # 解析失敗 fail-open 為 None，絕不回填 branch。
+                        "source_commit": None,
+                        "unpinned_source_commit": it.get("default_branch"),
+                        "commit_pinned": False,
                         "license": (it.get("license") or {}).get("spdx_id") or "unknown",
                         "maintenance": "archived" if it.get("archived") else ("stale" if (it.get("pushed_at") or "") < time.strftime("%Y-%m-%d", time.gmtime(time.time() - 365 * 86400)) else "active"),
                         "stars": it.get("stargazers_count", 0),
@@ -517,7 +545,11 @@ def main(argv=None):
             print(json.dumps({"refused": True, "reason": ev.get("reject_reason"),
                               "evaluation": ev}, ensure_ascii=False, indent=1))
             return 3
-        path = stage(target, ev, args.root)
+        # M4-P4-001：pin 成功時 proposals 記錄 pin 過的候選（source_commit = 40-hex）；
+        # pin 失敗時記錄原始候選（source_commit = None + unpinned_source_commit），
+        # 絕不把 branch 名稱寫進 source_commit。
+        staged_candidate = ev.get("pinned_candidate", target)
+        path = stage(staged_candidate, ev, args.root)
         print(str(path))
     elif args.cmd == "assess":
         local, names = discover_local(args.root)
