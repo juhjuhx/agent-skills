@@ -21,3 +21,12 @@ node_modules/
 .ruff_cache/
 .superpowers/sdd/
 .superpowers/brainstorm/
+
+# Registry data layers — public layer ships; private/history layers hold
+# local paths and unreleased 640-record details and stay local-only.
+registry/private/registry.json
+registry/history/registry.json
+registry/history/versions/
+registry/private/forge/
+# keep only the data files out; .keep placeholders remain tracked
+!registry/**/.keep
