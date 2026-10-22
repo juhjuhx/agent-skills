@@ -8,6 +8,7 @@ FORGE_ROLLBACK / COMPOSITION_SELECTION / V3_ROUTING_RELEVANCE。
 from __future__ import annotations
 
 import importlib.util
+import hashlib
 import json
 import os
 import re
@@ -417,6 +418,318 @@ class CompositionSelectionTest(unittest.TestCase):
                                       profile="normal", local_roots={"x": str(root)})
             self.assertFalse(packet.get("fallback"))
             self.assertEqual(packet["composition"], [])
+
+
+class FullCatalogRecallTest(unittest.TestCase):
+    """FULL_PRIVATE_REGISTRY_RECALL_TEST：三層全庫召回 + 角色門控（Step 2.1/2.2）。
+
+    證明 (1) 現役 private active 技能進入候選池且 role=executable；
+    (2) history 只當 search_only（未核准前不自動執行）；(3) quarantined 排除；
+    (4) 同 id 跨層 private(executable) 覆蓋 history(search_only)；
+    (5) 組合 / 正文讀取只認 executable，搜索-only 僅進展示；
+    (6) reconcile_counts 回傳 spec 六欄位。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        reg = _reg()
+        cls._tmp = tempfile.TemporaryDirectory()
+        layer_root = str(cls._tmp.name)
+
+        def mk(layer, id_, rel, status, visibility):
+            body = f"body of {id_}"
+            p = Path(layer_root) / rel
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(body, encoding="utf-8")
+            rec, _ = reg.build_record(
+                id=id_, name=id_.split(":")[-1], relative_path=rel,
+                sha=hashlib.sha256(body.encode("utf-8")).hexdigest(),
+                license="MIT", status=status, visibility=visibility,
+                risk="low", description=f"{id_} about kubernetes tls")
+            doc = reg.load_layer(layer_root, layer)
+            doc["records"].append(rec)
+            reg.save_layer(layer_root, layer, doc)
+
+        # active executable
+        mk("private", "local:active-a", "a/SKILL.md", "approved_private", "private")
+        mk("public",  "public:active-a", "a/SKILL.md", "approved_public", "public")
+        # id duplicated in private (exec) + history (search-only mirror)
+        mk("private", "local:dup", "dup/SKILL.md", "approved_private", "private")
+        mk("history", "local:dup", "dup/SKILL.md", "candidate", "private")
+        # history-only (no private copy)
+        mk("history", "local:hist-only", "h/SKILL.md", "candidate", "private")
+        # quarantined
+        mk("history", "local:quar", "q/SKILL.md", "quarantined", "private")
+        cls._root = layer_root
+        cls._composer = _composer()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls._tmp.cleanup()
+
+    def test_reconcile_counts_six_fields(self):
+        c = self._composer.reconcile_counts(self._root)
+        self.assertEqual(c["REGISTRY_TOTAL"], 6)
+        self.assertEqual(c["RECOVERY_COUNT"], 3)          # history 全數
+        self.assertEqual(c["ACTIVE_COUNT"], 3)            # public:active-a + private:active-a + private:dup
+        self.assertEqual(c["ROUTE_ELIGIBLE"], 3)          # 僅 executable
+        self.assertEqual(c["EXCLUDED_COUNT"], 1)          # quar
+        self.assertEqual(c["SEARCHABLE_COUNT"], 4)        # 3 executable + local:hist-only(search-only)
+
+    def test_private_active_is_executable_in_pool(self):
+        pool = {r["id"]: r for r in self._composer.candidate_pool(self._root, None)}
+        self.assertEqual(pool["local:active-a"]["_role"], "executable")
+        self.assertEqual(pool["public:active-a"]["_role"], "executable")
+        self.assertEqual(pool["local:dup"]["_layer"], "private")    # exec 覆蓋 history
+        self.assertEqual(pool["local:dup"]["_role"], "executable")
+
+    def test_history_only_is_search_only(self):
+        pool = {r["id"]: r for r in self._composer.candidate_pool(self._root, None)}
+        self.assertEqual(pool["local:hist-only"]["_role"], "search_only")
+
+    def test_quarantined_excluded(self):
+        pool = {r["id"]: r for r in self._composer.candidate_pool(self._root, None)}
+        self.assertEqual(pool["local:quar"]["_role"], "excluded")
+
+    def test_composition_executes_only_executable(self):
+        # 任務 token 命中 dup(私有現役) 與 hist-only(只有 history)：
+        # 組合必須只含 executable；hist-only 只能進 search-only 展示、絕不載入正文。
+        packet = self._composer.compose(
+            "kubernetes tls", reg_root=self._root, hosts=("generic",),
+            profile="normal", local_roots={"x": self._root})
+        composed_ids = {e["id"] for e in packet["composition"]}
+        self.assertIn("local:dup", composed_ids)
+        self.assertNotIn("local:hist-only", composed_ids,
+                         "history-only 技能不得進入可執行組合")
+        ranked = {e["id"]: e for e in packet["candidates_ranked"]}
+        self.assertNotIn("local:hist-only", ranked, "search-only 不得被讀取正文")
+        so = {e["id"] for e in packet.get("search_only_candidates", [])}
+        self.assertIn("local:hist-only", so)
+        self.assertEqual(packet.get("executable_eligible"), 3)
+
+
+class ActualLoadSemanticsTest(unittest.TestCase):
+    """ACTUAL_LOAD_SEMANTICS_TEST（Step 2.2）：SHA256 通過絕不等於「已載入」；
+    四態分界必須由各別證據驅動。"""
+
+    @classmethod
+    def setUpClass(cls):
+        reg = _reg()
+        cls._tmp = tempfile.TemporaryDirectory()
+        tmp = cls._tmp.name
+        body = "# real body\n"
+        p = Path(tmp) / "ok/SKILL.md"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(body, encoding="utf-8")
+        good, _ = reg.build_record(
+            id="local:good", name="good", relative_path="ok/SKILL.md",
+            sha=hashlib.sha256(body.encode("utf-8")).hexdigest(),
+            license="MIT", status="approved_private", visibility="private",
+            risk="low", description="some useful thing")
+        # digest mismatch record：sha 記錯
+        bad, _ = reg.build_record(
+            id="local:bad", name="bad", relative_path="ok/SKILL.md",
+            sha="f" * 64, license="MIT", status="approved_private",
+            visibility="private", risk="low", description="some useful thing")
+        doc = reg.load_layer(tmp, "private")
+        doc["records"].extend([good, bad])
+        reg.save_layer(tmp, "private", doc)
+        cls._root = tmp
+        cls._composer = _composer()
+        cls._good_id = "local:good"
+        cls._bad_id = "local:bad"
+
+    @classmethod
+    def tearDownClass(cls):
+        cls._tmp.cleanup()
+
+    def test_digest_ok_no_host_event_is_not_loaded(self):
+        """Digest 正確、無宿主載入事件 → NOT_LOADED（spec 明令禁止 digest=true 斷言）。"""
+        recs = [r for r in self._composer.candidate_pool(self._root, None)
+                if r["id"] == self._good_id]
+        bodies = self._composer.read_bodies([(9.0, recs[0])], {"x": self._root},
+                                            host_load_evidence={})
+        self.assertEqual(bodies[0]["body_status"], "verified")
+        self.assertEqual(bodies[0]["load_state"], "NOT_LOADED")
+        self.assertFalse(bodies[0]["skill_actually_loaded"])
+
+    def test_digest_mismatch_is_rejected(self):
+        recs = [r for r in self._composer.candidate_pool(self._root, None)
+                if r["id"] == self._bad_id]
+        bodies = self._composer.read_bodies([(9.0, recs[0])], {"x": self._root})
+        self.assertEqual(bodies[0]["body_status"], "digest_mismatch")
+        self.assertEqual(bodies[0]["load_state"], "REJECTED")
+        self.assertFalse(bodies[0]["skill_actually_loaded"])
+
+    def test_host_loaded_but_not_executed(self):
+        recs = [r for r in self._composer.candidate_pool(self._root, None)
+                if r["id"] == self._good_id]
+        bodies = self._composer.read_bodies(
+            [(9.0, recs[0])], {"x": self._root},
+            host_load_evidence={self._good_id: {"loaded": True, "executed": False}})
+        self.assertEqual(bodies[0]["load_state"], "LOADED_NOT_EXECUTED")
+        self.assertTrue(bodies[0]["skill_actually_loaded"])
+
+    def test_full_verified_execution(self):
+        recs = [r for r in self._composer.candidate_pool(self._root, None)
+                if r["id"] == self._good_id]
+        bodies = self._composer.read_bodies(
+            [(9.0, recs[0])], {"x": self._root},
+            host_load_evidence={self._good_id: {"loaded": True, "executed": True,
+                                                 "task_verified": True}})
+        self.assertEqual(bodies[0]["load_state"], "VERIFIED_EXECUTION")
+        self.assertTrue(bodies[0]["skill_actually_loaded"])
+
+    def test_advisory_compose_carries_load_state_default_not_loaded(self):
+        packet = self._composer.compose("some useful thing", reg_root=self._root,
+                                        hosts=("generic",), profile="normal",
+                                        local_roots={"x": self._root})
+        self.assertFalse(packet.get("fallback"))
+        for e in packet["composition"]:
+            self.assertEqual(e["load_state"], "NOT_LOADED")
+            self.assertFalse(e["skill_actually_loaded"])
+
+
+class PathBoundarySecurityTest(unittest.TestCase):
+    """PATH_BOUNDARY_SECURITY_TEST（Step 2.4）：_safe() 對不可信路徑 fail-closed，
+    對合法路徑 fail-open（工具仍可用）。"""
+
+    @classmethod
+    def setUpClass(cls):
+        composer = _composer()
+        cls._composer = composer
+        cls._tmp = tempfile.TemporaryDirectory()
+        cls._root = Path(cls._tmp.name)
+        # legit file inside root
+        (cls._root / "ok").mkdir()
+        (cls._root / "ok" / "SKILL.md").write_text("body", encoding="utf-8")
+        # sibling dir that shares root's string prefix
+        cls._sibling = cls._root.parent / (cls._root.name + "-evil")
+        (cls._sibling).mkdir(exist_ok=True)
+        (cls._sibling / "steal.txt").write_text("secret", encoding="utf-8")
+
+    @classmethod
+    def tearDownClass(cls):
+        self_tmp = cls._tmp
+        self_tmp.cleanup()
+        if cls._sibling.exists():
+            try:
+                cls._sibling.rmdir()
+            except OSError:
+                pass
+
+    def test_traversal_dotdot_rejected(self):
+        with self.assertRaises(ValueError):
+            self._composer._safe(self._root, "../etc/passwd")
+        with self.assertRaises(ValueError):
+            self._composer._safe(self._root, "a/../../x")
+
+    def test_string_prefix_sibling_dir_rejected(self):
+        """root=/tmp/x 時 /tmp/x-evil 不得被當成在 root 之下（字串前綴陷阱）。"""
+        # 用一個真實 sibling 路徑：從 root 走出去到 sibling 的檔案
+        target = str(self._sibling / "steal.txt")
+        # 相對表示：../<root>-evil/steal.txt
+        rel = f"../{self._root.name}-evil/steal.txt"
+        with self.assertRaises(ValueError):
+            self._composer._safe(self._root, rel)
+
+    def test_absolute_path_rejected(self):
+        with self.assertRaises(ValueError):
+            self._composer._safe(self._root, "/etc/passwd")
+        with self.assertRaises(ValueError):
+            self._composer._safe(self._root, "C:/Windows/System32")
+
+    def test_symlink_escape_rejected(self):
+        link = self._root / "link-to-sibling"
+        link.symlink_to(self._sibling)
+        with self.assertRaises(ValueError):
+            self._composer._safe(self._root, "link-to-sibling/steal.txt")
+
+    def test_corrupt_or_missing_resource_does_not_crash_pool(self):
+        """損壞／不存在的資源 → read_bodies 捕獲、該筆標 REJECTED，其餘不受影響。"""
+        reg = _reg()
+        rec, _ = reg.build_record(
+            id="local:ok", name="ok", relative_path="ok/SKILL.md",
+            sha=hashlib.sha256(b"body").hexdigest(),
+            license="MIT", status="approved_private", visibility="private",
+            risk="low", description="x")
+        missing, _ = reg.build_record(
+            id="local:missing", name="missing", relative_path="nope/SKILL.md",
+            sha=hashlib.sha256(b"body").hexdigest(),
+            license="MIT", status="approved_private", visibility="private",
+            risk="low", description="x")
+        bodies = self._composer.read_bodies(
+            [(9.0, rec), (8.0, missing)], {"x": str(self._root)})
+        by_id = {b["id"]: b for b in bodies}
+        self.assertEqual(by_id["local:ok"]["body_status"], "verified")
+        self.assertEqual(by_id["local:missing"]["body_status"], "unverified")
+        self.assertEqual(by_id["local:missing"]["load_state"], "NOT_LOADED")
+
+    def test_valid_relative_path_still_works(self):
+        """fail-open 邊界：合法相對路徑仍正常解析。"""
+        out = self._composer._safe(self._root, "ok/SKILL.md")
+        self.assertTrue(out.is_file())
+        self.assertEqual(out, (self._root / "ok" / "SKILL.md").resolve())
+
+
+class CJKRecallTest(unittest.TestCase):
+    """CJK_ROUTING_VALIDATED（Step 2.3）：繁中查詢召回中文化技能；不相關的
+    技能不得為了湊滿候選數量而被選入（score>0 過濾維持）。"""
+
+    @classmethod
+    def setUpClass(cls):
+        reg = _reg()
+        cls._tmp = tempfile.TemporaryDirectory()
+        tmp = cls._tmp.name
+
+        def mk(id_, name, desc, rel):
+            body = f"# {name}\n"
+            p = Path(tmp) / rel
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(body, encoding="utf-8")
+            rec, _ = reg.build_record(
+                id=id_, name=name, relative_path=rel,
+                sha=hashlib.sha256(body.encode("utf-8")).hexdigest(),
+                license="MIT", status="approved_private",
+                visibility="private", risk="low", description=desc)
+            doc = reg.load_layer(tmp, "private")
+            doc["records"].append(rec)
+            reg.save_layer(tmp, "private", doc)
+
+        mk("local:code-review", "code-review", "python 專案 審查 重構 程式碼 quality", "cr/SKILL.md")
+        mk("local:thumb", "thumbnail-gen", "影片 封面 縮圖 16:9 影像生成", "th/SKILL.md")
+        mk("local:llm-arch", "llm-agent-arch", "LLM Agent 開源 研究 架構 評估", "llm/SKILL.md")
+        mk("local:grandma", "lighting-etl", "燈光 ETC Eos grandMA3 舞台 投影", "gr/SKILL.md")
+        mk("local:k8s-pod", "k8s-pod-debug", "kubernetes pod crashloop 容器 除錯 OOM", "k8s/SKILL.md")
+        cls._root = tmp
+        cls._composer = _composer()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls._tmp.cleanup()
+
+    def _top(self, query):
+        pool = [r for r in self._composer.candidate_pool(self._root, None)
+                if r.get("_role") == "executable"]
+        ranked = self._composer.bm25_rank(query, pool, cap=3)
+        return [r["id"] for _, r in ranked]
+
+    def test_cjk_queries_hit_correct_skills(self):
+        self.assertEqual(self._top("幫我審查 Python 專案")[0], "local:code-review")
+        self.assertEqual(self._top("做一張影片封面")[0], "local:thumb")
+        self.assertEqual(self._top("研究開源的 LLM Agent")[0], "local:llm-arch")
+        self.assertEqual(self._top("ETC Eos 轉 grandMA3")[0], "local:grandma")
+
+    def test_unrelated_skill_not_padded_in(self):
+        # 「影片封面」不得把 k8s 技能拉進正分候選
+        tops = self._top("做一張影片封面")
+        self.assertNotIn("local:k8s-pod", tops)
+
+    def test_single_char_ascii_noise_suppressed(self):
+        toks = self._composer._tokens("ETC Eos 轉 grandMA3")
+        self.assertNotIn("e", toks)
+        self.assertNotIn("t", toks)
+        self.assertIn("grandma3", toks)
 
 
 class V3RoutingRelevanceTest(unittest.TestCase):
