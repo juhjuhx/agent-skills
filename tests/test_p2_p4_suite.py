@@ -45,18 +45,39 @@ def _composer():
 # ---------------------------------------------------------------- scout
 
 class ScoutDiscoveryTest(unittest.TestCase):
-    """SCOUT_DISCOVERY_TEST: 離線 discover 從 history 層列 candidate 候選。"""
+    """SCOUT_DISCOVERY_TEST：離線 discover 從 history 層列 candidate 候選。"""
 
     def test_discover_returns_candidates_and_names(self):
         scout = _scout()
+        reg = _reg()
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            scout_dir = Path.home() / ".local/agent-skills/registry-private"
-            # 用真實 main-repo registry 做 discover（read-only）
-            cands, names = scout.discover_local(str(REPO))
-            self.assertGreater(len(cands), 0)
+            # hermetic：在 tmp registry 建 2 筆 candidate + 1 筆 private name，
+            # 不依賴真實 ~/.local registry（CI 的 clean checkout 沒有私人層）
+            c1, _ = reg.build_record(
+                id="hist:a", name="alpha-skill", relative_path="a/SKILL.md",
+                sha="a" * 64, license="MIT", status="candidate",
+                visibility="private", risk="unreviewed", description="alpha")
+            c2, _ = reg.build_record(
+                id="hist:b", name="beta-skill", relative_path="b/SKILL.md",
+                sha="b" * 64, license="MIT", status="candidate",
+                visibility="private", risk="unreviewed", description="beta")
+            p, _ = reg.build_record(
+                id="priv:c", name="gamma-skill", relative_path="c/SKILL.md",
+                sha="c" * 64, license="MIT", status="approved_private",
+                visibility="private", risk="low", description="gamma")
+            hist = reg.load_layer(str(root), "history")
+            hist["records"].extend([c1, c2])
+            reg.save_layer(str(root), "history", hist)
+            priv = reg.load_layer(str(root), "private")
+            priv["records"].append(p)
+            reg.save_layer(str(root), "private", priv)
+
+            cands, names = scout.discover_local(str(root))
+            self.assertEqual(len(cands), 2, f"expected 2 candidates, got {len(cands)}")
             self.assertTrue(all(c["id"] for c in cands))
-            self.assertGreater(len(names), 0)
+            self.assertEqual(len(names), 1)  # 只有 approved_private name
+            self.assertIn("gamma-skill", names)
 
     def test_discover_empty_registry_fail_open(self):
         scout = _scout()
