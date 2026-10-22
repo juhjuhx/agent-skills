@@ -191,20 +191,43 @@ class ScoutRateLimitTest(unittest.TestCase):
         self.assertEqual(len(sleeps), scout.MAX_RETRIES)
 
     def test_non_rate_limit_error_no_retry(self):
+        """非 rate-limit、不可重試的 4xx（fatal）：絕不重試。
+
+        P4 語意：4xx fatal（400/404/422）與普通 403 絕不重試；
+        只有 rate-limit（429 / 帶 rate-limit 訊號的 403）與 transient（5xx）可重試。
+        """
         scout = _scout()
         import urllib.error
         calls = {"n": 0}
 
-        class ServerErr:
+        class Fatal404:
+            def __call__(self, req, **kw):
+                calls["n"] += 1
+                raise urllib.error.HTTPError("u", 404, "not found", {}, None)
+
+        scout.urllib.request.urlopen = Fatal404()
+        items, meta = scout.github_search("test", sleep=lambda s: None)
+        self.assertIsNone(items)
+        self.assertEqual(calls["n"], 1, "fatal 4xx must NOT be retried")
+        self.assertEqual(meta["attempts"], 1)
+
+    def test_transient_500_retries_bounded(self):
+        """P4：transient（5xx）允許一個短的 backoff 重試，但有上限（不占常駐迴圈）。"""
+        scout = _scout()
+        import urllib.error
+        calls = {"n": 0}
+
+        class Transient500:
             def __call__(self, req, **kw):
                 calls["n"] += 1
                 raise urllib.error.HTTPError("u", 500, "boom", {}, None)
 
-        scout.urllib.request.urlopen = ServerErr()
-        items, meta = scout.github_search("test", sleep=lambda s: None)
+        sleeps = []
+        scout.urllib.request.urlopen = Transient500()
+        items, meta = scout.github_search("test", sleep=sleeps.append)
         self.assertIsNone(items)
-        self.assertEqual(calls["n"], 1)
-        self.assertEqual(meta["attempts"], 1)
+        self.assertEqual(meta["attempts"], scout.MAX_RETRIES + 1)
+        self.assertEqual(len(sleeps), scout.MAX_RETRIES)
 
 
 class ScoutFailOpenTest(unittest.TestCase):
