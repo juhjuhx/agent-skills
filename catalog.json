@@ -10728,5 +10728,22 @@
   "security",
   "video"
  ],
- "updated_at": "2026-10-25T00:16:18Z"
+ "updated_at": "2026-10-25T00:16:18Z",
+ "installable_by_unique_name": 461,
+ "total_packages": 464,
+ "name_collisions": [
+  {
+   "slug": "requesting-code-review",
+   "resolution": "root-level Superpowers version wins; the skills/<slug> package's support dirs stay available but its SKILL.md is not installable under that name"
+  },
+  {
+   "slug": "systematic-debugging",
+   "resolution": "root-level Superpowers version wins; the skills/<slug> package's support dirs stay available but its SKILL.md is not installable under that name"
+  },
+  {
+   "slug": "test-driven-development",
+   "resolution": "root-level Superpowers version wins; the skills/<slug> package's support dirs stay available but its SKILL.md is not installable under that name"
+  }
+ ],
+ "_note": "total_packages counts core(14) + additional(450). installable_by_unique_name = 461 because 3 additional slugs share their name with a core root-level skill; the root-level version resolves first. All 464 SKILL.md bodies are present on disk."
 }

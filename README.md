@@ -21,7 +21,7 @@ V3 程式與精簡封裝已由 [PR #27](https://github.com/juhjuhx/agent-skills/
 
 - **14 個核心技能**：根目錄 `<skill>/SKILL.md`，來源為固定 Superpowers MIT 上游（commit `8ca22dba…`）與有權授權的 V3 原創，metadata-ready、可獨立安裝。
 - **450 個補充可攜技能包**：`skills/<slug>/SKILL.md`，從本機技能庫通過授權與安全 gate 後打包，附帶 `NOTICE`／`LICENSE`、必要 `scripts/` `references/` `assets/`。
-- **合計 464 個公開技能**。
+- **合計 464 個技能套件**（14 核心＋450 補充），**依名稱可安裝 461 個**：`requesting-code-review`、`systematic-debugging`、`test-driven-development` 三個補充 slug 與根目錄核心同名，根目錄版本優先解析；三者全部 464 份 SKILL.md 都在盤上，只是這 3 個補充版不該被獨立安裝為技能。
 
 機器可讀清單：[`catalog.json`](catalog.json) ＋ [`catalog.lock.json`](catalog.lock.json)（每個 slug 的 SHA-256 鎖）；人類摘要見 [Skills Catalog](docs/SKILLS_CATALOG.md)。
 
@@ -50,13 +50,13 @@ using-superpowers：讀取這個專案的狀態，找出相關技能與實際工
 
 ```sh
 bash install.sh --minimal                 # 3 個母技能
-bash install.sh --all --host hermes       # 全部 464 個公開技能（M4-P8）
+bash install.sh --all --host hermes       # 全部 464 個套件（461 個依名稱可安裝）
 bash install.sh --list                    # 列出 catalog 全部技能
 ```
 
 - `--minimal`：母技能、systematic-debugging、verification-before-completion，共 3 個。
 - `--default`：essential + coding 分類（14 核心技能）。
-- `--all`：全部公開技能（14 核心 + 450 補充 = 464）；`--host hermes|dsh|opencode|claude|codex|gemini` 指定宿主，或預設 `--host auto` 依既有目錄自適應。
+- `--all`：全部公開技能（464 套件、依名稱 461 個可安裝，見上方衝突說明）；`--host hermes|dsh|opencode|claude|codex|gemini` 指定宿主，或預設 `--host auto` 依既有目錄自適應。
 - `--category essential,coding,published-extra`：使用目前打包的分類。
 - `--skill name1,name2`：依 catalog slug 安裝特定技能（可與上述合併）。
 - `--dry-run`：解析安裝意圖、只輸出會做什麼；`--rollback`：還原到前一次 backup。
@@ -69,7 +69,7 @@ bash install.sh --list                    # 列出 catalog 全部技能
 
 | Host | 命令 | 行為 |
 |---|---|---|
-| Hermes | `bash install.sh --all --host hermes` | 選擇性 per-skill symlink 到 `~/.hermes/skills/`，**不覆寫**既有技能 |
+| Hermes | `bash install.sh --all --host hermes` | 選擇性 per-skill symlink 到 `~/.hermes/skills/`，**不覆寫**既有技能（461 個名稱級） |
 | DSH | `bash install.sh --all --host dsh` | top-level 直接子目錄 symlink，讓 DSH 非遞迴掃描能發現 |
 | OpenCode | `bash install.sh --all --host opencode` | `~/.config/opencode/skills/` 整目錄 symlink 到 `~/.agents/skills-enabled` |
 | Claude | `bash install.sh --all --host claude` | `~/.claude/skills/` 整目錄 symlink |
