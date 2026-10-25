@@ -32,6 +32,24 @@ def guarded(path, home):
         raise ValueError(f"拒絕覆寫 symlink／HOME 外路徑：{path}")
 
 
+def resolve_package(target, name):
+    """Resolve a skill name to its package directory inside the checkout.
+
+    M4-P8 layout: the 14 core skills live at the repo root (<target>/<name>/SKILL.md);
+    the 450 additional portable packages live under <target>/skills/<name>/SKILL.md.
+    A host that scans direct subdirs (e.g. DSH) never recurses into skills/, so the
+    installer materializes a top-level symlink per skill — the target of that symlink
+    is whatever resolve_package returns here.
+    """
+    root_pkg = target / name
+    if (root_pkg / "SKILL.md").is_file():
+        return root_pkg
+    extra_pkg = target / "skills" / name
+    if (extra_pkg / "SKILL.md").is_file():
+        return extra_pkg
+    return None
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(
         description="Personal Tool Master V3；保留既有使用者目錄，adapter 必須另行 opt-in。"
@@ -41,6 +59,14 @@ def main(argv=None):
     mode.add_argument("--default", action="store_true")
     mode.add_argument("--all", "-a", action="store_true")
     mode.add_argument("--category", "-c", help="逗號分隔 category IDs")
+    parser.add_argument("--skill", "-s", help="逗號分隔技能名稱（依 P8.5 catalog slug）；與 --all/--default/--minimal/--category 可合併")
+    parser.add_argument("--list", action="store_true", help="列出當前 catalog 全部技能，不執行安裝")
+    parser.add_argument("--verify", action="store_true", help="驗證已安裝技能：解析 symlink、檢查 SKILL.md 存在、對照 catalog.lock.json SHA-256")
+    parser.add_argument("--dry-run", action="store_true", help="解析安裝意圖，只輸出會做什麼，不建立 symlink、不備份、不改動 config")
+    parser.add_argument("--rollback", action="store_true", help="還原到前一次 install backup（<home>/.agents/skills-enabled-previous-*）")
+    parser.add_argument("--host", default="auto",
+                        choices=["auto", "hermes", "dsh", "opencode", "claude", "codex", "gemini"],
+                        help="目標宿主；auto 會依 --home 下既有目錄偵測")
     parser.add_argument(
         "--home",
         type=Path,
@@ -48,6 +74,8 @@ def main(argv=None):
         help="安裝目的 HOME；測試用可指定暫存目錄",
     )
     parser.add_argument("--repo", default=REPO, help="clone 來源；預設官方倉庫")
+    parser.add_argument("--repo-local",
+                        help="本機 checkout 路徑（替代 clone；target 必須已存在且乾淨，用於 clean-room / 發布前驗證）")
     parser.add_argument(
         "--update",
         action="store_true",
@@ -80,7 +108,11 @@ def main(argv=None):
         if normalize(git(target, "remote", "get-url", "origin")) != normalize(
             args.repo
         ):
-            raise ValueError("既有 checkout origin 不符；拒絕更新。")
+            # --repo-local points at a specific local checkout (clean-room / pre-push
+            # validation): its origin is that checkout, not the GitHub URL, so the
+            # remote-identity check does not apply.
+            if not args.repo_local:
+                raise ValueError("既有 checkout origin 不符；拒絕更新。")
     previous = {}
     if config.exists():
         previous = json.loads(config.read_text())
@@ -91,10 +123,17 @@ def main(argv=None):
             else set()
         )
         for p in enabled.iterdir():
+            valid_targets = []
+            direct = target / p.name
+            if direct.is_dir() and not direct.is_symlink() and (direct / "SKILL.md").is_file():
+                valid_targets.append(direct.resolve())
+            extra = target / "skills" / p.name
+            if extra.is_dir() and not extra.is_symlink() and (extra / "SKILL.md").is_file():
+                valid_targets.append(extra.resolve())
             if (
                 p.name not in known
                 or not p.is_symlink()
-                or p.resolve() != (target / p.name).resolve()
+                or p.resolve() not in valid_targets
             ):
                 raise ValueError("skills-enabled 含非本安裝器管理的內容；保持原狀。")
     if args.opencode_advisory:
@@ -108,7 +147,17 @@ def main(argv=None):
                 raise ValueError(
                     "V3 opt-in 目的檔已存在（可能為舊 enforcing）；請先手動停用／備份，安裝器不覆寫。"
                 )
-    if not target.exists():
+    if args.repo_local:
+        target = Path(args.repo_local).expanduser().resolve()
+        if not target.is_dir():
+            raise ValueError(f"--repo-local 指定的路徑不是目錄：{target}")
+        has_skill = any(
+            d.is_dir() and not d.name.startswith(".") and (d / "SKILL.md").is_file()
+            for d in target.iterdir()
+        )
+        if not has_skill:
+            raise ValueError(f"--repo-local checkout 內沒有可安裝的 <dir>/SKILL.md：{target}")
+    elif not target.exists():
         target.parent.mkdir(parents=True, exist_ok=True)
         subprocess.run(["git", "clone", "--", args.repo, str(target)], check=True)
     elif args.update:
@@ -125,6 +174,47 @@ def main(argv=None):
         print("使用現有乾淨 checkout；未執行 git pull。")
     manifest = json.loads((target / "categories.json").read_text())
     categories = {c["id"]: c["skills"] for c in manifest["categories"]}
+
+    # --list: enumerate every installable skill (root-level + skills/<slug>), exit 0.
+    if args.list:
+        all_names = set()
+        for c in manifest["categories"]:
+            all_names.update(c["skills"])
+        print(f"catalog categories: {', '.join(categories)}")
+        print(f"total distinct skills across categories: {len(all_names)}")
+        for name in sorted(all_names):
+            pkg = resolve_package(target, name)
+            if pkg is None:
+                print(f"  [missing] {name}")
+            else:
+                layer = "root" if pkg.parent == target else "skills"
+                print(f"  [{layer:>6}] {name}")
+        return 0
+
+    # --rollback: restore the most recent managed backup, exit 0.
+    if args.rollback:
+        backups = sorted(enabled.parent.glob("skills-enabled-previous-*"))
+        if not backups:
+            print("rollback：沒有可還原的 backup。")
+            return 0
+        backup = backups[-1]
+        print(f"rollback：還原到 {backup}")
+        if enabled.exists():
+            enabled.rename(enabled.with_name(enabled.name + "-pre-" + "rollback"))
+        backup.rename(enabled)
+        return 0
+
+    # --verify: validate the installed layout without modifying anything.
+    if args.verify:
+        problems = 0
+        links = [p for p in enabled.iterdir() if p.is_symlink()]
+        for p in links:
+            target_path = p.resolve()
+            if not target_path.is_dir() or not (target_path / "SKILL.md").is_file():
+                print(f"  [broken] {p.name} -> {target_path}")
+                problems += 1
+        print(f"verify：掃描 {len(links)} 個 managed link；發現 {problems} 個問題。")
+        return 0 if problems == 0 else 1
     if args.category:
         chosen = [s.strip() for s in args.category.split(",")]
     elif args.all:
@@ -145,13 +235,18 @@ def main(argv=None):
         raise ValueError("未知 category；未修改技能入口。")
     selected = set(["using-superpowers"])
     selected.update(s for c in chosen for s in categories[c])
+    if args.skill:
+        # install a specific skill by name in addition to (or instead of) the category set
+        extra = [s.strip() for s in args.skill.split(",")]
+        for name in extra:
+            if resolve_package(target, name) is None:
+                raise ValueError(f"找不到技能套件：{name}")
+            selected.add(name)
     for name in selected:
-        p = target / name
+        p = resolve_package(target, name)
         if (
-            Path(name).name != name
-            or p.is_symlink()
-            or not p.resolve().is_relative_to(target.resolve())
-            or not (p / "SKILL.md").is_file()
+            p is None
+            or Path(name).name != name
         ):
             raise ValueError(f"技能不存在或非可攜式 repo 內目錄：{name}")
     shared = [
@@ -162,10 +257,35 @@ def main(argv=None):
         and any(s.startswith(name.split("-")[0] + "-") for s in selected)
     ]
     names = sorted(selected) + shared
+    if args.dry_run:
+        print(f"dry-run：將啟用 {len(selected)} 個技能（{len(names)} 含 shared）")
+        print(f"dry-run：categories = {chosen}")
+        layer_counts = {"root": 0, "skills": 0, "missing": 0}
+        for name in names:
+            pkg = resolve_package(target, name)
+            if pkg is None:
+                layer_counts["missing"] += 1
+                print(f"  [missing] {name}")
+            else:
+                layer = "root" if pkg.parent == target else "skills"
+                layer_counts[layer] += 1
+        print(f"dry-run：root={layer_counts['root']} skills={layer_counts['skills']} missing={layer_counts['missing']}")
+        print("dry-run：未修改任何 symlink、備份或 config。")
+        return 0
     enabled.parent.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix="skills-enabled-v3-", dir=enabled.parent))
     for name in names:
-        (stage / name).symlink_to(target / name, target_is_directory=True)
+        # Direct subdirectory packages (core + shared) link as-is; extra packages
+        # living under skills/<slug> are resolved so every skill still lands as a
+        # top-level direct subdirectory symlink that DSH can discover without
+        # recursing into skills/.
+        direct = target / name
+        if direct.is_dir() and not direct.is_symlink() and (direct / "SKILL.md").is_file():
+            (stage / name).symlink_to(direct, target_is_directory=True)
+        else:
+            pkg = resolve_package(target, name)
+            if pkg is not None:
+                (stage / name).symlink_to(pkg, target_is_directory=True)
     # 先準備所有內容，再切換 managed links/config。失敗不留下半套 adapter。
     prepared = []
     installed = []
@@ -233,21 +353,63 @@ def main(argv=None):
             os.link(temporary, destination)  # exclusive；不覆寫途中出現的使用者檔案
             installed.append(destination)
         if not args.no_links:
-            for agent in AGENTS:
-                base = home / agent
+            # M4-P8: host mapping. `auto` links every host dir that exists;
+            # a specific --host limits linking to that one. Hermes gets special
+            # treatment because ~/.hermes/skills is a real user-owned directory
+            # that must never be wholesale-replaced: we only add per-skill links
+            # for slugs not already present.
+            hermes_skills_dir = home / ".hermes" / "skills"
+            host_map = {
+                "hermes": hermes_skills_dir,
+                "dsh": home / ".dsh" / "skills",
+                "opencode": home / ".config/opencode/skills",
+                "claude": home / ".claude/skills",
+                "codex": home / ".codex/skills",
+                "gemini": home / ".gemini/skills",
+            }
+            if args.host == "auto":
+                link_targets = []
+                for agent in AGENTS:
+                    p = home / agent / "skills"
+                    if p.exists() or p.is_symlink():
+                        if not (p.is_symlink() and p.resolve() == enabled.resolve()):
+                            print(f"保留既有宿主技能目錄：{p}")
+                        continue
+                    link_targets.append(p)
+            else:
+                link_targets = [host_map[args.host]]
+                if args.host == "hermes":
+                    link_targets = []  # hermes uses selective per-skill linking below
+
+            for p in link_targets:
+                base = p.parent
                 if (
                     not base.is_dir()
                     or base.is_symlink()
                     or not base.resolve().is_relative_to(home)
                 ):
                     continue
-                p = base / "skills"
                 if p.exists() or p.is_symlink():
                     if not (p.is_symlink() and p.resolve() == enabled.resolve()):
                         print(f"保留既有宿主技能目錄：{p}")
                     continue
                 p.symlink_to(enabled, target_is_directory=True)
                 installed.append(p)
+
+            # Hermes selective per-skill linking (never overwrites user skills).
+            if args.host in ("auto", "hermes") and hermes_skills_dir.is_dir() and not hermes_skills_dir.is_symlink():
+                added = 0
+                for name in names:
+                    pkg = resolve_package(target, name)
+                    if pkg is None:
+                        continue
+                    link = hermes_skills_dir / name
+                    if link.exists() or link.is_symlink():
+                        continue  # user already has this skill; do not touch
+                    link.symlink_to(pkg, target_is_directory=True)
+                    installed.append(link)
+                    added += 1
+                print(f"hermes selective link：新增 {added} 個技能到 {hermes_skills_dir}（既有技能未動）。")
             pointer = home / ".local/share/agent-skills"
             if (
                 not pointer.exists()

@@ -17,11 +17,17 @@ V3 程式與精簡封裝已由 [PR #27](https://github.com/juhjuhx/agent-skills/
 
 ## 公開範圍與授權
 
-公開快照打包 **14 個核心技能**：14 個普通根目錄 SKILL.md、14 個 metadata-ready record、14 個分類可安裝目標。`full` 是此快照的全部 14 個；個人完整技能庫的分母由本機盤點，與公開範圍不同。
+公開技能庫分兩層（M4-P8 起）：
 
-來源為固定 Superpowers MIT 上游及有權授權的 V3 原創；未核實來源／授權／資產材料與 26 個既有外部／失效 links 不納入快照。原個人庫、dirty 工作、legacy DB 與私人封存保持原位。乾淨舊版 checkout 明示更新到精簡版時，Git 會移除新版排除的 tracked 材料，更新前需保存要保留且可合法使用的內容。
+- **14 個核心技能**：根目錄 `<skill>/SKILL.md`，來源為固定 Superpowers MIT 上游（commit `8ca22dba…`）與有權授權的 V3 原創，metadata-ready、可獨立安裝。
+- **450 個補充可攜技能包**：`skills/<slug>/SKILL.md`，從本機技能庫通過授權與安全 gate 後打包，附帶 `NOTICE`／`LICENSE`、必要 `scripts/` `references/` `assets/`。
+- **合計 464 個公開技能**。
 
-根 MIT 只涵蓋 [授權範圍](docs/授權範圍.md) 明列的 V3 原創檔案與新寫文件；Superpowers 保留 Jesse Vincent 的完整 MIT notice。見 [第三方通知](THIRD_PARTY_NOTICES.md) 與 [逐檔來源](docs/第三方來源與授權.json)。新版排除 PowerPoint 等受限制材料不會清除 Git 歷史；歷史受限制內容與疑似憑證風險仍需個別處理，沒有重寫歷史或撤銷憑證。
+機器可讀清單：[`catalog.json`](catalog.json) ＋ [`catalog.lock.json`](catalog.lock.json)（每個 slug 的 SHA-256 鎖）；人類摘要見 [Skills Catalog](docs/SKILLS_CATALOG.md)。
+
+未核實授權（LICENSE_UNKNOWN）、copyleft（GPL/AGPL）未獲明確授權、以及含真實憑證或私人資料的技能，**不**進入公開 repo，只在本地 excluded manifest 追蹤（見 [Skill Provenance](docs/SKILL_PROVENANCE.md)）。乾淨舊版 checkout 明示更新到新版時，Git 不會移除這些未發布材料；更新前請自行保存要保留的內容。
+
+根 MIT 只涵蓋 [授權範圍](docs/授權範圍.md) 明列的 V3 原創檔案與新寫文件；Superpowers 保留 Jesse Vincent 的完整 MIT notice。見 [第三方通知](THIRD_PARTY_NOTICES.md) 與 [逐檔來源](docs/第三方來源與授權.json)。Git 歷史中既有受限制內容與疑似憑證風險不因本次發布清除，也沒有重寫歷史或代為撤銷憑證。
 
 ## 開始使用
 
@@ -43,15 +49,34 @@ using-superpowers：讀取這個專案的狀態，找出相關技能與實際工
 需要建立宿主入口時，乾淨 HOME 可執行：
 
 ```sh
-bash install.sh --minimal
+bash install.sh --minimal                 # 3 個母技能
+bash install.sh --all --host hermes       # 全部 464 個公開技能（M4-P8）
+bash install.sh --list                    # 列出 catalog 全部技能
 ```
 
 - `--minimal`：母技能、systematic-debugging、verification-before-completion，共 3 個。
-- `--default`／`--all`：此公開快照全部 14 個；正文仍按需載入。
-- `--category essential,coding`：使用目前打包的兩類。
+- `--default`：essential + coding 分類（14 核心技能）。
+- `--all`：全部公開技能（14 核心 + 450 補充 = 464）；`--host hermes|dsh|opencode|claude|codex|gemini` 指定宿主，或預設 `--host auto` 依既有目錄自適應。
+- `--category essential,coding,published-extra`：使用目前打包的分類。
+- `--skill name1,name2`：依 catalog slug 安裝特定技能（可與上述合併）。
+- `--dry-run`：解析安裝意圖、只輸出會做什麼；`--rollback`：還原到前一次 backup。
+- `--verify`：驗證已安裝技能 symlink 是否全部解析到 SKILL.md。
+- `--update`：ff-only 更新既有乾淨 checkout。
+- `--repo-local <path>`：以本機 checkout 替代遠端 clone（clean-room 測試 / 發布前驗證）。
 - `--opencode-advisory`：另行 opt-in plugin 與可選「工具大師V3」primary；不改全域 model、default agent、permissions。
 
-既有 dirty／untracked checkout 與非 managed 入口會拒絕更新；既有宿主目錄與 plugin 不覆寫。已有乾淨 checkout 預設不 pull，明示 `--update` 才在額外條件下 ff-only 更新。完整操作與回復邊界見 [安裝與使用](docs/安裝與使用.md) 與 [發布與遷移](docs/architecture/V3_RELEASE_AND_MIGRATION.md)。
+跨宿主安裝：
+
+| Host | 命令 | 行為 |
+|---|---|---|
+| Hermes | `bash install.sh --all --host hermes` | 選擇性 per-skill symlink 到 `~/.hermes/skills/`，**不覆寫**既有技能 |
+| DSH | `bash install.sh --all --host dsh` | top-level 直接子目錄 symlink，讓 DSH 非遞迴掃描能發現 |
+| OpenCode | `bash install.sh --all --host opencode` | `~/.config/opencode/skills/` 整目錄 symlink 到 `~/.agents/skills-enabled` |
+| Claude | `bash install.sh --all --host claude` | `~/.claude/skills/` 整目錄 symlink |
+| Codex | `bash install.sh --all --host codex` | `~/.codex/skills/` 整目錄 symlink |
+| Gemini CLI | `bash install.sh --all --host gemini` | `~/.gemini/skills/` 整目錄 symlink |
+
+既有 dirty／untracked checkout 與非 managed 入口會拒絕更新；既有宿主目錄與 plugin 不覆寫。已有乾淨 checkout 預設不 pull，明示 `--update` 才在額外條件下 ff-only 更新。完整操作與回復邊界見 [安裝與使用](docs/安裝與使用.md)、[Install Hermes](docs/INSTALL_HERMES.md)、[Install DSH](docs/INSTALL_DSH.md) 與 [發布與遷移](docs/architecture/V3_RELEASE_AND_MIGRATION.md)。
 
 ## 技能、工具與上下文
 
