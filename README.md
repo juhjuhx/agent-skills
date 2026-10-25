@@ -21,7 +21,9 @@ V3 程式與精簡封裝已由 [PR #27](https://github.com/juhjuhx/agent-skills/
 
 - **14 個核心技能**：根目錄 `<skill>/SKILL.md`，來源為固定 Superpowers MIT 上游（commit `8ca22dba…`）與有權授權的 V3 原創，metadata-ready、可獨立安裝。
 - **450 個補充可攜技能包**：`skills/<slug>/SKILL.md`，從本機技能庫通過授權與安全 gate 後打包，附帶 `NOTICE`／`LICENSE`、必要 `scripts/` `references/` `assets/`。
-- **合計 464 個技能套件**（14 核心＋450 補充），**依名稱可安裝 461 個**：`requesting-code-review`、`systematic-debugging`、`test-driven-development` 三個補充 slug 與根目錄核心同名，根目錄版本優先解析；三者全部 464 份 SKILL.md 都在盤上，只是這 3 個補充版不該被獨立安裝為技能。
+- **合計 464 個技能套件**（14 核心＋450 補充），全數**依名稱可安裝**：`requesting-code-review`、`systematic-debugging`、`test-driven-development` 三個 Hermes-adapted 補充版與根目錄核心同名且內容不同，已改名為 `-hermes` 後綴（`requesting-code-review-hermes`、`systematic-debugging-hermes`、`test-driven-development-hermes`），兩版皆可按名安裝；464 份 SKILL.md 全在盤上。
+
+**同名 `-2` 後綴慣例**：registry 中約 26 對技能以 `-2` 區分不同來源的同名技能（例如 `scholar-notes` 與 `scholar-notes-2`）；`-2` 通常是本地 mirror port，按 frontmatter 名稱掃描的 host 可能看到重複名稱，需要時以 slug 為準選用。
 
 機器可讀清單：[`catalog.json`](catalog.json) ＋ [`catalog.lock.json`](catalog.lock.json)（每個 slug 的 SHA-256 鎖）；人類摘要見 [Skills Catalog](docs/SKILLS_CATALOG.md)。
 

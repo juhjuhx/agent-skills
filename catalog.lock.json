@@ -2502,8 +2502,8 @@
    "license": "MIT"
   },
   {
-   "slug": "test-driven-development",
-   "body_sha256": "649e6ab89bd8aaad2f9b162c60321f227cff8a8cda56393f07a81d1c6825a692",
+   "slug": "test-driven-development-hermes",
+   "body_sha256": "38226e0b13e59314fca491460a95f6d5382efbb195e06836b3caf6c5218d8cab",
    "source_local_sha": "649e6ab89bd8aaad2f9b162c60321f227cff8a8cda56393f07a81d1c6825a692",
    "portable_rewrites": 0,
    "license": "MIT"
@@ -2754,8 +2754,8 @@
    "license": "MIT"
   },
   {
-   "slug": "systematic-debugging",
-   "body_sha256": "f514ef78f52d6a6908653437a864a06ba6786b4f911d692371e40c272af7fd18",
+   "slug": "systematic-debugging-hermes",
+   "body_sha256": "1047215890e42cb4a1d837659c95908e44e9dc11d38aef2b36f97878416ea202",
    "source_local_sha": "f514ef78f52d6a6908653437a864a06ba6786b4f911d692371e40c272af7fd18",
    "portable_rewrites": 0,
    "license": "MIT"
@@ -2775,8 +2775,8 @@
    "license": "MIT"
   },
   {
-   "slug": "requesting-code-review",
-   "body_sha256": "1126afb626b38f5b398afac61de1c2c5551913d020f7c745e5468a78f143bcfd",
+   "slug": "requesting-code-review-hermes",
+   "body_sha256": "bbc67f7dc3139ec0f3ca44c61be29f8cd595d3a88d6d5f416c68c10b3580c400",
    "source_local_sha": "1126afb626b38f5b398afac61de1c2c5551913d020f7c745e5468a78f143bcfd",
    "portable_rewrites": 0,
    "license": "MIT"
@@ -2958,7 +2958,7 @@
   },
   {
    "slug": "guizang-ppt-skill",
-   "body_sha256": "e34f087fe6b305a1eeef3c0e55f86a76c51d05f4b9e70a56fcba13fe995d4e7e",
+   "body_sha256": "47d9ae671dfb530c7051734ab725426fdd7cefad727302e02acc44653dc3a52e",
    "source_local_sha": "e34f087fe6b305a1eeef3c0e55f86a76c51d05f4b9e70a56fcba13fe995d4e7e",
    "portable_rewrites": 2,
    "license": "MIT"

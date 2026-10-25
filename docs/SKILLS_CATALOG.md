@@ -26,6 +26,11 @@ Counts of skills declaring each host in `host_compat` (from SKILL.md frontmatter
 - `gemini`: 450
 - `hermes`: 419
 
+### Name-collision conventions
+
+- Three Hermes-adapted packages whose base name matches a core root-level skill ship under a `-hermes` suffix (requesting-code-review-hermes, systematic-debugging-hermes, test-driven-development-hermes). Both versions are name-installable; the root Superpowers version keeps the bare name.
+- Roughly 26 registry pairs use a `-2` suffix to distinguish same-named skills from different sources (e.g. `scholar-notes` vs `scholar-notes-2`). The `-2` entry is the local mirror/port. For name-based hosts, the non-suffixed slug is preferred.
+
 > `dsh` requires YAML frontmatter with `name` + `description`; the installer materializes every
 > `skills/<slug>` package as a **top-level direct subdirectory** of the skills root so DSH's
 > non-recursive scan discovers it. Hermes discovers natively via `~/.hermes/skills` (selective

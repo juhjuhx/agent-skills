@@ -206,14 +206,37 @@ def main(argv=None):
 
     # --verify: validate the installed layout without modifying anything.
     if args.verify:
+        import hashlib
         problems = 0
+        checked = 0
+        # 1. structural: every managed link resolves to a SKILL.md
         links = [p for p in enabled.iterdir() if p.is_symlink()]
         for p in links:
             target_path = p.resolve()
             if not target_path.is_dir() or not (target_path / "SKILL.md").is_file():
                 print(f"  [broken] {p.name} -> {target_path}")
                 problems += 1
-        print(f"verify：掃描 {len(links)} 個 managed link；發現 {problems} 個問題。")
+        # 2. integrity: when the source tree carries catalog.lock.json, verify each
+        # installed skill body's SHA-256 against the lock (skills/ extras only).
+        lock_path = target / "catalog.lock.json"
+        if lock_path.is_file():
+            lock = json.loads(lock_path.read_text())
+            for entry in lock.get("entries", []):
+                pkg_md = target / entry.get("relative_path", "").replace("SKILL.md", "SKILL.md")
+                # relative_path in lock is skills/<slug>/SKILL.md
+                cand = target / "skills" / entry["slug"] / "SKILL.md"
+                if not cand.is_file():
+                    print(f"  [missing-body] {entry['slug']}")
+                    problems += 1
+                    continue
+                actual = hashlib.sha256(cand.read_bytes()).hexdigest()
+                if actual != entry["body_sha256"]:
+                    print(f"  [sha-mismatch] {entry['slug']}: {actual[:12]} != {entry['body_sha256'][:12]}")
+                    problems += 1
+                checked += 1
+        print(f"verify：掃描 {len(links)} 個 managed link；"
+              + (f"比對 {checked} 個 SHA-256 lock；" if lock_path.is_file() else "")
+              + f"發現 {problems} 個問題。")
         return 0 if problems == 0 else 1
     if args.category:
         chosen = [s.strip() for s in args.category.split(",")]

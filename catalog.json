@@ -8532,16 +8532,16 @@
   },
   {
    "skill_id": "public:test-driven-development",
-   "slug": "test-driven-development",
-   "name": "test-driven-development",
+   "slug": "test-driven-development-hermes",
+   "name": "test-driven-development-hermes",
    "description": "TDD: enforce RED-GREEN-REFACTOR, tests before code.",
    "category": [
     "coding",
     "agent-orchestration",
     "communication"
    ],
-   "relative_path": "skills/test-driven-development/SKILL.md",
-   "body_sha256": "649e6ab89bd8aaad2f9b162c60321f227cff8a8cda56393f07a81d1c6825a692",
+   "relative_path": "skills/test-driven-development-hermes/SKILL.md",
+   "body_sha256": "38226e0b13e59314fca491460a95f6d5382efbb195e06836b3caf6c5218d8cab",
    "license": "MIT",
    "canonical_source": "hermes_native",
    "host_compat": [
@@ -8552,7 +8552,8 @@
     "codex",
     "gemini"
    ],
-   "asset_file_count": 0
+   "asset_file_count": 0,
+   "rename_note": "was test-driven-development; renamed because the root-level Superpowers core skill keeps the base name"
   },
   {
    "skill_id": "public:huggingface-hub",
@@ -9393,16 +9394,16 @@
   },
   {
    "skill_id": "public:systematic-debugging",
-   "slug": "systematic-debugging",
-   "name": "systematic-debugging",
+   "slug": "systematic-debugging-hermes",
+   "name": "systematic-debugging-hermes",
    "description": "4-phase root cause debugging: understand bugs before fixing.",
    "category": [
     "coding",
     "agent-orchestration",
     "devops"
    ],
-   "relative_path": "skills/systematic-debugging/SKILL.md",
-   "body_sha256": "f514ef78f52d6a6908653437a864a06ba6786b4f911d692371e40c272af7fd18",
+   "relative_path": "skills/systematic-debugging-hermes/SKILL.md",
+   "body_sha256": "1047215890e42cb4a1d837659c95908e44e9dc11d38aef2b36f97878416ea202",
    "license": "MIT",
    "canonical_source": "hermes_native",
    "host_compat": [
@@ -9413,7 +9414,8 @@
     "codex",
     "gemini"
    ],
-   "asset_file_count": 0
+   "asset_file_count": 0,
+   "rename_note": "was systematic-debugging; renamed because the root-level Superpowers core skill keeps the base name"
   },
   {
    "skill_id": "public:hermes-agent-skill-authoring",
@@ -9465,16 +9467,16 @@
   },
   {
    "skill_id": "public:requesting-code-review",
-   "slug": "requesting-code-review",
-   "name": "requesting-code-review",
+   "slug": "requesting-code-review-hermes",
+   "name": "requesting-code-review-hermes",
    "description": "Pre-commit review: security scan, quality gates, auto-fix.",
    "category": [
     "coding",
     "review",
     "agent-orchestration"
    ],
-   "relative_path": "skills/requesting-code-review/SKILL.md",
-   "body_sha256": "1126afb626b38f5b398afac61de1c2c5551913d020f7c745e5468a78f143bcfd",
+   "relative_path": "skills/requesting-code-review-hermes/SKILL.md",
+   "body_sha256": "bbc67f7dc3139ec0f3ca44c61be29f8cd595d3a88d6d5f416c68c10b3580c400",
    "license": "MIT",
    "canonical_source": "hermes_native",
    "host_compat": [
@@ -9485,7 +9487,8 @@
     "codex",
     "gemini"
    ],
-   "asset_file_count": 0
+   "asset_file_count": 0,
+   "rename_note": "was requesting-code-review; renamed because the root-level Superpowers core skill keeps the base name"
   },
   {
    "skill_id": "public:simplify-code",
@@ -10085,7 +10088,7 @@
     "design"
    ],
    "relative_path": "skills/guizang-ppt-skill/SKILL.md",
-   "body_sha256": "e34f087fe6b305a1eeef3c0e55f86a76c51d05f4b9e70a56fcba13fe995d4e7e",
+   "body_sha256": "47d9ae671dfb530c7051734ab725426fdd7cefad727302e02acc44653dc3a52e",
    "license": "MIT",
    "canonical_source": "agents_mirror",
    "host_compat": [
@@ -10729,21 +10732,8 @@
   "video"
  ],
  "updated_at": "2026-10-25T00:16:18Z",
- "installable_by_unique_name": 461,
+ "installable_by_unique_name": 464,
  "total_packages": 464,
- "name_collisions": [
-  {
-   "slug": "requesting-code-review",
-   "resolution": "root-level Superpowers version wins; the skills/<slug> package's support dirs stay available but its SKILL.md is not installable under that name"
-  },
-  {
-   "slug": "systematic-debugging",
-   "resolution": "root-level Superpowers version wins; the skills/<slug> package's support dirs stay available but its SKILL.md is not installable under that name"
-  },
-  {
-   "slug": "test-driven-development",
-   "resolution": "root-level Superpowers version wins; the skills/<slug> package's support dirs stay available but its SKILL.md is not installable under that name"
-  }
- ],
- "_note": "total_packages counts core(14) + additional(450). installable_by_unique_name = 461 because 3 additional slugs share their name with a core root-level skill; the root-level version resolves first. All 464 SKILL.md bodies are present on disk."
+ "name_collisions": [],
+ "_note": "464 packages on disk = 14 core (root-level Superpowers, bare names) + 450 extras under skills/. The 3 Hermes-adapted extras that originally shared a bare name with a core skill are published under a -hermes suffix (requesting-code-review-hermes, systematic-debugging-hermes, test-driven-development-hermes), so every one of the 464 is name-installable."
 }

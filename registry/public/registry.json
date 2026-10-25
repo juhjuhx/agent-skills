@@ -16697,7 +16697,8 @@
     "canonical_source": "agents_mirror"
    },
    "generation": 1,
-   "updated_at": "2026-10-25T00:16:18Z"
+   "updated_at": "2026-10-25T00:16:18Z",
+   "body_sha256": "47d9ae671dfb530c7051734ab725426fdd7cefad727302e02acc44653dc3a52e"
   },
   {
    "id": "public:talking-head-recut",

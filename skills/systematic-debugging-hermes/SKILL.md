@@ -1,5 +1,5 @@
 ---
-name: systematic-debugging
+name: systematic-debugging-hermes
 description: "4-phase root cause debugging: understand bugs before fixing."
 version: 1.1.0
 author: Hermes Agent (adapted from obra/superpowers)
