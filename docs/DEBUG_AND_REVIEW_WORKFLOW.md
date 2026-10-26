@@ -13,7 +13,8 @@ new tooling; it pins the discipline so each cycle is auditable.
 Deterministic, minimal, evidenced. One issue at a time.
 
 ```
-Reproduce  ->  Minimize  ->  Root cause  ->  Failing test  ->  Minimal fix  ->  Regression
+Reproduce -> Minimize -> Root cause -> Failing test
+-> Minimal fix -> Regression
 ```
 
 | Step | Requirement |
@@ -47,6 +48,15 @@ Focused first, then broad. Each gate leaves `COMMAND / EXIT_CODE / RESULT`.
    `--all` into an isolated HOME and `--verify` on it. Do **not** install into the
    real `~/.hermes/skills` user layer just to test.
 
+> **Known gap (F-1, pre-existing — recorded, not fixed).** `install_v3.py --verify`
+> returns rc=1 when re-invoked against an already-installed home ("skills-enabled
+> contains non-installer-managed content"), even though the layout and all 450
+> SHA-256 digests are correct (independently verified). This is shipped behavior at
+> `3d55520`; the installer is on this release's forbidden list, so it is **recorded
+> here, not patched**. Verify an install by running the SHA-256 integrity check on
+> the isolated home rather than a second `--verify` in the same home. A future
+> installer release should reconcile the line-119 management guard with re-invocation.
+
 A passing local test does not equal a passing GitHub CI. The release gate below
 runs the real CI on the pushed commit.
 
@@ -55,7 +65,8 @@ runs the real CI on the pushed commit.
 A fresh-context reviewer who was **not** the implementer.
 
 ```
-Fresh-context reviewer  ->  Findings (Critical/High/Med/Low)  ->  Remediation  ->  Re-review
+Fresh-context reviewer -> Findings (Crit/High/Med/Low)
+-> Remediation -> Re-review
 ```
 
 | Rule | Why |
@@ -74,7 +85,8 @@ release and report `REVIEW_BLOCKED` with the unreviewed diff path.
 Ordered. A release happens only when every line is PASS.
 
 ```
-Security  ->  License  ->  Compatibility  ->  CI green  ->  Fast-forward push  ->  Remote verification
+Security -> License -> Compatibility -> CI green
+-> Fast-forward push -> Remote verification
 ```
 
 - **Security**: no new secret-bearing or private data in the diff; private
